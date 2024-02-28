@@ -231,11 +231,6 @@ fn randInUnitSphere(seed: ptr<function, u32>) -> vec3<f32> {
   return vec3<f32>(0.0, 0.0, 0.0);
 }
 
-fn randomOnHemiSphere(normal: vec3<f32>, seed: ptr<function, u32>) -> vec3<f32> {
-  let in_unit_sphere = randInUnitSphere(seed);
-  return select(in_unit_sphere, -in_unit_sphere, dot(in_unit_sphere, normal) < 0);
-}
-
 fn triangle_bounding_box(triangle: Triangle) -> Aabb {
   let min = min(triangle.Q, min(triangle.Q + triangle.u, triangle.Q + triangle.v));
   let max = max(triangle.Q, max(triangle.Q + triangle.u, triangle.Q + triangle.v));
