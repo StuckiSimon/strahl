@@ -312,7 +312,7 @@ fn ray_color(ray: Ray, seed: ptr<function, u32>) -> vec3<f32> {
       if (material.materialType == LAMBERTIAN_MATERIAL_TYPE) {
         scattered = render_lambertian_material(
         lambertianMaterials[material.index], hit_record, &attenuation, &emission_color, &local_ray, seed);
-        } else if (material.materialType == DIFFUSE_LIGHT_MATERIAL_TYPE) {
+      } else if (material.materialType == DIFFUSE_LIGHT_MATERIAL_TYPE) {
         scattered = render_diffuse_light_material(
         diffuseLightMaterials[material.index], hit_record, &attenuation, &emission_color, &local_ray, seed);
       }
