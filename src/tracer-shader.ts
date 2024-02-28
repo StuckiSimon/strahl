@@ -15,7 +15,7 @@ const PARAM_PLACEHOLDER_MAP: Record<keyof Params, string> = {
 export default function build(params: Params) {
   const placeholders = Object.entries(PARAM_PLACEHOLDER_MAP) as [
     keyof Params,
-    string
+    string,
   ][];
   return placeholders.reduce((aggregate, [key, value]) => {
     return aggregate.replaceAll(`\${${value}}`, `${params[key]}`);

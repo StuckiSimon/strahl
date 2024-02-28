@@ -64,7 +64,7 @@ async function run() {
     { texture },
     textureData,
     { bytesPerRow: kTextureWidth * 4 },
-    { width: kTextureWidth, height: kTextureHeight }
+    { width: kTextureWidth, height: kTextureHeight },
   );
 
   const sampler = device.createSampler();
@@ -245,7 +245,7 @@ fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
     {
       boundingBox: combineBoundingBoxes(
         getBoundingBoxFromSphere(spheres[0]),
-        getBoundingBoxFromSphere(spheres[2])
+        getBoundingBoxFromSphere(spheres[2]),
       ),
       leftIndex: 3,
       rightIndex: 4,
@@ -352,7 +352,7 @@ fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
   const maxWorkgroupDimension = 16;
   const computePasses = Math.ceil(
     // todo: check…
-    (imageWidth * imageWidth) / maxWorkgroupDimension
+    (imageWidth * imageWidth) / maxWorkgroupDimension,
   );
 
   const computeShaderModule = device.createShaderModule({
@@ -388,7 +388,7 @@ fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
     computePass.setPipeline(computePipeline);
     computePass.dispatchWorkgroups(
       Math.sqrt(computePasses),
-      Math.sqrt(computePasses)
+      Math.sqrt(computePasses),
     );
 
     computePass.end();
