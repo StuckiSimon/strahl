@@ -332,7 +332,7 @@ fn ray_color(ray: Ray, seed: ptr<function, u32>) -> vec3<f32> {
     color_stack_idx += 1;
   }
 
-  var color = Color(0,0,0); //color_stack[color_stack_idx].emission;
+  var color = Color(0,0,0);
   let last_idx = color_stack_idx;
   for (var i = color_stack_idx; i >= 0; i -= 1) {
     let bouncing = color_stack[i];
