@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "@webgpu/types": "^0.1.40",
+    "prettier": "3.2.5",
     "typescript": "^5.2.2",
     "vite": "^5.0.8"
   },
