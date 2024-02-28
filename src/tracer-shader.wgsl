@@ -305,7 +305,6 @@ fn ray_color(ray: Ray, seed: ptr<function, u32>) -> vec3<f32> {
     if (hittable_list_hit(local_ray, Interval(0.001, 999999999999999999), &hit_record)) {
       var attenuation: Color;
       
-      //color = 0.5 * color;
       var emission_color = Color(0,0,0);
       
       let material = hit_record.material;
