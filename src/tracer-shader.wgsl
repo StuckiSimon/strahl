@@ -282,7 +282,6 @@ fn hittable_list_hit(ray: Ray, ray_t: Interval, hit_record: ptr<function, HitRec
       hit_anything = true;
       closest_so_far = temp_record.t;
       (*hit_record) = temp_record;
-      // FIXME: Add this also to other hit checks!
       (*hit_record).material = triangle.material;
     }
   }
