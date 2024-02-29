@@ -24,7 +24,6 @@ struct Ray {
 };
 
 struct MaterialDefinition {
-  materialType: i32,
   index: i32,
 }
 
@@ -38,17 +37,10 @@ struct HitRecord {
 
 alias Color = vec3<f32>;
 
-struct LambertianMaterial {
-  texture: Color,
+struct Material {
+  baseColor: Color,
+  emissionColor: Color,
 }
-
-const LAMBERTIAN_MATERIAL_TYPE = 0;
-
-struct DiffuseLightMaterial {
-  emit: Color,
-}
-
-const DIFFUSE_LIGHT_MATERIAL_TYPE = 1;
 
 struct Triangle {
   Q: vec3<f32>,
@@ -121,8 +113,17 @@ fn nearZero(v: vec3f) -> bool {
   return any(abs(v) < epsilon);
 }
 
-fn renderLambertianMaterial(material: LambertianMaterial, hitRecord: HitRecord, attenuation: ptr<function, Color>, emissionColor: ptr<function, Color>, scattered: ptr<function, Ray>, seed: ptr<function, u32>) -> bool {
-  (*emissionColor) = Color(0.0,0.0,0.0);
+fn identical(v1: vec3f, v2: vec3f) -> bool {
+  return all(v1 == v2);
+}
+
+fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<function, Color>, emissionColor: ptr<function, Color>, scattered: ptr<function, Ray>, seed: ptr<function, u32>) -> bool {
+  (*emissionColor) = material.emissionColor;
+
+  // todo: optimize?
+  if (identical(material.baseColor, Color(0.0, 0.0, 0.0))) {
+    return false;
+  }
   
   var scatterDirection = hitRecord.normal + normalize(randInUnitSphere(seed));
 
@@ -133,43 +134,36 @@ fn renderLambertianMaterial(material: LambertianMaterial, hitRecord: HitRecord, 
 
   (*scattered) = Ray(hitRecord.point, scatterDirection);
 
-  (*attenuation) = material.texture;
+  (*attenuation) = material.baseColor;
 
   return true;  
 }
 
-fn renderDiffuseLightMaterial(material: DiffuseLightMaterial, hitRecord: HitRecord, attenuation: ptr<function, Color>, emissionColor: ptr<function, Color>, scattered: ptr<function, Ray>, seed: ptr<function, u32>) -> bool {
-  (*emissionColor) = material.emit;
-  return false;
-}
-
-
-const lambertianMaterials: array<LambertianMaterial, 2> = array<LambertianMaterial, 2>(
-  LambertianMaterial(vec3<f32>(0.5, 1.0, 0.0)),
-  LambertianMaterial(vec3<f32>(1.0, 0.5, 0.2)),
+const materials: array<Material, 4> = array<Material, 4>(
+  // base materials
+  Material(Color(0.5, 1.0, 0.0), Color(0.0, 0.0, 0.0)),
+  Material(Color(1.0, 0.5, 0.2), Color(0.0, 0.0, 0.0)),
+  // lights
+  Material(Color(0.0, 0.0, 0.0), Color(1.0, 0.5, 1.0)),
+  Material(Color(0.0, 0.0, 0.0), Color(1.0, 1.0, 1.0))
 );
 
-const diffuseLightMaterials: array<DiffuseLightMaterial, 2> = array<DiffuseLightMaterial, 2>(
-  DiffuseLightMaterial(vec3<f32>(1.0, 0.5, 1.0)),
-  DiffuseLightMaterial(vec3<f32>(1.0, 1.0, 1.0)),
-);
-
-const defaultMaterial = MaterialDefinition(LAMBERTIAN_MATERIAL_TYPE, 0);
-const defaultDiffuseLightMaterial = MaterialDefinition(DIFFUSE_LIGHT_MATERIAL_TYPE, 0);
+const defaultMaterial = MaterialDefinition(0);
+const defaultDiffuseLightMaterial = MaterialDefinition(2);
 
 const TRIANGLE_COUNT = 6;
 // Triangles are encoded as first being the lower point, then the two edges
 const triangles: array<Triangle, TRIANGLE_COUNT> = array<Triangle, TRIANGLE_COUNT>(
   // wall facing camera
-  Triangle(vec3<f32>(-3, 0, -3), vec3<f32>(4, 0, 0), vec3<f32>(0, 4, 0), MaterialDefinition(LAMBERTIAN_MATERIAL_TYPE, 1)),
-  Triangle(vec3<f32>(-3, 4, -3), vec3<f32>(4, -4, 0), vec3<f32>(4, 0, 0), MaterialDefinition(LAMBERTIAN_MATERIAL_TYPE, 1)),
+  Triangle(vec3<f32>(-3, 0, -3), vec3<f32>(4, 0, 0), vec3<f32>(0, 4, 0), MaterialDefinition(1)),
+  Triangle(vec3<f32>(-3, 4, -3), vec3<f32>(4, -4, 0), vec3<f32>(4, 0, 0), MaterialDefinition(1)),
   // ground floor below the wall
   Triangle(vec3<f32>(-3, 0, -3), vec3<f32>(4, 0, 0), vec3<f32>(0, -2, 1.5), defaultMaterial),
   Triangle(vec3<f32>(1, 0, -3), vec3<f32>(0, -2, 1.5), vec3<f32>(-4, -2, 1.5), defaultMaterial),
   // Light source from the right
   Triangle(vec3<f32>(2, 5, -6), vec3<f32>(0.1, -20, 0), vec3<f32>(0, 0, 10), defaultDiffuseLightMaterial),
   // Light from the left
-  Triangle(vec3<f32>(-3, 5, -6), vec3<f32>(0.0, -20, 0), vec3<f32>(0, 0, 10), MaterialDefinition(DIFFUSE_LIGHT_MATERIAL_TYPE, 1)),
+  Triangle(vec3<f32>(-3, 5, -6), vec3<f32>(0.0, -20, 0), vec3<f32>(0, 0, 10), MaterialDefinition(3)),
 );
 
 fn bvhNodeHit(bvh: BvhNode, r: Ray, rayT: ptr<function, Interval>) -> bool {
@@ -308,14 +302,7 @@ fn rayColor(ray: Ray, seed: ptr<function, u32>) -> vec3<f32> {
       var emissionColor = Color(0,0,0);
       
       let material = hitRecord.material;
-      var scattered = false;
-      if (material.materialType == LAMBERTIAN_MATERIAL_TYPE) {
-        scattered = renderLambertianMaterial(
-        lambertianMaterials[material.index], hitRecord, &attenuation, &emissionColor, &localRay, seed);
-      } else if (material.materialType == DIFFUSE_LIGHT_MATERIAL_TYPE) {
-        scattered = renderDiffuseLightMaterial(
-        diffuseLightMaterials[material.index], hitRecord, &attenuation, &emissionColor, &localRay, seed);
-      }
+      let scattered = renderMaterial(materials[material.index], hitRecord, &attenuation, &emissionColor, &localRay, seed);
 
       if (!scattered) {
         colorStack[colorStackIdx] = BouncingInfo(Color(0.0,0.0,0.0), emissionColor);
