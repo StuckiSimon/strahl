@@ -1,22 +1,22 @@
 @group(0) @binding(0) var texture: texture_storage_2d<rgba8unorm, write>;
 @group(0) @binding(1) var<storage, read_write> bvhNodes: array<BvhNode>;
 
-const focal_length = 1.0;
-const viewport_height = 4.0;
-const viewport_width = 4.0;
-const camera_center = vec3<f32>(0.0, 0.0, 0.0);
+const focalLength = 1.0;
+const viewportHeight = 4.0;
+const viewportWidth = 4.0;
+const cameraCenter = vec3<f32>(0.0, 0.0, 0.0);
 
-const viewport_u = vec3<f32>(viewport_width, 0.0, 0.0);
-const viewport_v = vec3<f32>(0.0, -viewport_height, 0.0);
+const viewportU = vec3<f32>(viewportWidth, 0.0, 0.0);
+const viewportV = vec3<f32>(0.0, -viewportHeight, 0.0);
 
-const pixel_delta_u = viewport_u / ${imageWidth};
-const pixel_delta_v = viewport_v / ${imageHeight};
+const pixelDeltaU = viewportU / ${imageWidth};
+const pixelDeltaV = viewportV / ${imageHeight};
 
-const viewport_upper_left = camera_center - vec3<f32>(0, 0, focal_length) - viewport_u / 2.0 - viewport_v / 2.0;
-const pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
+const viewportUpperLeft = cameraCenter - vec3<f32>(0, 0, focalLength) - viewportU / 2.0 - viewportV / 2.0;
+const pixel00Loc = viewportUpperLeft + 0.5 * (pixelDeltaU + pixelDeltaV);
 
-const samples_per_pixel = 30;
-const max_depth = 5;
+const samplesPerPixel = 30;
+const maxDepth = 5;
 
 struct Ray {
   origin: vec3<f32>,
@@ -32,7 +32,7 @@ struct HitRecord {
   point: vec3<f32>,
   normal: vec3<f32>,
   t: f32,
-  front_face: bool,
+  frontFace: bool,
   material: MaterialDefinition,
 }
 
@@ -66,43 +66,43 @@ fn interval(min: f32, max: f32) -> Interval {
   return Interval(min, max);
 }
 
-fn interval_contains(interval: Interval, value: f32) -> bool {
+fn intervalContains(interval: Interval, value: f32) -> bool {
   return interval.min <= value && value <= interval.max;
 }
 
-fn interval_surrounds(interval: Interval, value: f32) -> bool {
+fn intervalSurrounds(interval: Interval, value: f32) -> bool {
   return interval.min < value && value < interval.max;
 }
 
-fn interval_clamp(interval: Interval, value: f32) -> f32 {
+fn intervalClamp(interval: Interval, value: f32) -> f32 {
   return clamp(value, interval.min, interval.max);
 }
 
 struct Aabb {
-  interval_x: Interval,
-  interval_y: Interval,
-  interval_z: Interval,
+  intervalX: Interval,
+  intervalY: Interval,
+  intervalZ: Interval,
 }
 
-fn aabb_axis(aabb: Aabb, axis: i32) -> Interval {
+fn aabbAxis(aabb: Aabb, axis: i32) -> Interval {
   if (axis == 0) {
-    return aabb.interval_x;
+    return aabb.intervalX;
   } else if (axis == 1) {
-    return aabb.interval_y;
+    return aabb.intervalY;
   } else {
-    return aabb.interval_z;
+    return aabb.intervalZ;
   }
 }
 
-fn aabb_hit(aabb: Aabb, r: Ray, ray_t: ptr<function, Interval>) -> bool {
+fn aabbHit(aabb: Aabb, r: Ray, rayT: ptr<function, Interval>) -> bool {
   for (var a = 0; a < 3; a += 1) {
-    let t0 = min((aabb_axis(aabb, a).min - r.origin[a]) / r.direction[a],
-                 (aabb_axis(aabb, a).max - r.origin[a]) / r.direction[a]);
-    let t1 = max((aabb_axis(aabb, a).min - r.origin[a]) / r.direction[a],
-                  (aabb_axis(aabb, a).max - r.origin[a]) / r.direction[a]);
-    (*ray_t).min = max((*ray_t).min, t0);
-    (*ray_t).max = min((*ray_t).max, t1);
-    if ((*ray_t).max <= (*ray_t).min) {
+    let t0 = min((aabbAxis(aabb, a).min - r.origin[a]) / r.direction[a],
+                 (aabbAxis(aabb, a).max - r.origin[a]) / r.direction[a]);
+    let t1 = max((aabbAxis(aabb, a).min - r.origin[a]) / r.direction[a],
+                  (aabbAxis(aabb, a).max - r.origin[a]) / r.direction[a]);
+    (*rayT).min = max((*rayT).min, t0);
+    (*rayT).max = min((*rayT).max, t1);
+    if ((*rayT).max <= (*rayT).min) {
       return false;
     }
   }
@@ -121,25 +121,25 @@ fn nearZero(v: vec3f) -> bool {
   return any(abs(v) < epsilon);
 }
 
-fn render_lambertian_material(material: LambertianMaterial, hit_record: HitRecord, attenuation: ptr<function, Color>, emission_color: ptr<function, Color>, scattered: ptr<function, Ray>, seed: ptr<function, u32>) -> bool {
-  (*emission_color) = Color(0.0,0.0,0.0);
+fn renderLambertianMaterial(material: LambertianMaterial, hitRecord: HitRecord, attenuation: ptr<function, Color>, emissionColor: ptr<function, Color>, scattered: ptr<function, Ray>, seed: ptr<function, u32>) -> bool {
+  (*emissionColor) = Color(0.0,0.0,0.0);
   
-  var scatter_direction = hit_record.normal + normalize(randInUnitSphere(seed));
+  var scatterDirection = hitRecord.normal + normalize(randInUnitSphere(seed));
 
   // Catch degenerate scatter direction
-  if (nearZero(scatter_direction)) {
-    scatter_direction = hit_record.normal;
+  if (nearZero(scatterDirection)) {
+    scatterDirection = hitRecord.normal;
   }
 
-  (*scattered) = Ray(hit_record.point, scatter_direction);
+  (*scattered) = Ray(hitRecord.point, scatterDirection);
 
   (*attenuation) = material.texture;
 
   return true;  
 }
 
-fn render_diffuse_light_material(material: DiffuseLightMaterial, hit_record: HitRecord, attenuation: ptr<function, Color>, emission_color: ptr<function, Color>, scattered: ptr<function, Ray>, seed: ptr<function, u32>) -> bool {
-  (*emission_color) = material.emit;
+fn renderDiffuseLightMaterial(material: DiffuseLightMaterial, hitRecord: HitRecord, attenuation: ptr<function, Color>, emissionColor: ptr<function, Color>, scattered: ptr<function, Ray>, seed: ptr<function, u32>) -> bool {
+  (*emissionColor) = material.emit;
   return false;
 }
 
@@ -172,15 +172,15 @@ const triangles: array<Triangle, TRIANGLE_COUNT> = array<Triangle, TRIANGLE_COUN
   Triangle(vec3<f32>(-3, 5, -6), vec3<f32>(0.0, -20, 0), vec3<f32>(0, 0, 10), MaterialDefinition(DIFFUSE_LIGHT_MATERIAL_TYPE, 1)),
 );
 
-fn bvh_node_hit(bvh: BvhNode, r: Ray, ray_t: ptr<function, Interval>) -> bool {
-  return aabb_hit(bvh.boundingBox, r, ray_t);
+fn bvhNodeHit(bvh: BvhNode, r: Ray, rayT: ptr<function, Interval>) -> bool {
+  return aabbHit(bvh.boundingBox, r, rayT);
 }
 
-fn ray_at(ray: Ray, t: f32) -> vec3<f32> {
+fn rayAt(ray: Ray, t: f32) -> vec3<f32> {
   return ray.origin + t * ray.direction;
 }
 
-fn length_squared(v: vec3<f32>) -> f32 {
+fn lengthSquared(v: vec3<f32>) -> f32 {
   return dot(v, v);
 }
 
@@ -191,38 +191,38 @@ const PCG_MULTIPLIER = 747796405u;
 
 // https://www.pcg-random.org/download.html#id1
 // See https://github.com/imneme/pcg-c/blob/83252d9c23df9c82ecb42210afed61a7b42402d7/include/pcg_variants.h#L1533
-fn randInt(seed: ptr<function, u32>) -> i32 {
+fn randomI32(seed: ptr<function, u32>) -> i32 {
   let oldstate = *seed;
   *seed = *seed * PCG_MULTIPLIER + PCG_INC;
   let word = ((oldstate >> ((oldstate >> 28u) + 4u)) ^ oldstate) * 277803737u;
   return i32((word >> 22u) ^ word);
 }
 
-fn randFloat(seed: ptr<function, u32>) -> f32 {
-  let val = randInt(seed);
+fn randomF32(seed: ptr<function, u32>) -> f32 {
+  let val = randomI32(seed);
   return f32(val) / f32(0xffffffffu);
 }
 
-fn randFloatInRange(min: f32, max: f32, seed: ptr<function, u32>) -> f32 {
-  return (randFloat(seed) * (max - min)) + min;
+fn randomF32InRange(min: f32, max: f32, seed: ptr<function, u32>) -> f32 {
+  return (randomF32(seed) * (max - min)) + min;
 }
 
 fn randVec3(seed: ptr<function, u32>) -> vec3<f32> {
-  return vec3<f32>(randFloat(seed), randFloat(seed), randFloat(seed));
+  return vec3<f32>(randomF32(seed), randomF32(seed), randomF32(seed));
 }
 
 fn randVec3InRange(min: f32, max: f32, seed: ptr<function, u32>) -> vec3<f32> {
   return vec3<f32>(
-    randFloatInRange(min, max, seed),
-    randFloatInRange(min, max, seed),
-    randFloatInRange(min, max, seed),
+    randomF32InRange(min, max, seed),
+    randomF32InRange(min, max, seed),
+    randomF32InRange(min, max, seed),
   );
 }
 
 fn randInUnitSphere(seed: ptr<function, u32>) -> vec3<f32> {
   while (true) {
     let p = randVec3(seed);
-    if (length_squared(p) >= 1.0) {
+    if (lengthSquared(p) >= 1.0) {
       continue;
     }
     return p;
@@ -231,13 +231,13 @@ fn randInUnitSphere(seed: ptr<function, u32>) -> vec3<f32> {
   return vec3<f32>(0.0, 0.0, 0.0);
 }
 
-fn triangle_bounding_box(triangle: Triangle) -> Aabb {
+fn triangleBoundingBox(triangle: Triangle) -> Aabb {
   let min = min(triangle.Q, min(triangle.Q + triangle.u, triangle.Q + triangle.v));
   let max = max(triangle.Q, max(triangle.Q + triangle.u, triangle.Q + triangle.v));
   return Aabb(interval(min.x, max.x), interval(min.y, max.y), interval(min.z, max.z));
 }
 
-fn triangle_hit(triangle: Triangle, ray: Ray, ray_t: Interval, hit_record: ptr<function, HitRecord>) -> bool {
+fn triangleHit(triangle: Triangle, ray: Ray, rayT: Interval, hitRecord: ptr<function, HitRecord>) -> bool {
   let edge1 = triangle.u;
   let edge2 = triangle.v;
   let h = cross(ray.direction, edge2);
@@ -261,32 +261,32 @@ fn triangle_hit(triangle: Triangle, ray: Ray, ray_t: Interval, hit_record: ptr<f
   }
   let t = f * dot(edge2, q);
   // No hit if triangle is behind the ray
-  if (t < (ray_t).min || t > (ray_t).max) {
+  if (t < (rayT).min || t > (rayT).max) {
     return false;
   }
 
-  (*hit_record).t = t;
-  (*hit_record).point = ray_at(ray, t);
-  (*hit_record).normal = normalize(cross(edge1, edge2));
+  (*hitRecord).t = t;
+  (*hitRecord).point = rayAt(ray, t);
+  (*hitRecord).normal = normalize(cross(edge1, edge2));
   return true;
 }
 
-fn hittable_list_hit(ray: Ray, ray_t: Interval, hit_record: ptr<function, HitRecord>) -> bool {
-  var temp_record: HitRecord;
-  var hit_anything = false;
-  var closest_so_far = ray_t.max;
+fn hittableListHit(ray: Ray, rayT: Interval, hitRecord: ptr<function, HitRecord>) -> bool {
+  var tempRecord: HitRecord;
+  var hitAnything = false;
+  var closestSoFar = rayT.max;
 
   for (var i = 0; i < TRIANGLE_COUNT; i += 1) {
     let triangle = triangles[i];
-    if (triangle_hit(triangle, ray, Interval(ray_t.min, closest_so_far), &temp_record)) {
-      hit_anything = true;
-      closest_so_far = temp_record.t;
-      (*hit_record) = temp_record;
-      (*hit_record).material = triangle.material;
+    if (triangleHit(triangle, ray, Interval(rayT.min, closestSoFar), &tempRecord)) {
+      hitAnything = true;
+      closestSoFar = tempRecord.t;
+      (*hitRecord) = tempRecord;
+      (*hitRecord).material = triangle.material;
     }
   }
 
-  return hit_anything;
+  return hitAnything;
 }
 
 struct BouncingInfo {
@@ -294,75 +294,75 @@ struct BouncingInfo {
   emission: Color,
 }
 
-fn ray_color(ray: Ray, seed: ptr<function, u32>) -> vec3<f32> {
-  var hit_record: HitRecord;
-  var local_ray = ray;
+fn rayColor(ray: Ray, seed: ptr<function, u32>) -> vec3<f32> {
+  var hitRecord: HitRecord;
+  var localRay = ray;
 
-  var color_stack: array<BouncingInfo, max_depth>;
-  var color_stack_idx = 0;
+  var colorStack: array<BouncingInfo, maxDepth>;
+  var colorStackIdx = 0;
 
-  for (var i = 0; i < max_depth; i += 1) {
-    if (hittable_list_hit(local_ray, Interval(0.001, 999999999999999999), &hit_record)) {
+  for (var i = 0; i < maxDepth; i += 1) {
+    if (hittableListHit(localRay, Interval(0.001, 999999999999999999), &hitRecord)) {
       var attenuation: Color;
       
-      var emission_color = Color(0,0,0);
+      var emissionColor = Color(0,0,0);
       
-      let material = hit_record.material;
+      let material = hitRecord.material;
       var scattered = false;
       if (material.materialType == LAMBERTIAN_MATERIAL_TYPE) {
-        scattered = render_lambertian_material(
-        lambertianMaterials[material.index], hit_record, &attenuation, &emission_color, &local_ray, seed);
+        scattered = renderLambertianMaterial(
+        lambertianMaterials[material.index], hitRecord, &attenuation, &emissionColor, &localRay, seed);
       } else if (material.materialType == DIFFUSE_LIGHT_MATERIAL_TYPE) {
-        scattered = render_diffuse_light_material(
-        diffuseLightMaterials[material.index], hit_record, &attenuation, &emission_color, &local_ray, seed);
+        scattered = renderDiffuseLightMaterial(
+        diffuseLightMaterials[material.index], hitRecord, &attenuation, &emissionColor, &localRay, seed);
       }
 
       if (!scattered) {
-        color_stack[color_stack_idx] = BouncingInfo(Color(0.0,0.0,0.0), emission_color);
+        colorStack[colorStackIdx] = BouncingInfo(Color(0.0,0.0,0.0), emissionColor);
         break;
       } else {
-        color_stack[color_stack_idx] = BouncingInfo(attenuation, Color(0.0,0,0));
+        colorStack[colorStackIdx] = BouncingInfo(attenuation, Color(0.0,0,0));
       }
     } else {      
-      let unit_direction = normalize(local_ray.direction);
-      let a = 0.5 * (unit_direction.y + 1.0);
-      color_stack_idx -= 1;
+      let unitDirection = normalize(localRay.direction);
+      let a = 0.5 * (unitDirection.y + 1.0);
+      colorStackIdx -= 1;
       break;
     }
-    color_stack_idx += 1;
+    colorStackIdx += 1;
   }
 
   var color = Color(0,0,0);
-  let last_idx = color_stack_idx;
-  for (var i = color_stack_idx; i >= 0; i -= 1) {
-    let bouncing = color_stack[i];
+  let lastIdx = colorStackIdx;
+  for (var i = colorStackIdx; i >= 0; i -= 1) {
+    let bouncing = colorStack[i];
     color = bouncing.emission + (bouncing.attenuation * color);
   }
 
   return color;
 }
 
-fn get_ray(i: f32, j: f32, seed: ptr<function, u32>) -> Ray {
-  let pixel_center = pixel00_loc + (i * pixel_delta_u) + (j * pixel_delta_v);
-  let pixel_sample = pixel_center + pixel_sample_square(seed);
+fn getRay(i: f32, j: f32, seed: ptr<function, u32>) -> Ray {
+  let pixelCenter = pixel00Loc + (i * pixelDeltaU) + (j * pixelDeltaV);
+  let pixelSample = pixelCenter + pixelSampleSquare(seed);
 
-  let ray_origin = camera_center;
-  let ray_direction = pixel_sample - camera_center;
+  let rayOrigin = cameraCenter;
+  let rayDirection = pixelSample - cameraCenter;
 
-  let ray = Ray(camera_center, ray_direction);
+  let ray = Ray(cameraCenter, rayDirection);
   return ray;
 }
 
-fn pixel_sample_square(seed: ptr<function, u32>) -> vec3<f32> {
-  let px = -0.5 + randFloat(seed);
-  let py = -0.5 + randFloat(seed);
-  return (px * pixel_delta_u) + (py * pixel_delta_v);
+fn pixelSampleSquare(seed: ptr<function, u32>) -> vec3<f32> {
+  let px = -0.5 + randomF32(seed);
+  let py = -0.5 + randomF32(seed);
+  return (px * pixelDeltaU) + (py * pixelDeltaV);
 }
 
-fn write_color(pixel_color: vec3<f32>, x: i32, y: i32) {
-  let scale = 1.0 / f32(samples_per_pixel);
-  let adjusted_color = pixel_color * scale;
-  textureStore(texture, vec2<i32>(x, y), vec4<f32>(adjusted_color, 1.0));
+fn writeColor(pixelColor: vec3<f32>, x: i32, y: i32) {
+  let scale = 1.0 / f32(samplesPerPixel);
+  let adjustedColor = pixelColor * scale;
+  textureStore(texture, vec2<i32>(x, y), vec4<f32>(adjustedColor, 1.0));
 }
 
 @compute
@@ -373,12 +373,12 @@ fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
   let i = f32(local_id.x);
   let j = f32(local_id.y);
   
-  var pixel_color = vec3<f32>(0.0, 0.0, 0.0);
+  var pixelColor = vec3<f32>(0.0, 0.0, 0.0);
   
-  for (var sample = 0; sample < samples_per_pixel; sample += 1) {
-      let r = get_ray(i, j, &seed);
-      pixel_color += ray_color(r, &seed);
+  for (var sample = 0; sample < samplesPerPixel; sample += 1) {
+      let r = getRay(i, j, &seed);
+      pixelColor += rayColor(r, &seed);
   }
   
-  write_color(pixel_color, i32(local_id.x), i32(local_id.y));  
+  writeColor(pixelColor, i32(local_id.x), i32(local_id.y));  
 }
