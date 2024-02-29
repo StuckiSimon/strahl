@@ -310,9 +310,7 @@ fn rayColor(ray: Ray, seed: ptr<function, u32>) -> vec3<f32> {
       } else {
         colorStack[colorStackIdx] = BouncingInfo(attenuation, Color(0.0,0,0));
       }
-    } else {      
-      let unitDirection = normalize(localRay.direction);
-      let a = 0.5 * (unitDirection.y + 1.0);
+    } else {
       colorStackIdx -= 1;
       break;
     }
