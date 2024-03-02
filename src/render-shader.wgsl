@@ -1,14 +1,13 @@
 const pos = array(
-    // 1
-    vec2f(-1.0, -1.0),
-    vec2f(1.0, -1.0),
-    vec2f(-1.0, 1.0),
-
-    // 2
-    vec2f( -1.0,  1.0),
-    vec2f( 1.0,  -1.0),
-    vec2f( 1.0,  1.0),
-  );
+  // 1
+  vec2f(-1.0, -1.0),
+  vec2f(1.0, -1.0),
+  vec2f(-1.0, 1.0),
+  // 2
+  vec2f( -1.0,  1.0),
+  vec2f( 1.0,  -1.0),
+  vec2f( 1.0,  1.0),
+);
 
 struct VertexInput {
   @builtin(vertex_index) instance: u32,
