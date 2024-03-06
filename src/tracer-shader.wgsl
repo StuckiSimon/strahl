@@ -297,7 +297,7 @@ fn rayColor(ray: Ray, seed: ptr<function, u32>) -> vec3<f32> {
   var colorStackIdx = -1;
 
   for (var i = 0; i < maxDepth; i += 1) {
-    if (hittableListHit(localRay, Interval(0.001, 999999999999999999), &hitRecord)) {
+    if (hittableListHit(localRay, Interval(0.001, 0xfffffffffffffff), &hitRecord)) {
       var attenuation: Color;
       
       var emissionColor = Color(0,0,0);
