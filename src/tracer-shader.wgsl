@@ -294,7 +294,7 @@ fn rayColor(ray: Ray, seed: ptr<function, u32>) -> vec3<f32> {
   var localRay = ray;
 
   var colorStack: array<BouncingInfo, maxDepth>;
-  var colorStackIdx = 0;
+  var colorStackIdx = -1;
 
   for (var i = 0; i < maxDepth; i += 1) {
     if (hittableListHit(localRay, Interval(0.001, 999999999999999999), &hitRecord)) {
@@ -306,16 +306,17 @@ fn rayColor(ray: Ray, seed: ptr<function, u32>) -> vec3<f32> {
       let scattered = renderMaterial(materials[material.index], hitRecord, &attenuation, &emissionColor, &localRay, seed);
 
       if (!scattered) {
+        colorStackIdx += 1;
         colorStack[colorStackIdx] = BouncingInfo(Color(0.0,0.0,0.0), emissionColor);
         break;
       } else {
+        colorStackIdx += 1;
         colorStack[colorStackIdx] = BouncingInfo(attenuation, Color(0.0,0,0));
       }
     } else {
-      colorStackIdx -= 1;
+      // did not hit anything until infinity
       break;
     }
-    colorStackIdx += 1;
   }
 
   var color = Color(0,0,0);
