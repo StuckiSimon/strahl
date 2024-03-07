@@ -32,7 +32,24 @@ async function run() {
     return;
   }
 
-  const device = await adapter.requestDevice();
+  const device = await adapter.requestDevice({
+    requiredFeatures: ["timestamp-query"],
+  });
+
+  const timestampQuerySet = device.createQuerySet({
+    type: "timestamp",
+    count: 2,
+  });
+
+  const timestampQueryResolveBuffer = device.createBuffer({
+    size: timestampQuerySet.count * 8,
+    usage: GPUBufferUsage.COPY_SRC | GPUBufferUsage.QUERY_RESOLVE,
+  });
+
+  const timestampQueryResultBuffer = device.createBuffer({
+    size: timestampQueryResolveBuffer.size,
+    usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
+  });
 
   const context = canvas.getContext("webgpu");
 
@@ -336,10 +353,16 @@ async function run() {
 
   let TARGET_FRAMES = 0;
   let frame = 0;
-  const render = () => {
+  const render = async () => {
     const encoder = device.createCommandEncoder();
 
-    const computePass = encoder.beginComputePass();
+    const computePass = encoder.beginComputePass({
+      timestampWrites: {
+        querySet: timestampQuerySet,
+        beginningOfPassWriteIndex: 0,
+        endOfPassWriteIndex: 1,
+      },
+    });
     computePass.setBindGroup(0, computeBindGroup);
 
     computePass.setPipeline(computePipeline);
@@ -349,6 +372,24 @@ async function run() {
     );
 
     computePass.end();
+
+    encoder.resolveQuerySet(
+      timestampQuerySet,
+      0,
+      2,
+      timestampQueryResolveBuffer,
+      0,
+    );
+
+    if (timestampQueryResultBuffer.mapState === "unmapped") {
+      encoder.copyBufferToBuffer(
+        timestampQueryResolveBuffer,
+        0,
+        timestampQueryResultBuffer,
+        0,
+        timestampQueryResolveBuffer.size,
+      );
+    }
 
     computeLog.end();
     const renderLog = logGroup("render");
@@ -377,6 +418,17 @@ async function run() {
 
     const queueSubmitLog = logGroup("queue submit");
     device.queue.submit([commandBuffer]);
+
+    if (timestampQueryResultBuffer.mapState === "unmapped") {
+      await timestampQueryResultBuffer.mapAsync(GPUMapMode.READ);
+      const data = new BigUint64Array(
+        timestampQueryResultBuffer.getMappedRange(),
+      );
+      const gpuTime = data[1] - data[0];
+      console.log(`GPU Time: ${gpuTime}ns`);
+      timestampQueryResultBuffer.unmap();
+    }
+
     queueSubmitLog.end();
 
     if (frame < TARGET_FRAMES) {
