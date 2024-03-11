@@ -120,7 +120,9 @@ fn identical(v1: vec3f, v2: vec3f) -> bool {
 }
 
 fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<function, Color>, emissionColor: ptr<function, Color>, scattered: ptr<function, Ray>, seed: ptr<function, u32>) -> bool {
-  (*emissionColor) = material.emissionColor;
+  // Inverse-square law
+  let intensityFactor = material.emissionLuminance / pow(hitRecord.t, 2);
+  (*emissionColor) = min(material.emissionColor * intensityFactor, Color(1.0, 1.0, 1.0));
 
   // todo: optimize?
   if (identical(material.baseColor, Color(0.0, 0.0, 0.0))) {
@@ -146,8 +148,8 @@ const materials: array<Material, 4> = array<Material, 4>(
   Material(0.8, Color(0.5, 1.0, 0.0), 0, Color(0.0, 0.0, 0.0)),
   Material(1.0, Color(1.0, 0.5, 0.2), 0, Color(0.0, 0.0, 0.0)),
   // lights
-  Material(0.0, Color(0.0, 0.0, 0.0), 1.0, Color(1.0, 0.5, 1.0)),
-  Material(0.0, Color(0.0, 0.0, 0.0), 1.0, Color(1.0, 1.0, 1.0))
+  Material(0.0, Color(0.0, 0.0, 0.0), 10.0, Color(1.0, 0.5, 1.0)),
+  Material(0.0, Color(0.0, 0.0, 0.0), 10.0, Color(1.0, 1.0, 1.0))
 );
 
 const defaultMaterial = MaterialDefinition(0);
