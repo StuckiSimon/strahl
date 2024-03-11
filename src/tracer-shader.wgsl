@@ -40,6 +40,7 @@ alias Color = vec3<f32>;
 struct Material {
   baseWeight: f32,
   baseColor: Color,
+  emissionLuminance: f32,
   emissionColor: Color,
 }
 
@@ -142,11 +143,11 @@ fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<fun
 
 const materials: array<Material, 4> = array<Material, 4>(
   // base materials
-  Material(0.8, Color(0.5, 1.0, 0.0), Color(0.0, 0.0, 0.0)),
-  Material(1.0, Color(1.0, 0.5, 0.2), Color(0.0, 0.0, 0.0)),
+  Material(0.8, Color(0.5, 1.0, 0.0), 0, Color(0.0, 0.0, 0.0)),
+  Material(1.0, Color(1.0, 0.5, 0.2), 0, Color(0.0, 0.0, 0.0)),
   // lights
-  Material(0.0, Color(0.0, 0.0, 0.0), Color(1.0, 0.5, 1.0)),
-  Material(0.0, Color(0.0, 0.0, 0.0), Color(1.0, 1.0, 1.0))
+  Material(0.0, Color(0.0, 0.0, 0.0), 1.0, Color(1.0, 0.5, 1.0)),
+  Material(0.0, Color(0.0, 0.0, 0.0), 1.0, Color(1.0, 1.0, 1.0))
 );
 
 const defaultMaterial = MaterialDefinition(0);
