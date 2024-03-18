@@ -1,16 +1,6 @@
 import buildTracerShader from "./tracer-shader";
 import buildRenderShader from "./render-shader";
-
-function logGroup(label: string) {
-  const start = window.performance.now();
-
-  return {
-    end() {
-      const end = window.performance.now();
-      console.log(`${label}: ${end - start}ms`);
-    },
-  };
-}
+import { logGroup } from "./cpu-performance-logger";
 
 async function run() {
   const initLog = logGroup("init");
