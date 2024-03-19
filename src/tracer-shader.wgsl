@@ -19,6 +19,8 @@ const samplesPerPixel = 30;
 const maxDepth = 5;
 
 const MINIMUM_FLOAT_EPSILON = 1e-8;
+const PI = 3.1415926535897932;
+const PI_INVERSE = 1.0 / PI;
 
 struct Ray {
   origin: vec3<f32>,
@@ -123,7 +125,13 @@ fn identical(v1: vec3f, v2: vec3f) -> bool {
   return all(v1 == v2);
 }
 
+fn forwardFacingNormal(v1: vec3f, v2: vec3f) -> vec3f {
+  return select(v1, -v1, dot(v1, v2) < 0.0);
+}
+
 fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<function, Color>, emissionColor: ptr<function, Color>, scattered: ptr<function, Ray>, seed: ptr<function, u32>) -> bool {
+  let incomingRay = scattered;
+  
   // Inverse-square law
   let intensityFactor = material.emissionLuminance / pow(hitRecord.t, 2);
   (*emissionColor) = min(material.emissionColor * intensityFactor, Color(1.0, 1.0, 1.0));
@@ -142,7 +150,14 @@ fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<fun
 
   (*scattered) = Ray(hitRecord.point, scatterDirection);
 
-  (*attenuation) = (material.baseColor * material.baseWeight);
+  // Oren Nayar Diffuse BSDF Reflection based on MaterialX GLSL implementation
+  let occlusion = 1.0;
+  let normal = forwardFacingNormal(hitRecord.normal, (*incomingRay).direction);
+  let NdotL = clamp(dot(normal, scatterDirection), MINIMUM_FLOAT_EPSILON, 1.0);
+
+  var bsdfResponse = material.baseColor * occlusion * material.baseWeight * PI_INVERSE;
+  
+  (*attenuation) = bsdfResponse;
 
   return true;  
 }
