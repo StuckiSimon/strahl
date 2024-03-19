@@ -132,7 +132,7 @@ fn forwardFacingNormal(v1: vec3f, v2: vec3f) -> vec3f {
 // Based on MaterialX ShaderGen implementation, which is in turn
 // based on the OSL implementation of Oren-Nayar diffuse, which is in turn
 // based on https://mimosa-pudica.net/improved-oren-nayar.html.
-fn orenNayerDiffuse(L: vec3f, V: vec3f, N: vec3f, NdotL: f32, roughness: f32) -> f32 {
+fn orenNayarDiffuse(L: vec3f, V: vec3f, N: vec3f, NdotL: f32, roughness: f32) -> f32 {
   let LdotV = clamp(dot(L, V), MINIMUM_FLOAT_EPSILON, 1.0);
   let NdotV = clamp(dot(N, V), MINIMUM_FLOAT_EPSILON, 1.0);
   let s = LdotV - NdotL * NdotV;
@@ -174,7 +174,7 @@ fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<fun
   var bsdfResponse = material.baseColor * occlusion * material.baseWeight * PI_INVERSE;
 
   if (material.baseRoughness > 0.0) {
-    bsdfResponse *= orenNayerDiffuse(scatterDirection, -(*incomingRay).direction, normal, NdotL, material.baseRoughness);
+    bsdfResponse *= orenNayarDiffuse(scatterDirection, -(*incomingRay).direction, normal, NdotL, material.baseRoughness);
   }
   
   (*attenuation) = bsdfResponse;
