@@ -129,6 +129,22 @@ fn forwardFacingNormal(v1: vec3f, v2: vec3f) -> vec3f {
   return select(v1, -v1, dot(v1, v2) < 0.0);
 }
 
+// Based on MaterialX ShaderGen implementation, which is in turn
+// based on the OSL implementation of Oren-Nayar diffuse, which is in turn
+// based on https://mimosa-pudica.net/improved-oren-nayar.html.
+fn orenNayerDiffuse(L: vec3f, V: vec3f, N: vec3f, NdotL: f32, roughness: f32) -> f32 {
+  let LdotV = clamp(dot(L, V), MINIMUM_FLOAT_EPSILON, 1.0);
+  let NdotV = clamp(dot(N, V), MINIMUM_FLOAT_EPSILON, 1.0);
+  let s = LdotV - NdotL * NdotV;
+  let stinv = select(0.0, s / max(NdotL, NdotV), s > 0.0f);
+
+  let sigma2 = pow(roughness * PI, 2);
+  let A = 1.0 - 0.5 * (sigma2 / (sigma2 + 0.33));
+  let B = 0.45 * sigma2 / (sigma2 + 0.09);
+
+  return A + B * stinv;
+}
+
 fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<function, Color>, emissionColor: ptr<function, Color>, scattered: ptr<function, Ray>, seed: ptr<function, u32>) -> bool {
   let incomingRay = scattered;
   
@@ -156,6 +172,10 @@ fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<fun
   let NdotL = clamp(dot(normal, scatterDirection), MINIMUM_FLOAT_EPSILON, 1.0);
 
   var bsdfResponse = material.baseColor * occlusion * material.baseWeight * PI_INVERSE;
+
+  if (material.baseRoughness > 0.0) {
+    bsdfResponse *= orenNayerDiffuse(scatterDirection, -(*incomingRay).direction, normal, NdotL, material.baseRoughness);
+  }
   
   (*attenuation) = bsdfResponse;
 
