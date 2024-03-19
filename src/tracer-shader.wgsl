@@ -110,8 +110,10 @@ struct BvhNode {
   sphereIndex: i32,
 }
 
+const MINIMUM_FLOAT_EPSILON = 1e-8;
+
 fn nearZero(v: vec3f) -> bool {
-  let epsilon = vec3f(1e-8);
+  let epsilon = vec3f(MINIMUM_FLOAT_EPSILON);
   return any(abs(v) < epsilon);
 }
 
