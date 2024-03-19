@@ -18,6 +18,8 @@ const pixel00Loc = viewportUpperLeft + 0.5 * (pixelDeltaU + pixelDeltaV);
 const samplesPerPixel = 30;
 const maxDepth = 5;
 
+const MINIMUM_FLOAT_EPSILON = 1e-8;
+
 struct Ray {
   origin: vec3<f32>,
   direction: vec3<f32>,
@@ -109,8 +111,6 @@ struct BvhNode {
   rightIndex: i32,
   sphereIndex: i32,
 }
-
-const MINIMUM_FLOAT_EPSILON = 1e-8;
 
 fn nearZero(v: vec3f) -> bool {
   let epsilon = vec3f(MINIMUM_FLOAT_EPSILON);
