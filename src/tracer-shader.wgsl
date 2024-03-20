@@ -152,6 +152,179 @@ fn orenNayarDiffuse(L: vec3f, V: vec3f, N: vec3f, NdotL: f32, roughness: f32) ->
   return A + B * stinv;
 }
 
+// Compute the average of an anisotropic alpha pair.
+fn averageAlpha(alpha: vec2<f32>) -> f32 {
+  return sqrt(alpha.x * alpha.y);
+}
+
+// https://media.disneyanimation.com/uploads/production/publication_asset/48/asset/s2012_pbs_disney_brdf_notes_v3.pdf
+// Appendix B.2 Equation 13
+fn ggxNDF(H: vec3f, alpha: vec2<f32>) -> f32 {
+  let He = H.xy / alpha;
+  let denom = dot(He, He) + (H.z*H.z);
+  return 1.0 / (PI * alpha.x * alpha.y * denom * denom);
+}
+
+// Height-correlated Smith masking-shadowing
+// http://jcgt.org/published/0003/02/03/paper.pdf
+// Equations 72 and 99
+fn ggxSmithG2(NdotL: f32, NdotV: f32, alpha: f32) -> f32 {
+  let alpha2 = alpha * alpha;
+  let lambdaL = sqrt(alpha2 + (1.0 - alpha2) * (NdotL * NdotL));
+  let lambdaV = sqrt(alpha2 + (1.0 - alpha2) * (NdotV * NdotV));
+  return 2.0 / (lambdaL / NdotL + lambdaV / NdotV);
+}
+
+// todo: consider alternative DIRECTIONAL_ALBEDO_METHOD
+fn ggxDirAlbedo(NdotV: f32, alpha: f32, F0: vec3f, F90: vec3f) -> vec3f {
+  // Rational quadratic fit to Monte Carlo data for GGX directional albedo.
+  let x = NdotV;
+  let y = alpha;
+  let x2 = x * x;
+  let y2 = y * y;
+  let r = vec4(0.1003, 0.9345, 1.0, 1.0) +
+          vec4(-0.6303, -2.323, -1.765, 0.2281) * x +
+          vec4(9.748, 2.229, 8.263, 15.94) * y +
+          vec4(-2.038, -3.748, 11.53, -55.83) * x * y +
+          vec4(29.34, 1.424, 28.96, 13.08) * x2 +
+          vec4(-8.245, -0.7684, -7.507, 41.26) * y2 +
+          vec4(-26.44, 1.436, -36.11, 54.9) * x2 * y +
+          vec4(19.99, 0.2913, 15.86, 300.2) * x * y2 +
+          vec4(-5.448, 0.6286, 33.37, -285.1) * x2 * y2;
+  let AB = clamp(r.xy / r.zw, vec2(0.0, 0.0), vec2(1.0, 1.0));
+  return F0 * AB.x + F90 * AB.y;
+}
+
+fn ggxDirAlbedoFloat(NdotV: f32, alpha: f32, F0: f32, F90: f32) -> f32 {
+  return ggxDirAlbedo(NdotV, alpha, vec3f(F0), vec3f(F90)).x;
+}
+
+// https://blog.selfshadow.com/publications/turquin/ms_comp_final.pdf
+// Equations 14 and 16
+fn ggxEnergyCompensation(NdotV: f32, alpha: f32, Fss: vec3f) -> vec3f {
+  let Ess = ggxDirAlbedoFloat(NdotV, alpha, 1.0, 1.0);
+  return 1.0 + Fss * (Ess - 1.0) / Ess;
+}
+
+struct BsdfResponse {
+  response: vec3f,
+  throughput: vec3f,
+  thickness: f32,
+  ior: f32,
+}
+
+struct FresnelData {
+  model: i32,
+  ior: vec3f,
+  extinction: vec3f,
+  F0: vec3f,
+  F90: vec3f,
+  exponent: f32,
+  thinFilmThickness: f32,
+  thinFilmIOR: f32,
+  refraction: bool,
+}
+
+const FRESNEL_MODEL_SCHLICK = 2;
+
+fn initFresnelSchlick(F0: vec3f, F90: vec3f, exponent: f32) -> FresnelData {
+  return FresnelData(
+    FRESNEL_MODEL_SCHLICK,
+    vec3f(0.0),
+    vec3f(0.0),
+    F0,
+    F90,
+    exponent,
+    0.0,
+    0.0,
+    false
+  );
+}
+
+fn fresnelSchlick(cosTheta: f32, F0: vec3f, F90: vec3f, exponent: f32) -> vec3f {
+  let x = clamp(1.0 - cosTheta, 0.0, 1.0);
+  return mix(F0, F90, pow(x, exponent));
+}
+
+fn computeFresnel(cosTheta: f32, fd: FresnelData) -> vec3f {
+  // todo: implement other models (dielectric, conductor, airy)
+  if (fd.model == FRESNEL_MODEL_SCHLICK) {
+    return fresnelSchlick(cosTheta, fd.F0, fd.F90, fd.exponent);
+  }
+  
+  return vec3f(0.0);
+}
+
+fn generalizedSchlickBsdfReflection(L: vec3f, V: vec3f, P: vec3f, occlusion: f32, weight: f32, color0: Color, color90: Color, exponent: f32, roughness: vec2<f32>, N_in: vec3f, X_in: vec3f, distribution: i32, scatterMode: i32, bsdfThickness: f32, bsdfIor: f32) -> BsdfResponse {
+
+  if (weight < MINIMUM_FLOAT_EPSILON) {
+    return BsdfResponse(
+      vec3f(0.0),
+      vec3f(0.0),
+      0.0,
+      0.0
+    );
+  }
+
+  let N = forwardFacingNormal(N_in, V);
+  
+  let X = normalize(X_in - dot(X_in, N) * N);
+  let Y = cross(N, X);
+  let H = normalize(L + V);
+
+  let NdotL = clamp(dot(N, L), MINIMUM_FLOAT_EPSILON, 1.0);
+  let NdotV = clamp(dot(N, V), MINIMUM_FLOAT_EPSILON, 1.0);
+  let VdotH = clamp(dot(V, H), MINIMUM_FLOAT_EPSILON, 1.0);
+
+  let safeAlpha = clamp(roughness, vec2(MINIMUM_FLOAT_EPSILON, MINIMUM_FLOAT_EPSILON), vec2(1.0, 1.0));
+  let avgAlpha = averageAlpha(safeAlpha);
+  let Ht = vec3f(dot(H, X), dot(H, Y), dot(H, N));
+
+  var fd: FresnelData;
+  let safeColor0 = max(color0, vec3f(0, 0, 0));
+  let safeColor90 = max(color90, vec3f(0, 0, 0));
+  if (bsdfThickness > 0.0) {
+    // todo: implement fresnelSchlickAiry
+  } else {
+    fd = initFresnelSchlick(safeColor0, safeColor90, exponent);
+  }
+  let F = computeFresnel(VdotH, fd);
+  let D = ggxNDF(Ht, safeAlpha);
+  let G = ggxSmithG2(NdotL, NdotV, avgAlpha);
+
+  let comp = ggxEnergyCompensation(NdotV, avgAlpha, F);
+  let dirAlbedo = ggxDirAlbedo(NdotV, avgAlpha, safeColor0, safeColor90);
+  let avgDirAlbedo = dot(dirAlbedo, vec3f(1.0 / 3.0));
+  let bsdfThroughput = vec3f(1.0 - avgDirAlbedo * weight);
+
+  let bsdfResponse = D * F * G * comp * occlusion * weight / (4.0 * NdotV);
+
+  return BsdfResponse(
+    bsdfResponse,
+    bsdfThroughput,
+    bsdfThickness,
+    bsdfIor
+  );
+}
+
+fn rotationMatrix(originalAxis: vec3f, angle: f32) -> mat4x4<f32> {
+  let axis = normalize(originalAxis);
+  let s = sin(angle);
+  let c = cos(angle);
+  let oc = 1.0 - c;
+
+  return mat4x4<f32>(oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,  0.0,
+                     oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,  0.0,
+                     oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c,           0.0,
+                     0.0,                                0.0,                                0.0,                                1.0);
+}
+
+fn rotateVec3(in: vec3f, amount: f32, axis: vec3f) -> vec3f {
+  let rotationRadians = radians(amount);
+  let rotationMatrix = rotationMatrix(axis, rotationRadians);
+  return (rotationMatrix * vec4f(in, 1.0)).xyz;
+}
+
 fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<function, Color>, emissionColor: ptr<function, Color>, scattered: ptr<function, Ray>, seed: ptr<function, u32>) -> bool {
   let incomingRay = scattered;
   
@@ -173,9 +346,48 @@ fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<fun
 
   (*scattered) = Ray(hitRecord.point, scatterDirection);
 
-  // Oren Nayar Diffuse BSDF Reflection based on MaterialX GLSL implementation
   let occlusion = 1.0;
-  let normal = forwardFacingNormal(hitRecord.normal, (*incomingRay).direction);
+
+  // TODO: implement main_roughness_out2 (anisotropy)
+  let mainRoughness = vec2<f32>(material.baseRoughness, material.baseRoughness);
+  let tangentRotateDegree = material.specularRotation * 360.0;
+
+  let geompropNworld = hitRecord.normal;
+  // todo: check tangent vector (ensure to use normalized vector)
+  let geompropTworld = vec3<f32>(1.0, 0.0, 0.0);
+  let tangentRotate = rotateVec3(geompropTworld, tangentRotateDegree, geompropNworld);
+  let tangentRotateNormalized = normalize(tangentRotate);
+
+  let mainTangent = select(geompropTworld, tangentRotateNormalized, material.specularAnisotropy > 0.0);
+  let metalBsdfWeight = 1.0;
+  let metalBsdfExponent = 5.0;
+  let metalReflectivity = material.baseColor * material.baseWeight;
+  let metalEdgeColor = material.specularColor * material.specularWeight;
+  let metalBsdfOut = generalizedSchlickBsdfReflection(
+    // todo: negate?
+    -(*incomingRay).direction,
+    scatterDirection,
+    hitRecord.point,
+    occlusion,
+    metalBsdfWeight,
+    metalReflectivity,
+    metalEdgeColor,
+    metalBsdfExponent,
+    mainRoughness,
+    geompropNworld,
+    mainTangent,
+    // metalBsdfDistribution
+    0,
+    // metalBsdfScatterMode
+    0,
+    material.thinFilmThickness,
+    material.thinFilmIOR
+  );
+
+  // Oren Nayar Diffuse BSDF Reflection based on MaterialX GLSL implementation
+  // todo: also consider BsdfResponse (not only BsdfResponse.response)
+  
+  let normal = forwardFacingNormal(geompropNworld, (*incomingRay).direction);
   let NdotL = clamp(dot(normal, scatterDirection), MINIMUM_FLOAT_EPSILON, 1.0);
 
   var bsdfResponse = material.baseColor * occlusion * material.baseWeight * PI_INVERSE;
@@ -184,9 +396,16 @@ fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<fun
     bsdfResponse *= orenNayarDiffuse(scatterDirection, -(*incomingRay).direction, normal, NdotL, material.baseRoughness);
   }
   
-  (*attenuation) = bsdfResponse;
+  // opaque_base_out (ss not implemented atm)
+  let opaqueBaseOut = bsdfResponse;
 
-  return true;  
+  let metalOpaqueLayerMix = mix(opaqueBaseOut, metalBsdfOut.response, material.baseMetalness);
+  (*attenuation) = metalOpaqueLayerMix;
+
+  // todo: drop this in favor of mix
+  (*attenuation) = opaqueBaseOut;
+
+  return true;
 }
 
 const materials: array<Material, 4> = array<Material, 4>(
