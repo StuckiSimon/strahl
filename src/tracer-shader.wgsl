@@ -51,6 +51,8 @@ struct Material {
   specularRoughness: f32,
   specularAnisotropy: f32,
   specularRotation: f32,
+  coatWeight: f32,
+  coatRoughness: f32,
   emissionLuminance: f32,
   emissionColor: Color,
   thinFilmThickness: f32,
@@ -307,6 +309,18 @@ fn generalizedSchlickBsdfReflection(L: vec3f, V: vec3f, P: vec3f, occlusion: f32
   );
 }
 
+fn openPbrAnisotropy(roughness: f32, anisotropy: f32) -> vec2f {
+  let roughness2 = roughness * roughness;
+  let anisotropyInverted = 1.0 - anisotropy;
+  let anisotropyInverted2 = anisotropyInverted * anisotropyInverted;
+  let denom = anisotropyInverted2 + 1;
+  let fraction = 2 / denom;
+  let sqrt = sqrt(fraction);
+  let alphaX = roughness2 * sqrt;
+  let alphaY = anisotropyInverted * alphaX;
+  return vec2f(alphaX, alphaY);
+}
+
 fn rotationMatrix(originalAxis: vec3f, angle: f32) -> mat4x4<f32> {
   let axis = normalize(originalAxis);
   let s = sin(angle);
@@ -348,8 +362,10 @@ fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<fun
 
   let occlusion = 1.0;
 
-  // TODO: implement main_roughness_out2 (anisotropy)
-  let mainRoughness = vec2<f32>(material.baseRoughness, material.baseRoughness);
+  let coatAffectedRoughnessFg = 1.0;
+  let coatAffectRoughnessMultiply2 = material.coatWeight * material.coatRoughness;
+  let coatAffectedRoughness = mix(material.specularRoughness, coatAffectedRoughnessFg, coatAffectRoughnessMultiply2);
+  let mainRoughness = openPbrAnisotropy(coatAffectedRoughness, material.specularAnisotropy);
   let tangentRotateDegree = material.specularRotation * 360.0;
 
   let geompropNworld = hitRecord.normal;
@@ -410,11 +426,11 @@ fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<fun
 
 const materials: array<Material, 4> = array<Material, 4>(
   // base materials
-  Material(0.8, Color(0.5, 1.0, 0.0), 1.0, 1.0, 1.0, Color(0.1, 0.1, 1.0), 1.0, 0.5, 0.5, 0, Color(0.0, 0.0, 0.0), 0, 1.5),
-  Material(1.0, Color(1.0, 0.5, 0.2), 0.0, 0.0, 1.0, Color(0.1, 0.1, 1.0), 1.0, 0.5, 0.5, 0, Color(0.0, 0.0, 0.0), 0, 1.5),
+  Material(0.8, Color(0.5, 1.0, 0.0), 0.0, 1.0, 1.0, Color(0.5, 0.5, 1.0), 1.0, 0.5, 0.5, 0, 0, 0, Color(0.0, 0.0, 0.0), 0, 1.5),
+  Material(1.0, Color(1.0, 0.5, 0.2), 0.0, 0.0, 1.0, Color(0.1, 0.1, 1.0), 1.0, 0.5, 0.5, 0, 0, 0, Color(0.0, 0.0, 0.0), 0, 1.5),
   // lights
-  Material(0.0, Color(0.0, 0.0, 0.0), 0.0, 0.0, 0.0, Color(0.0, 0.0, 0.0), 0.0, 0.0, 0.0, 10.0, Color(1.0, 0.5, 1.0), 0, 1.5),
-  Material(0.0, Color(0.0, 0.0, 0.0), 0.0, 0.0, 0.0, Color(0.0, 0.0, 0.0), 0.0, 0.0, 0.0, 10.0, Color(1.0, 1.0, 1.0), 0, 1.5)
+  Material(0.0, Color(0.0, 0.0, 0.0), 0.0, 0.0, 0.0, Color(0.0, 0.0, 0.0), 0.0, 0.0, 0.0, 0.0, 0, 10.0, Color(1.0, 0.5, 1.0), 0, 1.5),
+  Material(0.0, Color(0.0, 0.0, 0.0), 0.0, 0.0, 0.0, Color(0.0, 0.0, 0.0), 0.0, 0.0, 0.0, 0.0, 0, 10.0, Color(1.0, 1.0, 1.0), 0, 1.5)
 );
 
 const defaultMaterial = MaterialDefinition(0);
