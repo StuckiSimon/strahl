@@ -1,0 +1,282 @@
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "doc"
+%%% coding: utf-8
+%%% End:
+% !TEX TS-program = pdflatexmk
+% !TEX encoding = UTF-8 Unicode
+% !TEX root = doc.tex
+% Lorem Ipsum
+\usepackage{lipsum}
+
+% Language and Font
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman, english]{babel}
+\usepackage{lmodern}
+
+% Mathematical Symbols
+\usepackage{amssymb}
+
+% Matrix etc.
+\usepackage{amsmath}
+
+% Images
+\usepackage{graphicx} % for including graphics
+\graphicspath{ {img/} } % root directory for graphics
+\usepackage{subcaption} % figures inside figures (e.g. for side by side figures)
+\usepackage{float} % required for positioning figures with [H] (and lots of other stuff)
+\usepackage{wrapfig} % floating figures
+
+% Import PDFs
+\usepackage{pdfpages}
+
+
+\usepackage[headsepline, footsepline, plainfootsepline]{scrlayer-scrpage}
+\clearpairofpagestyles
+\automark{chapter}
+\ihead{\leftmark{}}
+\ofoot[\thepage]{\thepage}
+
+\setlength{\parindent}{0cm} % no indent for new paragraphs
+
+% Finish paragraph so that it can be used as a title
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+            {-2.5ex\@plus -1ex \@minus -.25ex}%
+            {1.25ex \@plus .25ex}%
+            {\normalfont\normalsize\itshape\bfseries}}
+\makeatother
+
+% Package um Todo Notizen einzufügen und farblich hervorzuheben
+\usepackage[ngerman,linecolor=gray,bordercolor=gray,backgroundcolor=yellow]{todonotes}
+
+% Code Highlighting
+\usepackage{listings}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{ %
+  basicstyle=\ttfamily,        % size of fonts used for the code
+  breaklines=true,                 % automatic line breaking only at whitespace
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  keywordstyle=\color{blue},       % keyword style
+  stringstyle=\color{mymauve},     % string literal style
+  extendedchars=true,
+  frame=single,
+  frameround=tttt,
+  framexleftmargin=1pt,
+  framexrightmargin=1pt
+}
+
+% Hyperlinks
+\usepackage[hidelinks]{hyperref}
+\hypersetup{%
+  pdftitle={Web-based Rendering of physical-based 3D Scenes using WebGPU},
+% Use \plainauthor for final version.
+  pdfauthor={Simon Stucki},
+%  pdfauthor={\emptyauthor},
+  pdfdisplaydoctitle=true, % For Accessibility
+  bookmarksnumbered,
+  pdfstartview={FitH}
+}
+
+% Enumerated list modification
+\usepackage{enumitem}
+
+% Diagrams
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepackage{sfmath}
+\usetikzlibrary{patterns}
+
+% Removes the block justification from the bibliography and formats it more nicely than just \raggedright
+\usepackage{ragged2e}
+
+\newcommand{\pro}{\item[$+$]}
+\newcommand{\con}{\item[$-$]}
+
+% shortcut for emphasize
+\newcommand{\e}{\emph}
+\let\oldgls\gls
+\let\oldGls\Gls
+\let\oldglspl\glspl
+\let\oldGlspl\Glspl
+\renewcommand{\gls}[1]{{\e{\oldgls{#1}}}}
+\renewcommand{\Gls}[1]{{\e{\oldGls{#1}}}}
+\renewcommand{\glspl}[1]{{\e{\oldglspl{#1}}}}
+\renewcommand{\Glspl}[1]{{\e{\oldGlspl{#1}}}}
+
+% Shortcut for first glossary reference: lower-case & singular
+\newcommand{\fgls}[2]{{
+  \newglossaryentry{#1}
+  {
+    name={#1},
+    description={{#2}}
+  }\gls{#1}\footnote{#2}}}
+
+% Shortcut for first glossary reference: lower-case & plural
+\newcommand{\fglspl}[2]{{
+  \newglossaryentry{#1}
+  {
+    name={#1},
+    description={{#2}}
+  }\glspl{#1}\footnote{#2}}}
+
+% Shortcut for first glossary reference: Upper-case & singular
+\newcommand{\fGls}[2]{{
+  \newglossaryentry{#1}
+  {
+    name={#1},
+    description={{#2}}
+  }\Gls{#1}\footnote{#2}}}
+
+% Shortcut for first glossary reference: Upper-case & plural
+\newcommand{\fGlspl}[2]{{
+  \newglossaryentry{#1}
+  {
+    name={#1},
+    description={{#2}}
+  }\Glspl{#1}\footnote{#2}}}
+
+\pgfplotsset{compat=1.16}
+
+% Code Syntaxhighlighting
+% JavaScript
+\definecolor{lightgray}{rgb}{0.95, 0.95, 0.95}
+\definecolor{darkgray}{rgb}{0.4, 0.4, 0.4}
+%\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\definecolor{editorGray}{rgb}{0.95, 0.95, 0.95}
+\definecolor{editorOcher}{rgb}{1, 0.5, 0} % #FF7F00 -> rgb(239, 169, 0)
+\definecolor{editorGreen}{rgb}{0, 0.5, 0} % #007C00 -> rgb(0, 124, 0)
+\definecolor{brown}{rgb}{0.69,0.31,0.31}
+\lstdefinelanguage{JavaScript}{
+  morekeywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break, import, from, const},
+  morecomment=[s]{/*}{*/},
+  morecomment=[l]//,
+  morestring=[b]",
+  morestring=[b]'
+}
+\lstdefinestyle{JavaScript} {%
+  % General design
+%  backgroundcolor=\color{editorGray},
+  basicstyle={\footnotesize\ttfamily},
+  frame=b,
+  % line-numbers
+  xleftmargin={0.75cm},
+  numbers=left,
+  stepnumber=1,
+  firstnumber=1,
+  numberfirstline=true,
+  % Code design
+  identifierstyle=\color{black},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{editorGreen}\bfseries,
+  stringstyle=\color{editorOcher}\ttfamily,
+  commentstyle=\color{brown}\ttfamily,
+  % Code
+  language=JavaScript,
+  alsodigit={.:;},
+  tabsize=2,
+  showtabs=false,
+  showspaces=false,
+  showstringspaces=false,
+  extendedchars=true,
+  breaklines=true,
+}
+
+% glsl
+\lstdefinelanguage{glsl}{
+  morekeywords={void, attribute},
+  morecomment=[l]//,
+}
+\lstdefinestyle{glsl} {%
+  % General design
+  basicstyle={\footnotesize\ttfamily},
+  frame=b,
+  % line-numbers
+  xleftmargin={0.75cm},
+  numbers=left,
+  stepnumber=1,
+  firstnumber=1,
+  numberfirstline=true,
+  % Code design
+  identifierstyle=\color{black},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{editorGreen}\bfseries,
+  stringstyle=\color{editorOcher}\ttfamily,
+  commentstyle=\color{brown}\ttfamily,
+  % Code
+  language=glsl,
+  alsodigit={.:;},
+  tabsize=2,
+  showtabs=false,
+  showspaces=false,
+  showstringspaces=false,
+  extendedchars=true,
+  breaklines=true,
+}
+
+% json
+
+\lstdefinelanguage{json}{
+  basicstyle={\footnotesize\ttfamily},
+  frame=b,
+  % line-numbers
+  xleftmargin={0.75cm},
+  numbers=left,
+  stepnumber=1,
+  firstnumber=1,
+  numberfirstline=true,
+  tabsize=4,
+  string=[s]{"}{"},
+  stringstyle=\color{blue},
+  comment=[l]{:},
+  commentstyle=\color{black},
+}
+
+\lstdefinestyle{json} {%
+  % Code
+  language=json,
+}
+
+\makeatletter
+\renewcommand\listoffigures{%
+    \section{\listfigurename}% Used to be \section*{\listfigurename}
+      \@mkboth{\MakeUppercase\listfigurename}%
+              {\MakeUppercase\listfigurename}%
+    \@starttoc{lof}%
+    }
+\makeatother
+
+\makeatletter
+\renewcommand\listoftables{%
+    \section{\listtablename}% Used to be \section*{\listtablename}
+      \@mkboth{\MakeUppercase\listtablename}%
+              {\MakeUppercase\listtablename}%
+    \@starttoc{lot}%
+    }
+\makeatother
+
+\makeatletter
+\renewenvironment{thebibliography}[1]
+     {\section{\bibname}% <-- this line was changed from \chapter* to \section
+      \@mkboth{\MakeUppercase\bibname}{\MakeUppercase\bibname}%
+      \list{\@biblabel{\@arabic\c@enumiv}}%
+           {\settowidth\labelwidth{\@biblabel{#1}}%
+            \leftmargin\labelwidth
+            \advance\leftmargin\labelsep
+            \@openbib@code
+            \usecounter{enumiv}%
+            \let\p@enumiv\@empty
+            \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+      \sloppy
+      \clubpenalty4000
+      \@clubpenalty \clubpenalty
+      \widowpenalty4000%
+      \sfcode`\.\@m}
+     {\def\@noitemerr
+       {\@latex@warning{Empty `thebibliography' environment}}%
+      \endlist}
+\makeatother
