@@ -1,6 +1,6 @@
 \documentclass[a4paper, 11pt,abstract=on, listof=totocnumbered]{scrreprt}
 
-\usepackage[toc,section=section]{glossaries}
+\usepackage[toc,section=section, automake]{glossaries-extra}
 \usepackage{scrhack}
 \usepackage{url}
 
@@ -22,7 +22,7 @@
 \setcounter{page}{1}
 
 \selectlanguage{english}
-%\input{parts/glossary}
+\input{parts/glossary}
 %\begin{abstract}
 %\input{parts/zusammenfassung}
 %\end{abstract}
@@ -52,8 +52,8 @@
 %\chapter{Diskussion und Ausblick}
 %\input{parts/diskussion_ausblick}
 
-%\chapter{Verzeichnisse}
-%\input{parts/verzeichnis}
+\chapter{Index}
+\input{parts/index}
 
 \appendix
 \chapter{Appendix}
