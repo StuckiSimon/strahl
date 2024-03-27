@@ -11,5 +11,21 @@ Ray tracing is a powerful technique for rendering photorealistic sceneries. Hist
 WebGPU is a new web standard that provides a robust API for leveraging the power of GPUs across different platforms. It's designed to be more efficient and flexible than its predecessor, WebGL. This makes it ideal to be used for real-time ray tracing in the browser.
 
 \section{Use Cases}
-\subsection{CAD}
+
+The web is a versatile platform which can be used for a variety of applications. This section outlines some real-world use cases for web-based 3d rendering.
+
+One such use case is e-commerce. Historically, companies with a vast portfolio of products have provided physical catalogues to their customers. This approach hit limits mainly for use cases where configurations of multiple components are possible and the number of combinations is vast or not enumerable. This is where real-time rendering can be used to provide a more interactive experience by showing the customer a realistic representation of the product instead of a list of static images.
+
+As long as the configurations are enumerable it is theoretically possible to pre-render the combinations using offline renderers. However, this induces cost in terms of required processing power and storage.
+
+When opting to use real-time rendering, one option to choose is remote rendering which employs a server to render the scene and stream the visualization to the browser. The main drawbacks of this approach include network latency and full reliance on network stability. Additionally, the cost of running the server falls on the service provider.
+
+Another option is to use client-side rendering. Generally, rasterization approaches are used for real-time rendering. However, as will be discussed in the following sections, rasterization has limitations in terms of realism when having limited control over the models.
+
+\todo{Highlight use of models from production CAD software as a benefit of streamlined sales process}
+
+When all these requirements are considered, the need for a real-time ray tracing solution in the web becomes apparent.
+
 \section{Prior Work}
+
+There are a variety of ray tracers available for the web. Most of them are based on WebGL, a web standard which will be highlighted in the following sections.
