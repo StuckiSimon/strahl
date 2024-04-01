@@ -361,6 +361,13 @@ fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<fun
 
   (*scattered) = Ray(hitRecord.point, scatterDirection);
 
+  // light direction
+  let L = normalize(scatterDirection);
+  // view direction
+  let V = normalize(-(*incomingRay).direction);
+  // hit point
+  let P = hitRecord.point;
+
   let occlusion = 1.0;
 
   let coatAffectedRoughnessFg = 1.0;
@@ -381,10 +388,9 @@ fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<fun
   let metalReflectivity = material.baseColor * material.baseWeight;
   let metalEdgeColor = material.specularColor * material.specularWeight;
   let metalBsdfOut = generalizedSchlickBsdfReflection(
-    // todo: negate?
-    -(*incomingRay).direction,
-    scatterDirection,
-    hitRecord.point,
+    L,
+    V,
+    P,
     occlusion,
     metalBsdfWeight,
     metalReflectivity,
@@ -404,13 +410,13 @@ fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<fun
   // Oren Nayar Diffuse BSDF Reflection based on MaterialX GLSL implementation
   // todo: also consider BsdfResponse (not only BsdfResponse.response)
   
-  let normal = forwardFacingNormal(geompropNworld, (*incomingRay).direction);
-  let NdotL = clamp(dot(normal, scatterDirection), MINIMUM_FLOAT_EPSILON, 1.0);
+  let normal = forwardFacingNormal(geompropNworld, V);
+  let NdotL = clamp(dot(normal, L), MINIMUM_FLOAT_EPSILON, 1.0);
 
   var bsdfResponse = material.baseColor * occlusion * material.baseWeight * PI_INVERSE;
 
   if (material.baseRoughness > 0.0) {
-    bsdfResponse *= orenNayarDiffuse(scatterDirection, -(*incomingRay).direction, normal, NdotL, material.baseRoughness);
+    bsdfResponse *= orenNayarDiffuse(L, V, normal, NdotL, material.baseRoughness);
   }
   
   // opaque_base_out (ss not implemented atm)
