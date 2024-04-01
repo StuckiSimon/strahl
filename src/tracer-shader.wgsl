@@ -352,7 +352,12 @@ fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<fun
     return false;
   }
   
-  var scatterDirection = hitRecord.normal + normalize(randInUnitSphere(seed));
+  let randomScatter = hitRecord.normal + normalize(randInUnitSphere(seed));
+  let specularScatter = normalize(reflect((*incomingRay).direction, hitRecord.normal));
+
+  let scatterMix = mix(specularScatter, randomScatter, material.baseRoughness);
+
+  var scatterDirection = scatterMix;
 
   // Catch degenerate scatter direction
   if (nearZero(scatterDirection)) {
