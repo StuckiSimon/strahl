@@ -56,8 +56,26 @@ WebGL is designed to offer a rendering pipeline, but does not offer GPGPU capabi
 \subsection{BxDF}
 \subsection{Microfacet Theory}
 \subsection{Exchange Formats}
-\subsubsection{glTF}
-\subsubsection{USD}
+
+In order to exchange 3d scenes between a multitude of applications, various standardized formats have been developed. These formats are optimized for different use cases depending on the requirements of the application.
+
+\subsubsection{General Purpose Formats}
+
+One of the most widely used formats is Wavefront OBJ which was established in the 1980s. The format is text-based and has basic support for materials and textures. However, it lacks support for more advanced features such animations. Additionally, due to its encoding, it is not well-suited for delivery over the web compared to more modern alternatives.
+
+Formats such as the proprietary FBX by Autodesk established in 2006 can address the shortcomings in terms of advanced features. The format is supported by a wide range of applications.
+
+\subsubsection{Interoperability Formats}
+
+Other formats such as COLLADA have been developed to improve transporting 3d scenes between different applications. It is XML-based and has been established in 2004.
+
+Since, other formats such as USD and has been open-sourced by Pixar in 2016.
+
+\subsubsection{Runtime Formats}
+
+For usage in end-user applications, such as for this thesis, the glTF format is well-suited. It has been established in 2015 and is designed to be efficient for transmission and loading of 3d scenes.
+
+\subsection{Material Description}
 
 \subsubsection{MaterialX}
 \subsubsection{OpenPBR}
