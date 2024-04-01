@@ -302,7 +302,8 @@ fn generalizedSchlickBsdfReflection(L: vec3f, V: vec3f, P: vec3f, occlusion: f32
   let bsdfResponse = D * F * G * comp * occlusion * weight / (4.0 * NdotV);
 
   return BsdfResponse(
-    bsdfResponse,
+    // ensure to not return infinitesimal values
+    max(bsdfResponse, vec3f(MINIMUM_FLOAT_EPSILON, MINIMUM_FLOAT_EPSILON, MINIMUM_FLOAT_EPSILON)),
     bsdfThroughput,
     bsdfThickness,
     bsdfIor
