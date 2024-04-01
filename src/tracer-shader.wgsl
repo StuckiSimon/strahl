@@ -425,9 +425,6 @@ fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<fun
   let metalOpaqueLayerMix = mix(opaqueBaseOut, metalBsdfOut.response, material.baseMetalness);
   (*attenuation) = metalOpaqueLayerMix;
 
-  // todo: drop this in favor of mix
-  (*attenuation) = opaqueBaseOut;
-
   return true;
 }
 
