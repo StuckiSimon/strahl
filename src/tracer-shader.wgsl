@@ -448,7 +448,7 @@ const materials: array<Material, 4> = array<Material, 4>(
 const defaultMaterial = MaterialDefinition(0);
 const defaultDiffuseLightMaterial = MaterialDefinition(2);
 
-const defaultNormal = vec3<f32>(0.0, 0.0, 1.0);
+const defaultNormal = vec3<f32>(0.0, 1.0, 0.0);
 
 const TRIANGLE_COUNT = 6;
 // Triangles are encoded as first being the lower point, then the two edges
