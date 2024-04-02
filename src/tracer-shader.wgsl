@@ -64,6 +64,9 @@ struct Triangle {
   u: vec3<f32>,
   v: vec3<f32>,
   material: MaterialDefinition,
+  normal0: vec3<f32>,
+  normal1: vec3<f32>,
+  normal2: vec3<f32>,
 }
 
 struct Interval {
@@ -445,19 +448,21 @@ const materials: array<Material, 4> = array<Material, 4>(
 const defaultMaterial = MaterialDefinition(0);
 const defaultDiffuseLightMaterial = MaterialDefinition(2);
 
+const defaultNormal = vec3<f32>(0.0, 0.0, 1.0);
+
 const TRIANGLE_COUNT = 6;
 // Triangles are encoded as first being the lower point, then the two edges
 const triangles: array<Triangle, TRIANGLE_COUNT> = array<Triangle, TRIANGLE_COUNT>(
   // wall facing camera
-  Triangle(vec3<f32>(-3, 0, -3), vec3<f32>(4, 0, 0), vec3<f32>(0, 4, 0), MaterialDefinition(1)),
-  Triangle(vec3<f32>(-3, 4, -3), vec3<f32>(4, -4, 0), vec3<f32>(4, 0, 0), MaterialDefinition(1)),
+  Triangle(vec3<f32>(-3, 0, -3), vec3<f32>(4, 0, 0), vec3<f32>(0, 4, 0), defaultMaterial, defaultNormal,defaultNormal,defaultNormal),
+  Triangle(vec3<f32>(-3, 4, -3), vec3<f32>(4, -4, 0), vec3<f32>(4, 0, 0), MaterialDefinition(1), defaultNormal,defaultNormal,defaultNormal),
   // ground floor below the wall
-  Triangle(vec3<f32>(-3, 0, -3), vec3<f32>(4, 0, 0), vec3<f32>(0, -2, 1.5), defaultMaterial),
-  Triangle(vec3<f32>(1, 0, -3), vec3<f32>(0, -2, 1.5), vec3<f32>(-4, -2, 1.5), defaultMaterial),
+  Triangle(vec3<f32>(-3, 0, -3), vec3<f32>(4, 0, 0), vec3<f32>(0, -2, 1.5), MaterialDefinition(1), defaultNormal,defaultNormal,defaultNormal),
+  Triangle(vec3<f32>(1, 0, -3), vec3<f32>(0, -2, 1.5), vec3<f32>(-4, -2, 1.5), defaultMaterial, defaultNormal,defaultNormal,defaultNormal),
   // Light source from the right
-  Triangle(vec3<f32>(2, 5, -6), vec3<f32>(0.1, -20, 0), vec3<f32>(0, 0, 10), defaultDiffuseLightMaterial),
+  Triangle(vec3<f32>(2, 5, -6), vec3<f32>(0.1, -20, 0), vec3<f32>(0, 0, 10), defaultDiffuseLightMaterial, defaultNormal,defaultNormal,defaultNormal),
   // Light from the left
-  Triangle(vec3<f32>(-3, 5, -6), vec3<f32>(0.0, -20, 0), vec3<f32>(0, 0, 10), MaterialDefinition(3)),
+  Triangle(vec3<f32>(-3, 5, -6), vec3<f32>(0.0, -20, 0), vec3<f32>(0, 0, 10), MaterialDefinition(3), defaultNormal,defaultNormal,defaultNormal),
 );
 
 fn bvhNodeHit(bvh: BvhNode, r: Ray, rayT: ptr<function, Interval>) -> bool {
