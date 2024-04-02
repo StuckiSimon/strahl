@@ -560,7 +560,8 @@ fn triangleHit(triangle: Triangle, ray: Ray, rayT: Interval, hitRecord: ptr<func
 
   (*hitRecord).t = t;
   (*hitRecord).point = rayAt(ray, t);
-  (*hitRecord).normal = normalize(cross(edge1, edge2));
+  (*hitRecord).normal = normalize(triangle.normal0 * (1.0 - u - v) + triangle.normal1 * u + triangle.normal2 * v);
+
   return true;
 }
 
