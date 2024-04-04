@@ -9,9 +9,13 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@types/three": "^0.163.0",
     "@webgpu/types": "^0.1.40",
     "prettier": "3.2.5",
     "typescript": "^5.2.2",
     "vite": "^5.0.8"
+  },
+  "dependencies": {
+    "three": "^0.163.0"
   }
 }
