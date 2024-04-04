@@ -1,8 +1,24 @@
+import { Matrix4, Mesh } from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import buildTracerShader from "./tracer-shader";
 import buildRenderShader from "./render-shader";
 import { logGroup } from "./cpu-performance-logger";
 
+const DUCK_MODEL_URL = "models/duck/Duck.gltf";
+
+const gltfLoader = new GLTFLoader();
+
+async function loadGltf(url: string) {
+  return new Promise((resolve, reject) => {
+    gltfLoader.load(url, resolve, undefined, reject);
+  });
+}
+
 async function run() {
+  const duck = await loadGltf(DUCK_MODEL_URL);
+
+  const duckMesh = duck.scene.children[0].children[0] as Mesh;
+
   const initLog = logGroup("init");
   const canvas = document.getElementById("render-target");
 
@@ -270,6 +286,64 @@ async function run() {
 
   aabbBuffer.unmap();
 
+  // Prepare Position Data
+
+  // todo: remove magic downscaling & transform
+  const scaleFactor = 0.01;
+  const scaleMatrix = new Matrix4().makeScale(
+    scaleFactor,
+    scaleFactor,
+    scaleFactor,
+  );
+  duckMesh.geometry.applyMatrix4(scaleMatrix);
+
+  const translateX = 0;
+  const translateY = -1;
+  const translateZ = -2;
+
+  const transformMatrix = new Matrix4().makeTranslation(
+    translateX,
+    translateY,
+    translateZ,
+  );
+
+  duckMesh.geometry.applyMatrix4(transformMatrix);
+
+  const meshPositions = duckMesh.geometry.attributes.position.array;
+
+  const positions = meshPositions;
+
+  const positionBuffer = device.createBuffer({
+    label: "Position buffer",
+    size: Float32Array.BYTES_PER_ELEMENT * positions.length,
+    usage: GPUBufferUsage.STORAGE,
+    mappedAtCreation: true,
+  });
+
+  const positionMapped = positionBuffer.getMappedRange();
+  const positionData = new Float32Array(positionMapped);
+
+  positionData.set(positions);
+  positionBuffer.unmap();
+
+  // Prepare Indices
+  const meshIndices = duckMesh.geometry.index!.array;
+
+  const indices = new Uint32Array(meshIndices);
+
+  const indicesBuffer = device.createBuffer({
+    label: "Index buffer",
+    size: Uint32Array.BYTES_PER_ELEMENT * indices.length,
+    // todo: consider using GPUBufferUsage.INDEX
+    usage: GPUBufferUsage.STORAGE, // GPUBufferUsage.INDEX,
+    mappedAtCreation: true,
+  });
+
+  const indicesMapped = indicesBuffer.getMappedRange();
+  const indicesData = new Uint32Array(indicesMapped);
+  indicesData.set(indices);
+  indicesBuffer.unmap();
+
   const computeBindGroupLayout = device.createBindGroupLayout({
     label: "Compute bind group layout",
     entries: [
@@ -280,6 +354,20 @@ async function run() {
       },
       {
         binding: 1,
+        visibility: GPUShaderStage.COMPUTE,
+        buffer: {
+          type: "storage",
+        },
+      },
+      {
+        binding: 2,
+        visibility: GPUShaderStage.COMPUTE,
+        buffer: {
+          type: "storage",
+        },
+      },
+      {
+        binding: 3,
         visibility: GPUShaderStage.COMPUTE,
         buffer: {
           type: "storage",
@@ -305,6 +393,18 @@ async function run() {
         binding: 1,
         resource: {
           buffer: aabbBuffer,
+        },
+      },
+      {
+        binding: 2,
+        resource: {
+          buffer: positionBuffer,
+        },
+      },
+      {
+        binding: 3,
+        resource: {
+          buffer: indicesBuffer,
         },
       },
     ],
