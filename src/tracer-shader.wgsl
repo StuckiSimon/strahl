@@ -1,5 +1,11 @@
 @group(0) @binding(0) var texture: texture_storage_2d<rgba8unorm, write>;
 @group(0) @binding(1) var<storage, read_write> bvhNodes: array<BvhNode>;
+@group(0) @binding(2) var<storage, read_write> positions: array<f32>;
+// todo: Check when i16 is supported
+@group(0) @binding(3) var<storage, read_write> indices: array<i32>;
+
+// todo: This should not be hardcoded
+const indicesLength = 12636;
 
 const focalLength = 1.0;
 const viewportHeight = 4.0;
@@ -572,6 +578,30 @@ fn hittableListHit(ray: Ray, rayT: Interval, hitRecord: ptr<function, HitRecord>
 
   for (var i = 0; i < TRIANGLE_COUNT; i += 1) {
     let triangle = triangles[i];
+    if (triangleHit(triangle, ray, Interval(rayT.min, closestSoFar), &tempRecord)) {
+      hitAnything = true;
+      closestSoFar = tempRecord.t;
+      (*hitRecord) = tempRecord;
+      (*hitRecord).material = triangle.material;
+    }
+  }
+
+  // todo: use bvh
+  for (var i = 0; i < indicesLength; i += 3) {
+    let v1Index = indices[i];
+    let v2Index = indices[i+1];
+    let v3Index = indices[i+2];
+    
+    let x = vec3f(positions[v1Index*3], positions[v1Index*3+1], positions[v1Index*3+2]);
+    let y = vec3f(positions[v2Index*3], positions[v2Index*3+1], positions[v2Index*3+2]);
+    let z = vec3f(positions[v3Index*3], positions[v3Index*3+1], positions[v3Index*3+2]);
+    
+    let Q = x;
+    let u = y - x;
+    let v = z - x;
+    
+    let triangle = Triangle(Q, u, v, defaultMaterial, defaultNormal,defaultNormal,defaultNormal);
+
     if (triangleHit(triangle, ray, Interval(rayT.min, closestSoFar), &tempRecord)) {
       hitAnything = true;
       closestSoFar = tempRecord.t;
