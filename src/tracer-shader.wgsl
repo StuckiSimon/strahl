@@ -15,8 +15,8 @@ const pixelDeltaV = viewportV / ${imageHeight};
 const viewportUpperLeft = cameraCenter - vec3<f32>(0, 0, focalLength) - viewportU / 2.0 - viewportV / 2.0;
 const pixel00Loc = viewportUpperLeft + 0.5 * (pixelDeltaU + pixelDeltaV);
 
-const samplesPerPixel = 30;
-const maxDepth = 5;
+const samplesPerPixel = 1;
+const maxDepth = 2;
 
 const MINIMUM_FLOAT_EPSILON = 1e-8;
 const PI = 3.1415926535897932;
