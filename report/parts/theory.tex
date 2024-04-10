@@ -26,8 +26,11 @@ While CPU parallelization on consumer hardware is generally limited to a few cor
 In order to visualize 3d scenes using a computer, different rendering approaches have been developed. Two of the most common approaches are rasterization and ray tracing and will be described in more detail in the following sections.
 
 \subsubsection{Rasterization}
-Screen space ambient occlusion (SSAO)
-RTAO
+
+Rasterization is a rendering technique which maps the geometry of a 3d scene onto a 2d plane. Historically, the technique has been widely adopted in real-time rendering due to its efficiency. However, there are inherent limitations in terms of realism.
+
+One of the main limitations is the lack of support for global illumination. A related shortcoming is the difficulty to generate ambient occlusion. Certain techniques such as using pre-baked shadow maps, screen space ambient occlusion (SSAO) or Ray Traced Ambient Occlusion (RTAO) have been developed to address this limitation.
+
 \subsubsection{Ray Tracing}
 
 One of the earliest papers describing approaches to solve shadow casting was written as early 1968 by Appel \cite{appel1968shading}. The term global illumination was coined by Whitted in 1979 \cite{whitted2020OriginsOfGlobalIllumination}.
