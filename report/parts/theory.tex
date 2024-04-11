@@ -31,7 +31,11 @@ Rasterization is a rendering technique which maps the geometry of a 3d scene ont
 
 One of the main limitations is the lack of support for global illumination. A related shortcoming is the difficulty to generate ambient occlusion. Certain techniques such as using pre-baked shadow maps, screen space ambient occlusion (SSAO) or Ray Traced Ambient Occlusion (RTAO) have been developed to address this limitation.
 
+These approaches induce complexity and can be computationally expensive. Therefore, a technique which resembles reality more closely has been developed: Ray Tracing.
+
 \subsubsection{Ray Tracing}
+
+Ray Tracing is a rendering technique which simulates light transport in a scene. The main idea is to cast rays from the camera into the scene and compute the color of the object the ray intersects with. By adding additional bounces of the light ray, the technique can simulate global illumination.
 
 One of the earliest papers describing approaches to solve shadow casting was written as early 1968 by Appel \cite{appel1968shading}. The term global illumination was coined by Whitted in 1979 \cite{whitted2020OriginsOfGlobalIllumination}.
 
