@@ -15,7 +15,12 @@ Lights, Materials, Camera, Objects
 \subsection{Ray Tracing}
 \subsubsection{Uber Shader}
 \subsubsection{RGB, Spectral}
-\subsection{RNG}
+\subsection{Random Number Generator}
+
+To simulate light transport, the ray tracer needs to pick random directions. This is done using a random number generator (RNG). There are a variety of RNGs available which differ in characteristics. For domains such as cryptography, it is important that the RNG is unpredictable. However, for a ray tracer, it is more important to have high performance. Therefore, a pseudorandom number generator is used.
+
+https://www.pcg-random.org/pdf/hmc-cs-2014-0905.pdf
+
 \subsection{WebGPU}
 \subsection{Integration}
 \section{Use Case Scenarios}
