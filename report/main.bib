@@ -26,3 +26,32 @@
     keywords={Lighting;Reflection;Ray Tracing},
     doi={10.1109/MCG.2019.2957688}
 }
+
+@article{rngMersenneTwister,
+    author = {Matsumoto, Makoto and Nishimura, Takuji},
+    title = {Mersenne twister: a 623-dimensionally equidistributed uniform pseudo-random number generator},
+    year = {1998},
+    issue_date = {Jan. 1998},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    volume = {8},
+    number = {1},
+    issn = {1049-3301},
+    url = {https://doi.org/10.1145/272991.272995},
+    doi = {10.1145/272991.272995},
+    abstract = {A new algorithm called Mersenne Twister (MT) is proposed for generating uniform pseudorandom numbers. For a particular choice of parameters, the algorithm provides a super astronomical period of 219937 −1 and 623-dimensional equidistribution up to 32-bit accuracy, while using a working area of only 624 words. This is a new variant of the previously proposed generators, TGFSR, modified so as to admit a Mersenne-prime period. The characteristic polynomial has many terms. The distribution up to v bits accuracy for 1 ≤ v ≤ 32 is also shown to be good. An algorithm is also given that checks the primitivity of the characteristic polynomial of MT with computational complexity O(p2) where  p is the degree of the polynomial.We implemented this generator in portable C-code. It passed several stringent statistical tests, including diehard. Its speed is comparable to other modern generators. Its merits are due to the efficient algorithms that are unique to polynomial calculations over the two-element field.},
+    journal = {ACM Trans. Model. Comput. Simul.},
+    month = {jan},
+    pages = {3–30},
+    numpages = {28},
+    keywords = {k-distribution, m-sequences, GFSR, MT19937, Mersenne primes, Mersenne twister, TGFSR, finite fields, incomplete array, inversive-decimation method, multiple-recursive matrix method, primitive polynomials, random number generation, tempering}
+}
+
+@article{marsaglia2003xorshift,
+    title={Xorshift rngs},
+    author={Marsaglia, George},
+    journal={Journal of Statistical software},
+    volume={8},
+    pages={1--6},
+    year={2003}
+}
