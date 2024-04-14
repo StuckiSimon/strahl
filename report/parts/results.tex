@@ -19,6 +19,8 @@ Lights, Materials, Camera, Objects
 
 To simulate light transport, the ray tracer needs to pick random directions. This is done using a random number generator (RNG). There are a variety of RNGs available which differ in characteristics. For domains such as cryptography, it is important that the RNG is unpredictable. However, for a ray tracer, it is more important to have high performance. Therefore, a pseudorandom number generator is used.
 
+A number of suitable RNGs are available, including Mersenne Twister \cite{rngMersenneTwister}, Xorshifts such as the method described by Marsaglia \cite{marsaglia2003xorshift} and more.
+
 https://www.pcg-random.org/pdf/hmc-cs-2014-0905.pdf
 
 \subsection{WebGPU}
