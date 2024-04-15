@@ -229,33 +229,32 @@ FUNCTION {completed.message}
 %% STRING CONSTANTS %%
 %%%%%%%%%%%%%%%%%%%%%%
 
-FUNCTION {bbl.and}{ "und" }
-FUNCTION {bbl.etal}{ "et~al." }
-FUNCTION {bbl.editors}{ "Hrsgg." }
-FUNCTION {bbl.editor}{ "Hrsg." }
-FUNCTION {bbl.edition}{ "Aufl." }
-FUNCTION {bbl.volume}{ "Bd." }
-FUNCTION {bbl.of}{ "von" }
-FUNCTION {bbl.number}{ "Nr." }
-FUNCTION {bbl.in}{ "in" }
-FUNCTION {bbl.pages}{ "S." }
-FUNCTION {bbl.page}{ "S." }
-FUNCTION {bbl.chapter}{ "ch." }
-FUNCTION {bbl.paper}{ "paper" }
-FUNCTION {bbl.part}{ "Teil" }
-FUNCTION {bbl.patent}{ "Patent" }
-FUNCTION {bbl.patentUS}{ "U.S." }
-FUNCTION {bbl.revision}{ "Rev." }
-FUNCTION {bbl.series}{ "Serie" }
-FUNCTION {bbl.standard}{ "Std." }
-FUNCTION {bbl.techrep}{ "Tech. Rep." }
-FUNCTION {bbl.mthesis}{ "Master's thesis" }
-FUNCTION {bbl.phdthesis}{ "Ph.D. dissertation" }
-FUNCTION {bbl.st}{ "." }
-FUNCTION {bbl.nd}{ "." }
-FUNCTION {bbl.rd}{ "." }
-FUNCTION {bbl.th}{ "." }
-
+FUNCTION {bbl.and} {"and"}
+FUNCTION {bbl.etal} {"et al."}  % Note the space after "et"
+FUNCTION {bbl.editors} {"Eds."}
+FUNCTION {bbl.editor} {"Ed."}
+FUNCTION {bbl.edition} {"edition"}
+FUNCTION {bbl.volume} {"Vol."}
+FUNCTION {bbl.of} {"of"}
+FUNCTION {bbl.number} {"No."}
+FUNCTION {bbl.in} {"in"}
+FUNCTION {bbl.pages} {"pp."}
+FUNCTION {bbl.page} {"p."}
+FUNCTION {bbl.chapter} {"chap."}
+FUNCTION {bbl.paper} {"paper"}
+FUNCTION {bbl.part} {"Part"}
+FUNCTION {bbl.patent} {"Patent"}
+FUNCTION {bbl.patentUS} {"U.S. Patent"}
+FUNCTION {bbl.revision} {"Rev."}
+FUNCTION {bbl.series} {"Series"}
+FUNCTION {bbl.standard} {"Standard"}
+FUNCTION {bbl.techrep} {"Tech. Rep."}
+FUNCTION {bbl.mthesis} {"Master's thesis"}
+FUNCTION {bbl.phdthesis} {"Ph.D. thesis"}
+FUNCTION {bbl.st} {"."}
+FUNCTION {bbl.nd} {"."}
+FUNCTION {bbl.rd} {"."}
+FUNCTION {bbl.th} {"."}
 
 % This is the LaTeX spacer that is used when a larger than normal space
 % is called for (such as just before the address:publisher).
@@ -278,14 +277,14 @@ MACRO {jan} {"Jan."}
 MACRO {feb} {"Feb."}
 MACRO {mar} {"Mar."}
 MACRO {apr} {"Apr."}
-MACRO {may} {"Mai"}
-MACRO {jun} {"Juni"}
-MACRO {jul} {"Juli"}
+MACRO {may} {"May"}
+MACRO {jun} {"June"}
+MACRO {jul} {"July"}
 MACRO {aug} {"Aug."}
 MACRO {sep} {"Sep."}
-MACRO {oct} {"Okt."}
+MACRO {oct} {"Oct."}
 MACRO {nov} {"Nov."}
-MACRO {dec} {"Dez."}
+MACRO {dec} {"Dec."}
 
 
 
