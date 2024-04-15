@@ -1,5 +1,5 @@
 %%
-%% deIEEEzhaw.bst
+%% enIEEEzhaw.bst
 %% BibTeX Bibliography Style file for IEEE Journals and Conferences (unsorted)
 %% Version 1.13 (2008/09/30)
 %%
