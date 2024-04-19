@@ -66,6 +66,13 @@ Common 3d engines such as Babylon.js, Three.js, PlayCanvas and Unity have announ
 \section{Ray Tracing}
 \subsection{Monte Carlo Ray Tracing}
 \subsection{Intersection Testing}
+
+When casting a ray into the scene, the first step in a ray tracer is to determine where the ray intersects with the geometry of the scene.
+
+A brute force approach could be to determine the intersection distance for each object to the ray and picking the one with the lowest distance. Given the fact, that common objects consist of thousands of triangles and ray tracing many rays, this approach is not efficient.
+
+In order to accelerate the intersection testing, various approaches have been developed.
+
 \fgls{BVH}{\e{Bounding Volume Hierarchy}, common tree-based acceleration structure}
 
 \section{Physically Based Rendering}
