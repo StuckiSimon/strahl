@@ -5,7 +5,7 @@
 @group(0) @binding(3) var<storage, read_write> indices: array<i32>;
 
 @group(0) @binding(4) var<storage, read_write> bounds: array<f32>;
-@group(0) @binding(5) var<storage, read_write> contents: array<u32>;
+@group(0) @binding(5) var<storage, read_write> contents: array<BinaryBvhNodeInfo>;
 
 // todo: This should not be hardcoded
 const indicesLength = 12636;
@@ -134,7 +134,14 @@ struct BvhNode {
   boundingBox: Aabb,
   leftIndex: i32,
   rightIndex: i32,
-  sphereIndex: i32,
+  triangleIndex: i32,
+}
+
+struct BinaryBvhNodeInfo {
+  // 0-16: isLeaf, 17-31: splitAxis|triangleCount
+  x: u32,
+  // rightIndex|triangleOffset
+  y: u32,
 }
 
 fn nearZero(v: vec3f) -> bool {
@@ -676,9 +683,10 @@ fn hittableListHit(ray: Ray, rayT: Interval, hitRecord: ptr<function, HitRecord>
       continue;
     }
 
-    let contentsIdx = currNodeIndex * 2u;
-    let boundsInfoX = contents[contentsIdx];
-    let boundsInfoY = contents[contentsIdx + 1];
+    let contentsIdx = currNodeIndex;
+    let boundsInfo = contents[contentsIdx];
+    let boundsInfoX = boundsInfo.x;
+    let boundsInfoY = boundsInfo.y;
 
     let isLeaf = (boundsInfoX & 0xffff0000u) == 0xffff0000u;
 
