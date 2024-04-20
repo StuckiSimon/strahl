@@ -574,6 +574,75 @@ fn triangleHit(triangle: Triangle, ray: Ray, rayT: Interval, hitRecord: ptr<func
   return true;
 }
 
+// Based on https://github.com/gkjohnson/three-mesh-bvh/blob/master/src/gpu/glsl/bvh_ray_functions.glsl.js
+fn intersectsBounds(ray: Ray, boundsMin: vec3<f32>, boundsMax: vec3<f32>, dist: ptr<function, f32>) -> bool {
+  let invDir = vec3<f32>(1.0) / ray.direction;
+  
+  let tMinPlane = invDir * (boundsMin - ray.origin);
+  let tMaxPlane = invDir * (boundsMax - ray.origin);
+
+  let tMinHit = min(tMaxPlane, tMinPlane);
+  let tMaxHit = max(tMaxPlane, tMinPlane);
+
+  var t = max(tMinHit.xx, tMinHit.yz);
+  let t0 = max(t.x, t.y);
+
+  t = min(tMaxHit.xx, tMaxHit.yz);
+  let t1 = min(t.x, t.y);
+
+  (*dist) = max(t0, 0.0);
+
+  return t1 >= (*dist);
+}
+
+fn intersectsBVHNodeBounds(ray: Ray, currNodeIndex: u32, dist: ptr<function, f32>) -> bool {
+  // 2 because min+max, 4 because x,y,z + unused alpha
+  let cni2 = currNodeIndex * 2u * 4;
+  let boundsMin = vec3<f32>(bounds[cni2], bounds[cni2 + 1], bounds[cni2 + 2]);
+  // Start at 4 because of unused alpha
+  let boundsMax = vec3<f32>(bounds[cni2 + 4], bounds[cni2 + 5], bounds[cni2 + 6]);
+  return intersectsBounds(ray, boundsMin, boundsMax, dist);
+}
+
+fn intersectTriangles(offset: u32, count: u32, ray: Ray, hitRecord: ptr<function, HitRecord>) -> bool {
+  var found = false;
+  var localDist = f32(99999999999999.0);
+  let l = offset + count;
+  
+  for (var i = offset; i < l; i += 1) {
+    let idx = i * 3u;
+    let v1Index = indices[idx];
+    let v2Index = indices[idx+1];
+    let v3Index = indices[idx+2];
+    
+    let x = vec3f(positions[v1Index*3], positions[v1Index*3+1], positions[v1Index*3+2]);
+    let y = vec3f(positions[v2Index*3], positions[v2Index*3+1], positions[v2Index*3+2]);
+    let z = vec3f(positions[v3Index*3], positions[v3Index*3+1], positions[v3Index*3+2]);
+    
+    let Q = x;
+    let u = y - x;
+    let v = z - x;
+    
+    let triangle = Triangle(Q, u, v, defaultMaterial, defaultNormal,defaultNormal,defaultNormal);
+
+    var tmpRecord: HitRecord;
+    // todo: reuse rayT.min
+    if (triangleHit(triangle, ray, Interval(0.0001, localDist), &tmpRecord)) {
+      if (localDist < tmpRecord.t) {
+        continue;
+      }
+      (*hitRecord) = tmpRecord;
+
+      localDist = (*hitRecord).t;
+      found = true;
+    }
+  }
+  return found;
+}
+
+// todo: lower is better, maybe this should be set based on the tree depth
+const maxBvhStackDepth = 60;
+
 fn hittableListHit(ray: Ray, rayT: Interval, hitRecord: ptr<function, HitRecord>) -> bool {
   var tempRecord: HitRecord;
   var hitAnything = false;
@@ -589,7 +658,64 @@ fn hittableListHit(ray: Ray, rayT: Interval, hitRecord: ptr<function, HitRecord>
     }
   }
 
-  // todo: use bvh
+
+  // Inspired by https://github.com/gkjohnson/three-mesh-bvh/blob/master/src/gpu/glsl/bvh_ray_functions.glsl.js
+  
+  // BVH Intersection Detection
+  var sPtr = 0;
+  var stack: array<u32, maxBvhStackDepth> = array<u32, maxBvhStackDepth>();
+  stack[sPtr] = 0u;
+
+  while (sPtr > -1 && sPtr < maxBvhStackDepth) {
+    let currNodeIndex = stack[sPtr];
+    sPtr -= 1;
+
+    var boundsHitDistance: f32;
+    
+    if (!intersectsBVHNodeBounds(ray, currNodeIndex, &boundsHitDistance) || boundsHitDistance > closestSoFar) {
+      continue;
+    }
+
+    let contentsIdx = currNodeIndex * 2u;
+    let boundsInfoX = contents[contentsIdx];
+    let boundsInfoY = contents[contentsIdx + 1];
+
+    let isLeaf = (boundsInfoX & 0xffff0000u) == 0xffff0000u;
+
+    if (isLeaf) {
+      let count = boundsInfoX & 0x0000ffffu;
+      let offset = boundsInfoY;
+
+      let found2 = intersectTriangles(
+        offset,
+        count,
+        ray,
+        hitRecord
+      );
+      if (found2) {
+        closestSoFar = (*hitRecord).t;
+      }
+      
+      hitAnything = hitAnything || found2;
+    } else {
+      // Left node is always the next node
+      let leftIndex = currNodeIndex + 1u;
+      let splitAxis = boundsInfoX & 0x0000ffffu;
+      let rightIndex = boundsInfoY;
+
+      let leftToRight = ray.direction[splitAxis] > 0.0;
+      let c1 = select(rightIndex, leftIndex, leftToRight);
+      let c2 = select(leftIndex, rightIndex, leftToRight);
+
+      sPtr += 1;
+      stack[sPtr] = c2;
+      sPtr += 1;
+      stack[sPtr] = c1;
+    }
+  }
+
+  // todo: remove this demo code
+  /*
   for (var i = 0; i < indicesLength; i += 3) {
     let v1Index = indices[i];
     let v2Index = indices[i+1];
@@ -611,7 +737,7 @@ fn hittableListHit(ray: Ray, rayT: Interval, hitRecord: ptr<function, HitRecord>
       (*hitRecord) = tempRecord;
       (*hitRecord).material = triangle.material;
     }
-  }
+  } */
 
   return hitAnything;
 }
