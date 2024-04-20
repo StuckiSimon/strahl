@@ -444,6 +444,32 @@ async function run() {
   indicesData.set(indices);
   indicesBuffer.unmap();
 
+  // Prepare BVH Bounds
+  const boundsBuffer = device.createBuffer({
+    label: "BVH bounds buffer",
+    size: Float32Array.BYTES_PER_ELEMENT * boundsArray.length,
+    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+    mappedAtCreation: true,
+  });
+
+  const boundsMapped = boundsBuffer.getMappedRange();
+  const boundsData = new Float32Array(boundsMapped);
+  boundsData.set(boundsArray);
+  boundsBuffer.unmap();
+
+  // Prepare BVH Contents
+  const contentsBuffer = device.createBuffer({
+    label: "BVH contents buffer",
+    size: Uint32Array.BYTES_PER_ELEMENT * contentsArray.length,
+    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+    mappedAtCreation: true,
+  });
+
+  const contentsMapped = contentsBuffer.getMappedRange();
+  const contentsData = new Uint32Array(contentsMapped);
+  contentsData.set(contentsArray);
+  contentsBuffer.unmap();
+
   const computeBindGroupLayout = device.createBindGroupLayout({
     label: "Compute bind group layout",
     entries: [
@@ -468,6 +494,20 @@ async function run() {
       },
       {
         binding: 3,
+        visibility: GPUShaderStage.COMPUTE,
+        buffer: {
+          type: "storage",
+        },
+      },
+      {
+        binding: 4,
+        visibility: GPUShaderStage.COMPUTE,
+        buffer: {
+          type: "storage",
+        },
+      },
+      {
+        binding: 5,
         visibility: GPUShaderStage.COMPUTE,
         buffer: {
           type: "storage",
@@ -505,6 +545,18 @@ async function run() {
         binding: 3,
         resource: {
           buffer: indicesBuffer,
+        },
+      },
+      {
+        binding: 4,
+        resource: {
+          buffer: boundsBuffer,
+        },
+      },
+      {
+        binding: 5,
+        resource: {
+          buffer: contentsBuffer,
         },
       },
     ],
