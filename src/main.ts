@@ -405,7 +405,9 @@ async function run() {
 
   duckMesh.geometry.applyMatrix4(transformMatrix);
 
-  const meshPositions = duckMesh.geometry.attributes.position.array;
+  const boundsTree = new MeshBVH(duckMesh.geometry);
+
+  const { boundsArray, contentsArray } = bvhToTextures(boundsTree);
 
   const positions = meshPositions;
 
