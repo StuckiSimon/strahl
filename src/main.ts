@@ -409,6 +409,8 @@ async function run() {
 
   const { boundsArray, contentsArray } = bvhToTextures(boundsTree);
 
+  const meshPositions = boundsTree.geometry.attributes.position.array;
+
   const positions = meshPositions;
 
   const positionBuffer = device.createBuffer({
@@ -425,7 +427,7 @@ async function run() {
   positionBuffer.unmap();
 
   // Prepare Indices
-  const meshIndices = duckMesh.geometry.index!.array;
+  const meshIndices = boundsTree.geometry.index!.array;
 
   const indices = new Uint32Array(meshIndices);
 
