@@ -683,8 +683,7 @@ fn hittableListHit(ray: Ray, rayT: Interval, hitRecord: ptr<function, HitRecord>
       continue;
     }
 
-    let contentsIdx = currNodeIndex;
-    let boundsInfo = contents[contentsIdx];
+    let boundsInfo = contents[currNodeIndex];
     let boundsInfoX = boundsInfo.x;
     let boundsInfoY = boundsInfo.y;
 
