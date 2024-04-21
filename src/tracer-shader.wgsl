@@ -758,8 +758,8 @@ fn rayColor(ray: Ray, seed: ptr<function, u32>) -> vec3<f32> {
   var hitRecord: HitRecord;
   var localRay = ray;
 
-  var colorStack: array<BouncingInfo, maxDepth>;
-  var colorStackIdx = -1;
+  var throughput = vec3f(1.0);
+  var L = vec3f(0.0);
 
   for (var i = 0; i < maxDepth; i += 1) {
     if (hittableListHit(localRay, Interval(0.001, 0xfffffffffffffff), &hitRecord)) {
@@ -770,13 +770,11 @@ fn rayColor(ray: Ray, seed: ptr<function, u32>) -> vec3<f32> {
       let material = hitRecord.material;
       let scattered = renderMaterial(materials[material.index], hitRecord, &attenuation, &emissionColor, &localRay, seed);
 
+      L += throughput * emissionColor;
+      throughput *= attenuation;
+
       if (!scattered) {
-        colorStackIdx += 1;
-        colorStack[colorStackIdx] = BouncingInfo(Color(0.0,0.0,0.0), emissionColor);
         break;
-      } else {
-        colorStackIdx += 1;
-        colorStack[colorStackIdx] = BouncingInfo(attenuation, Color(0.0,0,0));
       }
     } else {
       // did not hit anything until infinity
@@ -784,14 +782,7 @@ fn rayColor(ray: Ray, seed: ptr<function, u32>) -> vec3<f32> {
     }
   }
 
-  var color = Color(0,0,0);
-  let lastIdx = colorStackIdx;
-  for (var i = colorStackIdx; i >= 0; i -= 1) {
-    let bouncing = colorStack[i];
-    color = bouncing.emission + (bouncing.attenuation * color);
-  }
-
-  return color;
+  return L;
 }
 
 fn getRay(i: f32, j: f32, seed: ptr<function, u32>) -> Ray {
