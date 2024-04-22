@@ -762,7 +762,13 @@ fn rayColor(ray: Ray, seed: ptr<function, u32>) -> vec3<f32> {
   var L = vec3f(0.0);
 
   for (var i = 0; i < maxDepth; i += 1) {
-    if (hittableListHit(localRay, Interval(0.001, 0xfffffffffffffff), &hitRecord)) {
+    let hit = hittableListHit(localRay, Interval(0.001, 0xfffffffffffffff), &hitRecord);
+
+    if (!hit) {
+      // did not hit anything until infinity
+      break;
+    }
+
       var attenuation: Color;
       
       var emissionColor = Color(0,0,0);
@@ -774,11 +780,7 @@ fn rayColor(ray: Ray, seed: ptr<function, u32>) -> vec3<f32> {
       throughput *= attenuation;
 
       if (!scattered) {
-        break;
-      }
-    } else {
-      // did not hit anything until infinity
-      break;
+              break;
     }
   }
 
