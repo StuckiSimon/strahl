@@ -507,6 +507,7 @@ fn randomI32(seed: ptr<function, u32>) -> i32 {
   return i32((word >> 22u) ^ word);
 }
 
+// Generate a random float in the range [0, 1).
 fn randomF32(seed: ptr<function, u32>) -> f32 {
   let val = randomI32(seed);
   return f32(val) / f32(0xffffffffu);
