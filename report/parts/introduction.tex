@@ -22,9 +22,16 @@ When opting to use real-time rendering, one option to choose is remote rendering
 
 Another option is to use client-side rendering. Generally, rasterization approaches are used for real-time rendering. However, as will be discussed in the following sections, rasterization has limitations in terms of realism when having limited control over the models.
 
-\todo{Highlight use of models from production CAD software as a benefit of streamlined sales process}
-
 When all these requirements are considered, the need for a real-time ray tracing solution in the web becomes apparent.
+
+\subsection{CAD Models}
+
+Many industries use CAD models for designing and producing products. These models often contain detailed information about the geometry as well as material properties. Such models are frequently used in mechanical engineering and product design.
+
+Using such models as the basis for end user applications can be beneficial as it alleviates the need to create separate marketing models.
+
+Some of the challenges when using CAD models is the lack of detailed material information. Another difficulty can be the complexity of the models. Frequently, the triangulated meshes are too fine-grained. There are approaches, such as algorithms used to generate level of detail (LOD) artifacts, to circumvent this issue.
+Another important consideration are intellectual property (IP) rights when using CAD models from production processes. The models may contain proprietary information which should not be disclosed to the end user.
 
 \section{Prior Work}
 
