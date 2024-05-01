@@ -249,139 +249,6 @@ async function run() {
     },
   });
 
-  type Vec3 = [number, number, number];
-
-  type Sphere = {
-    center: Vec3;
-    radius: number;
-  };
-
-  const spheres: Sphere[] = [
-    {
-      center: [0, 0, -1],
-      radius: 0.5,
-    },
-    {
-      center: [0, -100.5, -1],
-      radius: 100,
-    },
-    {
-      center: [1, 0, -1],
-      radius: 0.5,
-    },
-  ];
-
-  type Aabb = {
-    min: Vec3;
-    max: Vec3;
-  };
-
-  type BvhNode = {
-    boundingBox: Aabb;
-    leftIndex: number;
-    rightIndex: number;
-    sphereIndex: number;
-  };
-
-  function getBoundingBoxFromSphere(sphere: Sphere): Aabb {
-    const [x, y, z] = sphere.center;
-    const r = sphere.radius;
-    return {
-      min: [x - r, y - r, z - r],
-      max: [x + r, y + r, z + r],
-    };
-  }
-
-  function combineBoundingBoxes(a: Aabb, b: Aabb): Aabb {
-    return {
-      min: [
-        Math.min(a.min[0], b.min[0]),
-        Math.min(a.min[1], b.min[1]),
-        Math.min(a.min[2], b.min[2]),
-      ],
-      max: [
-        Math.max(a.max[0], b.max[0]),
-        Math.max(a.max[1], b.max[1]),
-        Math.max(a.max[2], b.max[2]),
-      ],
-    };
-  }
-
-  const bvs: BvhNode[] = [
-    {
-      boundingBox: {
-        // x, y, z
-        min: [-100, -100, -100],
-        max: [100, 100, 100],
-      },
-      leftIndex: 1,
-      rightIndex: 2,
-      sphereIndex: -1,
-    },
-    {
-      boundingBox: combineBoundingBoxes(
-        getBoundingBoxFromSphere(spheres[0]),
-        getBoundingBoxFromSphere(spheres[2]),
-      ),
-      leftIndex: 3,
-      rightIndex: 4,
-      sphereIndex: -1,
-    },
-    {
-      boundingBox: getBoundingBoxFromSphere(spheres[1]),
-      leftIndex: -1,
-      rightIndex: -1,
-      sphereIndex: 1,
-    },
-    {
-      boundingBox: getBoundingBoxFromSphere(spheres[0]),
-      leftIndex: -1,
-      rightIndex: -1,
-      sphereIndex: 0,
-    },
-    {
-      boundingBox: getBoundingBoxFromSphere(spheres[2]),
-      leftIndex: -1,
-      rightIndex: -1,
-      sphereIndex: 2,
-    },
-  ];
-
-  const FLOATS_PER_BVH_NODE = 9;
-  const aabbBuffer = device.createBuffer({
-    label: "AABB buffer",
-    size: FLOATS_PER_BVH_NODE * Float32Array.BYTES_PER_ELEMENT * bvs.length,
-    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
-    mappedAtCreation: true,
-  });
-
-  const aabbMapped = aabbBuffer.getMappedRange();
-  const aabbFloatData = new Float32Array(aabbMapped);
-  const aabbIntegerData = new Uint32Array(aabbMapped);
-
-  const indexNodes = bvs.map((node, i) => ({ ...node, index: i }));
-  for (const node of indexNodes) {
-    const { index, boundingBox, leftIndex, rightIndex, sphereIndex } = node;
-    const { min, max } = boundingBox;
-
-    const offset = index * FLOATS_PER_BVH_NODE;
-
-    aabbFloatData[offset] = min[0];
-    aabbFloatData[offset + 1] = max[0];
-    aabbFloatData[offset + 2] = min[1];
-    aabbFloatData[offset + 3] = max[1];
-    aabbFloatData[offset + 4] = min[2];
-    aabbFloatData[offset + 5] = max[2];
-
-    //aabbFloatData.set(min, offset);
-    //aabbFloatData.set(max, offset + 3);
-    aabbIntegerData[offset + 6] = leftIndex;
-    aabbIntegerData[offset + 7] = rightIndex;
-    aabbIntegerData[offset + 8] = sphereIndex;
-  }
-
-  aabbBuffer.unmap();
-
   // Prepare Position Data
 
   // todo: remove magic downscaling & transform
@@ -479,13 +346,6 @@ async function run() {
         storageTexture: { format: "rgba8unorm" /*, access: "write-only"*/ },
       },
       {
-        binding: 1,
-        visibility: GPUShaderStage.COMPUTE,
-        buffer: {
-          type: "storage",
-        },
-      },
-      {
         binding: 2,
         visibility: GPUShaderStage.COMPUTE,
         buffer: {
@@ -528,12 +388,6 @@ async function run() {
       {
         binding: 0,
         resource: texture.createView(),
-      },
-      {
-        binding: 1,
-        resource: {
-          buffer: aabbBuffer,
-        },
       },
       {
         binding: 2,

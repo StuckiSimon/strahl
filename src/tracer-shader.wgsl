@@ -1,5 +1,4 @@
 @group(0) @binding(0) var texture: texture_storage_2d<rgba8unorm, write>;
-@group(0) @binding(1) var<storage, read_write> bvhNodes: array<BvhNode>;
 @group(0) @binding(2) var<storage, read_write> positions: array<f32>;
 // todo: Check when i16 is supported
 @group(0) @binding(3) var<storage, read_write> indices: array<i32>;
