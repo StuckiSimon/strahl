@@ -346,6 +346,13 @@ async function run() {
         storageTexture: { format: "rgba8unorm" /*, access: "write-only"*/ },
       },
       {
+        binding: 1,
+        visibility: GPUShaderStage.COMPUTE,
+        buffer: {
+          type: "storage",
+        },
+      },
+      {
         binding: 2,
         visibility: GPUShaderStage.COMPUTE,
         buffer: {
@@ -361,13 +368,6 @@ async function run() {
       },
       {
         binding: 4,
-        visibility: GPUShaderStage.COMPUTE,
-        buffer: {
-          type: "storage",
-        },
-      },
-      {
-        binding: 5,
         visibility: GPUShaderStage.COMPUTE,
         buffer: {
           type: "storage",
@@ -390,25 +390,25 @@ async function run() {
         resource: texture.createView(),
       },
       {
-        binding: 2,
+        binding: 1,
         resource: {
           buffer: positionBuffer,
         },
       },
       {
-        binding: 3,
+        binding: 2,
         resource: {
           buffer: indicesBuffer,
         },
       },
       {
-        binding: 4,
+        binding: 3,
         resource: {
           buffer: boundsBuffer,
         },
       },
       {
-        binding: 5,
+        binding: 4,
         resource: {
           buffer: contentsBuffer,
         },

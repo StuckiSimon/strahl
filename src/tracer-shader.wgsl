@@ -1,10 +1,10 @@
 @group(0) @binding(0) var texture: texture_storage_2d<rgba8unorm, write>;
-@group(0) @binding(2) var<storage, read_write> positions: array<f32>;
+@group(0) @binding(1) var<storage, read_write> positions: array<f32>;
 // todo: Check when i16 is supported
-@group(0) @binding(3) var<storage, read_write> indices: array<i32>;
+@group(0) @binding(2) var<storage, read_write> indices: array<i32>;
 
-@group(0) @binding(4) var<storage, read_write> bounds: array<f32>;
-@group(0) @binding(5) var<storage, read_write> contents: array<BinaryBvhNodeInfo>;
+@group(0) @binding(3) var<storage, read_write> bounds: array<f32>;
+@group(0) @binding(4) var<storage, read_write> contents: array<BinaryBvhNodeInfo>;
 
 // todo: This should not be hardcoded
 const indicesLength = 12636;
