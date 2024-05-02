@@ -27,6 +27,7 @@ const samplesPerPixel = 1;
 const maxDepth = 2;
 
 const MINIMUM_FLOAT_EPSILON = 1e-8;
+const FLT_EPSILON = 1.1920929e-7;
 const PI = 3.1415926535897932;
 const PI_INVERSE = 1.0 / PI;
 
@@ -177,12 +178,61 @@ fn averageAlpha(alpha: vec2<f32>) -> f32 {
   return sqrt(alpha.x * alpha.y);
 }
 
+fn sqr(x: f32) -> f32 {
+  return x * x;
+}
+
 // https://media.disneyanimation.com/uploads/production/publication_asset/48/asset/s2012_pbs_disney_brdf_notes_v3.pdf
 // Appendix B.2 Equation 13
 fn ggxNDF(H: vec3f, alpha: vec2<f32>) -> f32 {
   let He = H.xy / alpha;
   let denom = dot(He, He) + (H.z*H.z);
   return 1.0 / (PI * alpha.x * alpha.y * denom * denom);
+}
+
+// todo: merge with ggxNDF
+fn ggxNDFV2(H: vec3f, alpha: vec2<f32>) -> f32 {
+  let safeAlpha = clamp(alpha, vec2(DENOM_TOLERANCE, DENOM_TOLERANCE), vec2(1.0, 1.0));
+  let Ddenom = PI * safeAlpha.x * safeAlpha.y * sqr(sqr(H.x/safeAlpha.x) + sqr(H.y/safeAlpha.y) + sqr(H.z));
+  return 1.0 / max(Ddenom, DENOM_TOLERANCE);
+}
+
+// GGX NDF sampling routine, as described in
+// "Sampling Visible GGX Normals with Spherical Caps", Dupuy et al., HPG 2023.
+// NB, this assumes wiL is in the +z hemisphere, and returns a sampled micronormal in that hemisphere.
+fn ggxNDFSample(wiL: vec3f, alpha: vec2<f32>, seed: ptr<function, u32>) -> vec3f {
+  let Xi = vec2f(randomF32(seed), randomF32(seed));
+  var V = wiL;
+  
+  V = normalize(vec3f(V.xy * alpha, V.z));
+
+  let phi = 2.0 * PI * Xi.x;
+  let z = (1.0 - Xi.y) * (1.0 + V.z) - V.z;
+  let sinTheta = sqrt(clamp(1.0 - z * z, 0.0, 1.0));
+  let x = sinTheta * cos(phi);
+  let y = sinTheta * sin(phi);
+  let c = vec3f(x, y, z);
+
+  var H = c + V;
+
+  H = normalize(vec3f(H.xy * alpha, H.z));
+
+  return H;
+}
+
+fn ggxLambda(w: vec3f, alpha: vec2f) -> f32 {
+  if (abs(w.z) < FLT_EPSILON) {
+    return 0.0;
+  }
+  return (-1.0 + sqrt(1.0 + (sqr(alpha.x*w.x) + sqr(alpha.y*w.y))/sqr(w.z))) / 2.0;
+}
+
+fn ggxG1(w: vec3f, alpha: vec2f) -> f32 {
+  return 1.0 / (1.0 + ggxLambda(w, alpha));
+}
+
+fn ggxG2(woL: vec3f, wiL: vec3f, alpha: vec2f) -> f32 {
+  return 1.0 / (1.0 + ggxLambda(woL, alpha) + ggxLambda(wiL, alpha));
 }
 
 // Height-correlated Smith masking-shadowing
@@ -266,6 +316,10 @@ fn fresnelSchlick(cosTheta: f32, F0: vec3f, F90: vec3f, exponent: f32) -> vec3f 
   return mix(F0, F90, pow(x, exponent));
 }
 
+fn fresnelSchlickV2(F0: vec3f, mu: f32) -> vec3f {
+  return F0 + pow(1.0 - mu, 5.0) * (vec3f(1.0) - F0);
+}
+
 fn computeFresnel(cosTheta: f32, fd: FresnelData) -> vec3f {
   // todo: implement other models (dielectric, conductor, airy)
   if (fd.model == FRESNEL_MODEL_SCHLICK) {
@@ -273,6 +327,14 @@ fn computeFresnel(cosTheta: f32, fd: FresnelData) -> vec3f {
   }
   
   return vec3f(0.0);
+}
+
+fn fresnelF82Tint(mu: f32, F0: vec3f, f82Tint: vec3f) -> vec3f {
+  let muBar = 1.0/7.0;
+  let denom = muBar * pow(1.0 - muBar, 6);
+  let fSchlickBar = fresnelSchlickV2(F0, muBar);
+  let fSchlick = fresnelSchlickV2(F0, mu);
+  return fSchlick - mu * pow(1.0 - mu, 6.0) * (vec3f(1.0) - f82Tint) * fSchlickBar / denom;
 }
 
 fn generalizedSchlickBsdfReflection(L: vec3f, V: vec3f, P: vec3f, occlusion: f32, weight: f32, color0: Color, color90: Color, exponent: f32, roughness: vec2<f32>, N_in: vec3f, X_in: vec3f, distribution: i32, scatterMode: i32, bsdfThickness: f32, bsdfIor: f32) -> BsdfResponse {
@@ -754,34 +816,510 @@ struct BouncingInfo {
   emission: Color,
 }
 
-fn rayColor(ray: Ray, seed: ptr<function, u32>) -> vec3<f32> {
+const skyPower = 0.5;
+const skyColor = Color(0.5, 0.7, 1.0);
+const sunPower = 0.5;
+const sunAngularSize = 40;
+const sunLatitude = 45;
+const sunLongitude = 180;
+const sunColor = Color(1.0, 1.0, 0.9);
+// todo: calculate based on params
+const sunDir = vec3f(-0.7071067811865475, 0.7071067811865476, 8.659560562354932e-17);
+
+struct Basis {
+  nW: vec3f,
+  tW: vec3f,
+  bW: vec3f,
+  baryCoords: vec3f,
+}
+
+const DENOM_TOLERANCE = 1.0e-10;
+const RADIANCE_EPSILON = 1.0e-12;
+
+fn safeNormalize(v: vec3f) -> vec3f {
+  let len = length(v);
+  return v/max(len, DENOM_TOLERANCE);
+}
+
+fn normalToTangent(N: vec3f) -> vec3f {
+  var T: vec3f;
+  if (abs(N.z) < abs(N.x)) {
+    T = vec3f(N.z, 0.0, -N.x);
+  } else {
+    T = vec3f(0.0, N.z, -N.y);
+  }
+  return safeNormalize(T);
+}
+
+fn makeBasis(nWI: vec3f) -> Basis {
+  let nW = safeNormalize(nWI);
+  let tW = normalToTangent(nWI);
+  let bW = cross(nWI, tW);
+  return Basis(nW, tW, bW, vec3f(0.0));
+}
+
+fn makeBasisFull(nW: vec3f, tW: vec3f, baryCoords: vec3f) -> Basis {
+  let nWo = safeNormalize(nW);
+  let tWo = safeNormalize(tW);
+  let bWo = cross(nWo, tWo);
+  return Basis(nWo, tWo, bWo, baryCoords);
+}
+
+fn worldToLocal(vWorld: vec3f, basis: Basis) -> vec3f {
+  return vec3f(dot(vWorld, basis.tW), dot(vWorld, basis.bW), dot(vWorld, basis.nW));
+}
+
+fn localToWorld(vLocal: vec3f, basis: Basis) -> vec3f {
+  return basis.tW * vLocal.x + basis.bW * vLocal.y + basis.nW * vLocal.z;
+}
+
+struct LocalFrameRotation {
+  M: mat2x2<f32>,
+  Minv: mat2x2<f32>,
+}
+
+fn getLocalFrameRotation(angle: f32) -> LocalFrameRotation {
+  if (angle == 0.0 || angle==2*PI) {
+    let identity = mat2x2<f32>(1.0, 0.0, 0.0, 1.0);
+    return LocalFrameRotation(identity, identity);
+  } else {
+    let cosRot = cos(angle);
+    let sinRot = sin(angle);
+    let M = mat2x2<f32>(cosRot, sinRot, -sinRot, cosRot);
+    let Minv = mat2x2<f32>(cosRot, -sinRot, sinRot, cosRot);
+    return LocalFrameRotation(M, Minv);
+  }
+}
+
+fn localToRotated(vLocal: vec3f, rotation: LocalFrameRotation) -> vec3f {
+  let xyRot = rotation.M * vLocal.xy;
+  return vec3f(xyRot.x, xyRot.y, vLocal.z);
+}
+
+fn rotatedToLocal(vRotated: vec3f, rotation: LocalFrameRotation) -> vec3f {
+  let xyLocal = rotation.Minv * vRotated.xy;
+  return vec3f(xyLocal.x, xyLocal.y, vRotated.z);
+}
+
+struct LobeWeights {
+  m: array<vec3f, NUM_LOBES>,
+}
+
+struct LobeAlbedos {
+  m: array<Color, NUM_LOBES>,
+}
+
+struct LobeProbs {
+  m: array<f32, NUM_LOBES>,
+}
+
+struct LobePDFs {
+  m: array<f32, NUM_LOBES>,
+}
+
+struct LobeData {
+  weights: LobeWeights,
+  albedos: LobeAlbedos,
+  probs: LobeProbs,
+}
+
+// todo: implement
+fn placeholderBrdfAlbedo() -> Color {
+  return Color(0.0, 0.0, 0.0);
+}
+
+fn specularNDFRoughness(material: Material) -> vec2f {
+  let rsqr = material.specularRoughness * material.specularRoughness;
+  let specularAnisotropyInv = 1.0 - material.specularAnisotropy;
+  let alphaX = rsqr * sqrt(2.0/(1.0+(specularAnisotropyInv*specularAnisotropyInv)));
+  let alphaY = (1.0 - material.specularAnisotropy) * alphaX;
+
+  let minAlpha = 1.0e-4;
+  return vec2f(max(alphaX, minAlpha), max(alphaY, minAlpha));
+}
+
+fn metalBrdfSample(pW: vec3f, basis: Basis, winputL: vec3f, material: Material, seed: ptr<function, u32>, woutputL: ptr<function, vec3f>, pdfWoutputL: ptr<function, f32>) -> vec3f {
+  if (winputL.z < DENOM_TOLERANCE) {
+    (*pdfWoutputL) = PDF_EPSILON;
+    return vec3f(0.0);
+  }
+
+  let alpha = specularNDFRoughness(material);
+
+  var rotation = getLocalFrameRotation(2*PI*material.specularRotation);
+  var winputR = localToRotated(winputL, rotation);
+
+  let mR = ggxNDFSample(winputR, alpha, seed);
+
+  let woutputR = -winputR + 2.0*dot(winputR, mR)*mR;
+  if (winputR.z * woutputR.z < FLT_EPSILON) {
+    return vec3f(0.0);
+  }
+  (*woutputL) = rotatedToLocal(woutputR, rotation);
+
+  let D = ggxNDFV2(mR, alpha);
+  let DV = D * ggxG1(winputR, alpha) * max(0.0, dot(winputR, mR)) / max(DENOM_TOLERANCE, winputR.z); // todo: should latter max term use abs for .z?
+  
+  let dwhDwo = 1.0 / max(abs(4.0*dot(winputR, mR)), DENOM_TOLERANCE);
+  (*pdfWoutputL) = max(PDF_EPSILON, DV * dwhDwo);
+
+  // todo: implement thin film workflow
+  let F_nofilm = fresnelF82Tint(abs(dot(winputR, mR)), material.baseWeight * material.baseColor, material.specularWeight * material.specularColor);
+  let F = F_nofilm;
+  
+  let G2 = ggxG2(winputR, woutputR, alpha);
+  
+  return F * D * G2 / max(4.0*abs(woutputL.z)*abs(winputL.z), DENOM_TOLERANCE);
+}
+
+fn metalBrdfAlbedo(material: Material, pW: vec3f, basis: Basis, winputL: vec3f, seed: ptr<function, u32>) -> Color {
+  if (winputL.z < DENOM_TOLERANCE) {
+    return vec3f(0.0);
+  }
+
+  let numSamples = 1;
+  var albedo = vec3f(0.0);
+  for (var n=0; n<numSamples; n+=1) {
+    var woutputL: vec3f;
+    var pdfWoutputL: f32;
+    var f = metalBrdfSample(pW, basis, winputL, material, seed, &woutputL, &pdfWoutputL);
+    if (length(f) > RADIANCE_EPSILON) {
+      albedo += f * abs(woutputL.z) / max(PDF_EPSILON, pdfWoutputL);
+    }
+  }
+
+  albedo /= f32(numSamples);
+  return albedo;
+}
+
+struct WeightsAndAlbedo {
+  weights: LobeWeights,
+  albedos: LobeAlbedos,
+}
+
+fn openPbrLobeWeights(pW: vec3f, basis: Basis, winputL: vec3f, material: Material, seed: ptr<function, u32>) -> WeightsAndAlbedo {
+  let F = 0.0; // todo: move to material definition fuzzWeight
+  let C = material.coatWeight;
+  let M = material.baseMetalness;
+  let T = 0.0; // todo: move to material definition transmissionWeight
+  let S = 0.0; // todo: move to material definition subsurfaceWeight
+
+  let coated = C > 0.0;
+  let metallic = M > 0.0;
+  let fullyMetallic = M == 1.0;
+  let transmissive = T > 0.0;
+  let fullyTransmissive = T == 1.0;
+  let subsurfaced = S > 0.0;
+  let fullySubsurfaced = S == 1.0;
+
+  var albedos = LobeAlbedos();
+  albedos.m[ID_COAT_BRDF] = select(vec3f(0.0), placeholderBrdfAlbedo(), coated);
+  albedos.m[ID_META_BRDF] = select(vec3f(0.0), metalBrdfAlbedo(material, pW, basis, winputL, seed), metallic);
+  albedos.m[ID_SPEC_BRDF] = select(vec3f(0.0), placeholderBrdfAlbedo(), !fullyMetallic);
+  albedos.m[ID_SPEC_BTDF] = select(vec3f(0.0), placeholderBrdfAlbedo(), !fullyMetallic && transmissive);
+  albedos.m[ID_DIFF_BRDF] = select(vec3f(0.0), placeholderBrdfAlbedo(), !fullyMetallic && !fullyTransmissive && !fullySubsurfaced);
+  albedos.m[ID_SSSC_BTDF] = select(vec3f(0.0), placeholderBrdfAlbedo(), !fullyMetallic && !fullyTransmissive && subsurfaced);
+
+  var weights = LobeWeights();
+
+  weights.m[ID_FUZZ_BRDF] = vec3f(0.0); // todo: check
+
+  let wCotedBase = vec3f(1.0); // todo: check 
+
+  weights.m[ID_COAT_BRDF] = wCotedBase * C;
+
+  // todo: implement coat workflow
+  let baseDarkening = vec3f(1.0); // todo: check
+  let materialCoatColor = vec3f(1.0); // todo: move to material definition (coat_color)
+  let wBaseSubstrate = wCotedBase * mix(vec3f(1.0), baseDarkening * materialCoatColor * (vec3(1.0) - albedos.m[ID_COAT_BRDF]), C);
+
+  weights.m[ID_META_BRDF] = wBaseSubstrate * M;
+
+  let wDielectricBase = wBaseSubstrate * vec3f(max(0.0, 1.0 - M));
+
+  weights.m[ID_SPEC_BRDF] = wDielectricBase;
+
+  weights.m[ID_SPEC_BTDF] = wDielectricBase * T;
+
+  let wOpaqueDielectricBase = wDielectricBase * (1.0 - T);
+
+  weights.m[ID_SSSC_BTDF] = wOpaqueDielectricBase * S;
+
+  weights.m[ID_DIFF_BRDF] = wOpaqueDielectricBase * (1.0 - S) * (vec3f(1.0) - albedos.m[ID_SPEC_BRDF]);
+
+  return WeightsAndAlbedo(
+    weights,
+    albedos
+  );
+}
+
+
+fn openPbrLobeProbabilities(weights: LobeWeights, albedos: LobeAlbedos) -> LobeProbs {
+  var probs = LobeProbs();
+  var Wtotal = 0.0;
+  for (var lobeId = 0; lobeId <= NUM_LOBES; lobeId += 1) {
+    probs.m[lobeId] = length(weights.m[lobeId] * albedos.m[lobeId]);
+    Wtotal += probs.m[lobeId];
+  }
+  Wtotal = max(DENOM_TOLERANCE, Wtotal);
+  for (var lobeId = 0; lobeId <= NUM_LOBES; lobeId += 1) {
+    probs.m[lobeId] /= Wtotal;
+  }
+  return probs;
+}
+
+fn openPbrPrepare(pW: vec3f, basis: Basis, winputL: vec3f, material: Material, seed: ptr<function, u32>) -> LobeData {
+  let weightsAndAlbedo = openPbrLobeWeights(pW, basis, winputL, material, seed);
+  let probs = openPbrLobeProbabilities(weightsAndAlbedo.weights, weightsAndAlbedo.albedos);
+
+  return LobeData(
+    weightsAndAlbedo.weights,
+    weightsAndAlbedo.albedos,
+    probs,
+  );
+}
+
+const PDF_EPSILON = 1.0e-6;
+const RAY_OFFSET = 1.0e-4;
+
+fn pdfHemisphereCosineWeighted(wiL: vec3f) -> f32 {
+  if (wiL.z <= PDF_EPSILON) {
+    return PDF_EPSILON / PI;
+  }
+  return wiL.z / PI;
+}
+
+fn skyPdf(woutputL: vec3f, woutputWs: vec3f) -> f32 {
+  return pdfHemisphereCosineWeighted(woutputL);
+}
+
+fn sunPdf(woutputL: vec3f, woutputW: vec3f) -> f32 {
+  let thetaMax = sunAngularSize * PI/180.0;
+  if (dot(woutputW, sunDir) < cos(thetaMax))  {
+    return 0.0;
+  }
+  let solidAngle = 2.0 * PI * (1.0 - cos(thetaMax));
+  return 1.0 / solidAngle;
+}
+
+fn sunTotalPower() -> f32 {
+  let thetaMax = sunAngularSize * PI/180.0;
+  let solidAngle = 2.0 * PI * (1.0 - cos(thetaMax));
+  return length(sunPower * sunColor) * solidAngle;
+}
+
+fn skyTotalPower() -> f32 {
+  return length(skyPower * skyColor) * 2.0 * PI;
+}
+
+fn sunRadiance(woutputW: vec3f) -> vec3f {
+  let thetaMax = sunAngularSize * PI/180.0;
+  if (dot(woutputW, sunDir) < cos(thetaMax)) {
+    return vec3f(0.0);
+  }
+  return sunPower * sunColor;
+}
+
+fn skyRadiance() -> vec3f {
+  return skyPower * skyColor;
+}
+
+fn lightPdf(shadowW: vec3f, basis: Basis) -> f32 {
+  let shadowL = worldToLocal(shadowW, basis);
+  let pdfSky = skyPdf(shadowL, shadowW);
+  let pdfSun = sunPdf(shadowL, shadowW);
+  let wSun = sunTotalPower();
+  let wSky = skyTotalPower();
+  let pSun = wSun / (wSun + wSky);
+  let pSky = max(0.0, 1.0 - pSun);
+  let lightPdf = pSun * pdfSun + pSky * pdfSky;
+  
+  return lightPdf;
+}
+
+fn powerHeuristic(a: f32, b: f32) -> f32 {
+  return pow(a, 2) / max(DENOM_TOLERANCE, pow(a, 2) + pow(b, 2));
+}
+
+fn brdfSamplePlaceholder() -> vec3f {
+  return vec3f(0.0);
+}
+
+fn brdfEvaluatePlaceholder() -> vec3f {
+  return vec3f(0.0);
+}
+
+fn openpbrBsdfEvaluateLobes(pW: vec3f, basis: Basis, material:Material, winputL: vec3f, woutputL: ptr<function, vec3f>, skipLobeId: i32, lobeData: LobeData, pdfs: ptr<function, LobePDFs>, seed: ptr<function, u32>
+) -> vec3f {
+  var f = vec3f(0.0);
+  if (skipLobeId != ID_FUZZ_BRDF && lobeData.probs.m[ID_FUZZ_BRDF] > 0.0) {
+    f += vec3f(0.0);
+  } else if (skipLobeId != ID_COAT_BRDF && lobeData.probs.m[ID_COAT_BRDF] > 0.0) {
+    f += lobeData.weights.m[ID_COAT_BRDF] * brdfEvaluatePlaceholder();
+  } else if (skipLobeId != ID_META_BRDF && lobeData.probs.m[ID_META_BRDF] > 0.0) {
+    f += metalBrdfSample(pW, basis, winputL, material, seed, woutputL, &pdfs.m[ID_META_BRDF]);
+  } else if (skipLobeId != ID_SPEC_BRDF && lobeData.probs.m[ID_SPEC_BRDF] > 0.0) {
+    f += lobeData.weights.m[ID_SPEC_BRDF] * brdfEvaluatePlaceholder();
+  } else if (skipLobeId != ID_DIFF_BRDF && lobeData.probs.m[ID_DIFF_BRDF] > 0.0) {
+    f += lobeData.weights.m[ID_DIFF_BRDF] * brdfEvaluatePlaceholder();
+  }
+
+  let evalSpecBtdf = skipLobeId != ID_SPEC_BTDF && lobeData.probs.m[ID_SPEC_BTDF] > 0.0;
+  let evalSsscBtdf = skipLobeId != ID_SSSC_BTDF && lobeData.probs.m[ID_SSSC_BTDF] > 0.0;
+  let evalTransmission = evalSpecBtdf || evalSsscBtdf;
+  if (evalTransmission) {
+    // todo: implement
+  }
+
+  return f;
+}
+
+fn openpbrBsdfTotalPdf(pdfs: LobePDFs, lobeData: LobeData) -> f32 {
+  var pdfWoutputL = 0.0;
+  for (var lobeId = 0; lobeId < NUM_LOBES; lobeId += 1) {
+    pdfWoutputL += lobeData.probs.m[lobeId] * pdfs.m[lobeId];
+  }
+  return pdfWoutputL;
+}
+
+const ID_FUZZ_BRDF = 0;
+const ID_COAT_BRDF = 1;
+const ID_META_BRDF = 2;
+const ID_SPEC_BRDF = 3;
+const ID_SPEC_BTDF = 4;
+const ID_DIFF_BRDF = 5;
+const ID_SSSC_BTDF = 6;
+const NUM_LOBES    = 7;
+
+fn sampleBsdf(pW: vec3f, basis: Basis, winputL: vec3f, lobeData: LobeData, material: Material, woutputL: ptr<function, vec3f>, pdfWoutputL: ptr<function, f32>, seed: ptr<function, u32>) -> vec3f {
+  let X = randomF32(seed);
+  var CDF = 0.0;
+
+  for (var lobeId = 0; lobeId < NUM_LOBES; lobeId += 1) {
+    CDF += lobeData.probs.m[lobeId];
+    if (X < CDF) {
+      var pdfLobe: f32;
+      var fLobe: vec3f;
+      if (lobeId == ID_FUZZ_BRDF) { fLobe = brdfSamplePlaceholder(); }
+      else if (lobeId == ID_COAT_BRDF) { fLobe = brdfSamplePlaceholder(); }
+      else if (lobeId == ID_META_BRDF) {
+        fLobe = metalBrdfSample(pW, basis, winputL, material, seed, woutputL, pdfWoutputL);
+      }
+      else if (lobeId == ID_SPEC_BRDF) { fLobe = brdfSamplePlaceholder(); }
+      else if (lobeId == ID_SPEC_BTDF) { fLobe = brdfSamplePlaceholder(); }
+      else if (lobeId == ID_SSSC_BTDF) { fLobe = brdfSamplePlaceholder(); }
+      else if (lobeId == ID_DIFF_BRDF) { fLobe = brdfSamplePlaceholder(); }
+      else { break; }
+
+      var pdfs: LobePDFs;
+      var skipLobeId = lobeId;
+      var f = openpbrBsdfEvaluateLobes(pW, basis, material, winputL, woutputL, skipLobeId, lobeData, &pdfs, seed);
+      f += lobeData.weights.m[lobeId] * fLobe;
+
+      pdfs.m[lobeId] = pdfLobe;
+      (*pdfWoutputL) = openpbrBsdfTotalPdf(pdfs, lobeData);
+      
+      let transmitted = woutputL.z * winputL.z < 0.0;
+      let transmittedInside = transmitted && woutputL.z < 0.0;
+      if (!transmittedInside) {
+        return f;
+      }
+
+      // todo: volume
+
+      return f;
+    }
+  }
+
+  (*pdfWoutputL) = 1.0;
+  return vec3f(0);
+}
+
+fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec3<f32> {
   var hitRecord: HitRecord;
-  var localRay = ray;
+  var ray = cameraRay;
 
   var throughput = vec3f(1.0);
   var L = vec3f(0.0);
+  var bsdfPdfContinuation = 1.0;
+
+  var dW = ray.direction;
+  var pW = ray.origin;
+
+  var basis: Basis;
+
+  var inDielectric = false;
 
   for (var i = 0; i < maxDepth; i += 1) {
-    let hit = hittableListHit(localRay, Interval(0.001, 0xfffffffffffffff), &hitRecord);
+    let hit = hittableListHit(ray, Interval(0.001, 0xfffffffffffffff), &hitRecord);
+
+    // todo: consider normal handling
 
     if (!hit) {
       // did not hit anything until infinity
+
+      var misWeightLight = 1.0;
+      
+      if (i > 0) {
+        let lightPdf = lightPdf(
+          dW,
+          basis
+        );
+        misWeightLight = powerHeuristic(bsdfPdfContinuation, lightPdf);
+      }
+      L += throughput * misWeightLight * (sunRadiance(dW) + skyRadiance());
       break;
     }
 
-      var attenuation: Color;
-      
-      var emissionColor = Color(0,0,0);
-      
-      let material = hitRecord.material;
-      let scattered = renderMaterial(materials[material.index], hitRecord, &attenuation, &emissionColor, &localRay, seed);
+    let material = materials[hitRecord.material.index];
 
-      L += throughput * emissionColor;
-      throughput *= attenuation;
+    // Surface Normal
+    var NsW = hitRecord.normal;
+    // Geometric Normal todo: distinguish between geometric and shading normal
+    var NgW = NsW;
+    // Tangent
+    let TsW = normalToTangent(NsW);
+    let baryCoords = vec3f(0.0); // todo: implement
+    
+    pW = hitRecord.point;
 
-      if (!scattered) {
-              break;
+    if (!inDielectric && dot(NsW, dW) > 0.0) {
+      NsW = -NsW;
     }
+
+    if (dot(NgW, NsW) < 0.0) {
+      NgW = -NgW;
+    }
+
+    basis = makeBasisFull(NsW, TsW, baryCoords);
+
+    let winputW = -dW;
+    let winputL = worldToLocal(winputW, basis);
+
+    let lobeData = openPbrPrepare(pW, basis, winputL, material, seed);
+
+    var woutputL: vec3f;
+    let f = sampleBsdf(pW, basis, winputL, lobeData, material, &woutputL, &bsdfPdfContinuation, seed);
+    let woutputW = localToWorld(woutputL, basis);
+    let surfaceThroughput = f / max(PDF_EPSILON, bsdfPdfContinuation) * abs(dot(woutputW, basis.nW));
+    dW = woutputW;
+
+    // todo: consider emission
+
+    pW += NgW * sign(dot(dW, NgW)) * RAY_OFFSET;
+
+    ray = Ray(pW, dW);
+
+    var transmitted = dot(winputW, NgW) * dot(dW, NgW) < 0.0;
+    if (transmitted) {
+      inDielectric = !inDielectric;
+    }
+
+    if (!inDielectric && !transmitted) {
+      // todo: 
+    }
+
+    throughput *= surfaceThroughput;
   }
 
   return L;
