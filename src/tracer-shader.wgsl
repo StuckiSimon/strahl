@@ -1203,7 +1203,7 @@ fn sampleBsdf(pW: vec3f, basis: Basis, winputL: vec3f, lobeData: LobeData, mater
       if (lobeId == ID_FUZZ_BRDF) { fLobe = brdfSamplePlaceholder(); }
       else if (lobeId == ID_COAT_BRDF) { fLobe = brdfSamplePlaceholder(); }
       else if (lobeId == ID_META_BRDF) {
-        fLobe = metalBrdfSample(pW, basis, winputL, material, seed, woutputL, pdfWoutputL);
+        fLobe = metalBrdfSample(pW, basis, winputL, material, seed, woutputL, &pdfLobe);
       }
       else if (lobeId == ID_SPEC_BRDF) { fLobe = brdfSamplePlaceholder(); }
       else if (lobeId == ID_SPEC_BTDF) { fLobe = brdfSamplePlaceholder(); }
