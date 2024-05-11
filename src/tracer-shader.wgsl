@@ -993,6 +993,54 @@ fn metalBrdfAlbedo(material: Material, pW: vec3f, basis: Basis, winputL: vec3f, 
   return albedo;
 }
 
+fn diffuseBrdfAlbedo(material: Material, pW: vec3f, basis: Basis, winputL: vec3f, seed: ptr<function, u32>) -> vec3f {
+  // fixme: drop this sample
+  //return vec3f(1);
+  if (winputL.z < DENOM_TOLERANCE) {
+    return vec3f(0.0);
+  }
+  return material.baseWeight * material.baseColor;
+}
+
+// https://github.com/AcademySoftwareFoundation/MaterialX/blob/main/libraries/pbrlib/genglsl/lib/mx_microfacet_diffuse.glsl
+fn fujiiMaterialX(albedo: vec3f, roughness: f32, V: vec3f, L: vec3f) -> vec3f {
+  let NdotV = V.z;
+  let NdotL = L.z;
+  let s = dot(L, V) - NdotV * NdotL;
+  let stinv = select(0.0, s / max(NdotL, NdotV), s > 0.0f);
+  let sigma = roughness;
+  let sigma2 = sqr(sigma);
+  let A = 1.0 - 0.5 * (sigma2 / (sigma2 + 0.33));
+  let B = 0.45 * sigma2 / (sigma2 + 0.09);
+  return albedo * NdotL / PI * (A + B * stinv);
+}
+
+fn diffuseBrdfEvalImplementation(woutputL: vec3f, winputL: vec3f, material: Material) -> vec3f {
+  let albedo = material.baseWeight * material.baseColor;
+  let V = winputL;
+  let L = woutputL;
+  let NdotL = max(FLT_EPSILON, abs(L.z));
+  
+  return fujiiMaterialX(albedo, material.baseRoughness, V, L) / NdotL;
+}
+
+fn diffuseBrdfEvaluate(material: Material, pW: vec3f, basis: Basis, winputL: vec3f, woutputL: vec3f, pdfWoutputL: ptr<function, f32>) -> vec3f {
+  if (winputL.z < DENOM_TOLERANCE || woutputL.z < DENOM_TOLERANCE) {
+    return vec3f(0.0);
+  }
+  (*pdfWoutputL) = pdfHemisphereCosineWeighted(woutputL);
+  return diffuseBrdfEvalImplementation(winputL, woutputL, material);
+}
+
+fn diffuseBrdfSample(material: Material, pW: vec3f, basis: Basis, winputL: vec3f, woutputL: ptr<function, vec3f>, pdfWoutputL: ptr<function, f32>, seed: ptr<function, u32>) -> vec3f {
+  if (winputL.z < DENOM_TOLERANCE) {
+    return vec3f(0.0);
+  }
+  (*woutputL) = sampleHemisphereCosineWeighted(pdfWoutputL, seed);
+  return diffuseBrdfEvalImplementation(winputL, *woutputL, material);
+}
+
+
 struct WeightsAndAlbedo {
   weights: LobeWeights,
   albedos: LobeAlbedos,
@@ -1018,7 +1066,7 @@ fn openPbrLobeWeights(pW: vec3f, basis: Basis, winputL: vec3f, material: Materia
   albedos.m[ID_META_BRDF] = select(vec3f(0.0), metalBrdfAlbedo(material, pW, basis, winputL, seed), metallic);
   albedos.m[ID_SPEC_BRDF] = select(vec3f(0.0), placeholderBrdfAlbedo(), !fullyMetallic);
   albedos.m[ID_SPEC_BTDF] = select(vec3f(0.0), placeholderBrdfAlbedo(), !fullyMetallic && transmissive);
-  albedos.m[ID_DIFF_BRDF] = select(vec3f(0.0), placeholderBrdfAlbedo(), !fullyMetallic && !fullyTransmissive && !fullySubsurfaced);
+  albedos.m[ID_DIFF_BRDF] = select(vec3f(0.0), diffuseBrdfAlbedo(material, pW, basis, winputL, seed), !fullyMetallic && !fullyTransmissive && !fullySubsurfaced);
   albedos.m[ID_SSSC_BTDF] = select(vec3f(0.0), placeholderBrdfAlbedo(), !fullyMetallic && !fullyTransmissive && subsurfaced);
 
   var weights = LobeWeights();
@@ -1088,6 +1136,16 @@ fn pdfHemisphereCosineWeighted(wiL: vec3f) -> f32 {
     return PDF_EPSILON / PI;
   }
   return wiL.z / PI;
+}
+
+fn sampleHemisphereCosineWeighted(pdf: ptr<function, f32>, seed: ptr<function, u32>) -> vec3f {
+  let r = sqrt(randomF32(seed));
+  let theta = 2.0 * PI * randomF32(seed);
+  let x = r * cos(theta);
+  let y = r * sin(theta);
+  let z = sqrt(max(0.0, 1.0 - x*x - y*y));
+  (*pdf) = max(PDF_EPSILON, abs(z) / PI);
+  return vec3f(x, y, z);
 }
 
 fn skyPdf(woutputL: vec3f, woutputWs: vec3f) -> f32 {
@@ -1162,7 +1220,7 @@ fn openpbrBsdfEvaluateLobes(pW: vec3f, basis: Basis, material:Material, winputL:
   } else if (skipLobeId != ID_SPEC_BRDF && lobeData.probs.m[ID_SPEC_BRDF] > 0.0) {
     f += lobeData.weights.m[ID_SPEC_BRDF] * brdfEvaluatePlaceholder();
   } else if (skipLobeId != ID_DIFF_BRDF && lobeData.probs.m[ID_DIFF_BRDF] > 0.0) {
-    f += lobeData.weights.m[ID_DIFF_BRDF] * brdfEvaluatePlaceholder();
+    f += lobeData.weights.m[ID_DIFF_BRDF] * diffuseBrdfEvaluate(material, pW, basis, winputL, *woutputL, &pdfs.m[ID_DIFF_BRDF]);
   }
 
   let evalSpecBtdf = skipLobeId != ID_SPEC_BTDF && lobeData.probs.m[ID_SPEC_BTDF] > 0.0;
@@ -1209,7 +1267,9 @@ fn sampleBsdf(pW: vec3f, basis: Basis, winputL: vec3f, lobeData: LobeData, mater
       else if (lobeId == ID_SPEC_BRDF) { fLobe = brdfSamplePlaceholder(); }
       else if (lobeId == ID_SPEC_BTDF) { fLobe = brdfSamplePlaceholder(); }
       else if (lobeId == ID_SSSC_BTDF) { fLobe = brdfSamplePlaceholder(); }
-      else if (lobeId == ID_DIFF_BRDF) { fLobe = brdfSamplePlaceholder(); }
+      else if (lobeId == ID_DIFF_BRDF) {
+        fLobe = diffuseBrdfSample(material, pW, basis, winputL, woutputL, &pdfLobe, seed);
+        }
       else { break; }
 
       var pdfs: LobePDFs;
