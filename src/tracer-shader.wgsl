@@ -1073,14 +1073,14 @@ fn openPbrLobeWeights(pW: vec3f, basis: Basis, winputL: vec3f, material: Materia
 
   weights.m[ID_FUZZ_BRDF] = vec3f(0.0); // todo: check
 
-  let wCotedBase = vec3f(1.0); // todo: check 
+  let wCoatedBase = vec3f(1.0); // todo: check 
 
-  weights.m[ID_COAT_BRDF] = wCotedBase * C;
+  weights.m[ID_COAT_BRDF] = wCoatedBase * C;
 
   // todo: implement coat workflow
   let baseDarkening = vec3f(1.0); // todo: check
   let materialCoatColor = vec3f(1.0); // todo: move to material definition (coat_color)
-  let wBaseSubstrate = wCotedBase * mix(vec3f(1.0), baseDarkening * materialCoatColor * (vec3(1.0) - albedos.m[ID_COAT_BRDF]), C);
+  let wBaseSubstrate = wCoatedBase * mix(vec3f(1.0), baseDarkening * materialCoatColor * (vec3(1.0) - albedos.m[ID_COAT_BRDF]), C);
 
   weights.m[ID_META_BRDF] = wBaseSubstrate * M;
 
