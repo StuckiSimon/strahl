@@ -561,17 +561,18 @@ const PCG_MULTIPLIER = 747796405u;
 
 // https://www.pcg-random.org/download.html#id1
 // See https://github.com/imneme/pcg-c/blob/83252d9c23df9c82ecb42210afed61a7b42402d7/include/pcg_variants.h#L1533
-fn randomI32(seed: ptr<function, u32>) -> i32 {
-  let oldstate = *seed;
-  *seed = *seed * PCG_MULTIPLIER + PCG_INC;
-  let word = ((oldstate >> ((oldstate >> 28u) + 4u)) ^ oldstate) * 277803737u;
-  return i32((word >> 22u) ^ word);
+fn randomU32(seed: u32) -> u32 {
+  let state = seed * PCG_MULTIPLIER + PCG_INC;
+  let word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277803737u;
+  return u32((word >> 22u) ^ word);
 }
+
+const range = 1.0 / f32(0xffffffffu);
 
 // Generate a random float in the range [0, 1).
 fn randomF32(seed: ptr<function, u32>) -> f32 {
-  let val = randomI32(seed);
-  return f32(val) / f32(0xffffffffu);
+  *seed = randomU32(*seed);
+  return f32(*seed - 1u) * range;
 }
 
 fn randomF32InRange(min: f32, max: f32, seed: ptr<function, u32>) -> f32 {
