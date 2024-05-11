@@ -1354,7 +1354,7 @@ fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec3<f32> {
       NgW = -NgW;
     }
 
-    basis = makeBasisFull(NsW, TsW, baryCoords);
+    basis = makeBasisFull(NgW, TsW, baryCoords);
 
     let winputW = -dW;
     let winputL = worldToLocal(winputW, basis);
