@@ -1344,7 +1344,9 @@ fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec3<f32> {
     
     pW = hitRecord.point;
 
-    if (!inDielectric && dot(NsW, dW) > 0.0) {
+    if (
+      (inDielectric && dot(NsW, dW) < 0.0) ||
+      (!inDielectric && dot(NsW, dW) > 0.0)) {
       NsW = -NsW;
     }
 
