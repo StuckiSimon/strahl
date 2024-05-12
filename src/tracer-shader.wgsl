@@ -1006,9 +1006,7 @@ fn metalBrdfAlbedo(material: Material, pW: vec3f, basis: Basis, winputL: vec3f, 
 }
 
 fn diffuseBrdfAlbedo(material: Material, pW: vec3f, basis: Basis, winputL: vec3f, seed: ptr<function, u32>) -> vec3f {
-  // fixme: drop this sample
-  //return vec3f(1);
-  if (winputL.z < DENOM_TOLERANCE) {
+    if (winputL.z < DENOM_TOLERANCE) {
     return vec3f(0.0);
   }
   return material.baseWeight * material.baseColor;
