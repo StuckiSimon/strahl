@@ -311,6 +311,25 @@ async function run() {
   indicesData.set(indices);
   indicesBuffer.unmap();
 
+  // Prepare Material Indices
+  const materialIndices = new Uint32Array(duckMesh.geometry.index!.count);
+  for (let i = 0; i < materialIndices.length; i++) {
+    materialIndices[i] = 0;
+    //if (i % 3 === 0) materialIndices[i] = 1;
+  }
+
+  const materialIndicesBuffer = device.createBuffer({
+    label: "Material index buffer",
+    size: Uint32Array.BYTES_PER_ELEMENT * materialIndices.length,
+    usage: GPUBufferUsage.STORAGE,
+    mappedAtCreation: true,
+  });
+
+  const materialIndicesMapped = materialIndicesBuffer.getMappedRange();
+  const materialIndicesData = new Uint32Array(materialIndicesMapped);
+  materialIndicesData.set(materialIndices);
+  materialIndicesBuffer.unmap();
+
   // Prepare BVH Bounds
   const boundsBuffer = device.createBuffer({
     label: "BVH bounds buffer",
@@ -373,6 +392,13 @@ async function run() {
           type: "storage",
         },
       },
+      {
+        binding: 5,
+        visibility: GPUShaderStage.COMPUTE,
+        buffer: {
+          type: "storage",
+        },
+      },
     ],
   });
 
@@ -411,6 +437,12 @@ async function run() {
         binding: 4,
         resource: {
           buffer: contentsBuffer,
+        },
+      },
+      {
+        binding: 5,
+        resource: {
+          buffer: materialIndicesBuffer,
         },
       },
     ],
