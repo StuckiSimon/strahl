@@ -7,6 +7,7 @@
 @group(0) @binding(4) var<storage, read_write> contents: array<BinaryBvhNodeInfo>;
 
 @group(0) @binding(5) var<storage, read_write> materialIndices: array<i32>;
+@group(0) @binding(6) var<storage, read_write> normals: array<f32>;
 
 // todo: This should not be hardcoded
 const indicesLength = 12636;
