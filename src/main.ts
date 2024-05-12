@@ -314,6 +314,7 @@ async function run() {
   // Prepare Material Indices
   const materialIndices = new Uint32Array(duckMesh.geometry.index!.count);
   for (let i = 0; i < materialIndices.length; i++) {
+    // todo: set based on model
     materialIndices[i] = 0;
     //if (i % 3 === 0) materialIndices[i] = 1;
   }
