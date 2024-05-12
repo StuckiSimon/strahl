@@ -331,6 +331,21 @@ async function run() {
   materialIndicesData.set(materialIndices);
   materialIndicesBuffer.unmap();
 
+  // Prepare Normal Data
+  const normals = duckMesh.geometry.attributes.normal.array;
+
+  const normalBuffer = device.createBuffer({
+    label: "Normal buffer",
+    size: Float32Array.BYTES_PER_ELEMENT * normals.length,
+    usage: GPUBufferUsage.STORAGE,
+    mappedAtCreation: true,
+  });
+
+  const normalMapped = normalBuffer.getMappedRange();
+  const normalData = new Float32Array(normalMapped);
+  normalData.set(normals);
+  normalBuffer.unmap();
+
   // Prepare BVH Bounds
   const boundsBuffer = device.createBuffer({
     label: "BVH bounds buffer",
@@ -400,6 +415,13 @@ async function run() {
           type: "storage",
         },
       },
+      {
+        binding: 6,
+        visibility: GPUShaderStage.COMPUTE,
+        buffer: {
+          type: "storage",
+        },
+      },
     ],
   });
 
@@ -444,6 +466,12 @@ async function run() {
         binding: 5,
         resource: {
           buffer: materialIndicesBuffer,
+        },
+      },
+      {
+        binding: 6,
+        resource: {
+          buffer: normalBuffer,
         },
       },
     ],
