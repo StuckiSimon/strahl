@@ -6,6 +6,8 @@
 @group(0) @binding(3) var<storage, read_write> bounds: array<f32>;
 @group(0) @binding(4) var<storage, read_write> contents: array<BinaryBvhNodeInfo>;
 
+@group(0) @binding(5) var<storage, read_write> materialIndices: array<i32>;
+
 // todo: This should not be hardcoded
 const indicesLength = 12636;
 
@@ -641,6 +643,8 @@ fn triangleHit(triangle: Triangle, ray: Ray, rayT: Interval, hitRecord: ptr<func
   (*hitRecord).point = rayAt(ray, t);
   (*hitRecord).normal = normalize(triangle.normal0 * (1.0 - u - v) + triangle.normal1 * u + triangle.normal2 * v);
 
+  (*hitRecord).material = triangle.material;
+
   return true;
 }
 
@@ -693,7 +697,14 @@ fn intersectTriangles(offset: u32, count: u32, ray: Ray, hitRecord: ptr<function
     let u = y - x;
     let v = z - x;
     
-    let triangle = Triangle(Q, u, v, defaultMaterial, defaultNormal,defaultNormal,defaultNormal);
+    let materialIndex = materialIndices[i];
+    let materialDefinition = MaterialDefinition(materialIndex);
+
+    let normalX = vec3f(normals[v1Index*3], normals[v1Index*3+1], normals[v1Index*3+2]);
+    let normalY = vec3f(normals[v2Index*3], normals[v2Index*3+1], normals[v2Index*3+2]);
+    let normalZ = vec3f(normals[v3Index*3], normals[v3Index*3+1], normals[v3Index*3+2]);
+    
+    let triangle = Triangle(Q, u, v, materialDefinition, normalX,normalY,normalZ);
 
     var tmpRecord: HitRecord;
     // todo: reuse rayT.min
