@@ -312,7 +312,7 @@ async function run() {
   indicesBuffer.unmap();
 
   // Prepare Material Indices
-  const materialIndices = new Uint32Array(duckMesh.geometry.index!.count);
+  const materialIndices = new Uint32Array(boundsTree.geometry.index!.count);
   for (let i = 0; i < materialIndices.length; i++) {
     // todo: set based on model
     materialIndices[i] = 0;
@@ -332,7 +332,7 @@ async function run() {
   materialIndicesBuffer.unmap();
 
   // Prepare Normal Data
-  const normals = duckMesh.geometry.attributes.normal.array;
+  const normals = boundsTree.geometry.attributes.normal.array;
 
   const normalBuffer = device.createBuffer({
     label: "Normal buffer",
