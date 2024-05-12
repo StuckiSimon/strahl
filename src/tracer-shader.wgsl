@@ -223,6 +223,13 @@ fn ggxNDFSample(wiL: vec3f, alpha: vec2<f32>, seed: ptr<function, u32>) -> vec3f
   return H;
 }
 
+fn ggxNDFEval(m: vec3f, alpha: vec2f) -> f32 {
+  let ax = max(alpha.x, DENOM_TOLERANCE);
+  let ay = max(alpha.y, DENOM_TOLERANCE);
+  let Ddenom = PI * ax * ay * sqr(sqr(m.x/ax) + sqr(m.y/ay) + sqr(m.z));
+  return 1.0 / max(Ddenom, DENOM_TOLERANCE);
+}
+
 fn ggxLambda(w: vec3f, alpha: vec2f) -> f32 {
   if (abs(w.z) < FLT_EPSILON) {
     return 0.0;
@@ -951,6 +958,37 @@ fn specularNDFRoughness(material: Material) -> vec2f {
   return vec2f(max(alphaX, minAlpha), max(alphaY, minAlpha));
 }
 
+fn metalBrdfEvaluate(pW: vec3f, basis: Basis, winputL: vec3f, woutputL: vec3f, material: Material, pdfWoutputL: ptr<function, f32>) -> vec3f {
+  if (winputL.z < DENOM_TOLERANCE || woutputL.z < DENOM_TOLERANCE) {
+    (*pdfWoutputL) = PDF_EPSILON;
+    return vec3f(0.0);
+  }
+
+  let rotation = getLocalFrameRotation(2*PI*material.specularRotation);
+  let winputR = localToRotated(winputL, rotation);
+  let woutputR = localToRotated(woutputL, rotation);
+
+  let alpha = specularNDFRoughness(material);
+
+  let mR = normalize(winputR + woutputR);
+
+  let D = ggxNDFEval(mR, alpha);
+  let DV = D * ggxG1(winputR, alpha) * max(0.0, dot(winputR, mR)) / max(DENOM_TOLERANCE, winputR.z);
+
+  let dwhDwo = 1.0 / max(abs(4.0*dot(winputR, mR)), DENOM_TOLERANCE);
+  (*pdfWoutputL) = max(PDF_EPSILON, DV * dwhDwo);
+
+  let FnoFilm = fresnelF82Tint(abs(dot(winputR, mR)), material.baseWeight * material.baseColor, material.specularWeight * material.specularColor);
+
+  // todo: thin film workflow
+
+  let F = FnoFilm;
+
+  let G2 = ggxG2(winputR, woutputR, alpha);
+
+  return F * D * G2 * max(4.0*abs(woutputL.z)*abs(winputL.z), DENOM_TOLERANCE);
+}
+
 fn metalBrdfSample(pW: vec3f, basis: Basis, winputL: vec3f, material: Material, seed: ptr<function, u32>, woutputL: ptr<function, vec3f>, pdfWoutputL: ptr<function, f32>) -> vec3f {
   if (winputL.z < DENOM_TOLERANCE) {
     (*pdfWoutputL) = PDF_EPSILON;
@@ -1226,7 +1264,8 @@ fn openpbrBsdfEvaluateLobes(pW: vec3f, basis: Basis, material:Material, winputL:
   } else if (skipLobeId != ID_COAT_BRDF && lobeData.probs.m[ID_COAT_BRDF] > 0.0) {
     f += lobeData.weights.m[ID_COAT_BRDF] * brdfEvaluatePlaceholder();
   } else if (skipLobeId != ID_META_BRDF && lobeData.probs.m[ID_META_BRDF] > 0.0) {
-    f += metalBrdfSample(pW, basis, winputL, material, seed, woutputL, &pdfs.m[ID_META_BRDF]);
+    //f += metalBrdfSample(pW, basis, winputL, material, seed, woutputL, &pdfs.m[ID_META_BRDF]); // fixme: evaluate???
+    f += metalBrdfEvaluate(pW, basis, winputL, *woutputL, material, &pdfs.m[ID_META_BRDF]);
   } else if (skipLobeId != ID_SPEC_BRDF && lobeData.probs.m[ID_SPEC_BRDF] > 0.0) {
     f += lobeData.weights.m[ID_SPEC_BRDF] * brdfEvaluatePlaceholder();
   } else if (skipLobeId != ID_DIFF_BRDF && lobeData.probs.m[ID_DIFF_BRDF] > 0.0) {
