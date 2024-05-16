@@ -41,6 +41,15 @@ One of the earliest papers describing approaches to solve shadow casting was wri
 
 Due to the computational complexity of these algorithms, ray tracing was not widely adopted until the 1980s. Some of the first widely used ray tracing software was POV-Ray, which was released in 1991 \cite{POV_Ray_Documentation}. Blue Moon Rendering Tools (BMRT) \cite{bmrt}, a RenderMan compliant renderer, was released in the mid 90s and was one of the first ray tracing renderers to be used in the industry. In 2003 PRMan included ray tracing capabilities \cite{RenderMan_11_Release_Notes}.
 
+The rendering equation has been defined in 1986 in a paper which also coined the term path tracing \cite{kajiya1986rendering}. Generally, path tracing can be seen as a Monte Carlo integration of the rendering equation which is defined as
+
+\begin{equation}
+  \label{eqn:rendering-equation}
+  I(x, x') = g(x, x') [\epsilon(x, x') + \int_{S} p(x, x', x'')I(x', x'')dx'']
+\end{equation}
+
+Further research into light transport techniques such as bidirectional ligh transport or Metropolis Light Transport has been conducted in the 1990s \cite{veachMonteCarloLightTransport}.
+
 \todo{This is only for showing citation style}
 
 \subsection{Graphic APIs}
