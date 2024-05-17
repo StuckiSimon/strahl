@@ -48,6 +48,8 @@ The rendering equation has been defined in 1986 in a paper which also coined the
   I(x, x') = g(x, x') [\epsilon(x, x') + \int_{S} p(x, x', x'')I(x', x'')dx'']
 \end{equation}
 
+Where $I(x, x')$ is the radiance from point $x$ to point $x'$. $x$ for example being the camera position and $x'$ the intersected object. $g(x, x')$ is a geometry term determining how much light is transmitted. This depends on the distance and possibly occlusions such as in the case of transparent surfaces. $\epsilon(x, x')$ is the emitted radiance, generally used for light sources. The integral term is taken over $S$ = $\cup S_i$ which is the union of all surfaces. $p(x, x', x'')$ is the bidirectional reflection function which describes how light is reflected at the surface. \cite{kajiya1986rendering}
+
 Further research into light transport techniques such as bidirectional ligh transport or Metropolis Light Transport has been conducted in the 1990s \cite{veachMonteCarloLightTransport}.
 
 \todo{This is only for showing citation style}
