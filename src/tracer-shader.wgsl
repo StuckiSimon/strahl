@@ -688,7 +688,7 @@ fn intersectsBVHNodeBounds(ray: Ray, currNodeIndex: u32, dist: ptr<function, f32
 
 fn intersectTriangles(offset: u32, count: u32, ray: Ray, hitRecord: ptr<function, HitRecord>) -> bool {
   var found = false;
-  var localDist = f32(99999999999999.0);
+  var localDist = hitRecord.t;
   let l = offset + count;
   
   for (var i = offset; i < l; i += 1) {
@@ -1361,6 +1361,7 @@ fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec3<f32> {
   var inDielectric = false;
 
   for (var i = 0; i < maxDepth; i += 1) {
+    hitRecord.t = 99999999999999999999.0;
     let hit = hittableListHit(ray, Interval(0.001, 0xfffffffffffffff), &hitRecord);
 
     // todo: consider normal handling
