@@ -29,7 +29,7 @@ In order to visualize 3d scenes using a computer, different rendering approaches
 
 Rasterization is a rendering technique which maps the geometry of a 3d scene onto a 2d plane. Historically, the technique has been widely adopted in real-time rendering due to its efficiency. However, there are inherent limitations in terms of realism.
 
-One of the main limitations is the lack of support for global illumination. A related shortcoming is the difficulty to generate ambient occlusion. Certain techniques such as using pre-baked shadow or light maps, screen space ambient occlusion (SSAO), screen space global illumination (SSGI) or Ray Traced Ambient Occlusion (RTAO) have been developed to address this limitation.
+One of the main limitations is the lack of support for global illumination. A related shortcoming is the difficulty to generate ambient occlusion. Certain techniques such as using pre-baked shadow, environment and light maps, screen space ambient occlusion (SSAO) \cite{bavoil2008ssao}, screen space directional occlusion (SSDO) \cite{ritschel2009ssdo} or ray traced ambient occlusion (RTAO) \cite{gautron2020rtao} have been developed to address these limitations.
 
 These approaches induce complexity and can be computationally expensive. An alternative technique which resembles reality more closely could alleviate these issues: Ray Tracing.
 

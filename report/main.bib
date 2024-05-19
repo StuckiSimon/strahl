@@ -70,6 +70,50 @@
     year={1998}
 }
 
+@article{bavoil2008ssao,
+  title={Screen space ambient occlusion},
+  author={Bavoil, Louis and Sainz, Miguel},
+  journal={NVIDIA developer information: http://developers. nvidia. com},
+  volume={6},
+  number={2},
+  year={2008}
+}
+
+@inproceedings{gautron2020rtao,
+  author = {Gautron, Pascal},
+  title = {Real-Time Ray-Traced Ambient Occlusion of Complex Scenes using Spatial Hashing},
+  year = {2020},
+  isbn = {9781450379717},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  url = {https://doi.org/10.1145/3388767.3407375},
+  doi = {10.1145/3388767.3407375},
+  abstract = {Ambient occlusion is often approximated in real-time using screen-space techniques, leading to visible artifacts. Raytracing provides a unique way to increase the rendering fidelity by accurately sampling the distance to the surrounding objects, but it introduces sampling noise. We propose a real-time ray-traced ambient occlusion technique in which noise is filtered in world space. Using extended spatial hashing for efficient storage, multiresolution AO evaluation and ad-hoc filtering, we demonstrate the usability of our technique as a production feature usable in CAD viewports with scenes comprising hundreds of millions of polygons.},
+  booktitle = {ACM SIGGRAPH 2020 Talks},
+  articleno = {5},
+  numpages = {2},
+  location = {Virtual Event, USA},
+  series = {SIGGRAPH '20}
+}
+
+@inproceedings{ritschel2009ssdo,
+  author = {Ritschel, Tobias and Grosch, Thorsten and Seidel, Hans-Peter},
+  title = {Approximating dynamic global illumination in image space},
+  year = {2009},
+  isbn = {9781605584294},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  url = {https://doi.org/10.1145/1507149.1507161},
+  doi = {10.1145/1507149.1507161},
+  abstract = {Physically plausible illumination at real-time framerates is often achieved using approximations. One popular example is ambient occlusion (AO), for which very simple and efficient implementations are used extensively in production. Recent methods approximate AO between nearby geometry in screen space (SSAO). The key observation described in this paper is, that screen-space occlusion methods can be used to compute many more types of effects than just occlusion, such as directional shadows and indirect color bleeding. The proposed generalization has only a small overhead compared to classic SSAO, approximates direct and one-bounce light transport in screen space, can be combined with other methods that simulate transport for macro structures and is visually equivalent to SSAO in the worst case without introducing new artifacts. Since our method works in screen space, it does not depend on the geometric complexity. Plausible directional occlusion and indirect lighting effects can be displayed for large and fully dynamic scenes at real-time frame rates.},
+  booktitle = {Proceedings of the 2009 Symposium on Interactive 3D Graphics and Games},
+  pages = {75–82},
+  numpages = {8},
+  keywords = {radiosity, global illumination, constant time},
+  location = {Boston, Massachusetts},
+  series = {I3D '09}
+}
+
 @article{rngMersenneTwister,
     author = {Matsumoto, Makoto and Nishimura, Takuji},
     title = {Mersenne twister: a 623-dimensionally equidistributed uniform pseudo-random number generator},
