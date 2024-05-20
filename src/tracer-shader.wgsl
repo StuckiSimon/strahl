@@ -11,6 +11,8 @@
 
 @group(0) @binding(7) var<storage, read_write> indirectIndices: array<u32>;
 
+@group(0) @binding(8) var<storage, read_write> objectDefinitions: array<ObjectDefinition>;
+
 // todo: This should not be hardcoded
 const indicesLength = 12636;
 
@@ -41,8 +43,14 @@ struct Ray {
   direction: vec3<f32>,
 };
 
+struct ObjectDefinition {
+  start: u32,
+  count: u32,
+  material: MaterialDefinition,
+}
+
 struct MaterialDefinition {
-  index: i32,
+  index: u32,
 }
 
 struct HitRecord {
@@ -708,8 +716,16 @@ fn intersectTriangles(offset: u32, count: u32, ray: Ray, hitRecord: ptr<function
     let u = y - x;
     let v = z - x;
     
-    let materialIndex = materialIndices[i];
-    let materialDefinition = MaterialDefinition(materialIndex);
+    var matchingObjectDefinition: ObjectDefinition = objectDefinitions[0];
+    // todo: consider more elegant limit than 100 object parts
+    for (var j = 0; j < 100; j++) {
+      let objectDefinition = objectDefinitions[j];
+      if (objectDefinition.start <= offset && objectDefinition.start + objectDefinition.count > offset) {
+        matchingObjectDefinition = objectDefinition;
+        break;
+      }
+    }
+    let materialDefinition = matchingObjectDefinition.material;
 
     let normalX = vec3f(normals[v1Index*3], normals[v1Index*3+1], normals[v1Index*3+2]);
     let normalY = vec3f(normals[v2Index*3], normals[v2Index*3+1], normals[v2Index*3+2]);

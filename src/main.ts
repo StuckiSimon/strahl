@@ -392,6 +392,25 @@ async function run() {
   indirectData.set(boundsTree._indirectBuffer);
   indirectBuffer.unmap();
 
+  // Prepare Object Definitions
+  const OBJECT_DEFINITION_SIZE_PER_ENTRY = Uint32Array.BYTES_PER_ELEMENT * 3;
+  const groups = reducedModel.geometry.groups;
+
+  const objectDefinitionsBuffer = device.createBuffer({
+    label: "Object definitions buffer",
+    size: OBJECT_DEFINITION_SIZE_PER_ENTRY * groups.length,
+    usage: GPUBufferUsage.STORAGE,
+    mappedAtCreation: true,
+  });
+
+  const objectDefinitionsMapped = objectDefinitionsBuffer.getMappedRange();
+  const objectDefinitionsData = new Uint32Array(objectDefinitionsMapped);
+
+  objectDefinitionsData.set(
+    groups.map((g) => [g.start, g.count, g.materialIndex]).flat(1),
+  );
+  objectDefinitionsBuffer.unmap();
+
   const computeBindGroupLayout = device.createBindGroupLayout({
     label: "Compute bind group layout",
     entries: [
@@ -444,6 +463,13 @@ async function run() {
       },
       {
         binding: 7,
+        visibility: GPUShaderStage.COMPUTE,
+        buffer: {
+          type: "storage",
+        },
+      },
+      {
+        binding: 8,
         visibility: GPUShaderStage.COMPUTE,
         buffer: {
           type: "storage",
@@ -505,6 +531,12 @@ async function run() {
         binding: 7,
         resource: {
           buffer: indirectBuffer,
+        },
+      },
+      {
+        binding: 8,
+        resource: {
+          buffer: objectDefinitionsBuffer,
         },
       },
     ],
