@@ -65,7 +65,7 @@ alias Color = vec3<f32>;
 struct Material {
   baseWeight: f32,
   baseColor: Color,
-  baseRoughness: f32,
+  baseDiffuseRoughness: f32,
   baseMetalness: f32,
   specularWeight: f32,
   specularColor: Color,
@@ -454,7 +454,7 @@ fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<fun
   let randomScatter = hitRecord.normal + normalize(randInUnitSphere(seed));
   let specularScatter = normalize(reflect((*incomingRay).direction, hitRecord.normal));
 
-  let scatterMix = mix(specularScatter, randomScatter, material.baseRoughness);
+  let scatterMix = mix(specularScatter, randomScatter, material.baseDiffuseRoughness);
 
   var scatterDirection = scatterMix;
 
@@ -519,8 +519,8 @@ fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<fun
 
   var bsdfResponse = material.baseColor * occlusion * material.baseWeight * PI_INVERSE;
 
-  if (material.baseRoughness > 0.0) {
-    bsdfResponse *= orenNayarDiffuse(L, V, normal, NdotL, material.baseRoughness);
+  if (material.baseDiffuseRoughness > 0.0) {
+    bsdfResponse *= orenNayarDiffuse(L, V, normal, NdotL, material.baseDiffuseRoughness);
   }
   
   // opaque_base_out (ss not implemented atm)
@@ -1087,7 +1087,7 @@ fn diffuseBrdfEvalImplementation(woutputL: vec3f, winputL: vec3f, material: Mate
   let L = woutputL;
   let NdotL = max(FLT_EPSILON, abs(L.z));
   
-  return fujiiMaterialX(albedo, material.baseRoughness, V, L) / NdotL;
+  return fujiiMaterialX(albedo, material.baseDiffuseRoughness, V, L) / NdotL;
 }
 
 fn diffuseBrdfEvaluate(material: Material, pW: vec3f, basis: Basis, winputL: vec3f, woutputL: vec3f, pdfWoutputL: ptr<function, f32>) -> vec3f {
