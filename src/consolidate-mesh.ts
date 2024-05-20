@@ -25,7 +25,10 @@ export function consolidateMesh(groups: Group[]): BufferGeometry {
     true,
   );
 
-  // todo: extract materials
+  const materials = meshes.map((mesh) => mesh.material).flat(1);
 
-  return mergedGeometry;
+  return {
+    geometry: mergedGeometry,
+    materials,
+  };
 }

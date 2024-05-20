@@ -275,8 +275,8 @@ async function run() {
 
   const reducedModel = consolidateMesh([duckMesh]);
 
-  reducedModel.applyMatrix4(transformMatrix);
-  reducedModel.boundsTree = new MeshBVH(reducedModel, {
+  reducedModel.geometry.applyMatrix4(transformMatrix);
+  reducedModel.boundsTree = new MeshBVH(reducedModel.geometry, {
     indirect: true,
   });
   const boundsTree = reducedModel.boundsTree;
