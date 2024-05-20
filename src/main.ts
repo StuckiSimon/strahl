@@ -318,26 +318,6 @@ async function run() {
   indicesData.set(indices);
   indicesBuffer.unmap();
 
-  // Prepare Material Indices
-  const materialIndices = new Uint32Array(boundsTree.geometry.index!.count);
-  for (let i = 0; i < materialIndices.length; i++) {
-    // todo: set based on model
-    materialIndices[i] = 0;
-    //if (i % 3 === 0) materialIndices[i] = 1;
-  }
-
-  const materialIndicesBuffer = device.createBuffer({
-    label: "Material index buffer",
-    size: Uint32Array.BYTES_PER_ELEMENT * materialIndices.length,
-    usage: GPUBufferUsage.STORAGE,
-    mappedAtCreation: true,
-  });
-
-  const materialIndicesMapped = materialIndicesBuffer.getMappedRange();
-  const materialIndicesData = new Uint32Array(materialIndicesMapped);
-  materialIndicesData.set(materialIndices);
-  materialIndicesBuffer.unmap();
-
   // Prepare Normal Data
   const normals = boundsTree.geometry.attributes.normal.array;
 
@@ -468,13 +448,6 @@ async function run() {
           type: "storage",
         },
       },
-      {
-        binding: 8,
-        visibility: GPUShaderStage.COMPUTE,
-        buffer: {
-          type: "storage",
-        },
-      },
     ],
   });
 
@@ -518,23 +491,17 @@ async function run() {
       {
         binding: 5,
         resource: {
-          buffer: materialIndicesBuffer,
+          buffer: normalBuffer,
         },
       },
       {
         binding: 6,
         resource: {
-          buffer: normalBuffer,
-        },
-      },
-      {
-        binding: 7,
-        resource: {
           buffer: indirectBuffer,
         },
       },
       {
-        binding: 8,
+        binding: 7,
         resource: {
           buffer: objectDefinitionsBuffer,
         },

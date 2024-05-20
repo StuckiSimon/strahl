@@ -6,12 +6,11 @@
 @group(0) @binding(3) var<storage, read_write> bounds: array<f32>;
 @group(0) @binding(4) var<storage, read_write> contents: array<BinaryBvhNodeInfo>;
 
-@group(0) @binding(5) var<storage, read_write> materialIndices: array<i32>;
-@group(0) @binding(6) var<storage, read_write> normals: array<f32>;
+@group(0) @binding(5) var<storage, read_write> normals: array<f32>;
 
-@group(0) @binding(7) var<storage, read_write> indirectIndices: array<u32>;
+@group(0) @binding(6) var<storage, read_write> indirectIndices: array<u32>;
 
-@group(0) @binding(8) var<storage, read_write> objectDefinitions: array<ObjectDefinition>;
+@group(0) @binding(7) var<storage, read_write> objectDefinitions: array<ObjectDefinition>;
 
 // todo: This should not be hardcoded
 const indicesLength = 12636;
