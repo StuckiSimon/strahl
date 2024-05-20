@@ -379,6 +379,19 @@ async function run() {
   contentsData.set(contentsArray);
   contentsBuffer.unmap();
 
+  // Prepare BVH indirect buffer
+  const indirectBuffer = device.createBuffer({
+    label: "BVH indirect buffer",
+    size: Uint32Array.BYTES_PER_ELEMENT * boundsTree._indirectBuffer.length,
+    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+    mappedAtCreation: true,
+  });
+
+  const indirectMapped = indirectBuffer.getMappedRange();
+  const indirectData = new Uint32Array(indirectMapped);
+  indirectData.set(boundsTree._indirectBuffer);
+  indirectBuffer.unmap();
+
   const computeBindGroupLayout = device.createBindGroupLayout({
     label: "Compute bind group layout",
     entries: [
@@ -424,6 +437,13 @@ async function run() {
       },
       {
         binding: 6,
+        visibility: GPUShaderStage.COMPUTE,
+        buffer: {
+          type: "storage",
+        },
+      },
+      {
+        binding: 7,
         visibility: GPUShaderStage.COMPUTE,
         buffer: {
           type: "storage",
@@ -479,6 +499,12 @@ async function run() {
         binding: 6,
         resource: {
           buffer: normalBuffer,
+        },
+      },
+      {
+        binding: 7,
+        resource: {
+          buffer: indirectBuffer,
         },
       },
     ],

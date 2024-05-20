@@ -9,6 +9,8 @@
 @group(0) @binding(5) var<storage, read_write> materialIndices: array<i32>;
 @group(0) @binding(6) var<storage, read_write> normals: array<f32>;
 
+@group(0) @binding(7) var<storage, read_write> indirectIndices: array<u32>;
+
 // todo: This should not be hardcoded
 const indicesLength = 12636;
 
@@ -692,10 +694,11 @@ fn intersectTriangles(offset: u32, count: u32, ray: Ray, hitRecord: ptr<function
   let l = offset + count;
   
   for (var i = offset; i < l; i += 1) {
-    let idx = i * 3u;
-    let v1Index = indices[idx];
-    let v2Index = indices[idx+1];
-    let v3Index = indices[idx+2];
+    let vIndexOffset = indirectIndices[i] * 3u;
+
+    let v1Index = indices[vIndexOffset];
+    let v2Index = indices[vIndexOffset+1];
+    let v3Index = indices[vIndexOffset+2];
     
     let x = vec3f(positions[v1Index*3], positions[v1Index*3+1], positions[v1Index*3+2]);
     let y = vec3f(positions[v2Index*3], positions[v2Index*3+1], positions[v2Index*3+2]);
