@@ -4,6 +4,7 @@ import { MeshBVH } from "three-mesh-bvh";
 import buildTracerShader from "./tracer-shader";
 import buildRenderShader from "./render-shader";
 import { logGroup } from "./cpu-performance-logger";
+import { consolidateMesh } from "./consolidate-mesh";
 
 const DUCK_MODEL_URL = "models/duck/Duck.gltf";
 
@@ -272,7 +273,13 @@ async function run() {
 
   duckMesh.geometry.applyMatrix4(transformMatrix);
 
-  const boundsTree = new MeshBVH(duckMesh.geometry);
+  const reducedModel = consolidateMesh([duckMesh]);
+
+  reducedModel.applyMatrix4(transformMatrix);
+  reducedModel.boundsTree = new MeshBVH(reducedModel, {
+    indirect: true,
+  });
+  const boundsTree = reducedModel.boundsTree;
 
   const { boundsArray, contentsArray } = bvhToTextures(boundsTree);
 
