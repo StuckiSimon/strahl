@@ -5,6 +5,12 @@ import buildTracerShader from "./tracer-shader";
 import buildRenderShader from "./render-shader";
 import { logGroup } from "./cpu-performance-logger";
 import { consolidateMesh } from "./consolidate-mesh";
+import { OpenPBRMaterial } from "./openpbr-material";
+import {
+  getSizeAndAlignmentOfUnsizedArrayElement,
+  makeShaderDataDefinitions,
+  makeStructuredView,
+} from "webgpu-utils";
 
 const DUCK_MODEL_URL = "models/duck/Duck.gltf";
 
@@ -169,6 +175,17 @@ async function run() {
 
   const kTextureWidth = 1024;
   const kTextureHeight = kTextureWidth;
+
+  const imageWidth = kTextureWidth;
+  const imageHeight = imageWidth;
+
+  const maxWorkgroupDimension = 16;
+
+  const tracerShaderCode = buildTracerShader({
+    imageWidth,
+    imageHeight,
+    maxWorkgroupDimension,
+  });
 
   const textureData = new Uint8Array(kTextureWidth * kTextureHeight * 4);
 
@@ -391,6 +408,59 @@ async function run() {
   );
   objectDefinitionsBuffer.unmap();
 
+  // Prepare Material Definitions
+  const material = new OpenPBRMaterial();
+  material.oBaseWeight = 1.0;
+  material.oBaseColor = [1.0, 0.2, 0.2];
+
+  // todo: define based on model
+  const materials = [material];
+
+  const definitions = makeShaderDataDefinitions(tracerShaderCode);
+  const { size: bytesPerMaterial } = getSizeAndAlignmentOfUnsizedArrayElement(
+    definitions.storages.materials,
+  );
+
+  const materialDataView = makeStructuredView(
+    definitions.storages.materials,
+    new ArrayBuffer(bytesPerMaterial * materials.length),
+  );
+
+  const materialBuffer = device.createBuffer({
+    label: "Material buffer",
+    size: bytesPerMaterial * materials.length,
+    usage: GPUBufferUsage.STORAGE,
+    mappedAtCreation: true,
+  });
+
+  const materialMapped = materialBuffer.getMappedRange();
+  const materialData = new Float32Array(materialMapped);
+
+  materialDataView.set(
+    materials.map((m) => ({
+      baseWeight: m.oBaseWeight,
+      baseColor: m.oBaseColor,
+      baseDiffuseRoughness: m.oBaseDiffuseRoughness,
+      baseMetalness: m.oBaseMetalness,
+      specularWeight: m.oSpecularWeight,
+      specularColor: m.oSpecularColor,
+      specularRoughness: m.oSpecularRoughness,
+      specularAnisotropy: m.oSpecularRoughnessAnisotropy,
+      specularRotation: m.oSpecularRoughnessRotation,
+      coatWeight: m.oCoatWeight,
+      coatRoughness: m.oCoatRoughness,
+      emissionLuminance: m.oEmissionLuminance,
+      emissionColor: m.oEmissionColor,
+      thinFilmThickness: m.oThinFilmThickness,
+      thinFilmIOR: m.oThinFilmIOR,
+    })),
+  );
+
+  // todo: check if Flaot32Array is strictly necessary
+  materialData.set(new Float32Array(materialDataView.arrayBuffer));
+
+  materialBuffer.unmap();
+
   const computeBindGroupLayout = device.createBindGroupLayout({
     label: "Compute bind group layout",
     entries: [
@@ -443,6 +513,13 @@ async function run() {
       },
       {
         binding: 7,
+        visibility: GPUShaderStage.COMPUTE,
+        buffer: {
+          type: "storage",
+        },
+      },
+      {
+        binding: 8,
         visibility: GPUShaderStage.COMPUTE,
         buffer: {
           type: "storage",
@@ -506,13 +583,15 @@ async function run() {
           buffer: objectDefinitionsBuffer,
         },
       },
+      {
+        binding: 8,
+        resource: {
+          buffer: materialBuffer,
+        },
+      },
     ],
   });
 
-  const imageWidth = kTextureWidth;
-  const imageHeight = imageWidth;
-
-  const maxWorkgroupDimension = 16;
   const computePasses = Math.ceil(
     // todo: check…
     (imageWidth * imageWidth) / maxWorkgroupDimension,
@@ -520,11 +599,7 @@ async function run() {
 
   const computeShaderModule = device.createShaderModule({
     label: "Ray Tracing Compute Shader",
-    code: buildTracerShader({
-      imageWidth,
-      imageHeight,
-      maxWorkgroupDimension,
-    }),
+    code: tracerShaderCode,
   });
 
   const computePipeline = device.createComputePipeline({

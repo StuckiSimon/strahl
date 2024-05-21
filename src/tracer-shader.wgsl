@@ -1,3 +1,24 @@
+alias Color = vec3<f32>;
+
+struct Material {
+  baseWeight: f32,
+  baseColor: Color,
+  // switch order of baseDiffuseRoughness and baseMetalness
+  baseDiffuseRoughness: f32,
+  baseMetalness: f32,
+  specularWeight: f32,
+  specularColor: Color,
+  specularRoughness: f32,
+  specularAnisotropy: f32,
+  specularRotation: f32,
+  coatWeight: f32,
+  coatRoughness: f32,
+  emissionLuminance: f32,
+  emissionColor: Color,
+  thinFilmThickness: f32,
+  thinFilmIOR: f32,
+}
+
 @group(0) @binding(0) var texture: texture_storage_2d<rgba8unorm, write>;
 @group(0) @binding(1) var<storage, read_write> positions: array<f32>;
 // todo: Check when i16 is supported
@@ -532,14 +553,14 @@ fn renderMaterial(material: Material, hitRecord: HitRecord, attenuation: ptr<fun
   return true;
 }
 
-const materials: array<Material, 4> = array<Material, 4>(
+/*const materials: array<Material, 4> = array<Material, 4>(
   // base materials
   Material(0.8, Color(0.5, 1.0, 0.0), 0.0, 1.0, 1.0, Color(0.5, 0.5, 1.0), 1.0, 0.5, 0.5, 0, 0, 0, Color(0.0, 0.0, 0.0), 0, 1.5),
   Material(1.0, Color(1.0, 0.5, 0.2), 0.0, 0.0, 1.0, Color(0.1, 0.1, 1.0), 1.0, 0.5, 0.5, 0, 0, 0, Color(0.0, 0.0, 0.0), 0, 1.5),
   // lights
   Material(0.0, Color(0.0, 0.0, 0.0), 0.0, 0.0, 0.0, Color(0.0, 0.0, 0.0), 0.0, 0.0, 0.0, 0.0, 0, 10.0, Color(1.0, 0.5, 1.0), 0, 1.5),
   Material(0.0, Color(0.0, 0.0, 0.0), 0.0, 0.0, 0.0, Color(0.0, 0.0, 0.0), 0.0, 0.0, 0.0, 0.0, 0, 10.0, Color(1.0, 1.0, 1.0), 0, 1.5)
-);
+);*/
 
 const defaultMaterial = MaterialDefinition(0);
 const defaultDiffuseLightMaterial = MaterialDefinition(2);
