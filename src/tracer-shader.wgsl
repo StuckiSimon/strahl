@@ -33,6 +33,8 @@ struct Material {
 
 @group(0) @binding(7) var<storage, read_write> objectDefinitions: array<ObjectDefinition>;
 
+@group(0) @binding(8) var<storage, read_write> materials: array<Material>;
+
 // todo: This should not be hardcoded
 const indicesLength = 12636;
 
@@ -79,26 +81,6 @@ struct HitRecord {
   t: f32,
   frontFace: bool,
   material: MaterialDefinition,
-}
-
-alias Color = vec3<f32>;
-
-struct Material {
-  baseWeight: f32,
-  baseColor: Color,
-  baseDiffuseRoughness: f32,
-  baseMetalness: f32,
-  specularWeight: f32,
-  specularColor: Color,
-  specularRoughness: f32,
-  specularAnisotropy: f32,
-  specularRotation: f32,
-  coatWeight: f32,
-  coatRoughness: f32,
-  emissionLuminance: f32,
-  emissionColor: Color,
-  thinFilmThickness: f32,
-  thinFilmIOR: f32,
 }
 
 struct Triangle {
