@@ -722,7 +722,7 @@ fn intersectTriangles(offset: u32, count: u32, ray: Ray, hitRecord: ptr<function
     // todo: consider more elegant limit than 100 object parts
     for (var j = 0; j < 100; j++) {
       let objectDefinition = objectDefinitions[j];
-      if (objectDefinition.start <= offset && objectDefinition.start + objectDefinition.count > offset) {
+      if (objectDefinition.start <= vIndexOffset && objectDefinition.start + objectDefinition.count >= vIndexOffset) {
         matchingObjectDefinition = objectDefinition;
         break;
       }
