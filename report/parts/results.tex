@@ -18,6 +18,10 @@ Lights, Materials, Camera, Objects
 The OpenPBR standard is based on an über shader approach. This differs from node-based approaches such as MaterialX in that it uses a fixed set of inputs which can be configured. This approach offers a good balance between flexibility and performance.
 
 \subsubsection{RGB, Spectral}
+\subsubsection{Memory}
+
+Memory Alignment (GPU), Memory Management (GPU+CPU)
+
 \subsection{Random Number Generator}
 
 To simulate light transport, the ray tracer needs to pick random directions. This is done using a random number generator (RNG). There are a variety of RNGs available which differ in characteristics. For domains such as cryptography, it is important that the RNG is unpredictable. However, for a ray tracer, it is more important to have high performance. Therefore, a pseudorandom number generator is used.
