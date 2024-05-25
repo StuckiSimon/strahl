@@ -864,8 +864,20 @@ const sunAngularSize = 40;
 const sunLatitude = 45;
 const sunLongitude = 180;
 const sunColor = Color(1.0, 1.0, 0.9);
-// todo: calculate based on params
-const sunDir = vec3f(-0.7071067811865475, 0.7071067811865476, 8.659560562354932e-17);
+
+// todo: set in uniform
+fn getSunDirection() -> vec3f {
+  let latTheta = ((90.0 - sunLatitude) * PI) / 180.0;
+  let lonPhi = (sunLongitude * PI) / 180.0;
+  let cosTheta = cos(latTheta);
+  let sinTheta = sin(latTheta);
+  let cosPhi = cos(lonPhi);
+  let sinPhi = sin(lonPhi);
+  let x = sinTheta * cosPhi;
+  let y = sinTheta * sinPhi;
+  let z = cosTheta;
+  return vec3f(x, y, z);
+}
 
 struct Basis {
   nW: vec3f,
@@ -1223,7 +1235,7 @@ fn skyPdf(woutputL: vec3f, woutputWs: vec3f) -> f32 {
 
 fn sunPdf(woutputL: vec3f, woutputW: vec3f) -> f32 {
   let thetaMax = sunAngularSize * PI/180.0;
-  if (dot(woutputW, sunDir) < cos(thetaMax))  {
+  if (dot(woutputW, getSunDirection()) < cos(thetaMax))  {
     return 0.0;
   }
   let solidAngle = 2.0 * PI * (1.0 - cos(thetaMax));
@@ -1242,7 +1254,7 @@ fn skyTotalPower() -> f32 {
 
 fn sunRadiance(woutputW: vec3f) -> vec3f {
   let thetaMax = sunAngularSize * PI/180.0;
-  if (dot(woutputW, sunDir) < cos(thetaMax)) {
+  if (dot(woutputW, getSunDirection()) < cos(thetaMax)) {
     return vec3f(0.0);
   }
   return sunPower * sunColor;
