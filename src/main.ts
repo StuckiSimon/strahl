@@ -408,13 +408,7 @@ async function run() {
   );
   objectDefinitionsBuffer.unmap();
 
-  // Prepare Material Definitions
-  const material = new OpenPBRMaterial();
-  material.oBaseWeight = 1.0;
-  material.oBaseColor = [1.0, 0.2, 0.2];
-
-  // todo: define based on model
-  const materials = [material];
+  const materials = reducedModel.materials;
 
   const definitions = makeShaderDataDefinitions(tracerShaderCode);
   const { size: bytesPerMaterial } = getSizeAndAlignmentOfUnsizedArrayElement(
