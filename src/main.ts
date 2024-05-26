@@ -173,7 +173,7 @@ async function run() {
     format,
   });
 
-  const kTextureWidth = 1024;
+  const kTextureWidth = 512;
   const kTextureHeight = kTextureWidth;
 
   const imageWidth = kTextureWidth;
