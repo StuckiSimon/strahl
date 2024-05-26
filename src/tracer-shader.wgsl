@@ -11,6 +11,7 @@ struct Material {
   specularRoughness: f32,
   specularAnisotropy: f32,
   specularRotation: f32,
+  specularIor: f32,
   coatWeight: f32,
   coatColor: Color,
   coatRoughness: f32,
