@@ -1493,8 +1493,8 @@ fn pixelSampleSquare(seed: ptr<function, u32>) -> vec3<f32> {
   return (px * pixelDeltaU) + (py * pixelDeltaV);
 }
 
-fn writeColor(pixelColor: vec3<f32>, x: i32, y: i32) {
-  let scale = 1.0 / f32(samplesPerPixel);
+fn writeColor(pixelColor: vec3<f32>, x: i32, y: i32, samples: i32) {
+  let scale = 1.0 / f32(samples);
   let adjustedColor = pixelColor * scale;
   textureStore(texture, vec2<i32>(x, y), vec4<f32>(adjustedColor, 1.0));
 }
@@ -1514,5 +1514,5 @@ fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
       pixelColor += rayColor(r, &seed);
   }
   
-  writeColor(pixelColor, i32(local_id.x), i32(local_id.y));  
+  writeColor(pixelColor, i32(local_id.x), i32(local_id.y), samplesPerPixel);
 }
