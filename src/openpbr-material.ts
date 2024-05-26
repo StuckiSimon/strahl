@@ -13,7 +13,11 @@ export class OpenPBRMaterial extends MeshPhysicalMaterial {
   oSpecularRoughnessAnisotropy: number = 0.0;
   oSpecularRoughnessRotation: number = 0.0;
   oCoatWeight: number = 0.0;
+  oCoatColor: Color = [1.0, 1.0, 1.0];
   oCoatRoughness: number = 0.0;
+  oCoatRoughnessAnisotropy: number = 0.0;
+  oCoatIor: number = 1.6;
+  oCoatDarkening: number = 1.0;
   oEmissionLuminance: number = 0.0;
   oEmissionColor: Color = [1.0, 1.0, 1.0];
   oThinFilmThickness: number = 0.5;
