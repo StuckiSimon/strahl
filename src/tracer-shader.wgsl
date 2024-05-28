@@ -24,6 +24,11 @@ struct Material {
   thinFilmIOR: f32,
 }
 
+struct UniformData {
+  seedOffset: u32,
+  priorSamples: u32,
+}
+
 @group(0) @binding(0) var texture: texture_storage_2d<rgba8unorm, write>;
 @group(0) @binding(1) var<storage, read_write> positions: array<f32>;
 // todo: Check when i16 is supported
