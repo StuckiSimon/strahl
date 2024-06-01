@@ -205,6 +205,29 @@ async function run() {
     { width: kTextureWidth, height: kTextureHeight },
   );
 
+  const textureB = device.createTexture({
+    size: [kTextureWidth, kTextureHeight],
+    format: "rgba8unorm",
+    usage:
+      GPUTextureUsage.TEXTURE_BINDING |
+      GPUTextureUsage.COPY_DST |
+      GPUTextureUsage.STORAGE_BINDING, // Permit writting to texture in compute shader
+  });
+
+  device.queue.writeTexture(
+    {
+      texture: textureB,
+    },
+    textureData,
+    {
+      bytesPerRow: kTextureWidth * 4,
+    },
+    {
+      width: kTextureWidth,
+      height: kTextureHeight,
+    },
+  );
+
   const sampler = device.createSampler();
 
   const renderShaderModule = device.createShaderModule({
@@ -231,21 +254,6 @@ async function run() {
   const renderPipelineLayout = device.createPipelineLayout({
     label: "Pipeline Layout",
     bindGroupLayouts: [renderBindGroupLayout],
-  });
-
-  const renderBindGroup = device.createBindGroup({
-    label: "Texture sampler bind group",
-    layout: renderBindGroupLayout,
-    entries: [
-      {
-        binding: 0,
-        resource: sampler,
-      },
-      {
-        binding: 1,
-        resource: texture.createView(),
-      },
-    ],
   });
 
   const renderPipeline = device.createRenderPipeline({
@@ -527,10 +535,58 @@ async function run() {
     ],
   });
 
+  const computeBindGroupLayout2 = device.createBindGroupLayout({
+    label: "Compute bind group layout 2",
+    entries: [
+      {
+        binding: 0,
+        visibility: GPUShaderStage.COMPUTE,
+        storageTexture: { format: "rgba8unorm", access: "read-only" },
+      },
+      {
+        binding: 1,
+        visibility: GPUShaderStage.COMPUTE,
+        buffer: {
+          type: "uniform",
+        },
+      },
+    ],
+  });
+
   const computePipelineLayout = device.createPipelineLayout({
     label: "Compute pipeline layout",
-    bindGroupLayouts: [computeBindGroupLayout],
+    bindGroupLayouts: [computeBindGroupLayout, computeBindGroupLayout2],
   });
+
+  const computePasses = Math.ceil(
+    // todo: check…
+    (imageWidth * imageWidth) / maxWorkgroupDimension,
+  );
+
+  const computeShaderModule = device.createShaderModule({
+    label: "Ray Tracing Compute Shader",
+    code: tracerShaderCode,
+  });
+
+  let TARGET_FRAMES = 20;
+  let frame = 0;
+  const render = async () => {
+    const writeTexture = frame % 2 === 0 ? texture : textureB;
+    const readTexture = frame % 2 === 0 ? textureB : texture;
+
+    const priorSamplesUniformBuffer = device.createBuffer({
+      label: "Prior Samples buffer",
+      size: Uint32Array.BYTES_PER_ELEMENT * 2,
+      usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+      mappedAtCreation: true,
+    });
+
+    const priorSamplesMapped = priorSamplesUniformBuffer.getMappedRange();
+    const priorSamplesData = new Uint32Array(priorSamplesMapped);
+
+    priorSamplesData.set([Math.random() * 10_000, frame]);
+
+    priorSamplesUniformBuffer.unmap();
 
   const computeBindGroup = device.createBindGroup({
     label: "Compute bind group",
@@ -538,7 +594,7 @@ async function run() {
     entries: [
       {
         binding: 0,
-        resource: texture.createView(),
+          resource: writeTexture.createView(),
       },
       {
         binding: 1,
@@ -591,14 +647,21 @@ async function run() {
     ],
   });
 
-  const computePasses = Math.ceil(
-    // todo: check…
-    (imageWidth * imageWidth) / maxWorkgroupDimension,
-  );
-
-  const computeShaderModule = device.createShaderModule({
-    label: "Ray Tracing Compute Shader",
-    code: tracerShaderCode,
+    const computeBindGroup2 = device.createBindGroup({
+      label: "Compute bind group 2",
+      layout: computeBindGroupLayout2,
+      entries: [
+        {
+          binding: 0,
+          resource: readTexture.createView(),
+        },
+        {
+          binding: 1,
+          resource: {
+            buffer: priorSamplesUniformBuffer,
+          },
+        },
+      ],
   });
 
   const computePipeline = device.createComputePipeline({
@@ -614,9 +677,6 @@ async function run() {
 
   const computeLog = logGroup("compute");
 
-  let TARGET_FRAMES = 0;
-  let frame = 0;
-  const render = async () => {
     const encoder = device.createCommandEncoder();
 
     const computePass = encoder.beginComputePass({
@@ -627,6 +687,7 @@ async function run() {
       },
     });
     computePass.setBindGroup(0, computeBindGroup);
+    computePass.setBindGroup(1, computeBindGroup2);
 
     computePass.setPipeline(computePipeline);
     computePass.dispatchWorkgroups(
@@ -669,6 +730,21 @@ async function run() {
     });
 
     pass.setPipeline(renderPipeline);
+
+    const renderBindGroup = device.createBindGroup({
+      label: "Texture sampler bind group",
+      layout: renderBindGroupLayout,
+      entries: [
+        {
+          binding: 0,
+          resource: sampler,
+        },
+        {
+          binding: 1,
+          resource: texture.createView(),
+        },
+      ],
+    });
 
     pass.setBindGroup(0, renderBindGroup);
     const RENDER_TEXTURE_VERTEX_COUNT = 6;

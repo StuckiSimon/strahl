@@ -45,6 +45,10 @@ struct UniformData {
 
 @group(0) @binding(8) var<storage, read_write> materials: array<Material>;
 
+@group(1) @binding(0) var readTexture: texture_storage_2d<rgba8unorm, read>;
+
+@group(1) @binding(1) var<uniform> uniformData: UniformData;
+
 // todo: This should not be hardcoded
 const indicesLength = 12636;
 
@@ -62,8 +66,8 @@ const pixelDeltaV = viewportV / ${imageHeight};
 const viewportUpperLeft = cameraCenter - vec3<f32>(0, 0, focalLength) - viewportU / 2.0 - viewportV / 2.0;
 const pixel00Loc = viewportUpperLeft + 0.5 * (pixelDeltaU + pixelDeltaV);
 
-const samplesPerPixel = 3;
-const maxDepth = 4;
+const samplesPerPixel = 1;
+const maxDepth = 10;
 
 const MINIMUM_FLOAT_EPSILON = 1e-8;
 const FLT_EPSILON = 1.1920929e-7;
@@ -1499,8 +1503,10 @@ fn pixelSampleSquare(seed: ptr<function, u32>) -> vec3<f32> {
 }
 
 fn writeColor(pixelColor: vec3<f32>, x: i32, y: i32, samples: i32) {
-  let scale = 1.0 / f32(samples);
-  let adjustedColor = pixelColor * scale;
+  let previousColor = textureLoad(readTexture, vec2<i32>(x, y)).xyz;
+  let previousColorAdjusted = previousColor * f32(uniformData.priorSamples);
+  let scale = 1.0 / f32(uniformData.priorSamples + samplesPerPixel);
+  let adjustedColor = (pixelColor + previousColorAdjusted) * scale;
   textureStore(texture, vec2<i32>(x, y), vec4<f32>(adjustedColor, 1.0));
 }
 
