@@ -1509,11 +1509,21 @@ fn writeColor(pixelColor: vec3<f32>, x: i32, y: i32, samples: i32) {
   let adjustedColor = (pixelColor + previousColorAdjusted) * scale;
   textureStore(texture, vec2<i32>(x, y), vec4<f32>(adjustedColor, 1.0));
 }
+fn xorshift32(seed: ptr<function, u32>) -> u32 {
+  var x = (*seed);
+  x ^= x << 13;
+  x ^= x >> 17;
+  x ^= x << 5;
+  (*seed) = x;
+  return x;
+}
 
 @compute
 @workgroup_size(${maxWorkgroupDimension}, ${maxWorkgroupDimension}, 1)
 fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
   var seed = local_id.x + local_id.y * ${imageWidth};
+  xorshift32(&seed);
+  seed ^= uniformData.seedOffset;
   
   let i = f32(local_id.x);
   let j = f32(local_id.y);
