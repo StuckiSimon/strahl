@@ -568,9 +568,12 @@ async function run() {
     code: tracerShaderCode,
   });
 
+  initLog.end();
+
   let TARGET_FRAMES = 20;
   let frame = 0;
   const render = async () => {
+    const renderLog = logGroup("render");
     const writeTexture = frame % 2 === 0 ? texture : textureB;
     const readTexture = frame % 2 === 0 ? textureB : texture;
 
@@ -673,10 +676,6 @@ async function run() {
     },
   });
 
-  initLog.end();
-
-  const computeLog = logGroup("compute");
-
     const encoder = device.createCommandEncoder();
 
     const computePass = encoder.beginComputePass({
@@ -715,9 +714,6 @@ async function run() {
       );
     }
 
-    computeLog.end();
-    const renderLog = logGroup("render");
-
     const pass = encoder.beginRenderPass({
       colorAttachments: [
         {
@@ -753,9 +749,7 @@ async function run() {
     pass.end();
 
     const commandBuffer = encoder.finish();
-    renderLog.end();
 
-    const queueSubmitLog = logGroup("queue submit");
     device.queue.submit([commandBuffer]);
 
     if (timestampQueryResultBuffer.mapState === "unmapped") {
@@ -768,7 +762,7 @@ async function run() {
       timestampQueryResultBuffer.unmap();
     }
 
-    queueSubmitLog.end();
+    renderLog.end();
 
     if (frame < TARGET_FRAMES) {
       frame++;
