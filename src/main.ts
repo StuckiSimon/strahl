@@ -646,6 +646,29 @@ async function run() {
     ],
   });
 
+  initLog.end();
+
+  let TARGET_FRAMES = 20;
+  let frame = 0;
+  const render = async () => {
+    const renderLog = logGroup("render");
+    const writeTexture = frame % 2 === 0 ? texture : textureB;
+    const readTexture = frame % 2 === 0 ? textureB : texture;
+
+    const priorSamplesUniformBuffer = device.createBuffer({
+      label: "Prior Samples buffer",
+      size: Uint32Array.BYTES_PER_ELEMENT * 2,
+      usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+      mappedAtCreation: true,
+    });
+
+    const priorSamplesMapped = priorSamplesUniformBuffer.getMappedRange();
+    const priorSamplesData = new Uint32Array(priorSamplesMapped);
+
+    priorSamplesData.set([Math.random() * 10_000, frame]);
+
+    priorSamplesUniformBuffer.unmap();
+
     const computeBindGroup2 = device.createBindGroup({
       label: "Compute bind group 2",
       layout: computeBindGroupLayout2,
