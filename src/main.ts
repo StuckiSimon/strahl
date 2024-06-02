@@ -469,7 +469,7 @@ async function run() {
   materialBuffer.unmap();
 
   const computeBindGroupLayout = device.createBindGroupLayout({
-    label: "Compute bind group layout",
+    label: "Static compute bind group layout",
     entries: [
       {
         binding: 0,
@@ -530,8 +530,8 @@ async function run() {
     ],
   });
 
-  const computeBindGroupLayout2 = device.createBindGroupLayout({
-    label: "Compute bind group layout 2",
+  const dynamicComputeBindGroupLayout = device.createBindGroupLayout({
+    label: "Dynamic compute bind group layout",
     entries: [
       {
         binding: 0,
@@ -555,7 +555,7 @@ async function run() {
 
   const computePipelineLayout = device.createPipelineLayout({
     label: "Compute pipeline layout",
-    bindGroupLayouts: [computeBindGroupLayout, computeBindGroupLayout2],
+    bindGroupLayouts: [computeBindGroupLayout, dynamicComputeBindGroupLayout],
   });
 
   const computePasses = Math.ceil(
@@ -568,31 +568,8 @@ async function run() {
     code: tracerShaderCode,
   });
 
-  initLog.end();
-
-  let TARGET_FRAMES = 20;
-  let frame = 0;
-  const render = async () => {
-    const renderLog = logGroup("render");
-    const writeTexture = frame % 2 === 0 ? texture : textureB;
-    const readTexture = frame % 2 === 0 ? textureB : texture;
-
-    const priorSamplesUniformBuffer = device.createBuffer({
-      label: "Prior Samples buffer",
-      size: Uint32Array.BYTES_PER_ELEMENT * 2,
-      usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
-      mappedAtCreation: true,
-    });
-
-    const priorSamplesMapped = priorSamplesUniformBuffer.getMappedRange();
-    const priorSamplesData = new Uint32Array(priorSamplesMapped);
-
-    priorSamplesData.set([Math.random() * 10_000, frame]);
-
-    priorSamplesUniformBuffer.unmap();
-
   const computeBindGroup = device.createBindGroup({
-    label: "Compute bind group",
+    label: "Static compute bind group",
     layout: computeBindGroupLayout,
     entries: [
       {
@@ -669,9 +646,9 @@ async function run() {
 
     priorSamplesUniformBuffer.unmap();
 
-    const computeBindGroup2 = device.createBindGroup({
-      label: "Compute bind group 2",
-      layout: computeBindGroupLayout2,
+    const dynamicComputeBindGroup = device.createBindGroup({
+      label: "Dynamic compute bind group",
+      layout: dynamicComputeBindGroupLayout,
       entries: [
         {
           binding: 0,
@@ -709,7 +686,7 @@ async function run() {
       },
     });
     computePass.setBindGroup(0, computeBindGroup);
-    computePass.setBindGroup(1, computeBindGroup2);
+    computePass.setBindGroup(1, dynamicComputeBindGroup);
 
     computePass.setPipeline(computePipeline);
     computePass.dispatchWorkgroups(
