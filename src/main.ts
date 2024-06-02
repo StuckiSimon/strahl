@@ -474,7 +474,9 @@ async function run() {
       {
         binding: 0,
         visibility: GPUShaderStage.COMPUTE,
-        storageTexture: { format: "rgba8unorm" /*, access: "write-only"*/ },
+        buffer: {
+          type: "storage",
+        },
       },
       {
         binding: 1,
@@ -525,13 +527,6 @@ async function run() {
           type: "storage",
         },
       },
-      {
-        binding: 8,
-        visibility: GPUShaderStage.COMPUTE,
-        buffer: {
-          type: "storage",
-        },
-      },
     ],
   });
 
@@ -541,10 +536,15 @@ async function run() {
       {
         binding: 0,
         visibility: GPUShaderStage.COMPUTE,
-        storageTexture: { format: "rgba8unorm", access: "read-only" },
+        storageTexture: { format: "rgba8unorm" /*, access: "write-only"*/ },
       },
       {
         binding: 1,
+        visibility: GPUShaderStage.COMPUTE,
+        storageTexture: { format: "rgba8unorm", access: "read-only" },
+      },
+      {
+        binding: 2,
         visibility: GPUShaderStage.COMPUTE,
         buffer: {
           type: "uniform",
@@ -594,52 +594,48 @@ async function run() {
     entries: [
       {
         binding: 0,
-          resource: writeTexture.createView(),
-      },
-      {
-        binding: 1,
         resource: {
           buffer: positionBuffer,
         },
       },
       {
-        binding: 2,
+          binding: 1,
         resource: {
           buffer: indicesBuffer,
         },
       },
       {
-        binding: 3,
+          binding: 2,
         resource: {
           buffer: boundsBuffer,
         },
       },
       {
-        binding: 4,
+          binding: 3,
         resource: {
           buffer: contentsBuffer,
         },
       },
       {
-        binding: 5,
+          binding: 4,
         resource: {
           buffer: normalBuffer,
         },
       },
       {
-        binding: 6,
+          binding: 5,
         resource: {
           buffer: indirectBuffer,
         },
       },
       {
-        binding: 7,
+          binding: 6,
         resource: {
           buffer: objectDefinitionsBuffer,
         },
       },
       {
-        binding: 8,
+          binding: 7,
         resource: {
           buffer: materialBuffer,
         },
@@ -653,10 +649,14 @@ async function run() {
       entries: [
         {
           binding: 0,
-          resource: readTexture.createView(),
+          resource: writeTexture.createView(),
         },
         {
           binding: 1,
+          resource: readTexture.createView(),
+        },
+        {
+          binding: 2,
           resource: {
             buffer: priorSamplesUniformBuffer,
           },
