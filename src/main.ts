@@ -634,7 +634,7 @@ async function run() {
 
     const priorSamplesUniformBuffer = device.createBuffer({
       label: "Prior Samples buffer",
-      size: Uint32Array.BYTES_PER_ELEMENT * 2,
+      size: Uint32Array.BYTES_PER_ELEMENT * 3,
       usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
       mappedAtCreation: true,
     });
@@ -642,7 +642,12 @@ async function run() {
     const priorSamplesMapped = priorSamplesUniformBuffer.getMappedRange();
     const priorSamplesData = new Uint32Array(priorSamplesMapped);
 
-    priorSamplesData.set([Math.random() * 10_000, frame]);
+    const SAMPLES_PER_ITERATION = 1;
+    priorSamplesData.set([
+      Math.random() * 10_000,
+      frame,
+      SAMPLES_PER_ITERATION,
+    ]);
 
     priorSamplesUniformBuffer.unmap();
 

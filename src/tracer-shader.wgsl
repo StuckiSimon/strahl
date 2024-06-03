@@ -27,6 +27,7 @@ struct Material {
 struct UniformData {
   seedOffset: u32,
   priorSamples: u32,
+  samplesPerPixel: u32,
 }
 
 @group(0) @binding(0) var<storage, read_write> positions: array<f32>;
@@ -67,7 +68,6 @@ const pixelDeltaV = viewportV / ${imageHeight};
 const viewportUpperLeft = cameraCenter - vec3<f32>(0, 0, focalLength) - viewportU / 2.0 - viewportV / 2.0;
 const pixel00Loc = viewportUpperLeft + 0.5 * (pixelDeltaU + pixelDeltaV);
 
-const samplesPerPixel = 1;
 const maxDepth = 10;
 
 const MINIMUM_FLOAT_EPSILON = 1e-8;
@@ -1506,6 +1506,7 @@ fn pixelSampleSquare(seed: ptr<function, u32>) -> vec3<f32> {
 fn writeColor(pixelColor: vec3<f32>, x: i32, y: i32, samples: i32) {
   let previousColor = textureLoad(readTexture, vec2<i32>(x, y)).xyz;
   let previousColorAdjusted = previousColor * f32(uniformData.priorSamples);
+  let samplesPerPixel = uniformData.samplesPerPixel;
   let scale = 1.0 / f32(uniformData.priorSamples + samplesPerPixel);
   let adjustedColor = (pixelColor + previousColorAdjusted) * scale;
   textureStore(texture, vec2<i32>(x, y), vec4<f32>(adjustedColor, 1.0));
@@ -1531,6 +1532,7 @@ fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
   
   var pixelColor = vec3<f32>(0.0, 0.0, 0.0);
   
+  let samplesPerPixel = i32(uniformData.samplesPerPixel);
   for (var sample = 0; sample < samplesPerPixel; sample += 1) {
       let r = getRay(i, j, &seed);
       pixelColor += rayColor(r, &seed);
