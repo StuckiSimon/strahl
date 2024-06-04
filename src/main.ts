@@ -632,24 +632,29 @@ async function run() {
     const writeTexture = frame % 2 === 0 ? texture : textureB;
     const readTexture = frame % 2 === 0 ? textureB : texture;
 
-    const priorSamplesUniformBuffer = device.createBuffer({
-      label: "Prior Samples buffer",
-      size: Uint32Array.BYTES_PER_ELEMENT * 3,
+    const { size: bytesForUniform } = definitions.uniforms.uniformData;
+
+    const uniformData = makeStructuredView(
+      definitions.uniforms.uniformData,
+      new ArrayBuffer(bytesForUniform),
+    );
+
+    const uniformBuffer = device.createBuffer({
+      label: "Uniform data buffer",
+      size: bytesForUniform,
       usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
-      mappedAtCreation: true,
+      // mappedAtCreation: true,
     });
 
-    const priorSamplesMapped = priorSamplesUniformBuffer.getMappedRange();
-    const priorSamplesData = new Uint32Array(priorSamplesMapped);
-
     const SAMPLES_PER_ITERATION = 1;
-    priorSamplesData.set([
-      Math.random() * 10_000,
-      frame,
-      SAMPLES_PER_ITERATION,
-    ]);
 
-    priorSamplesUniformBuffer.unmap();
+    uniformData.set({
+      seedOffset: Math.random() * 10_000,
+      priorSamples: frame,
+      samplesPerPixel: SAMPLES_PER_ITERATION,
+    });
+    // todo: consider buffer writing
+    device.queue.writeBuffer(uniformBuffer, 0, uniformData.arrayBuffer);
 
     const dynamicComputeBindGroup = device.createBindGroup({
       label: "Dynamic compute bind group",
@@ -666,7 +671,7 @@ async function run() {
         {
           binding: 2,
           resource: {
-            buffer: priorSamplesUniformBuffer,
+            buffer: uniformBuffer,
           },
         },
       ],
