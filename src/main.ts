@@ -38,10 +38,6 @@ function getCount(n16: number, uint16Array: Uint16Array) {
   return uint16Array[n16 + 14];
 }
 
-function getLeftNode(n32: number) {
-  return n32 + 8;
-}
-
 function getRightNode(n32: number, uint32Array: Uint32Array) {
   return uint32Array[n32 + 6];
 }
