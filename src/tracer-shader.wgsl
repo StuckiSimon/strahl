@@ -113,60 +113,6 @@ struct Interval {
   max: f32,
 }
 
-fn interval(min: f32, max: f32) -> Interval {
-  return Interval(min, max);
-}
-
-fn intervalContains(interval: Interval, value: f32) -> bool {
-  return interval.min <= value && value <= interval.max;
-}
-
-fn intervalSurrounds(interval: Interval, value: f32) -> bool {
-  return interval.min < value && value < interval.max;
-}
-
-fn intervalClamp(interval: Interval, value: f32) -> f32 {
-  return clamp(value, interval.min, interval.max);
-}
-
-struct Aabb {
-  intervalX: Interval,
-  intervalY: Interval,
-  intervalZ: Interval,
-}
-
-fn aabbAxis(aabb: Aabb, axis: i32) -> Interval {
-  if (axis == 0) {
-    return aabb.intervalX;
-  } else if (axis == 1) {
-    return aabb.intervalY;
-  } else {
-    return aabb.intervalZ;
-  }
-}
-
-fn aabbHit(aabb: Aabb, r: Ray, rayT: ptr<function, Interval>) -> bool {
-  for (var a = 0; a < 3; a += 1) {
-    let t0 = min((aabbAxis(aabb, a).min - r.origin[a]) / r.direction[a],
-                 (aabbAxis(aabb, a).max - r.origin[a]) / r.direction[a]);
-    let t1 = max((aabbAxis(aabb, a).min - r.origin[a]) / r.direction[a],
-                  (aabbAxis(aabb, a).max - r.origin[a]) / r.direction[a]);
-    (*rayT).min = max((*rayT).min, t0);
-    (*rayT).max = min((*rayT).max, t1);
-    if ((*rayT).max <= (*rayT).min) {
-      return false;
-    }
-  }
-  return true;
-}
-
-struct BvhNode {
-  boundingBox: Aabb,
-  leftIndex: i32,
-  rightIndex: i32,
-  triangleIndex: i32,
-}
-
 struct BinaryBvhNodeInfo {
   // 0-16: isLeaf, 17-31: splitAxis|triangleCount
   x: u32,
@@ -579,10 +525,6 @@ const triangles: array<Triangle, TRIANGLE_COUNT> = array<Triangle, TRIANGLE_COUN
   Triangle(vec3<f32>(-3, 5, -6), vec3<f32>(0.0, -20, 0), vec3<f32>(0, 0, 10), MaterialDefinition(3), defaultNormal,defaultNormal,defaultNormal),
 );
 
-fn bvhNodeHit(bvh: BvhNode, r: Ray, rayT: ptr<function, Interval>) -> bool {
-  return aabbHit(bvh.boundingBox, r, rayT);
-}
-
 fn rayAt(ray: Ray, t: f32) -> vec3<f32> {
   return ray.origin + t * ray.direction;
 }
@@ -638,12 +580,6 @@ fn randInUnitSphere(seed: ptr<function, u32>) -> vec3<f32> {
   }
   // Should never reach here
   return vec3<f32>(0.0, 0.0, 0.0);
-}
-
-fn triangleBoundingBox(triangle: Triangle) -> Aabb {
-  let min = min(triangle.Q, min(triangle.Q + triangle.u, triangle.Q + triangle.v));
-  let max = max(triangle.Q, max(triangle.Q + triangle.u, triangle.Q + triangle.v));
-  return Aabb(interval(min.x, max.x), interval(min.y, max.y), interval(min.z, max.z));
 }
 
 fn triangleHit(triangle: Triangle, ray: Ray, rayT: Interval, hitRecord: ptr<function, HitRecord>) -> bool {
