@@ -54,6 +54,30 @@ type MeshBVHInternal = {
   _roots: ArrayBuffer[];
 };
 
+const sunConfig = {
+  skyPower: 0.4,
+  skyColor: [0.5, 0.7, 1.0],
+  sunPower: 0.9,
+  sunAngularSize: 40,
+  sunLatitude: 45,
+  sunLongitude: 180,
+  sunColor: [1.0, 1.0, 0.9],
+};
+
+function getSunDirection() {
+  const { sunLatitude, sunLongitude } = sunConfig;
+  let latTheta = ((90.0 - sunLatitude) * Math.PI) / 180.0;
+  let lonPhi = (sunLongitude * Math.PI) / 180.0;
+  let cosTheta = Math.cos(latTheta);
+  let sinTheta = Math.sin(latTheta);
+  let cosPhi = Math.cos(lonPhi);
+  let sinPhi = Math.sin(lonPhi);
+  let x = sinTheta * cosPhi;
+  let y = sinTheta * sinPhi;
+  let z = cosTheta;
+  return [x, y, z];
+}
+
 // Inspired by https://github.com/gkjohnson/three-mesh-bvh/blob/0eda7b718799e1709ad9efecdcc13c06ae3d5a55/src/gpu/MeshBVHUniformStruct.js#L110C1-L191C2
 function bvhToTextures(bvh: MeshBVH) {
   const privateBvh = bvh as unknown as MeshBVHInternal;
@@ -619,6 +643,8 @@ async function run() {
     ],
   });
 
+  const sunDirection = getSunDirection();
+
   initLog.end();
 
   let TARGET_FRAMES = 20;
@@ -648,6 +674,12 @@ async function run() {
       seedOffset: Math.random() * 10_000,
       priorSamples: frame,
       samplesPerPixel: SAMPLES_PER_ITERATION,
+      sunDirection,
+      skyPower: sunConfig.skyPower,
+      skyColor: sunConfig.skyColor,
+      sunPower: sunConfig.sunPower,
+      sunAngularSize: sunConfig.sunAngularSize,
+      sunColor: sunConfig.sunColor,
     });
     // todo: consider buffer writing
     device.queue.writeBuffer(uniformBuffer, 0, uniformData.arrayBuffer);

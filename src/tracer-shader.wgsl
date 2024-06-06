@@ -28,6 +28,12 @@ struct UniformData {
   seedOffset: u32,
   priorSamples: u32,
   samplesPerPixel: u32,
+  sunDirection: vec3f,
+  skyPower: f32,
+  skyColor: Color,
+  sunPower: f32,
+  sunAngularSize: f32,
+  sunColor: Color,
 }
 
 @group(0) @binding(0) var<storage, read_write> positions: array<f32>;
@@ -808,28 +814,6 @@ struct BouncingInfo {
   emission: Color,
 }
 
-const skyPower = 0.5;
-const skyColor = Color(0.5, 0.7, 1.0);
-const sunPower = 0.5;
-const sunAngularSize = 40;
-const sunLatitude = 45;
-const sunLongitude = 180;
-const sunColor = Color(1.0, 1.0, 0.9);
-
-// todo: set in uniform
-fn getSunDirection() -> vec3f {
-  let latTheta = ((90.0 - sunLatitude) * PI) / 180.0;
-  let lonPhi = (sunLongitude * PI) / 180.0;
-  let cosTheta = cos(latTheta);
-  let sinTheta = sin(latTheta);
-  let cosPhi = cos(lonPhi);
-  let sinPhi = sin(lonPhi);
-  let x = sinTheta * cosPhi;
-  let y = sinTheta * sinPhi;
-  let z = cosTheta;
-  return vec3f(x, y, z);
-}
-
 struct Basis {
   nW: vec3f,
   tW: vec3f,
@@ -1185,8 +1169,8 @@ fn skyPdf(woutputL: vec3f, woutputWs: vec3f) -> f32 {
 }
 
 fn sunPdf(woutputL: vec3f, woutputW: vec3f) -> f32 {
-  let thetaMax = sunAngularSize * PI/180.0;
-  if (dot(woutputW, getSunDirection()) < cos(thetaMax))  {
+  let thetaMax = uniformData.sunAngularSize * PI/180.0;
+  if (dot(woutputW, uniformData.sunDirection) < cos(thetaMax))  {
     return 0.0;
   }
   let solidAngle = 2.0 * PI * (1.0 - cos(thetaMax));
@@ -1194,25 +1178,25 @@ fn sunPdf(woutputL: vec3f, woutputW: vec3f) -> f32 {
 }
 
 fn sunTotalPower() -> f32 {
-  let thetaMax = sunAngularSize * PI/180.0;
+  let thetaMax = uniformData.sunAngularSize * PI/180.0;
   let solidAngle = 2.0 * PI * (1.0 - cos(thetaMax));
-  return length(sunPower * sunColor) * solidAngle;
+  return length(uniformData.sunPower * uniformData.sunColor) * solidAngle;
 }
 
 fn skyTotalPower() -> f32 {
-  return length(skyPower * skyColor) * 2.0 * PI;
+  return length(uniformData.skyPower * uniformData.skyColor) * 2.0 * PI;
 }
 
 fn sunRadiance(woutputW: vec3f) -> vec3f {
-  let thetaMax = sunAngularSize * PI/180.0;
-  if (dot(woutputW, getSunDirection()) < cos(thetaMax)) {
+  let thetaMax = uniformData.sunAngularSize * PI/180.0;
+  if (dot(woutputW, uniformData.sunDirection) < cos(thetaMax)) {
     return vec3f(0.0);
   }
-  return sunPower * sunColor;
+  return uniformData.sunPower * uniformData.sunColor;
 }
 
 fn skyRadiance() -> vec3f {
-  return skyPower * skyColor;
+  return uniformData.skyPower * uniformData.skyColor;
 }
 
 fn lightPdf(shadowW: vec3f, basis: Basis) -> f32 {
