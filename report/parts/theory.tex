@@ -88,6 +88,23 @@ WebGPU is a new web standard which is no longer based on OpenGL. One of the main
 The standard is still in development and new features are being added.
 Common 3d engines such as Babylon.js, Three.js, PlayCanvas and Unity have announced support for WebGPU.
 
+\subsection{Buffers}
+
+Data needs to be transferred between the CPU and the GPU. Buffers are the primary method to do so. Depending on the type of data to be transferred, different types of buffers can be used.
+
+\subsubsection{Uniforms}
+
+Uniform Buffers are optimized for data which is read-only on the GPU and is the same for all vertices or fragments. Such information could be the projection matrix.
+
+\subsubsection{Storage}
+
+Storage Buffers are intended for read-write access on the GPU. The limits of the buffer are higher than for uniform buffers.
+
+\subsubsection{Vertex}
+
+\subsection{Index}
+
+
 \section{Ray Tracing}
 \subsection{Monte Carlo Ray Tracing}
 \subsection{Intersection Testing}
