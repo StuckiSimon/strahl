@@ -573,8 +573,7 @@ async function run() {
   });
 
   const computePasses = Math.ceil(
-    // todo: check…
-    (imageWidth * imageWidth) / maxWorkgroupDimension,
+    (imageWidth * imageWidth) / (maxWorkgroupDimension * maxWorkgroupDimension),
   );
 
   const computeShaderModule = device.createShaderModule({
