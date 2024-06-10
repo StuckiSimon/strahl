@@ -451,12 +451,9 @@ async function run() {
   const materialBuffer = device.createBuffer({
     label: "Material buffer",
     size: bytesPerMaterial * materials.length,
-    usage: GPUBufferUsage.STORAGE,
-    mappedAtCreation: true,
+    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+    //mappedAtCreation: true,
   });
-
-  const materialMapped = materialBuffer.getMappedRange();
-  const materialData = new Float32Array(materialMapped);
 
   materialDataView.set(
     materials.map((m) => ({
@@ -483,10 +480,7 @@ async function run() {
     })),
   );
 
-  // todo: check if Flaot32Array is strictly necessary
-  materialData.set(new Float32Array(materialDataView.arrayBuffer));
-
-  materialBuffer.unmap();
+  device.queue.writeBuffer(materialBuffer, 0, materialDataView.arrayBuffer);
 
   const computeBindGroupLayout = device.createBindGroupLayout({
     label: "Static compute bind group layout",
