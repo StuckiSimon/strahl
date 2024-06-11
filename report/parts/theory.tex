@@ -116,7 +116,7 @@ A brute force approach could be to determine the intersection distance for each 
 
 In order to accelerate the intersection testing, various approaches have been developed.
 
-\fgls{BVH}{\e{Bounding Volume Hierarchy}, common tree-based acceleration structure}
+The \fgls{BVH}{\e{Bounding Volume Hierarchy}, common tree-based acceleration structure} is an acceleration structure which is leveraged to speed up the ray intersection tests. The core idea is to group adjacent objects in a bounding volume and structure the hierarchy in a way that all child elements of a node are contained in the bounding volume of the parent node. This allows for early rejection of branches which are not intersected by the ray. By employing a BVH, the number of intersection tests can be reduced from $O(n)$ to $O(log(n))$.
 
 \subsection{Importance Sampling}
 
