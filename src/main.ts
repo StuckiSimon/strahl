@@ -640,12 +640,12 @@ async function run() {
 
   initLog.end();
 
-  let TARGET_FRAMES = 20;
-  let frame = 0;
+  const TARGET_SAMPLES = 20;
+  let currentSample = 0;
   const render = async () => {
     const renderLog = logGroup("render");
-    const writeTexture = frame % 2 === 0 ? texture : textureB;
-    const readTexture = frame % 2 === 0 ? textureB : texture;
+    const writeTexture = currentSample % 2 === 0 ? texture : textureB;
+    const readTexture = currentSample % 2 === 0 ? textureB : texture;
 
     const { size: bytesForUniform } = definitions.uniforms.uniformData;
 
@@ -665,7 +665,7 @@ async function run() {
 
     uniformData.set({
       seedOffset: Math.random() * 10_000,
-      priorSamples: frame,
+      priorSamples: currentSample,
       samplesPerPixel: SAMPLES_PER_ITERATION,
       sunDirection,
       skyPower: sunConfig.skyPower,
@@ -795,8 +795,8 @@ async function run() {
 
     renderLog.end();
 
-    if (frame < TARGET_FRAMES) {
-      frame++;
+    if (currentSample < TARGET_SAMPLES) {
+      currentSample++;
       requestAnimationFrame(render);
     }
   };
