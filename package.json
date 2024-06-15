@@ -11,13 +11,13 @@
   "devDependencies": {
     "@types/three": "^0.165.0",
     "@webgpu/types": "^0.1.42",
-    "prettier": "3.3.1",
+    "prettier": "3.3.2",
     "typescript": "^5.4.5",
-    "vite": "^5.2.13"
+    "vite": "^5.3.1"
   },
   "dependencies": {
     "three": "^0.165.0",
     "three-mesh-bvh": "^0.7.5",
-    "webgpu-utils": "^1.7.2"
+    "webgpu-utils": "^1.8.2"
   }
 }
