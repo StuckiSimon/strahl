@@ -4,7 +4,9 @@ export function logGroup(label: string) {
   return {
     end() {
       const end = window.performance.now();
-      console.log(`${label}: ${end - start}ms`);
+      const delta = end - start;
+      console.log(`${label}: ${delta}ms`);
+      return delta;
     },
   };
 }

@@ -642,6 +642,8 @@ async function run() {
 
   const TARGET_SAMPLES = 20;
   let currentSample = 0;
+  let renderAgg = 0;
+
   const render = async () => {
     const renderLog = logGroup("render");
     const writeTexture = currentSample % 2 === 0 ? texture : textureB;
@@ -793,11 +795,13 @@ async function run() {
       timestampQueryResultBuffer.unmap();
     }
 
-    renderLog.end();
+    renderAgg += renderLog.end();
 
     if (currentSample < TARGET_SAMPLES) {
       currentSample++;
       requestAnimationFrame(render);
+    } else {
+      console.log("Average render time", renderAgg / TARGET_SAMPLES);
     }
   };
   requestAnimationFrame(render);
