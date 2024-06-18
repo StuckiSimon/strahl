@@ -1440,6 +1440,14 @@ fn xorshift32(seed: ptr<function, u32>) -> u32 {
   return x;
 }
 
+const invProjectionMatrix = mat4x4<f32>(
+  0.4663076581549986, -0, -0, -0, -0, 0.4663076581549986, -0, -0, -0, -0, -0, -4.99975, -0, -0, -0.9999999999999999, 5.000249999999999
+);
+
+const cameraWorldMatrix = mat4x4<f32>(
+  1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1
+);
+
 @compute
 @workgroup_size(${maxWorkgroupDimension}, ${maxWorkgroupDimension}, 1)
 fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
