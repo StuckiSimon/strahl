@@ -1441,6 +1441,11 @@ fn identityMatrix() -> mat4x4<f32> {
       0.0, 0.0, 0.0, 1.0
   );
 }
+
+fn sampleTriangleFilter(xi: f32) -> f32 {
+  return select(1.0 - sqrt(2.0 - 2.0 * xi), sqrt(2.0 * xi) - 1.0, xi < 0.5);
+}
+
 fn ndcToCameraRay(coord: vec2f, cameraWorld: mat4x4<f32>, invProjectionMatrix: mat4x4<f32>, seed: ptr<function, u32>) -> Ray {
   let lookDirection = cameraWorld * vec4f(0.0, 0.0, -1.0, 0.0);
   let nearVector = invProjectionMatrix * vec4f(0.0, 0.0, -1.0, 1.0);
@@ -1471,6 +1476,12 @@ fn xorshift32(seed: ptr<function, u32>) -> u32 {
   return x;
 }
 
+fn getPixelJitter(seed: ptr<function, u32>) -> vec2f {
+  let jitterX = 0.5 * sampleTriangleFilter(randomF32(seed));
+  let jitterY = 0.5 * sampleTriangleFilter(randomF32(seed));
+  return vec2f(jitterX, jitterY);
+}
+
 const invProjectionMatrix = mat4x4<f32>(
   0.4663076581549986, -0, -0, -0, -0, 0.4663076581549986, -0, -0, -0, -0, -0, -4.99975, -0, -0, -0.9999999999999999, 5.000249999999999
 );
@@ -1496,8 +1507,8 @@ fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
   
   let samplesPerPixel = i32(uniformData.samplesPerPixel);
   for (var sample = 0; sample < samplesPerPixel; sample += 1) {
-    // todo: anti-aliasing
-    let pixel = vec2<f32>(i, j);
+    // anti-aliasing
+    let pixel = vec2<f32>(i, j) + getPixelJitter(&seed);
     let ndc = -1.0 + 2.0*pixel / vec2<f32>(${imageWidth}, ${imageHeight});
     
     var ray = ndcToCameraRay(ndc, invModelMatrix * cameraWorldMatrix, invProjectionMatrix, &seed);
