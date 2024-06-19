@@ -1431,6 +1431,7 @@ fn writeColor(pixelColor: vec3<f32>, x: i32, y: i32, samples: i32) {
   let adjustedColor = (pixelColor + previousColorAdjusted) * scale;
   textureStore(texture, vec2<i32>(x, y), vec4<f32>(adjustedColor, 1.0));
 }
+
 @must_use
 fn identityMatrix() -> mat4x4<f32> {
   return mat4x4<f32>(
