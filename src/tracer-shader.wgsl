@@ -1431,6 +1431,36 @@ fn writeColor(pixelColor: vec3<f32>, x: i32, y: i32, samples: i32) {
   let adjustedColor = (pixelColor + previousColorAdjusted) * scale;
   textureStore(texture, vec2<i32>(x, y), vec4<f32>(adjustedColor, 1.0));
 }
+@must_use
+fn identityMatrix() -> mat4x4<f32> {
+  return mat4x4<f32>(
+      1.0, 0.0, 0.0, 0.0,
+      0.0, 1.0, 0.0, 0.0,
+      0.0, 0.0, 1.0, 0.0,
+      0.0, 0.0, 0.0, 1.0
+  );
+}
+fn ndcToCameraRay(coord: vec2f, cameraWorld: mat4x4<f32>, invProjectionMatrix: mat4x4<f32>, seed: ptr<function, u32>) -> Ray {
+  let lookDirection = cameraWorld * vec4f(0.0, 0.0, -1.0, 0.0);
+  let nearVector = invProjectionMatrix * vec4f(0.0, 0.0, -1.0, 1.0);
+  let near = abs(nearVector.z / nearVector.w);
+
+  var origin = cameraWorld * vec4f(0.0, 0.0, 0.0, 1.0);
+  
+  let randomOffset = randomF32(seed) * vec2f(0.5, 0.5);
+
+  var direction = invProjectionMatrix * vec4f(coord.x, coord.y, 0.5, 1.0);
+  direction /= direction.w;
+  direction = cameraWorld * direction - origin;
+
+  origin += vec4f(direction.xyz * near / dot(direction, lookDirection), 0);
+
+  return Ray(
+    origin.xyz,
+    direction.xyz
+  );
+}
+
 fn xorshift32(seed: ptr<function, u32>) -> u32 {
   var x = (*seed);
   x ^= x << 13;
@@ -1451,6 +1481,9 @@ const cameraWorldMatrix = mat4x4<f32>(
 @compute
 @workgroup_size(${maxWorkgroupDimension}, ${maxWorkgroupDimension}, 1)
 fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
+  // todo: use based on scene
+  let invModelMatrix = identityMatrix();
+
   var seed = local_id.x + local_id.y * ${imageWidth};
   xorshift32(&seed);
   seed ^= uniformData.seedOffset;
@@ -1462,8 +1495,14 @@ fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
   
   let samplesPerPixel = i32(uniformData.samplesPerPixel);
   for (var sample = 0; sample < samplesPerPixel; sample += 1) {
-      let r = getRay(i, j, &seed);
-      pixelColor += rayColor(r, &seed);
+    // todo: anti-aliasing
+    let pixel = vec2<f32>(i, j);
+    let ndc = -1.0 + 2.0*pixel / vec2<f32>(${imageWidth}, ${imageHeight});
+    
+    var ray = ndcToCameraRay(ndc, invModelMatrix * cameraWorldMatrix, invProjectionMatrix, &seed);
+    ray.direction = normalize(ray.direction);
+
+    pixelColor += rayColor(ray, &seed);
   }
   
   writeColor(pixelColor, i32(local_id.x), i32(local_id.y), samplesPerPixel);
