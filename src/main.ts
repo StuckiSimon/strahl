@@ -646,10 +646,15 @@ async function run() {
 
   initLog.end();
 
+  const TARGET_SAMPLES = 20;
 
   const controls = new OrbitControls(camera, canvas);
 
   const buildRenderLoop = () => {
+    let state: "running" | "halted" = "running";
+
+    const isHalted = () => state === "halted";
+
     let currentAnimationFrameRequest: number | null = null;
   let currentSample = 0;
   let renderAgg = 0;
@@ -813,18 +818,21 @@ async function run() {
 
     renderAgg += renderLog.end();
 
-    if (currentSample < TARGET_SAMPLES) {
+      if (currentSample < TARGET_SAMPLES && !isHalted()) {
       currentSample++;
         currentAnimationFrameRequest = requestAnimationFrame(render);
     } else {
       console.log("Average render time", renderAgg / TARGET_SAMPLES);
         currentAnimationFrameRequest = null;
+
+        state = "halted";
       }
   };
     currentAnimationFrameRequest = requestAnimationFrame(render);
 
     return {
       terminateLoop: () => {
+        state = "halted";
         if (currentAnimationFrameRequest !== null) {
           cancelAnimationFrame(currentAnimationFrameRequest);
         }
