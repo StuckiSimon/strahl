@@ -1408,17 +1408,6 @@ fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec3<f32> {
   return L;
 }
 
-fn getRay(i: f32, j: f32, seed: ptr<function, u32>) -> Ray {
-  let pixelCenter = pixel00Loc + (i * pixelDeltaU) + (j * pixelDeltaV);
-  let pixelSample = pixelCenter + pixelSampleSquare(seed);
-
-  let rayOrigin = cameraCenter;
-  let rayDirection = pixelSample - cameraCenter;
-
-  let ray = Ray(cameraCenter, rayDirection);
-  return ray;
-}
-
 fn pixelSampleSquare(seed: ptr<function, u32>) -> vec3<f32> {
   let px = -0.5 + randomF32(seed);
   let py = -0.5 + randomF32(seed);
@@ -1484,14 +1473,6 @@ fn getPixelJitter(seed: ptr<function, u32>) -> vec2f {
   return vec2f(jitterX, jitterY);
 }
 
-const invProjectionMatrix = mat4x4<f32>(
-  0.4663076581549986, -0, -0, -0, -0, 0.4663076581549986, -0, -0, -0, -0, -0, -4.99975, -0, -0, -0.9999999999999999, 5.000249999999999
-);
-
-const cameraWorldMatrix = mat4x4<f32>(
-  1, 0, 0, 0, 0, 0.999800059980007, 0.019996001199600145, 0, 0, -0.019996001199600145, 0.999800059980007, 0, 0, 0, 50, 1
-);
-
 @compute
 @workgroup_size(${maxWorkgroupDimension}, ${maxWorkgroupDimension}, 1)
 fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
@@ -1513,7 +1494,7 @@ fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
     let pixel = vec2<f32>(i, j) + getPixelJitter(&seed);
     let ndc = -1.0 + 2.0*pixel / vec2<f32>(${imageWidth}, ${imageHeight});
     
-    var ray = ndcToCameraRay(ndc, invModelMatrix * cameraWorldMatrix, invProjectionMatrix, &seed);
+    var ray = ndcToCameraRay(ndc, invModelMatrix * uniformData.cameraWorldMatrix, uniformData.invProjectionMatrix, &seed);
     ray.direction = normalize(ray.direction);
 
     pixelColor += rayColor(ray, &seed);
