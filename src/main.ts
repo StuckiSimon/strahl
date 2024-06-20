@@ -1,5 +1,6 @@
 import { Matrix4, Mesh, PerspectiveCamera } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { MeshBVH } from "three-mesh-bvh";
 import buildTracerShader from "./tracer-shader";
 import buildRenderShader from "./render-shader";
@@ -324,9 +325,6 @@ async function run() {
   camera.lookAt(0, 2, 0);
 
   camera.updateMatrixWorld(true);
-  const projectionMatrix = camera.projectionMatrix;
-  const matrixWorld = camera.matrixWorld;
-  const invProjectionMatrix = projectionMatrix.invert();
 
   reducedModel.geometry.applyMatrix4(transformMatrix);
   reducedModel.boundsTree = new MeshBVH(reducedModel.geometry, {
@@ -648,11 +646,19 @@ async function run() {
 
   initLog.end();
 
-  const TARGET_SAMPLES = 20;
+
+  const controls = new OrbitControls(camera, canvas);
+
+  const buildRenderLoop = () => {
+    let currentAnimationFrameRequest: number | null = null;
   let currentSample = 0;
   let renderAgg = 0;
 
   const render = async () => {
+      const projectionMatrix = camera.projectionMatrix;
+      const matrixWorld = camera.matrixWorld;
+      const invProjectionMatrix = projectionMatrix.invert();
+
     const renderLog = logGroup("render");
     const writeTexture = currentSample % 2 === 0 ? texture : textureB;
     const readTexture = currentSample % 2 === 0 ? textureB : texture;
@@ -809,12 +815,30 @@ async function run() {
 
     if (currentSample < TARGET_SAMPLES) {
       currentSample++;
-      requestAnimationFrame(render);
+        currentAnimationFrameRequest = requestAnimationFrame(render);
     } else {
       console.log("Average render time", renderAgg / TARGET_SAMPLES);
-    }
+        currentAnimationFrameRequest = null;
+      }
   };
-  requestAnimationFrame(render);
+    currentAnimationFrameRequest = requestAnimationFrame(render);
+
+    return {
+      terminateLoop: () => {
+        if (currentAnimationFrameRequest !== null) {
+          cancelAnimationFrame(currentAnimationFrameRequest);
+        }
+      },
+    };
+  };
+
+  let renderLoop = buildRenderLoop();
+
+  controls.addEventListener("change", () => {
+    renderLoop.terminateLoop();
+
+    renderLoop = buildRenderLoop();
+  });
 }
 
 run();
