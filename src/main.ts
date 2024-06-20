@@ -1,4 +1,4 @@
-import { Matrix4, Mesh } from "three";
+import { Matrix4, Mesh, PerspectiveCamera } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { MeshBVH } from "three-mesh-bvh";
 import buildTracerShader from "./tracer-shader";
