@@ -317,8 +317,16 @@ async function run() {
   );
 
   duckMesh.geometry.applyMatrix4(transformMatrix);
-
   const reducedModel = consolidateMesh([duckMesh]);
+
+  const camera = new PerspectiveCamera();
+  camera.position.set(0.0, 0.0, 30.0);
+  camera.lookAt(0, 2, 0);
+
+  camera.updateMatrixWorld(true);
+  const projectionMatrix = camera.projectionMatrix;
+  const matrixWorld = camera.matrixWorld;
+  const invProjectionMatrix = projectionMatrix.invert();
 
   reducedModel.geometry.applyMatrix4(transformMatrix);
   reducedModel.boundsTree = new MeshBVH(reducedModel.geometry, {
@@ -666,6 +674,8 @@ async function run() {
     const SAMPLES_PER_ITERATION = 1;
 
     uniformData.set({
+      invProjectionMatrix: invProjectionMatrix.elements,
+      cameraWorldMatrix: matrixWorld.elements,
       seedOffset: Math.random() * 10_000,
       priorSamples: currentSample,
       samplesPerPixel: SAMPLES_PER_ITERATION,
