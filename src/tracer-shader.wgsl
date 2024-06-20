@@ -25,6 +25,8 @@ struct Material {
 }
 
 struct UniformData {
+  invProjectionMatrix: mat4x4<f32>,
+  cameraWorldMatrix: mat4x4<f32>,
   seedOffset: u32,
   priorSamples: u32,
   samplesPerPixel: u32,
