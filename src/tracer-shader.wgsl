@@ -62,20 +62,6 @@ struct UniformData {
 // todo: This should not be hardcoded
 const indicesLength = 12636;
 
-const focalLength = 1.0;
-const viewportHeight = 4.0;
-const viewportWidth = 4.0;
-const cameraCenter = vec3<f32>(0.0, 0.0, 0.0);
-
-const viewportU = vec3<f32>(viewportWidth, 0.0, 0.0);
-const viewportV = vec3<f32>(0.0, -viewportHeight, 0.0);
-
-const pixelDeltaU = viewportU / ${imageWidth};
-const pixelDeltaV = viewportV / ${imageHeight};
-
-const viewportUpperLeft = cameraCenter - vec3<f32>(0, 0, focalLength) - viewportU / 2.0 - viewportV / 2.0;
-const pixel00Loc = viewportUpperLeft + 0.5 * (pixelDeltaU + pixelDeltaV);
-
 const maxDepth = 10;
 
 const MINIMUM_FLOAT_EPSILON = 1e-8;
@@ -1406,12 +1392,6 @@ fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec3<f32> {
   }
 
   return L;
-}
-
-fn pixelSampleSquare(seed: ptr<function, u32>) -> vec3<f32> {
-  let px = -0.5 + randomF32(seed);
-  let py = -0.5 + randomF32(seed);
-  return (px * pixelDeltaU) + (py * pixelDeltaV);
 }
 
 fn writeColor(pixelColor: vec3<f32>, x: i32, y: i32, samples: i32) {
