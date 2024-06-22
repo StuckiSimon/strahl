@@ -152,6 +152,10 @@ fn sqr(x: f32) -> f32 {
   return x * x;
 }
 
+fn maxVec3(v: vec3f) -> f32 {
+  return max(v.x, max(v.y, v.z));
+}
+
 // https://media.disneyanimation.com/uploads/production/publication_asset/48/asset/s2012_pbs_disney_brdf_notes_v3.pdf
 // Appendix B.2 Equation 13
 fn ggxNDF(H: vec3f, alpha: vec2<f32>) -> f32 {
@@ -1389,6 +1393,15 @@ fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec3<f32> {
     }
 
     throughput *= surfaceThroughput;
+
+    // Russian Roulette
+    if (maxVec3(throughput) < 1.0 && i > 1) {
+      let q = max(0.0, 1.0 - maxVec3(throughput));
+      if (randomF32(seed) < q) {
+        break;
+      }
+      throughput /= 1.0 - q;
+    }
   }
 
   return L;
