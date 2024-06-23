@@ -662,7 +662,7 @@ async function run() {
   const render = async () => {
       const projectionMatrix = camera.projectionMatrix;
       const matrixWorld = camera.matrixWorld;
-      const invProjectionMatrix = projectionMatrix.invert();
+      const invProjectionMatrix = projectionMatrix.clone().invert();
 
     const renderLog = logGroup("render");
     const writeTexture = currentSample % 2 === 0 ? texture : textureB;
