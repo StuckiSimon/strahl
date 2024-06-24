@@ -687,7 +687,7 @@ async function run() {
     uniformData.set({
       invProjectionMatrix: invProjectionMatrix.elements,
       cameraWorldMatrix: matrixWorld.elements,
-      seedOffset: Math.random() * 10_000,
+        seedOffset: Math.random() * Number.MAX_SAFE_INTEGER,
       priorSamples: currentSample,
       samplesPerPixel: SAMPLES_PER_ITERATION,
       sunDirection,
