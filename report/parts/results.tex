@@ -24,11 +24,11 @@ Memory Alignment (GPU), Memory Management (GPU+CPU)
 
 \subsection{Random Number Generator}
 
-To simulate light transport, the ray tracer needs to pick random directions. This is done using a random number generator (RNG). There are a variety of RNGs available which differ in characteristics. For domains such as cryptography, it is important that the RNG is unpredictable. However, for a ray tracer, it is more important to have high performance. Therefore, a pseudorandom number generator is used.
+To simulate light transport, the path tracer needs to pick random directions. Generating a random direction vector, defined as $v = (x, y, z)$, can be achieved by picking three random numbers independent of one another. This is done using a random number generator (RNG). There are a variety of RNGs available which differ in characteristics. For domains such as cryptography, it is important that the RNG is unpredictable. However, for a ray tracer, it is more important to have high performance. Therefore, a pseudorandom number generator is used.
 
 A number of suitable RNGs are available, including Mersenne Twister \cite{rngMersenneTwister}, Xorshifts such as the method described by Marsaglia \cite{marsaglia2003xorshift} and more.
 
-https://www.pcg-random.org/pdf/hmc-cs-2014-0905.pdf
+However, the renderer uses PCG as the RNG due to its good performance and quality \cite{o2014pcg}.
 
 \subsection{WebGPU}
 \subsection{Integration}
