@@ -24,7 +24,19 @@ Memory Alignment (GPU), Memory Management (GPU+CPU)
 
 \subsection{Random Number Generator}
 
-To simulate light transport, the path tracer needs to pick random directions. Generating a random direction vector, defined as $v = (x, y, z)$, can be achieved by picking three random numbers independent of one another. This is done using a random number generator (RNG). There are a variety of RNGs available which differ in characteristics. For domains such as cryptography, it is important that the RNG is unpredictable. However, for a ray tracer, it is more important to have high performance. Therefore, a pseudorandom number generator is used.
+To simulate light transport, the path tracer needs to pick random directions. Generating a random direction vector, defined as $v = (x, y, z)$, can be achieved by picking three random numbers independent of one another. This is done using a random number generator (RNG). Unlike other programming languages, WGSL does not have a built-in RNG. Therefore, a custom RNG is required. There are a variety of RNGs available which differ in important characteristics. Domains such as cryptography require unpredictability of the RNG to prevent an adversary from predicting secret keys. However, for a path tracer, it is more important to have high performance. Therefore, a pseudorandom number generator is used. Pseudorandomness satisfies the requirement of randomness but is following a deterministic algorithm.
+
+RNG can be implemented by Xorshifts such as described by Marsaglia \cite{marsaglia2003xorshift}. The algorithm can be defined as shown in Figure \ref{code:xorShift}. $x$ is the state of the RNG and $a$, $b$ and $c$ are constants. Frequent choices for these constants are $a = 13$, $b = 17$ and $c = 5$.
+
+\begin{figure}[H]
+\begin{lstlisting}[style=wgsl]
+x ^= x << a;
+x ^= x >> b;
+x ^= x << c;
+\end{lstlisting}
+\caption{Xorshift RNG implementation in WGSL.}
+\label{code:xorShift}
+\end{figure}
 
 A number of suitable RNGs are available, including Mersenne Twister \cite{rngMersenneTwister}, Xorshifts such as the method described by Marsaglia \cite{marsaglia2003xorshift} and more.
 
