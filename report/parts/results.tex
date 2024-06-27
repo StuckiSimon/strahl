@@ -24,7 +24,16 @@ Memory Alignment (GPU), Memory Management (GPU+CPU)
 
 \subsection{Random Number Generator}
 
-To simulate light transport, the path tracer needs to pick random directions. Generating a random direction vector, defined as $v = (x, y, z)$, can be achieved by picking three random numbers independent of one another. This is done using a random number generator (RNG). Unlike other programming languages, WGSL does not have a built-in RNG. Therefore, a custom RNG is required. There are a variety of RNGs available which differ in important characteristics. Domains such as cryptography require unpredictability of the RNG to prevent an adversary from predicting secret keys. However, for a path tracer, it is more important to have high performance. Therefore, a pseudorandom number generator is used. Pseudorandomness satisfies the requirement of randomness but is following a deterministic algorithm.
+To simulate light transport, the path tracer needs to pick random directions. Generating a random direction vector, defined as $v = (x, y, z)$, can be achieved by picking three random numbers independent of one another. This is done using a random number generator (RNG). Unlike other programming languages, WGSL does not have a built-in RNG. Therefore, a custom RNG is required. There are a variety of RNGs available which differ in important characteristics. Domains such as cryptography require unpredictability of the RNG to prevent an adversary from predicting secret keys. However, for a path tracer, it is more important to have high performance.
+As per \cite{o2014pcg}, some of the characteristics to consider when choosing a suitable RNG are:
+
+\begin{itemize}
+    \item{Statistical Quality} – The RNG should generate numbers that are statistically random. This means that the numbers should be uniformly distributed and have a low correlation between them.
+    \item{Period} – The length of the cycle before the sequence of generated numbers starts to repeat itself.
+    \item{Time Performance} – The time it takes to generate a random number. This is influenced by the algorithm as well as the hardware which may support dedicated instructions.
+\end{itemize}
+
+Therefore, a pseudorandom number generator is used. Pseudorandomness satisfies the requirement of randomness but is following a deterministic algorithm.
 
 RNG can be implemented by Xorshifts such as described by Marsaglia \cite{marsaglia2003xorshift}. The algorithm can be defined as shown in Figure \ref{code:xorShift}. $x$ is the state of the RNG and $a$, $b$ and $c$ are constants. Frequent choices for these constants are $a = 13$, $b = 17$ and $c = 5$.
 
