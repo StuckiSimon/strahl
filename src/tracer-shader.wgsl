@@ -323,6 +323,7 @@ fn lengthSquared(v: vec3<f32>) -> f32 {
   return dot(v, v);
 }
 
+// ref#CODE-100
 // See https://github.com/imneme/pcg-c/blob/83252d9c23df9c82ecb42210afed61a7b42402d7/include/pcg_variants.h#L283
 const PCG_INC = 2891336453u;
 // See https://github.com/imneme/pcg-c/blob/83252d9c23df9c82ecb42210afed61a7b42402d7/include/pcg_variants.h#L278
