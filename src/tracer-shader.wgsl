@@ -1195,6 +1195,7 @@ fn sampleTriangleFilter(xi: f32) -> f32 {
   return select(1.0 - sqrt(2.0 - 2.0 * xi), sqrt(2.0 * xi) - 1.0, xi < 0.5);
 }
 
+// ref#CODE-200
 fn ndcToCameraRay(coord: vec2f, cameraWorld: mat4x4<f32>, invProjectionMatrix: mat4x4<f32>, seed: ptr<function, u32>) -> Ray {
   let lookDirection = cameraWorld * vec4f(0.0, 0.0, -1.0, 0.0);
   let nearVector = invProjectionMatrix * vec4f(0.0, 0.0, -1.0, 1.0);
