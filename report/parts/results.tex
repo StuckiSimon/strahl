@@ -26,7 +26,8 @@ Memory Alignment (GPU), Memory Management (GPU+CPU)
 
 \subsection{View Projection}
 
-In order to render an image, a virtual camera needs to be defined. Given a vertex as $p = (x, y, z)$, the view projection is responsible for transforming the vertex into clip space.
+\todo{Move to Rasterization? Highlight difference between usage in Rasterization + Ray Tracing.}
+In order to render an image, a virtual camera needs to be defined. Given a vertex as $p = (x, y, z)$, the view projection is responsible for transforming the vertex into normalized device coordinates. The view projection matrix is a 4x4 matrix which depends on the projection type.
 
 Depending on the use case, different types of camera projection can be used. The most common types are perspective and orthographic projection. Perspective projection simulates the way the human eye perceives the world, objects which are further away appear smaller. Whereas orthographic projection does not take the distance into account and objects appear the same size regardless of their distance.
 
