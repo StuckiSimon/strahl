@@ -7,6 +7,61 @@
 % !TEX encoding = UTF-8 Unicode
 % !TEX root = ../main.tex
 
+\section{Mathematics}
+
+This section highlights some basics about the mathematics involved in computer graphics and defines concepts and notations picked up in the following sections.
+
+\subsection{Vectors}
+
+Euclidean vectors are fundamental in computer graphics and are generally defined by a magnitude and a direction. In a three-dimensional space, a vector can be defined as $v = (x, y, z)$. This definition can be used to represent a point in space as well as a direction. The magnitude or length of the vector can be calculated using the Euclidean norm:
+
+\begin{equation}
+  \label{eqn:euclidean-norm}
+  ||v|| = \sqrt{x^2 + y^2 + z^2}
+\end{equation}
+
+The dot product of two vectors $v = (x_1, y_1, z_1)$ and $w = (x_2, y_2, z_2)$ is defined as:
+
+\begin{equation}
+  \label{eqn:dot-product}
+  v \cdot w = x_1 \cdot x_2 + y_1 \cdot y_2 + z_1 \cdot z_2
+\end{equation}
+
+The cross product of two vectors $v = (x_1, y_1, z_1)$ and $w = (x_2, y_2, z_2)$ is defined as:
+
+\begin{equation}
+  \label{eqn:cross-product}
+  v \times w = (y_1 \cdot z_2 - z_1 \cdot y_2, z_1 \cdot x_2 - x_1 \cdot z_2, x_1 \cdot y_2 - y_1 \cdot x_2)
+\end{equation}
+
+\subsection{Triangle}
+
+The triangle can be defined as $t = (Q, u, v)$ where $Q$ is the position of the triangle and $u$ and $v$ are vectors defining the triangle. See \autoref{fig:q-u-v-parameterization} for a visual representation.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.25\textwidth]{resources/q-u-v-parameterization.png}
+  \caption{Triangle defined using three vertices, $Q$ as the position and $u$,$v$ as direction vectors starting at $Q$.}
+  \label{fig:q-u-v-parameterization}
+\end{figure}
+
+An alternative way to define a triangle is using three vertices, each in world space. The vertices can be defined as $v_1 = (x_1, y_1, z_1)$, $v_2 = (x_2, y_2, z_2)$ and $v_3 = (x_3, y_3, z_3)$. Converting between the two systems can be done using the following formulas:
+
+\begin{equation}
+  \label{eqn:triangle-vertices-to-q-u-v}
+  Q = v_1
+\end{equation}
+
+\begin{equation}
+  \label{eqn:triangle-vertices-to-q-u-v1}
+  u = v_2 - v_1
+\end{equation}
+
+\begin{equation}
+  \label{eqn:triangle-vertices-to-q-u-v2}
+  v = v_3 - v_1
+\end{equation}
+
 \section{Computer Graphics}
 
 This section provides an overview of computer graphics, including its history, key concepts and applications.
