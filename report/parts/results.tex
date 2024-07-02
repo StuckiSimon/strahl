@@ -33,7 +33,33 @@ Depending on the use case, different types of camera projection can be used. The
 
 For many applications, especially photorealistic rendering, perspective projection is used. Therefore, the path tracer uses perspective projection. However, orthographic projection is frequently used in domains such as architecture.
 
-The view projection matrix is a 4x4 matrix.
+These two projection types differ in the view projection matrix. For perspective projection, given $near$, $far$, $fov$, $aspectRatio$ as well as 
+
+\begin{equation}
+    \label{eqn:perspectiveProjectionHeight}
+    height = 2 \cdot \mathit{near} \cdot \tan(\frac{1}{2} \underbrace{\pi / 180}_{\text{deg to rad}} \mathit{fov})
+\end{equation}
+
+\begin{equation}
+    \label{eqn:perspectiveProjectionWidth}
+    width = aspectRatio \cdot height
+\end{equation}
+
+\begin{equation}
+    \label{eqn:perspectiveProjectionDepth}
+    depth = far - \mathit{near}
+\end{equation}
+
+the matrix is defined as:
+
+\begin{equation}
+\begin{bmatrix}
+    2\frac{\mathit{near}}{width} & 0 & 0 & 0 \\
+    0 & 2\frac{\mathit{near}}{height} & 0 & 0 \\
+    0 & 0 & - \frac{far + \mathit{near}}{depth} & -2 \frac{far \cdot \mathit{near}}{depth} \\
+    0 & 0 & -1 & 0
+\end{bmatrix}
+\end{equation}
 
 See \coderef{200} for implementation.
 
