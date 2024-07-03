@@ -56,16 +56,18 @@ The clipping plane parameters $n$ and $f$ are primarily used in rasterization to
 
 \begin{equation}
     \label{eqn:perspectiveProjectionMatrix}
-    P_{per} = 
-\begin{bmatrix}
+    P = 
+    \begin{bmatrix}
         \frac{2n}{w} & 0 & 0 & 0 \\
         0 & \frac{2n}{h} & 0 & 0 \\
         0 & 0 & -\frac{f + n}{f - n} & -\frac{2fn}{f - n} \\
-    0 & 0 & -1 & 0
-\end{bmatrix}
+        0 & 0 & -1 & 0
+    \end{bmatrix}
 \end{equation}
 
-See \coderef{200} for implementation.
+The elements $P_{1,1}$ and $P_{2,2}$ adjust the field of view and therefore the perspective effect. The elements $P_{3,3}$, $P_{3,4}$ and $P_{4,3}$ adjust the near and far clipping planes. In comparison to rasterization, the view projection matrix is used differently in ray tracing. In rasterization, every vertex is transformed by the view projection matrix. In ray tracing, the view projection matrix is only applied to the camera rays. See \coderef{200} for implementation.
+
+For ortographic projection, no such projection matrix is required in ray tracing. Instead, parallel rays are cast from the camera grid.
 
 \subsection{Random Number Generator}
 
