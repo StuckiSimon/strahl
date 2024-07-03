@@ -193,6 +193,16 @@ Storage Buffers are intended for read-write access on the GPU. The limits of the
 
 \subsubsection{Index}
 
+\subsection{Shading Language}
+
+WebGPU introduces a new shading language called WebGPU Shading Language (WGSL). The language is statically typed and supports a variety of data structures required for computer graphics as well as general-purpose computing.
+
+WGSL supports common high-level helpers such as Swizzling, which is a class of operations which facilitate managing vector elements. For example, given a vector \verb|let v = vec3f(x, y, z)|, the operation \verb|v.xy| returns a vector \verb|(x, y)|.
+
+\subsubsection{Memory Alignment}
+
+WGSL supports \verb|struct| for defining data structures. However, when passing data between the CPU and the GPU, memory alignment needs to be considered. Alignment is a constraint, restricting the memory address at which a data structure can be stored. Having strict memory alignment enables use of more efficient hardware instruction sets, or address hardware requirements.
+
 \section{Optics}
 
 In physics, optics is the study of light. The field encompasses topics such as light propagation and optical properties of matter. \cite{fowles1989introduction}
