@@ -36,6 +36,9 @@ struct UniformData {
   sunPower: f32,
   sunAngularSize: f32,
   sunColor: Color,
+  clearColor: Color,
+  // bool is not supported in uniform
+  enableClearColor: i32,
 }
 
 @group(0) @binding(0) var<storage, read_write> positions: array<f32>;
@@ -1102,6 +1105,10 @@ fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec3<f32> {
           basis
         );
         misWeightLight = powerHeuristic(bsdfPdfContinuation, lightPdf);
+      } else {
+        if (uniformData.enableClearColor == 1) {
+          return uniformData.clearColor;
+      }
       }
       L += throughput * misWeightLight * (sunRadiance(dW) + skyRadiance());
       break;
