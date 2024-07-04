@@ -97,6 +97,12 @@ x ^= x << c;
 
 Alternatives to Xorshift are available, such as the Mersenne Twister \cite{rngMersenneTwister}. The Mersenne Twister is a pseudorandom number generator which has a long period and good statistical properties. However, it is slower than Xorshifts \cite{o2014pcg}. More recently, PCG has been proposed as an alternative to these options. PCG is a family of fast generators. The path tracer uses PCG-RXS-M-XS variant as described by O’Neill \cite{o2014pcg}. See \coderef{100} for implementation.
 
+\subsection{Aliasing}
+
+Aliasing is a common issue in computer graphics. It occurs when the resolution of the screen is not sufficient to represent the scene accurately. One such example is jagged edges on diagonal lines. Anti-aliasing techniques can be employed to reduce the effect.
+
+In ray tracing, aliasing can be alleviated by randomizing the direction of the rays.
+
 \subsection{WebGPU}
 \subsection{Integration}
 \section{Use Case Scenarios}
