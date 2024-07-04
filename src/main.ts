@@ -696,6 +696,8 @@ async function run() {
       sunPower: sunConfig.sunPower,
       sunAngularSize: sunConfig.sunAngularSize,
       sunColor: sunConfig.sunColor,
+        clearColor: [1.0, 0.0, 0.0],
+        enableClearColor: 1,
     });
     // todo: consider buffer writing
     device.queue.writeBuffer(uniformBuffer, 0, uniformData.arrayBuffer);
