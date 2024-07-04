@@ -99,9 +99,26 @@ Alternatives to Xorshift are available, such as the Mersenne Twister \cite{rngMe
 
 \subsection{Aliasing}
 
-Aliasing is a common issue in computer graphics. It occurs when the resolution of the screen is not sufficient to represent the scene accurately. One such example is jagged edges on diagonal lines. Anti-aliasing techniques can be employed to reduce the effect.
+Aliasing is a common issue in computer graphics. It occurs when the resolution of the screen is not sufficient to represent the scene accurately. One such example is jagged edges on diagonal lines. Anti-aliasing techniques can be employed to reduce the effect. The negative effect of aliasing is demonstrated in \autoref{fig:aliasingA}.
 
-In ray tracing, aliasing can be alleviated by randomizing the direction of the rays.
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{resources/aliasing.png}
+        \caption{Rendering showing aliasing.}
+        \label{fig:aliasingA}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{resources/anti-aliasing.png}
+        \caption{Rendering with anti-aliasing applied.}
+        \label{fig:aliasingB}
+    \end{subfigure}
+    \caption{The two images show the effect of aliasing and anti-aliasing.}
+    \label{fig:aliasing}
+\end{figure}
+
+In ray tracing, aliasing can be alleviated by randomizing the direction of the rays the result of applying anti-aliasing can be seen in \autoref{fig:aliasingB}. See \coderef{300} for implementation.
 
 \subsection{WebGPU}
 \subsection{Integration}
