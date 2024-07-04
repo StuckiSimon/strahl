@@ -203,6 +203,27 @@ WGSL supports common high-level helpers such as Swizzling, which is a class of o
 
 WGSL supports \verb|struct| for defining data structures. However, when passing data between the CPU and the GPU, memory alignment needs to be considered. Alignment is a constraint, restricting the memory address at which a data structure can be stored. Having strict memory alignment enables use of more efficient hardware instruction sets, or address hardware requirements.
 
+Each type in WGSL has specific alignment requirements which are independent of the size. For example, a \verb|vec3f| has a size of 12 bytes, but requires an alignment of 16 bytes. So for a struct definition such as can be seen in \autoref{code:memoryAlignment}, the struct requires 32 bytes of memory to store 20 bytes of data as illustrated in \autoref{fig:memory-alignment}.
+
+\begin{figure}[H]
+  \begin{lstlisting}[style=wgsl]
+  struct ThreeFields {
+    a: f32,
+    b: vec3f,
+    c: f32
+  }
+  \end{lstlisting}
+  \caption{WGSL \texttt{struct} containing three fields of type \texttt{f32} and \texttt{vec3f}.}
+  \label{code:memoryAlignment}
+  \end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{resources/memory-alignment.png}
+  \caption{Memory Alignment for struct defined in \autoref{code:memoryAlignment}.}
+  \label{fig:memory-alignment}
+\end{figure}
+
 \section{Optics}
 
 In physics, optics is the study of light. The field encompasses topics such as light propagation and optical properties of matter. \cite{fowles1989introduction}
