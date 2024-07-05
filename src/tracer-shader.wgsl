@@ -326,7 +326,7 @@ fn lengthSquared(v: vec3<f32>) -> f32 {
   return dot(v, v);
 }
 
-// ref#CODE-100
+// CODE#RNG
 // See https://github.com/imneme/pcg-c/blob/83252d9c23df9c82ecb42210afed61a7b42402d7/include/pcg_variants.h#L283
 const PCG_INC = 2891336453u;
 // See https://github.com/imneme/pcg-c/blob/83252d9c23df9c82ecb42210afed61a7b42402d7/include/pcg_variants.h#L278
@@ -1202,7 +1202,7 @@ fn sampleTriangleFilter(xi: f32) -> f32 {
   return select(1.0 - sqrt(2.0 - 2.0 * xi), sqrt(2.0 * xi) - 1.0, xi < 0.5);
 }
 
-// ref#CODE-200
+// CODE#VIEWPROJECTION
 fn ndcToCameraRay(coord: vec2f, cameraWorld: mat4x4<f32>, invProjectionMatrix: mat4x4<f32>, seed: ptr<function, u32>) -> Ray {
   let lookDirection = cameraWorld * vec4f(0.0, 0.0, -1.0, 0.0);
   let nearVector = invProjectionMatrix * vec4f(0.0, 0.0, -1.0, 1.0);
@@ -1256,6 +1256,7 @@ fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
   
   let samplesPerPixel = i32(uniformData.samplesPerPixel);
   for (var sample = 0; sample < samplesPerPixel; sample += 1) {
+    // CODE#ALIASING
     // anti-aliasing
     let pixel = vec2<f32>(i, j) + getPixelJitter(&seed);
     let ndc = -1.0 + 2.0*pixel / vec2<f32>(${imageWidth}, ${imageHeight});

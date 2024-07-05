@@ -65,7 +65,7 @@ The clipping plane parameters $n$ and $f$ are primarily used in rasterization to
     \end{bmatrix}
 \end{equation}
 
-The elements $P_{1,1}$ and $P_{2,2}$ adjust the field of view and therefore the perspective effect. The elements $P_{3,3}$, $P_{3,4}$ and $P_{4,3}$ adjust the near and far clipping planes. In comparison to rasterization, the view projection matrix is used differently in ray tracing. In rasterization, every vertex is transformed by the view projection matrix. In ray tracing, the view projection matrix is only applied to the camera rays. See \coderef{200} for implementation.
+The elements $P_{1,1}$ and $P_{2,2}$ adjust the field of view and therefore the perspective effect. The elements $P_{3,3}$, $P_{3,4}$ and $P_{4,3}$ adjust the near and far clipping planes. In comparison to rasterization, the view projection matrix is used differently in ray tracing. In rasterization, every vertex is transformed by the view projection matrix. In ray tracing, the view projection matrix is only applied to the camera rays. See \coderef{VIEWPROJECTION} for implementation.
 
 For ortographic projection, no such projection matrix is required in ray tracing. Instead, parallel rays are cast from the camera grid.
 
@@ -95,7 +95,7 @@ x ^= x << c;
 \label{code:xorShift}
 \end{figure}
 
-Alternatives to Xorshift are available, such as the Mersenne Twister \cite{rngMersenneTwister}. The Mersenne Twister is a pseudorandom number generator which has a long period and good statistical properties. However, it is slower than Xorshifts \cite{o2014pcg}. More recently, PCG has been proposed as an alternative to these options. PCG is a family of fast generators. The path tracer uses PCG-RXS-M-XS variant as described by O’Neill \cite{o2014pcg}. See \coderef{100} for implementation.
+Alternatives to Xorshift are available, such as the Mersenne Twister \cite{rngMersenneTwister}. The Mersenne Twister is a pseudorandom number generator which has a long period and good statistical properties. However, it is slower than Xorshifts \cite{o2014pcg}. More recently, PCG has been proposed as an alternative to these options. PCG is a family of fast generators. The path tracer uses PCG-RXS-M-XS variant as described by O’Neill \cite{o2014pcg}. See \coderef{RNG} for implementation.
 
 \subsection{Aliasing}
 
@@ -118,7 +118,7 @@ Aliasing is a common issue in computer graphics. It occurs when the resolution o
     \label{fig:aliasing}
 \end{figure}
 
-In ray tracing, aliasing can be alleviated by randomizing the direction of the rays the result of applying anti-aliasing can be seen in \autoref{fig:aliasingB}. See \coderef{300} for implementation.
+In ray tracing, aliasing can be alleviated by randomizing the direction of the rays the result of applying anti-aliasing can be seen in \autoref{fig:aliasingB}. See \coderef{ALIASING} for implementation.
 
 \subsection{WebGPU}
 \subsection{Integration}
