@@ -266,19 +266,33 @@ While the macroscopic appearance of a material is visible to the human eye, the 
 
 \section{Exchange Formats}
 
-In order to exchange 3d scenes between a multitude of applications, various standardized formats have been developed. These formats are optimized for different use cases depending on the requirements of the application.
+In order to exchange 3D scenes between a multitude of applications, various standardized formats have been developed. These formats are optimized for different use cases depending on the requirements of the application. For the purpose of this thesis, the focus is on formats which are well-suited for real-time rendering on the web. In comparison to other use cases, certain aspects are more important on the web. These aspects include:
+
+\begin{itemize}
+    \item{Efficiency} – It should be optimized for transmission and loading. While data compression algorithms such as gzip can alleviate some of the issues during transmission, pure text-based formats are generally less efficient than binary formats.
+    \item{Feature Set} – The format should support a wide range of features such as geometry, materials and scene graph.
+    \item{Interoperability} – The format should be widely supported by 3D engines and applications.
+\end{itemize}
 
 \subsection{General Purpose Formats}
 
 One of the most widely used formats is Wavefront OBJ which was established in the 1980s. The format is text-based and has basic support for materials and textures. However, it lacks support for more advanced features such animations. Additionally, due to its encoding, it is not well-suited for delivery over the web compared to more modern alternatives.
 
-Formats such as the proprietary FBX by Autodesk established in 2006 can address the shortcomings in terms of advanced features. The format is supported by a wide range of applications.
+Formats such as the proprietary FBX by Autodesk established in 2006 can address the shortcomings in terms of advanced features. The format is supported by a wide range of applications. One of the main disadvantages is the proprietary nature of the format  which can make it difficult to integrate in a applications which do not have access to the SDK.
+
+\subsection{Specialized Formats}
+
+For specific use cases, specialized formats have been developed. One such example is STEP which is standardised in ISO 10303. The format is widely used in product manufacturing and offers support for a wide range of modelling features. The ASCII encoding of the format is human-readable but is not well suited for real-time rendering requirements of the web due to transmission size and parsing complexity.
+
+Another such format is STL which is widely used in 3D printing. The format is binary and has limited support for material representation. 
 
 \subsection{Interoperability Formats}
 
-Other formats such as COLLADA have been developed to improve transporting 3D scenes between different applications. It is XML-based and has been established in 2004.
+The aforementioned formats have shortcomings in terms of interoperability and feature set for complex 3D scenes. Special formats have been developed to address issues encountered in complex 3D scenes such as encountered in the film industry.
 
-Since, other formats such as USD and has been open-sourced by Pixar in 2016.
+Other formats such as COLLADA have been developed to improve transporting 3D scenes between different applications. It is XML-based and has been established in 2004 and has since been managed by the Khronos Group. The latest release of the format was in 2008.
+
+One notable format is USD, which has been open-sourced by Pixar in 2016. Similar to COLLADA, the format is designed with interoperability in mind. The main focus of USD is support for complex scenes and complex collaboration workflows. The format is widely supported by 3D engines and applications.
 
 \subsection{Runtime Formats}
 
