@@ -318,7 +318,11 @@ The hierarchy structure of a glTF file is shown in \autoref{fig:gltf-hierarchy}.
 
 \section{Material Description}
 
-A variety of standardized material description models have been developed over the years.
+While the principles of PBR are well-established, the material description in 3D formats is not uniform. A variety of different approaches have been developed. Similar to exchange formats, a variety of different use cases are addressed by material description models.
+
+Many exchange formats, such as glTF, support material description as part of the standard. The material description in glTF supports a PBR approach which is based on the metallic-roughness material model \todo{source?}. However, the PBR material description in glTF is limited in terms of feature set, by lacking features such as subsurface scattering, and is not intended to become an open standard across a variety of applications.
+
+This is where new material description standards come into play. These are open standards intended to be used across different applications.
 
 \subsection{MaterialX}
 
