@@ -312,7 +312,16 @@ The \fgls{BVH}{\e{Bounding Volume Hierarchy}, common tree-based acceleration str
 
 Defining the geometry is one part of the equation. Another major part is defining materials. Materials define how a surface interacts with light. The core idea of physically based rendering (PBR) is to simulate the interaction of light using physical models. Instead of fine-tuning parameters for a specific look and feel and having to adjust based on desired lighting situations, PBR aims to define a material which behaves consistently in different lighting situations.
 
+Research into PBR has been conducted for a similar amount of time as ray tracing. And just like ray tracing, the computational complexity of the algorithms has limited the adoption of PBR in real-time rendering for a long time \todo{Quote some early adopters of 2000s?}. PBR has generally coincided with the rise of ray tracing as it is a natural fit for the physics based rendering approach. However, PBR and ray tracing are not mutually dependent as PBR can be used in rasterization as well.
+
+In contrast to how ray tracing is inherently addressing shortcomings of rasterization by leveraging an entirely different approach, PBR is a more incremental improvement extending existing shading techniques with more sophisticated models.
+
+In general, there is no PBR standard. Instead, a variety of different models have been developed over time. In recent years however, a convergence towards a common set of principles has been observed. Nevertheless, certain aspects of PBR are found in most models.
+
 \subsection{BxDF}
+
+The definition of the bidirectional distribution functions (BxDF) is a key concept in PBR. The $x$ stands for the different kinds of distributions to consider. In general, the functions describe how light is reflected or transmitted. The two functions are usually abbreviated as BRDF, the r standing for reflectance, and BTDF, the t standing for transmittance.
+
 \subsection{Microfacet Theory}
 
 While the macroscopic appearance of a material is visible to the human eye, the microscopic structure of the material is crucial in determining how light interacts with the material. Microfacet theory is a model which describes this microscopic structure. The distribution of the normals of the microfacet is described by a distribution function.
