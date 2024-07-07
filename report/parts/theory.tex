@@ -237,9 +237,62 @@ const c = new Float32Array(ValueBuffer, 28, 1);
   \label{code:memoryAlignmentJs}
 \end{figure}
 
-\section{Optics}
+\section{Physics}
 
-In physics, optics is the study of light. The field encompasses topics such as light propagation and optical properties of matter. \cite{fowles1989introduction}
+In order to generate images using computer graphics, understanding the physics is crucial. More specifically, the study of light and its perception is important. In physics, optics is the study of light. The field encompasses topics such as light propagation and optical properties of matter. Maxwell's equations are a set of equations in electromagnetism that describe the behavior of electromagnetic fields. Formulated by James Clerk Maxwell in the 19th century, they provide a mathematical framework for understanding the propagation of electromagnetic waves, including, but not limited to, visible light. Light can be described as a wave or as a particle, this is generally known as the wave-particle duality. \cite{fowles1989introduction}
+
+\subsubsection{Reflection}
+
+Reflection is the process of light bouncing off a surface. The angle of incidence equals the angle of reflection as visualized in \autoref{fig:reflection}. An example of such an effect can be seen when looking at a mirror.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.4\textwidth]{resources/reflection.png}
+  \caption{Reflection of light when hitting a surface.}
+  \label{fig:reflection}
+\end{figure}
+
+This can be described using the law of reflection:
+
+\begin{equation}
+  \label{eqn:law-of-reflection}
+  \theta = \theta'
+\end{equation}
+
+Where $\theta$ is the angle of incidence and $\theta'$ is the angle of reflection.
+
+\subsubsection{Refraction}
+
+Refraction is the bending of light when passing through a medium as visualized in \autoref{fig:refraction}. An example of such an effect is the distortion of underwater objects.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.4\textwidth]{resources/refraction.png}
+  \caption{Refraction of light when passing through a medium.}
+  \label{fig:refraction}
+\end{figure}
+
+It can roughly be defined by using Snell's law:
+
+\begin{equation}
+  \label{eqn:snells-law}
+  \frac{\sin \theta}{\sin \phi} = n
+\end{equation}
+
+or in a more general form:
+
+\begin{equation}
+  \label{eqn:snells-law-general}
+  n_1 \sin \theta = n_2 \sin \phi
+\end{equation}
+
+where $n_1$ and $n_2$ are the refractive indices of the two media and $\theta$ and $\phi$ are the angles of incidence and refraction respectively.
+
+Leveraging Snell's law, fresnel equations can be derived which describe not only the refraction but also the reflection of light when passing through a medium.
+
+\subsubsection{Isotropy}
+
+Isotropy is a property of materials which have the same properties in all directions. An example of such a material is glass or water. Anisotropy on the other hand is a property of materials which have different properties in different directions. An example of such a material is wood or brushed metal. 
 
 \section{Ray Tracing}
 \subsection{Monte Carlo Ray Tracing}
