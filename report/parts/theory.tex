@@ -197,6 +197,52 @@ The \fgls{BVH}{\e{Bounding Volume Hierarchy}, common tree-based acceleration str
 
 \subsubsection{Importance Sampling}
 
+\subsection{Common Techniques}
+
+While rasterization and ray tracing are inherently different techniques, they face similar challenges. Notable frequently encountered challenges and their differences in rasterization and ray tracing are discussed in the following sections.
+
+\subsubsection{View Projection}
+
+In order to render an image, a virtual camera needs to be defined. Given a vertex as $p = (x, y, z)$, the view projection is responsible for transforming the vertex into normalized device coordinates. The view projection matrix is a 4x4 matrix which depends on the projection type.
+
+Depending on the use case, different types of camera projection can be used. The most common types are perspective and orthographic projection. Perspective projection simulates the way the human eye perceives the world, objects which are further away appear smaller. Whereas orthographic projection does not take the distance into account and objects appear the same size regardless of their distance. Orthographic projection is frequently used in domains such as architecture.
+
+These two projection types differ in the view projection matrix. For perspective projection, the following parameters need to be defined:
+
+\begin{description}
+    \item[near ($n$)] The distance from the camera to the near clipping plane.
+    \item[far ($f$)] The distance from the camera to the far clipping plane.
+    \item[fov ($\theta$)] The \textit{field of view} angle, measured in degrees.
+    \item[aspect ratio ($r$)] The ratio of the viewport's width to its height.
+\end{description}
+
+The clipping plane parameters $n$ and $f$ are primarily used in rasterization to determine the camera frustum. Using equations \ref{eqn:perspectiveProjectionHeight} and \ref{eqn:perspectiveProjectionWidth}, the view projection matrix $P$ for perspective projection is defined in equation \ref{eqn:perspectiveProjectionMatrix}.
+
+\begin{equation}
+    \label{eqn:perspectiveProjectionHeight}
+    h = 2n \cdot \tan(\frac{\theta}{2} \underbrace{\pi / 180}_{\text{deg to rad}})
+\end{equation}
+
+\begin{equation}
+    \label{eqn:perspectiveProjectionWidth}
+    w = rh
+\end{equation}
+
+\begin{equation}
+    \label{eqn:perspectiveProjectionMatrix}
+    P = 
+    \begin{bmatrix}
+        \frac{2n}{w} & 0 & 0 & 0 \\
+        0 & \frac{2n}{h} & 0 & 0 \\
+        0 & 0 & -\frac{f + n}{f - n} & -\frac{2fn}{f - n} \\
+        0 & 0 & -1 & 0
+    \end{bmatrix}
+\end{equation}
+
+The elements $P_{1,1}$ and $P_{2,2}$ adjust the field of view and therefore the perspective effect. The elements $P_{3,3}$, $P_{3,4}$ and $P_{4,3}$ adjust the near and far clipping planes. In comparison to rasterization, the view projection matrix is used differently in ray tracing. In rasterization, every vertex is transformed by the view projection matrix. In ray tracing, the view projection matrix is only applied to the camera rays.
+
+For ortographic projection, no such projection matrix is required in ray tracing. Instead, parallel rays are cast from the camera grid.
+
 \section{Physically Based Rendering}
 
 Defining the geometry is one part of the equation. Another major part is defining materials. Materials define how a surface interacts with light. The core idea of physically based rendering (PBR) is to simulate the interaction of light using physical models. Instead of fine-tuning parameters for a specific look and feel and having to adjust based on desired lighting situations, PBR aims to define a material which behaves consistently in different lighting situations.
