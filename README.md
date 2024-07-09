@@ -15,6 +15,7 @@ The repo is structured as a monorepo of independent packages. It does not levera
 The packages are:
 
 - [`strahl-lib`](./strahl-lib/README.md) – strahl npm package, the core of the path tracer
+- [`website`](./website/README.md) – public website, docs and information
 - [`report`](./report/README.md) – LaTeX report of the master thesis
 
 ## Setup
