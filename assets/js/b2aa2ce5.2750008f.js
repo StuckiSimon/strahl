@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkstrahl_website=self.webpackChunkstrahl_website||[]).push([[361],{1276:e=>{e.exports=JSON.parse('{"metadata":{"permalink":"/strahl/blog","page":1,"postsPerPage":10,"totalPages":1,"totalCount":1,"blogDescription":"Blog","blogTitle":"Blog"}}')}}]);

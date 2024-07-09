@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://stuckisimon.github.io/strahl/blog</id>
+    <title>strahl Blog</title>
+    <updated>2024-07-09T00:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://stuckisimon.github.io/strahl/blog"/>
+    <subtitle>strahl Blog</subtitle>
+    <icon>https://stuckisimon.github.io/strahl/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Welcome]]></title>
+        <id>https://stuckisimon.github.io/strahl/blog/welcome</id>
+        <link href="https://stuckisimon.github.io/strahl/blog/welcome"/>
+        <updated>2024-07-09T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Strahl has gone public.]]></summary>
+        <content type="html"><![CDATA[<p>Strahl has gone public.</p>
+<p>While feedback is welcome, it's still early days and work on the path tracer is still ongoing. Expect significant changes in the upcoming weeks.</p>]]></content>
+        <author>
+            <name>Simon Stucki</name>
+            <uri>https://github.com/StuckiSimon</uri>
+        </author>
+    </entry>
+</feed>

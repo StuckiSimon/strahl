@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    <channel>
+        <title>strahl Blog</title>
+        <link>https://stuckisimon.github.io/strahl/blog</link>
+        <description>strahl Blog</description>
+        <lastBuildDate>Tue, 09 Jul 2024 00:00:00 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <language>en</language>
+        <item>
+            <title><![CDATA[Welcome]]></title>
+            <link>https://stuckisimon.github.io/strahl/blog/welcome</link>
+            <guid>https://stuckisimon.github.io/strahl/blog/welcome</guid>
+            <pubDate>Tue, 09 Jul 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[Strahl has gone public.]]></description>
+            <content:encoded><![CDATA[<p>Strahl has gone public.</p>
+<p>While feedback is welcome, it's still early days and work on the path tracer is still ongoing. Expect significant changes in the upcoming weeks.</p>]]></content:encoded>
+        </item>
+    </channel>
+</rss>

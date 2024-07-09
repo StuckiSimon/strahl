@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkstrahl_website=self.webpackChunkstrahl_website||[]).push([[472],{5513:e=>{e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Welcome","permalink":"/strahl/blog/welcome","unlisted":false}]}')}}]);
