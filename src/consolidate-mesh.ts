@@ -17,7 +17,10 @@ function traverseGroups(group: Group[]): Mesh[] {
   return meshes;
 }
 
-export function consolidateMesh(groups: Group[]): BufferGeometry {
+export function consolidateMesh(groups: Group[]): {
+  geometry: BufferGeometry;
+  materials: Mesh["material"][];
+} {
   const meshes = traverseGroups(groups);
 
   const mergedGeometry = BufferGeometryUtils.mergeGeometries(
