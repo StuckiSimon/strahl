@@ -12,7 +12,6 @@
     "@types/three": "^0.165.0",
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "@webgpu/types": "^0.1.43",
-    "prettier": "3.3.2",
     "typescript": "^5.5.2",
     "vite": "^5.3.1"
   },
