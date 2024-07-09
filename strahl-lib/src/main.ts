@@ -598,43 +598,43 @@ async function run() {
         },
       },
       {
-          binding: 1,
+        binding: 1,
         resource: {
           buffer: indicesBuffer,
         },
       },
       {
-          binding: 2,
+        binding: 2,
         resource: {
           buffer: boundsBuffer,
         },
       },
       {
-          binding: 3,
+        binding: 3,
         resource: {
           buffer: contentsBuffer,
         },
       },
       {
-          binding: 4,
+        binding: 4,
         resource: {
           buffer: normalBuffer,
         },
       },
       {
-          binding: 5,
+        binding: 5,
         resource: {
           buffer: indirectBuffer,
         },
       },
       {
-          binding: 6,
+        binding: 6,
         resource: {
           buffer: objectDefinitionsBuffer,
         },
       },
       {
-          binding: 7,
+        binding: 7,
         resource: {
           buffer: materialBuffer,
         },
@@ -656,180 +656,180 @@ async function run() {
     const isHalted = () => state === "halted";
 
     let currentAnimationFrameRequest: number | null = null;
-  let currentSample = 0;
-  let renderAgg = 0;
+    let currentSample = 0;
+    let renderAgg = 0;
 
-  const render = async () => {
+    const render = async () => {
       const projectionMatrix = camera.projectionMatrix;
       const matrixWorld = camera.matrixWorld;
       const invProjectionMatrix = projectionMatrix.clone().invert();
 
-    const renderLog = logGroup("render");
-    const writeTexture = currentSample % 2 === 0 ? texture : textureB;
-    const readTexture = currentSample % 2 === 0 ? textureB : texture;
+      const renderLog = logGroup("render");
+      const writeTexture = currentSample % 2 === 0 ? texture : textureB;
+      const readTexture = currentSample % 2 === 0 ? textureB : texture;
 
-    const { size: bytesForUniform } = definitions.uniforms.uniformData;
+      const { size: bytesForUniform } = definitions.uniforms.uniformData;
 
-    const uniformData = makeStructuredView(
-      definitions.uniforms.uniformData,
-      new ArrayBuffer(bytesForUniform),
-    );
+      const uniformData = makeStructuredView(
+        definitions.uniforms.uniformData,
+        new ArrayBuffer(bytesForUniform),
+      );
 
-    const uniformBuffer = device.createBuffer({
-      label: "Uniform data buffer",
-      size: bytesForUniform,
-      usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
-      // mappedAtCreation: true,
-    });
+      const uniformBuffer = device.createBuffer({
+        label: "Uniform data buffer",
+        size: bytesForUniform,
+        usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+        // mappedAtCreation: true,
+      });
 
-    const SAMPLES_PER_ITERATION = 1;
+      const SAMPLES_PER_ITERATION = 1;
 
-    uniformData.set({
-      invProjectionMatrix: invProjectionMatrix.elements,
-      cameraWorldMatrix: matrixWorld.elements,
+      uniformData.set({
+        invProjectionMatrix: invProjectionMatrix.elements,
+        cameraWorldMatrix: matrixWorld.elements,
         seedOffset: Math.random() * Number.MAX_SAFE_INTEGER,
-      priorSamples: currentSample,
-      samplesPerPixel: SAMPLES_PER_ITERATION,
-      sunDirection,
-      skyPower: sunConfig.skyPower,
-      skyColor: sunConfig.skyColor,
-      sunPower: sunConfig.sunPower,
-      sunAngularSize: sunConfig.sunAngularSize,
-      sunColor: sunConfig.sunColor,
+        priorSamples: currentSample,
+        samplesPerPixel: SAMPLES_PER_ITERATION,
+        sunDirection,
+        skyPower: sunConfig.skyPower,
+        skyColor: sunConfig.skyColor,
+        sunPower: sunConfig.sunPower,
+        sunAngularSize: sunConfig.sunAngularSize,
+        sunColor: sunConfig.sunColor,
         clearColor: [1.0, 1.0, 1.0],
         enableClearColor: 1,
-    });
-    // todo: consider buffer writing
-    device.queue.writeBuffer(uniformBuffer, 0, uniformData.arrayBuffer);
+      });
+      // todo: consider buffer writing
+      device.queue.writeBuffer(uniformBuffer, 0, uniformData.arrayBuffer);
 
-    const dynamicComputeBindGroup = device.createBindGroup({
-      label: "Dynamic compute bind group",
-      layout: dynamicComputeBindGroupLayout,
-      entries: [
-        {
-          binding: 0,
-          resource: writeTexture.createView(),
-        },
-        {
-          binding: 1,
-          resource: readTexture.createView(),
-        },
-        {
-          binding: 2,
-          resource: {
-            buffer: uniformBuffer,
+      const dynamicComputeBindGroup = device.createBindGroup({
+        label: "Dynamic compute bind group",
+        layout: dynamicComputeBindGroupLayout,
+        entries: [
+          {
+            binding: 0,
+            resource: writeTexture.createView(),
           },
+          {
+            binding: 1,
+            resource: readTexture.createView(),
+          },
+          {
+            binding: 2,
+            resource: {
+              buffer: uniformBuffer,
+            },
+          },
+        ],
+      });
+
+      const computePipeline = device.createComputePipeline({
+        label: "Ray Tracing Compute pipeline",
+        layout: computePipelineLayout,
+        compute: {
+          module: computeShaderModule,
+          entryPoint: "computeMain",
         },
-      ],
-  });
+      });
 
-  const computePipeline = device.createComputePipeline({
-    label: "Ray Tracing Compute pipeline",
-    layout: computePipelineLayout,
-    compute: {
-      module: computeShaderModule,
-      entryPoint: "computeMain",
-    },
-  });
+      const encoder = device.createCommandEncoder();
 
-    const encoder = device.createCommandEncoder();
+      const computePass = encoder.beginComputePass({
+        timestampWrites: {
+          querySet: timestampQuerySet,
+          beginningOfPassWriteIndex: 0,
+          endOfPassWriteIndex: 1,
+        },
+      });
+      computePass.setBindGroup(0, computeBindGroup);
+      computePass.setBindGroup(1, dynamicComputeBindGroup);
 
-    const computePass = encoder.beginComputePass({
-      timestampWrites: {
-        querySet: timestampQuerySet,
-        beginningOfPassWriteIndex: 0,
-        endOfPassWriteIndex: 1,
-      },
-    });
-    computePass.setBindGroup(0, computeBindGroup);
-    computePass.setBindGroup(1, dynamicComputeBindGroup);
+      computePass.setPipeline(computePipeline);
+      computePass.dispatchWorkgroups(
+        Math.sqrt(computePasses),
+        Math.sqrt(computePasses),
+      );
 
-    computePass.setPipeline(computePipeline);
-    computePass.dispatchWorkgroups(
-      Math.sqrt(computePasses),
-      Math.sqrt(computePasses),
-    );
+      computePass.end();
 
-    computePass.end();
-
-    encoder.resolveQuerySet(
-      timestampQuerySet,
-      0,
-      2,
-      timestampQueryResolveBuffer,
-      0,
-    );
-
-    if (timestampQueryResultBuffer.mapState === "unmapped") {
-      encoder.copyBufferToBuffer(
+      encoder.resolveQuerySet(
+        timestampQuerySet,
+        0,
+        2,
         timestampQueryResolveBuffer,
         0,
-        timestampQueryResultBuffer,
-        0,
-        timestampQueryResolveBuffer.size,
       );
-    }
 
-    const pass = encoder.beginRenderPass({
-      colorAttachments: [
-        {
-          view: context.getCurrentTexture().createView(),
-          loadOp: "clear",
-          clearValue: { r: 0, g: 0, b: 0.2, a: 1 },
-          storeOp: "store",
-        },
-      ],
-    });
+      if (timestampQueryResultBuffer.mapState === "unmapped") {
+        encoder.copyBufferToBuffer(
+          timestampQueryResolveBuffer,
+          0,
+          timestampQueryResultBuffer,
+          0,
+          timestampQueryResolveBuffer.size,
+        );
+      }
 
-    pass.setPipeline(renderPipeline);
+      const pass = encoder.beginRenderPass({
+        colorAttachments: [
+          {
+            view: context.getCurrentTexture().createView(),
+            loadOp: "clear",
+            clearValue: { r: 0, g: 0, b: 0.2, a: 1 },
+            storeOp: "store",
+          },
+        ],
+      });
 
-    const renderBindGroup = device.createBindGroup({
-      label: "Texture sampler bind group",
-      layout: renderBindGroupLayout,
-      entries: [
-        {
-          binding: 0,
-          resource: sampler,
-        },
-        {
-          binding: 1,
-          resource: texture.createView(),
-        },
-      ],
-    });
+      pass.setPipeline(renderPipeline);
 
-    pass.setBindGroup(0, renderBindGroup);
-    const RENDER_TEXTURE_VERTEX_COUNT = 6;
-    pass.draw(RENDER_TEXTURE_VERTEX_COUNT);
+      const renderBindGroup = device.createBindGroup({
+        label: "Texture sampler bind group",
+        layout: renderBindGroupLayout,
+        entries: [
+          {
+            binding: 0,
+            resource: sampler,
+          },
+          {
+            binding: 1,
+            resource: texture.createView(),
+          },
+        ],
+      });
 
-    pass.end();
+      pass.setBindGroup(0, renderBindGroup);
+      const RENDER_TEXTURE_VERTEX_COUNT = 6;
+      pass.draw(RENDER_TEXTURE_VERTEX_COUNT);
 
-    const commandBuffer = encoder.finish();
+      pass.end();
 
-    device.queue.submit([commandBuffer]);
+      const commandBuffer = encoder.finish();
 
-    if (timestampQueryResultBuffer.mapState === "unmapped") {
-      await timestampQueryResultBuffer.mapAsync(GPUMapMode.READ);
-      const data = new BigUint64Array(
-        timestampQueryResultBuffer.getMappedRange(),
-      );
-      const gpuTime = data[1] - data[0];
-      console.log(`GPU Time: ${gpuTime}ns`);
-      timestampQueryResultBuffer.unmap();
-    }
+      device.queue.submit([commandBuffer]);
 
-    renderAgg += renderLog.end();
+      if (timestampQueryResultBuffer.mapState === "unmapped") {
+        await timestampQueryResultBuffer.mapAsync(GPUMapMode.READ);
+        const data = new BigUint64Array(
+          timestampQueryResultBuffer.getMappedRange(),
+        );
+        const gpuTime = data[1] - data[0];
+        console.log(`GPU Time: ${gpuTime}ns`);
+        timestampQueryResultBuffer.unmap();
+      }
+
+      renderAgg += renderLog.end();
 
       if (currentSample < TARGET_SAMPLES && !isHalted()) {
-      currentSample++;
+        currentSample++;
         currentAnimationFrameRequest = requestAnimationFrame(render);
-    } else {
-      console.log("Average render time", renderAgg / TARGET_SAMPLES);
+      } else {
+        console.log("Average render time", renderAgg / TARGET_SAMPLES);
         currentAnimationFrameRequest = null;
 
         state = "halted";
       }
-  };
+    };
     currentAnimationFrameRequest = requestAnimationFrame(render);
 
     return {
