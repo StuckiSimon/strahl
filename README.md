@@ -15,3 +15,7 @@ Browser supporting WebGPU, e.g. Chrome.
 ## Run
 
 `npm run dev`
+
+In order to expose in local network, run:
+
+`npm run dev -- --host`
