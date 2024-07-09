@@ -8,6 +8,12 @@
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
+  "exports": {
+    ".": {
+      "import": "./dist/strahl.js",
+      "require": "./dist/strahl.umd.cjs"
+    }
+  },
   "devDependencies": {
     "@types/three": "^0.165.0",
     "@vitejs/plugin-basic-ssl": "^1.1.0",
