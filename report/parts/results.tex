@@ -34,9 +34,10 @@ For many applications, especially photorealistic rendering, perspective projecti
 
 The path tracer uses PCG-RXS-M-XS variant as described by O’Neill \cite{o2014pcg} in combination with Xorshift as described by Marsaglia \cite{marsaglia2003xorshift}. See \coderef{RNG} for implementation.
 
-\subsection{Aliasing}
+\subsection{Anti-Aliasing}
 
-Aliasing is a common issue in computer graphics. It occurs when the resolution of the screen is not sufficient to represent the scene accurately. One such example is jagged edges on diagonal lines. Anti-aliasing techniques can be employed to reduce the effect. The negative effect of aliasing is demonstrated in \autoref{fig:aliasingA}.
+See \coderef{ALIASING} for implementation.
+
 
 \begin{figure}[H]
     \centering
