@@ -32,31 +32,7 @@ For many applications, especially photorealistic rendering, perspective projecti
 
 \subsection{Random Number Generator}
 
-To simulate light transport, the path tracer needs to pick random directions. Generating a random direction vector, defined as $v = (x, y, z)$, can be achieved by picking three random numbers independent of one another. This is done using a random number generator (RNG). Unlike other programming languages, WGSL does not have a built-in RNG. Therefore, a custom RNG is required. There are a variety of RNGs available which differ in important characteristics. Some of the characteristics to consider when choosing a suitable RNG are:
-
-\begin{itemize}
-    \item{Statistical Quality} – The RNG should generate numbers that are statistically random. This means that the numbers should be uniformly distributed and have a low correlation between them.
-    \item{Period} – The length of the cycle before the sequence of generated numbers starts to repeat itself.
-    \item{Time Performance} – The time it takes to generate a random number. This is influenced by the algorithm as well as the hardware which may support dedicated instructions.
-    \item{Space Usage} – The amount of memory required to store state.
-\end{itemize}
-
-Based on the use case, other factors such as prediction difficulty or others such as highlighted by O’Neill \cite{o2014pcg} may be important. Cryptography for example requires randomness of the RNG to prevent an adversary from predicting secret keys. Options to generate the randomness require additional signals \cite{randomnessCryptography} or may require special hardware such as LavaRand \cite{cloudflareLavaRand}. Many generators are pseudorandom generators. These generators are deterministic and require a seed to start the sequence. For crypographically secure generators, the seed must be random.
-However, for a path tracer, there is no need for cryptographic security. Instead, it is more important to have high performance and having a long period to avoid repetition. Therefore, a pseudorandom number generator with non-cryptographically secure seed is used.
-
-One option for such a pseudorandom generator is using Xorshifts such as described by Marsaglia \cite{marsaglia2003xorshift}. The algorithm can be defined as shown in Figure \ref{code:xorShift}. $x$ is the state of the RNG and $a$, $b$ and $c$ are constants which are chosen to achieve good statistical properties. Frequent choices for these constants are $a = 13$, $b = 17$ and $c = 5$.
-
-\begin{figure}[H]
-\begin{lstlisting}[style=wgsl]
-x ^= x << a;
-x ^= x >> b;
-x ^= x << c;
-\end{lstlisting}
-\caption{Xorshift RNG implementation in WGSL.}
-\label{code:xorShift}
-\end{figure}
-
-Alternatives to Xorshift are available, such as the Mersenne Twister \cite{rngMersenneTwister}. The Mersenne Twister is a pseudorandom number generator which has a long period and good statistical properties. However, it is slower than Xorshifts \cite{o2014pcg}. More recently, PCG has been proposed as an alternative to these options. PCG is a family of fast generators. The path tracer uses PCG-RXS-M-XS variant as described by O’Neill \cite{o2014pcg}. See \coderef{RNG} for implementation.
+The path tracer uses PCG-RXS-M-XS variant as described by O’Neill \cite{o2014pcg} in combination with Xorshift as described by Marsaglia \cite{marsaglia2003xorshift}. See \coderef{RNG} for implementation.
 
 \subsection{Aliasing}
 
