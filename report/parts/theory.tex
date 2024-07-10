@@ -197,6 +197,10 @@ The \fgls{BVH}{\e{Bounding Volume Hierarchy}, common tree-based acceleration str
 
 \subsubsection{Importance Sampling}
 
+\subsubsection{Hybrid Approaches}
+
+Ray Tracing and Rasterization are not mutually exclusive. Hybrid approaches have been developed which leverage a multi-paradigm approach. One such example is PICA PICA, a real-time ray-tracing experiment developed by Nvidia \cite{hybridRenderingBarreBrisebois2019}. The rendering pipeline is split into multiple stages, consisting of global illumination, shadow, reflection, direct lighting. Each stage could be implemented using different techniques where the strategy could be chosen based on the requirements of the scene as well as the available computational resources.
+
 \subsection{Common Techniques}
 
 While rasterization and ray tracing are inherently different techniques, they face similar challenges. Notable frequently encountered challenges and their differences in rasterization and ray tracing are discussed in the following sections.
