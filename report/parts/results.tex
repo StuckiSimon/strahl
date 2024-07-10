@@ -36,27 +36,8 @@ The path tracer uses PCG-RXS-M-XS variant as described by O’Neill \cite{o2014p
 
 \subsection{Anti-Aliasing}
 
-See \coderef{ALIASING} for implementation.
+The implementation of the strategy indicated in \ref{sec:anti-aliasing} is implemented in \coderef{ALIASING}.
 
-
-\begin{figure}[H]
-    \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{resources/aliasing.png}
-        \caption{Rendering showing aliasing.}
-        \label{fig:aliasingA}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{resources/anti-aliasing.png}
-        \caption{Rendering with anti-aliasing applied.}
-        \label{fig:aliasingB}
-    \end{subfigure}
-    \caption{The two images show the effect of aliasing and anti-aliasing.}
-    \label{fig:aliasing}
-\end{figure}
-
-In ray tracing, aliasing can be alleviated by randomizing the direction of the rays the result of applying anti-aliasing can be seen in \autoref{fig:aliasingB}. See \coderef{ALIASING} for implementation.
 
 \subsection{WebGPU}
 \subsection{Integration}
