@@ -294,7 +294,9 @@ Aliasing is a common issue in computer graphics. It occurs when the resolution o
     \label{fig:aliasing}
 \end{figure}
 
-In ray tracing, aliasing can be alleviated by randomizing the direction of the rays the result of applying anti-aliasing can be seen in \autoref{fig:aliasingB}.
+In ray tracing, aliasing can be alleviated by randomizing the direction of the rays for the different samples taken. The result of applying anti-aliasing can be seen in \autoref{fig:aliasingB}.
+
+In rasterization, similar solution strategies can be employed. Supersampling is a common technique which renders the scene at a higher resolution and then downsamples the image by averaging the colors of the pixels. More elaborate techniques such as deep learning super sampling (DLSS) implemented by Nvidia \cite{nvidiaDlss} can be used to further improve the quality of the image in real-time rendering.
 
 \section{Physically Based Rendering}
 
