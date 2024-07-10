@@ -295,15 +295,15 @@ While the macroscopic appearance of a material is visible to the human eye, the 
 
 This section provides an overview of the technology used to render 3D scenes. It will introduce the hardware as well as the software used in the field with a focus on technology relevant for this thesis by introducing WebGPU and its core concepts.
 
-\subsection{Parallel Processing}
+\paragraph{Parallel Processing}
 
 Sequential processing is limited in terms of performance. As the amount of data to process grows, the time to process the data grows linearly. Computer graphics exhibits a large number of problems which can be parallelized. The idea of parallelization for data processing is not new. In 1966, Flynn introduced a classification system for computer architectures based on the instruction streams and data streams they can process in parallel \cite{flynnTaxonomy,flynnTaxonomy2}. Already in 1970, Watkins described an algorithm for computer graphics leveraging a specialized processor for parallel processing \cite{surfaceAlgorithmProcessor}. Further research such as Chap, a \fGls{SIMD}{\e{Single Instruction, Multiple Data}, type of parallel processing of data points with a single instruction} graphics processor proposed in 1984 by Levinthal and Porter as part of Lucasfilm introduced a special purpose processor executing a single instruction on multiple data points \cite{chapSIMDgpu}.
 
-\subsection{GPU}
+\paragraph{GPU}
 
-The first so-called consumer graphics processing units (GPU) were developed in the 1990s and extend on research conducted in the decades prior such as so-called superworkstations introduced by Silicon Graphics in the 1980s \cite{sigWorkstation}. These workstations were special-purpose computers which were optimized for computer graphics. The GPU is a specialized processor that is well-suited for workloads which require parallel processing. While CPU parallelization on consumer hardware is generally limited to a few cores, modern GPUs have thousands of compute units.
+The first so-called consumer graphics processing units (GPU) were developed in the 1990s and extend on research conducted in the decades prior such as so-called superworkstations introduced by Silicon Graphics in the 1980s \cite{sigWorkstation}. These workstations were special-purpose computers which were optimized for computer graphics. The GPU on the other hand is a specialized processor that is well-suited for workloads which require parallel processing and can be installed on a standard computer. While CPU parallelization on consumer hardware is generally limited to a few cores, modern GPUs have thousands of compute units.
 
-Nowadays GPUs are prevalent in consumer hardware such as smartphones, tablets, laptops and desktops and their use case is not limited to computer graphics. GPUs are used in a wide range of applications, such as machine learning, scientific computing and data processing.
+Nowadays GPUs are prevalent in consumer hardware such as smartphones, tablets, laptops and desktops and their use case is not limited to computer graphics. GPUs are used in a wide range of applications, such as machine learning, scientific computing and data processing. Devices, which do not have a discrete GPU, often use an integrated GPU which is part of the CPU.
 
 \subsection{OpenGL}
 
