@@ -693,7 +693,7 @@ async function run() {
         sunDirection,
         skyPower: sunConfig.skyPower,
         skyColor: sunConfig.skyColor,
-        sunPower: sunConfig.sunPower,
+        sunPower: Math.pow(10, sunConfig.sunPower),
         sunAngularSize: sunConfig.sunAngularSize,
         sunColor: sunConfig.sunColor,
         clearColor: [1.0, 1.0, 1.0],
