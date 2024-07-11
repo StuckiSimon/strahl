@@ -22,19 +22,28 @@ Euclidean vectors are fundamental in computer graphics and are generally defined
   ||v|| = \sqrt{x^2 + y^2 + z^2}
 \end{equation}
 
-The dot product of two vectors $v = (x_1, y_1, z_1)$ and $w = (x_2, y_2, z_2)$ is defined as:
+The dot product (scalar $s$) of two vectors $v = (x_1, y_1, z_1)$ and $w = (x_2, y_2, z_2)$ is defined as:
 
 \begin{equation}
   \label{eqn:dot-product}
-  v \cdot w = x_1 \cdot x_2 + y_1 \cdot y_2 + z_1 \cdot z_2
+  s = v \cdot w = x_1 \cdot x_2 + y_1 \cdot y_2 + z_1 \cdot z_2
 \end{equation}
 
-The cross product of two vectors $v = (x_1, y_1, z_1)$ and $w = (x_2, y_2, z_2)$ is defined as:
+The cross product (vector $p$) of two vectors $v = (x_1, y_1, z_1)$ and $w = (x_2, y_2, z_2)$ is defined as:
 
 \begin{equation}
   \label{eqn:cross-product}
-  v \times w = (y_1 \cdot z_2 - z_1 \cdot y_2, z_1 \cdot x_2 - x_1 \cdot z_2, x_1 \cdot y_2 - y_1 \cdot x_2)
+  p = v \times w = (y_1 \cdot z_2 - z_1 \cdot y_2, z_1 \cdot x_2 - x_1 \cdot z_2, x_1 \cdot y_2 - y_1 \cdot x_2)
 \end{equation}
+
+As visualized in \autoref{fig:cross-product}, the cross product gives a vector $p$ which is orthogonal to the two input vectors $v$ and $w$.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.2\textwidth]{resources/cross-product.png}
+  \caption{Cross product of two vectors $v$ and $w$, resulting in a vector $p$ orthogonal to $v$ and $w$.}
+  \label{fig:cross-product}
+\end{figure}
 
 \subsubsection{Matrices}
 
