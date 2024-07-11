@@ -74,8 +74,8 @@ function getSunDirection() {
   let cosPhi = Math.cos(lonPhi);
   let sinPhi = Math.sin(lonPhi);
   let x = sinTheta * cosPhi;
-  let y = sinTheta * sinPhi;
-  let z = cosTheta;
+  let z = sinTheta * sinPhi;
+  let y = cosTheta;
   return [x, y, z];
 }
 
