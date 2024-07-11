@@ -520,9 +520,9 @@ Technically, the format offers two different encoding formats which differ in fi
     \item{\texttt{.gltf}} – Text-based format which is human-readable.
 \end{itemize}
 
-glTF is designed to be extensible and a variety of extensions have been developed to support features such as mesh compression using Draco.
+\gls{glTF} is designed to be extensible and a variety of extensions have been developed to support features such as mesh compression using Draco.
 
-The hierarchy structure of a glTF file is shown in \autoref{fig:gltf-hierarchy}.
+The hierarchy structure of a \gls{glTF} file is shown in \autoref{fig:gltf-hierarchy}.
 
 \begin{figure}[H]
   \centering
@@ -533,11 +533,11 @@ The hierarchy structure of a glTF file is shown in \autoref{fig:gltf-hierarchy}.
 
 \section{Material Description}
 
-While the principles of PBR are well-established, the material description in 3D formats is not uniform. A variety of different approaches have been developed. Similar to exchange formats, a variety of different use cases are addressed by material description models.
+While the principles of PBR are well-established, the material description in 3D formats is not uniform. A variety of different approaches have been developed. In addition to many exchange formats such as \gls{glTF} having their own material definition, different shading models exist independent of these formats. Similar to exchange formats, a variety of different use cases are addressed by material description models. While some shading models are optimized for real-time rendering, others are optimized for film production.
 
-Many exchange formats, such as glTF, support material description as part of the standard. The material description in glTF supports a PBR approach which is based on the metallic-roughness material model \todo{source?}. However, the PBR material description in glTF is limited in terms of feature set, by lacking features such as subsurface scattering, and is not intended to become an open standard across a variety of applications.
+Many exchange formats, such as \gls{glTF}, support material description as part of the standard. The material description in \gls{glTF} supports a PBR approach which is based on the metallic-roughness material model \todo{source?}. However, the PBR material description in \gls{glTF} is limited in terms of feature set, by lacking features such as subsurface scattering, and is not intended to become an open standard across a variety of applications.
 
-This is where new material description standards come into play. These are open standards intended to be used across different applications.
+In addition, many real-time rendering engines such as Unity and Unreal, modeling software such as 3ds Max and Maya have their own shading models. Supporting many different shading models in a web-based real-time rendering application can be challenging, making the need for a common material description standard more apparent. This is where new material description standards come into play. These are open standards intended to be used across different applications.
 
 \subsection{MaterialX}
 
