@@ -120,6 +120,37 @@
     url = {https://renderman.pixar.com/resources/RenderMan_20/rnotes-11.0.html},
 }
 
+@article{rubinWhittedBvh,
+  author = {Rubin, Steven M. and Whitted, Turner},
+  title = {A 3-dimensional representation for fast rendering of complex scenes},
+  year = {1980},
+  issue_date = {July 1980},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  volume = {14},
+  number = {3},
+  issn = {0097-8930},
+  url = {https://doi.org/10.1145/965105.807479},
+  doi = {10.1145/965105.807479},
+  abstract = {Hierarchical representations of 3-dimensional objects are both time and space efficient. They typically consist of trees whose branches represent bounding volumes and whose terminal nodes represent primitive object elements (usually polygons). This paper describes a method whereby the object space is represented entirely by a hierarchical data structure consisting of bounding volumes, with no other form of representation. This homogencity allows the visible surface rendering to be performed simply and efficiently.The bounding volumes selected for this algorithm are parallelepipeds oriented to minimize their size. With this representation, any surface can be rendered since in the limit the bounding volumes make up a point representation of the object. The advantage is that the visibility calculations consist only of a search through the data structure to determine the correspondence between terminal level bounding volumes and the current pixel. For ray tracing algorithms, this means that a simplified operation will produce the point of intersection of each ray with the bounding volumes.Memory requirements are minimized by expanding or fetching the lower levels of the hierarchy only when required. Because the viewing process has a single operation and primitive type, the software or hardware chosen to implement the search can be highly optimized for very fast execution.},
+  journal = {SIGGRAPH Comput. Graph.},
+  month = {jul},
+  pages = {110–116},
+  numpages = {7},
+  keywords = {Visible surface algorithms, Object descriptions, Hierarchical data structures, Computer graphics}
+}
+
+@inproceedings{lauterbach2009GPUbvh,
+  title={Fast BVH construction on GPUs},
+  author={Lauterbach, Christian and Garland, Michael and Sengupta, Shubhabrata and Luebke, David and Manocha, Dinesh},
+  booktitle={Computer Graphics Forum},
+  volume={28},
+  number={2},
+  pages={375--384},
+  year={2009},
+  organization={Wiley Online Library}
+}
+
 @article{whitted2020OriginsOfGlobalIllumination,
     author={Whitted, Turner},
     journal={IEEE Computer Graphics and Applications}, 

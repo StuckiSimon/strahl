@@ -200,11 +200,11 @@ Further research into light transport techniques such as bidirectional ligh tran
 
 When casting a ray into the scene, the first step in a ray tracer is to determine where the ray intersects with the geometry of the scene.
 
-A brute force approach could be to determine the intersection distance for each object to the ray and picking the one with the lowest distance. Given the fact, that common objects consist of thousands of triangles and ray tracing many rays, this approach is not efficient.
+A brute force approach could be to determine the intersection distance for each object to the ray and picking the one with the lowest distance. Given the fact, that common objects consist of thousands of triangles ($n$) and ray tracing many rays, this approach is not efficient as it would worst case require $O(n)$ intersection tests for each ray.
 
 In order to accelerate the intersection testing, various approaches have been developed.
 
-The \fgls{BVH}{\e{Bounding Volume Hierarchy}, common tree-based acceleration structure} is an acceleration structure which is leveraged to speed up the ray intersection tests. The core idea is to group adjacent objects in a bounding volume and structure the hierarchy in a way that all child elements of a node are contained in the bounding volume of the parent node. This allows for early rejection of branches which are not intersected by the ray. By employing a BVH, the number of intersection tests can be reduced from $O(n)$ to $O(log(n))$.
+The bounding volume hierarchy (\gls{BVH}) is an acceleration structure which is leveraged to speed up the ray intersection tests. This method is widely used in ray tracing and has been studied for a long time \cite{rubinWhittedBvh}. The core idea is to group adjacent objects in a bounding volume and structure the hierarchy in a way that all child elements of a node are contained in the bounding volume of the parent node. This allows for early rejection of branches which are not intersected by the ray. By employing a \gls{BVH}, the number of intersection tests can be reduced from $O(n)$ to $O(log(n))$.
 
 \subsubsection{Importance Sampling}
 
@@ -373,11 +373,11 @@ This section provides an overview of the technology used to render 3D scenes. It
 
 Sequential processing is limited in terms of performance. As the amount of data to process grows, the time to process the data grows linearly. Computer graphics exhibits a large number of problems which can be parallelized. The idea of parallelization for data processing is not new. In 1966, Flynn introduced a classification system for computer architectures based on the instruction streams and data streams they can process in parallel \cite{flynnTaxonomy,flynnTaxonomy2}. Already in 1970, Watkins described an algorithm for computer graphics leveraging a specialized processor for parallel processing \cite{surfaceAlgorithmProcessor}. Further research such as Chap, a \fGls{SIMD}{\e{Single Instruction, Multiple Data}, type of parallel processing of data points with a single instruction} graphics processor proposed in 1984 by Levinthal and Porter as part of Lucasfilm introduced a special purpose processor executing a single instruction on multiple data points \cite{chapSIMDgpu}.
 
-Due to computational complexity, ray tracing techniques have been limited to offline rendering for a long time. Early ray tracers such as \gls{BMRT} were developed focusing on leveraging \gls{CPU} for computations. Leveraging specialized processing units has been a focus of research and has enabled real-time ray tracing in recent years.
-
 \paragraph{GPU}
 
 The first so-called consumer graphics processing units (\gls{GPU}) were developed in the 1990s and extend on research conducted in the decades prior such as so-called superworkstations introduced by Silicon Graphics in the 1980s \cite{sigWorkstation}. These workstations were special-purpose computers which were optimized for computer graphics. The GPU on the other hand is a specialized processor that is well-suited for workloads which require parallel processing and can be installed on a standard computer. While CPU parallelization on consumer hardware is generally limited to a few cores, modern GPUs have thousands of compute units which enable \gls{SIMD} processing.
+
+Due to computational complexity, ray tracing techniques have been limited to offline rendering for a long time. Early ray tracers such as \gls{BMRT} were developed focusing on leveraging \gls{CPU} for computations. Leveraging \gls{GPU} has been a focus of research and has enabled real-time ray tracing in recent years. One such example of research for a well-established technique is \gls{BVH} construction on the \gls{GPU} \cite{lauterbach2009GPUbvh} instead of \gls{CPU}.
 
 Nowadays GPUs are prevalent in consumer hardware such as smartphones, tablets, laptops and desktops and their use case is not limited to computer graphics. GPUs are used in a wide range of applications, such as machine learning, scientific computing and data processing. Devices, which do not have a discrete GPU, often use an integrated GPU which is part of the CPU.
 
