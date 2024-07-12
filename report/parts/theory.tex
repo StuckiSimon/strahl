@@ -315,13 +315,13 @@ In rasterization, similar solution strategies can be employed. Supersampling is 
 
 \section{Physically Based Rendering}
 
-Defining the geometry is one part of the equation. Another major part is defining materials. Materials define how a surface interacts with light. The core idea of physically based rendering (PBR) is to simulate the interaction of light using physical models. Instead of fine-tuning parameters for a specific look and feel and having to adjust based on desired lighting situations, PBR aims to define a material which behaves consistently in different lighting situations.
+Defining the geometry is one part of the equation. Another major part is defining materials. Materials define how a surface interacts with light. The core idea of physically based rendering (\gls{PBR}) is to simulate the interaction of light using physical models. Instead of fine-tuning parameters for a specific look and feel and having to adjust based on desired lighting situations, \gls{PBR} aims to define a material which behaves consistently in different lighting situations.
 
-Research into PBR has been conducted for a similar amount of time as ray tracing. And just like ray tracing, the computational complexity of the algorithms has limited the adoption of PBR in real-time rendering for a long time \todo{Quote some early adopters of 2000s?}. PBR has generally coincided with the rise of ray tracing as it is a natural fit for the physics based rendering approach. However, PBR and ray tracing are not mutually dependent as PBR can be used in rasterization as well.
+Research into \gls{PBR} has been conducted for a similar amount of time as ray tracing. And just like ray tracing, the computational complexity of the algorithms has limited the adoption of \gls{PBR} in real-time rendering for a long time \todo{Quote some early adopters of 2000s?}. \gls{PBR} has generally coincided with the rise of ray tracing as it is a natural fit for the physics based rendering approach. However, \gls{PBR} and ray tracing are not mutually dependent as \gls{PBR} can be used in rasterization as well.
 
-In contrast to how ray tracing is inherently addressing shortcomings of rasterization by leveraging an entirely different approach, PBR is a more incremental improvement extending existing shading techniques with more sophisticated models.
+In contrast to how ray tracing is inherently addressing shortcomings of rasterization by leveraging an entirely different approach, \gls{PBR} is a more incremental improvement extending existing shading techniques with more sophisticated models.
 
-In general, there is no PBR standard. Instead, a variety of different models have been developed over time. In recent years however, a convergence towards a common set of principles has been observed. Nevertheless, certain aspects of PBR are found in most models.
+In general, there is no \gls{PBR} standard. Instead, a variety of different models have been developed over time. In recent years however, a convergence towards a common set of principles has been observed. Nevertheless, certain aspects of \gls{PBR} are found in most models.
 
 \subsection{BxDF}
 
@@ -535,18 +535,21 @@ The hierarchy structure of a \gls{glTF} file is shown in \autoref{fig:gltf-hiera
 
 \section{Material Description}
 
-While the principles of PBR are well-established, the material description in 3D formats is not uniform. A variety of different approaches have been developed. In addition to many exchange formats such as \gls{glTF} having their own material definition, different shading models exist independent of these formats. Similar to exchange formats, a variety of different use cases are addressed by material description models. While some shading models are optimized for real-time rendering, others are optimized for film production.
+While the principles of \gls{PBR} are well-established, the material description in 3D formats is not uniform. A variety of different approaches have been developed. In addition to many exchange formats such as \gls{glTF} having their own material definition, different shading models exist independent of these formats. Similar to exchange formats, a variety of different use cases are addressed by material description models. While some shading models are optimized for real-time rendering, others are optimized for film production.
 
-Many exchange formats, such as \gls{glTF}, support material description as part of the standard. The material description in \gls{glTF} supports a PBR approach which is based on the metallic-roughness material model \todo{source?}. However, the PBR material description in \gls{glTF} is limited in terms of feature set, by lacking features such as subsurface scattering, and is not intended to become an open standard across a variety of applications.
+Many exchange formats, such as \gls{glTF}, support material description as part of the standard. The material description in \gls{glTF} supports a \gls{PBR} approach which is based on the metallic-roughness material model \todo{source?}. However, the \gls{PBR} material description in \gls{glTF} is limited in terms of feature set, by lacking features such as subsurface scattering, and is not intended to become an open standard across a variety of applications.
 
 In addition, many real-time rendering engines such as Unity and Unreal, modeling software such as 3ds Max and Maya have their own shading models. Supporting many different shading models in a web-based real-time rendering application can be challenging, making the need for a common material description standard more apparent. This is where new material description standards come into play. These are open standards intended to be used across different applications.
 
 \subsection{MaterialX}
 
-MaterialX is an open standard which was originally developed by Lucasfilm in 2012. The standard has since been adopted by the Academy Software Foundation as an open standard.
+\gls{MaterialX} is an open standard which was originally developed by Lucasfilm in 2012. The standard has since been adopted by the Academy Software Foundation as an open standard.
 
-While not strictly limited to PBR, the standard provides a wide range of features to describe physically based materials \cite{Harrysson2019}.
+While not strictly limited to \gls{PBR}, the standard provides a wide range of features to describe physically based materials \cite{Harrysson2019}.
+
+
+
 
 \subsection{OpenPBR}
 
-OpenPBR\cite{openPBRSpec} is a surface shading model hosted by the Academy Software Foundation as an open standard. It differs from MaterialX in that it is providing an uber-shader approach instead of a more flexible node-based approach. It serves as a combination of Autodesk Standard Surface and Adobe Standard Material and is being worked on by both companies. The uber-shader approach is defined by having a fix set of inputs which can be adjusted, but it does not allow for custom node graphs as MaterialX does.
+\gls{OpenPBR}\cite{openPBRSpec} is a surface shading model hosted by the Academy Software Foundation as an open standard. It differs from \gls{MaterialX} in that it is providing an uber-shader approach instead of a more flexible node-based approach. It serves as a combination of Autodesk Standard Surface and Adobe Standard Material and is being worked on by both companies. The uber-shader approach is defined by having a fix set of inputs which can be adjusted, but it does not allow for custom node graphs as \gls{MaterialX} does.
