@@ -400,24 +400,24 @@ Due to computational complexity, ray tracing techniques have been limited to off
 
 Nowadays GPUs are prevalent in consumer hardware such as smartphones, tablets, laptops and desktops and their use case is not limited to computer graphics. GPUs are used in a wide range of applications, such as machine learning, scientific computing and data processing. Devices, which do not have a discrete GPU, often use an integrated GPU which is part of the CPU.
 
-Modern GPU hardware offers support for hardware-accelerated ray tracing. Examples include Nvidia RTX \cite{nvidiaRtxRayTracing}, Apple Metal on M3 \cite{appleM3GpuAdvancements} and others. These examples demonstrate an increasing trend towards hardware-accelerated ray tracing in recent years, however many devices and \gls{API}s do not yet support hardware-accelerated ray tracing.
+Modern GPU hardware offers support for hardware-accelerated ray tracing. Examples include Nvidia RTX \cite{nvidiaRtxRayTracing}, Apple Metal on M3 \cite{appleM3GpuAdvancements} and others. These examples demonstrate an increasing trend towards hardware-accelerated ray tracing in recent years, however many devices and \glspl{API} do not yet support hardware-accelerated ray tracing.
 
 \subsection{OpenGL}
 
 OpenGL is an \gls{API} for rendering 3D graphics. After its introduction in 1992, it was widely adopted. Subsequently, the standard has been ported to other platforms and has been extended with new features.
 
-To date, OpenGL is still widely used in the industry, but it has been replaced by more modern \gls{API}s in recent years.
+To date, OpenGL is still widely used in the industry, but it has been replaced by more modern \glspl{API} in recent years.
 
 \todo{introduce GPGPU as a concept}
 
 \subsection{Vulkan, Metal, DirectX}
 
-While OpenGL and derivatives such as OpenGL ES have been widely adopted, the introduction of a number of new \gls{API}s has changed the landscape. Some of the most notable \gls{API}s are:
+While OpenGL and derivatives such as OpenGL ES have been widely adopted, the introduction of a number of new \glspl{API} has changed the landscape. Some of the most notable \glspl{API} are:
 
 \begin{itemize}
     \item{Vulkan} Developed by the Khronos Group, Vulkan is a low-level \gls{API} which is supported on a wide range of platforms.
     \item{Metal} Developed by Apple, Metal is a low-level \gls{API} which is supported on Apple platforms.
-    \item{DirectX} Developed by Microsoft, DirectX is a collection of \gls{API}s which are supported on Windows platforms.
+    \item{DirectX} Developed by Microsoft, DirectX is a collection of \glspl{API} which are supported on Windows platforms.
 \end{itemize}
 
 Dawn's Vulkan backend used for WebGPU on Android and ChromeOS. Plan is to use it for Linux as well (Brandon Jones).
@@ -486,7 +486,7 @@ Each type in WGSL has specific alignment requirements which are independent of t
   \label{fig:memory-alignment}
 \end{figure}
 
-Memory alignment is opaque while writing WGSL code, it is relevant when providing data to the GPU. For creating buffers, the alignment requirements need to be considered. When using JavaScript to create buffers, the standard Web \gls{API}s such as \texttt{Float32Array} or \texttt{Uint32Array} can be used to provide data. In order to write data to the \texttt{struct} in \autoref{code:memoryAlignment}, the views can be created as shown in \autoref{code:memoryAlignmentJs}.
+Memory alignment is opaque while writing WGSL code, it is relevant when providing data to the GPU. For creating buffers, the alignment requirements need to be considered. When using JavaScript to create buffers, the standard Web \glspl{API} such as \texttt{Float32Array} or \texttt{Uint32Array} can be used to provide data. In order to write data to the \texttt{struct} in \autoref{code:memoryAlignment}, the views can be created as shown in \autoref{code:memoryAlignmentJs}.
 
 \begin{figure}[H]
   \begin{lstlisting}[style=JavaScript]
