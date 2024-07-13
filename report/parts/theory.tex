@@ -206,22 +206,22 @@ In order to accelerate the intersection testing, various approaches have been de
 
 The bounding volume hierarchy (\gls{BVH}) is an acceleration structure which is leveraged to speed up the ray intersection tests. This method is widely used in ray tracing and has been studied for a long time \cite{rubinWhittedBvh}. The core idea is to group adjacent objects in a bounding volume and structure the hierarchy in a way that all child elements of a node are contained in the bounding volume of the parent node. This allows for early rejection of branches which are not intersected by the ray. By employing a \gls{BVH}, the number of intersection tests ($n$) can be reduced from $O(n)$ to $O(log(n))$.
 
-A bounding box ($b$) can be defined as $b = (min, max)$ where $min$ and $max$ are the minimum and maximum vertices of the bounding box. The boxes are then grouped into a hierarchy where the maximum and minimum vertices of the children define the bounding box of the parent. This is visualized in \autoref{fig:bvhVisualized}.
+A bounding box ($b$) can be defined as $b = (min, max)$ where $min$ and $max$ are the minimum and maximum vertices of the bounding box. The boxes are then grouped into a hierarchy where the maximum and minimum vertices of the children define the bounding box of the parent. This is visualized in \autoref{fig:bvhVisualized}. Good performance of the \gls{BVH} depends on the quality of the hierarchy. A badly constructed \gls{BVH} can lead to a higher number of intersection tests as visualized in \autoref{fig:bvhBad} because intersections need to be tested against all elements: three bounding boxes and four triangles. For a well-constructed \gls{BVH}, the algorithm can reduce the number of intersection tests as visualized in \autoref{fig:bvhGood} by doing the minimum amount of intersection tests: $b_1$, which intersects, $b_2$ which can be discarded after checking and then $b_3$ necessitates further intersection tests for the two contained triangles. For such a small number of triangles, the overhead of the \gls{BVH} exceeds the benefits, but for larger scenes, the performance gain is significant as the amount of tests can be halved for well-balanced trees.
 
 \begin{figure}[H]
   \centering
   \begin{subfigure}[b]{0.45\textwidth}
       \includegraphics[width=\textwidth]{resources/bvh-bad-visualized.png}
-      \caption{Badly-constructed \gls{BVH} which requires eight intersection tests.}
+      \caption{Badly-constructed \gls{BVH} which requires seven intersection tests for $r$, essentially testing against all objects.}
       \label{fig:bvhBad}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.45\textwidth}
     \includegraphics[width=\textwidth]{resources/bvh-good-visualized.png}
-    \caption{Well-constructed \gls{BVH} which reduces the required intersection tests to four.}
+    \caption{Well-constructed \gls{BVH} which reduces the required intersection tests for $r$ to four.}
     \label{fig:bvhGood}
   \end{subfigure}
-  \caption{Sample 2D \gls{BVH} visualization which contains four triangles ($t_1$ to $t_4$) and their corresponding bounding boxes $n1$ as parent and $n2$ as well as $n3$ as the children. $n1$ is visualized bigger than need be to improve readability. $r$ indicates the ray to be tested.}
+  \caption{Sample 2D \gls{BVH} visualization which contains four triangles ($t_1$ to $t_4$) and their corresponding bounding boxes $b_1$ as parent and $b_2$ as well as $b_3$ as the children. $b_1$ is visualized bigger than need be to improve readability. The color of the triangles indicates to which bounding box they belong. $r$ indicates the ray to be tested for intersection.}
   \label{fig:bvhVisualized}
 \end{figure}
 
