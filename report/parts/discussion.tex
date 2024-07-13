@@ -22,6 +22,10 @@ This means that it's straightforward to use WebGPU on most modern devices with t
 
 \section{Future Work}
 
+\subsection{Web Worker Support}
+
+Web Workers are a web technology that allows running scripts off the main thread. This can be used to offload \gls{CPU}-heavy tasks to a separate thread to prevent blocking the main thread which is responsible for rendering the user interface.
+
 \subsection{BVH Construction}
 
 The current implementation builds the \gls{BVH} on the \gls{CPU} and transfers it to the \gls{GPU}. Moving this to be built on the \gls{GPU} directly could improve performance. This would reduce the amount of data that needs to be transferred between the \gls{CPU} and the \gls{GPU}. The new \gls{GPGPU} capabilities of WebGPU further enable this approach.
