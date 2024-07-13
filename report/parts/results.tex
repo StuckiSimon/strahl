@@ -34,6 +34,10 @@ For many applications, especially photorealistic rendering, perspective projecti
 
 The path tracer uses PCG-RXS-M-XS variant as described by O’Neill \cite{o2014pcg} in combination with Xorshift as described by Marsaglia \cite{marsaglia2003xorshift}. See \coderef{RNG} for implementation.
 
+\subsection{Intersection Testing}
+
+For \gls{BVH} construction, well-established solutions for the web are available. The path tracer uses \texttt{three-mesh-bvh} \cite{threeMeshBvh}. This method builds the \gls{BVH} on the \gls{CPU}, the code for transfering the \gls{BVH} to the \gls{GPU} is in \coderef{BVH-TRANSFER}, intersection tests are implemented in \gls{WGSL}, see \coderef{BVH-TESTS}.
+
 \subsection{Anti-Aliasing}
 
 The implementation of the strategy indicated in \ref{sec:anti-aliasing} is implemented in \coderef{ALIASING}.

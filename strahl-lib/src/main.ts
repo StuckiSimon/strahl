@@ -79,6 +79,7 @@ function getSunDirection() {
   return [x, y, z];
 }
 
+// CODE#BVH-TRANSFER
 // Inspired by https://github.com/gkjohnson/three-mesh-bvh/blob/0eda7b718799e1709ad9efecdcc13c06ae3d5a55/src/gpu/MeshBVHUniformStruct.js#L110C1-L191C2
 function bvhToTextures(bvh: MeshBVH) {
   const privateBvh = bvh as unknown as MeshBVHInternal;

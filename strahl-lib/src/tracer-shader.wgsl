@@ -385,6 +385,7 @@ fn triangleHit(triangle: Triangle, ray: Ray, rayT: Interval, hitRecord: ptr<func
   return true;
 }
 
+// CODE#BVH-TESTS
 // Based on https://github.com/gkjohnson/three-mesh-bvh/blob/master/src/gpu/glsl/bvh_ray_functions.glsl.js
 fn intersectsBounds(ray: Ray, boundsMin: vec3<f32>, boundsMax: vec3<f32>, dist: ptr<function, f32>) -> bool {
   let invDir = vec3<f32>(1.0) / ray.direction;
