@@ -21,6 +21,10 @@ The main browser which supports WebGPU to date is Chrome. WebGPU has shipped to 
 This means that it's straightforward to use WebGPU on most modern devices with the notable exception of Apple iOS and iPadOS devices.
 
 \section{Future Work}
+
+\subsection{BVH Construction}
+
+The current implementation builds the \gls{BVH} on the \gls{CPU} and transfers it to the \gls{GPU}. Moving this to be built on the \gls{GPU} directly could improve performance. This would reduce the amount of data that needs to be transferred between the \gls{CPU} and the \gls{GPU}. The new \gls{GPGPU} capabilities of WebGPU further enable this approach.
 \subsection{ReSTIR}
 \subsection{SHaRC}
 
