@@ -408,6 +408,8 @@ OpenGL is an \gls{API} for rendering 3D graphics. After its introduction in 1992
 
 To date, OpenGL is still widely used in the industry, but it has been replaced by more modern \gls{API}s in recent years.
 
+\todo{introduce GPGPU as a concept}
+
 \subsection{Vulkan, Metal, DirectX}
 
 While OpenGL and derivatives such as OpenGL ES have been widely adopted, the introduction of a number of new \gls{API}s has changed the landscape. Some of the most notable \gls{API}s are:
@@ -424,16 +426,16 @@ Dawn's Vulkan backend used for WebGPU on Android and ChromeOS. Plan is to use it
 
 WebGL is a graphics \gls{API} based on OpenGL ES 2.0 for the web. It was initially released in 2011 and has since been adopted by all major browsers.
 
-WebGL is designed to offer a rendering pipeline, but does not offer GPGPU capabilities. There have been efforts to extend with compute shaders, but efforts by the Khronos Group have been halted in favor of focusing on WebGPU instead.
+WebGL is designed to offer a rendering pipeline, but does not offer \gls{GPGPU} capabilities. There have been efforts to extend with compute shaders, but efforts by the Khronos Group have been halted in favor of focusing on WebGPU instead.
 
-In order to provide GPGPU capabilities, workarounds have been developed. The basic idea is to render the output of a fragment shader to a texture and interpreting the output as binary data instead of color information.
-There are libraries such as GPU.js which provide GPGPU capabilities using WebGL. Tensorflow.js, a library for training and deploying Machine Learning models, use similar techniques in the WebGL backend.
+In order to provide \gls{GPGPU} capabilities, workarounds have been developed. The basic idea is to render the output of a fragment shader to a texture and interpreting the output as binary data instead of color information.
+There are libraries such as GPU.js which provide \gls{GPGPU} capabilities using WebGL. Tensorflow.js, a library for training and deploying Machine Learning models, use similar techniques in the WebGL backend.
 
 Since its introduction, WebGL has been extended with new features. WebGL 2.0, which is based on OpenGL ES 3.0, was released in 2017. Of the major browsers, Safari was the last to support it out of the box in 2021. Since WebGL 2.0 no new major versions have been released but new features have been added.
 
 \subsection{WebGPU}
 
-WebGPU is a new web standard which is no longer based on OpenGL. One of the main capabilities is support for GPGPU by design. While all major browser vendors have announced intent to support WebGPU, to date only Chrome has shipped WebGPU for general use on desktop as well as mobile.
+WebGPU is a new web standard which is no longer based on OpenGL. One of the main capabilities is support for \gls{GPGPU} by design. While all major browser vendors have announced intent to support WebGPU, to date only Chrome has shipped WebGPU for general use on desktop as well as mobile.
 The standard is still in development and new features are being added.
 Common 3D engines such as Babylon.js, Three.js, PlayCanvas and Unity have announced support for WebGPU.
 
