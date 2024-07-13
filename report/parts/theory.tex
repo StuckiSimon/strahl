@@ -204,7 +204,26 @@ A brute force approach could be to determine the intersection distance for each 
 
 In order to accelerate the intersection testing, various approaches have been developed.
 
-The bounding volume hierarchy (\gls{BVH}) is an acceleration structure which is leveraged to speed up the ray intersection tests. This method is widely used in ray tracing and has been studied for a long time \cite{rubinWhittedBvh}. The core idea is to group adjacent objects in a bounding volume and structure the hierarchy in a way that all child elements of a node are contained in the bounding volume of the parent node. This allows for early rejection of branches which are not intersected by the ray. By employing a \gls{BVH}, the number of intersection tests can be reduced from $O(n)$ to $O(log(n))$.
+The bounding volume hierarchy (\gls{BVH}) is an acceleration structure which is leveraged to speed up the ray intersection tests. This method is widely used in ray tracing and has been studied for a long time \cite{rubinWhittedBvh}. The core idea is to group adjacent objects in a bounding volume and structure the hierarchy in a way that all child elements of a node are contained in the bounding volume of the parent node. This allows for early rejection of branches which are not intersected by the ray. By employing a \gls{BVH}, the number of intersection tests ($n$) can be reduced from $O(n)$ to $O(log(n))$.
+
+A bounding box ($b$) can be defined as $b = (min, max)$ where $min$ and $max$ are the minimum and maximum vertices of the bounding box. The boxes are then grouped into a hierarchy where the maximum and minimum vertices of the children define the bounding box of the parent. This is visualized in \autoref{fig:bvhVisualized}.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+      \includegraphics[width=\textwidth]{resources/bvh-bad-visualized.png}
+      \caption{Badly-constructed \gls{BVH} which requires eight intersection tests.}
+      \label{fig:bvhBad}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics[width=\textwidth]{resources/bvh-good-visualized.png}
+    \caption{Well-constructed \gls{BVH} which reduces the required intersection tests to four.}
+    \label{fig:bvhGood}
+  \end{subfigure}
+  \caption{Sample 2D \gls{BVH} visualization which contains four triangles ($t_1$ to $t_4$) and their corresponding bounding boxes $n1$ as parent and $n2$ as well as $n3$ as the children. $n1$ is visualized bigger than need be to improve readability. $r$ indicates the ray to be tested.}
+  \label{fig:bvhVisualized}
+\end{figure}
 
 \subsubsection{Importance Sampling}
 
