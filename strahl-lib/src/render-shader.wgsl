@@ -28,7 +28,7 @@ fn vertexMain(input: VertexInput) -> VertexOutput {
   let xy = pos[input.instance];
   output.pos = vec4f(xy, 0, 1);
 
-  let baseCoord = convertToZeroOne(vec2f(xy.x, xy.y));
+  let baseCoord = convertToZeroOne(vec2f(xy.x, -xy.y));
   output.texcoord = vec2f(baseCoord.x, 1.0 - baseCoord.y);
   return output;
 }
