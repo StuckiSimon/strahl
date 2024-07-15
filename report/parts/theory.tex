@@ -585,13 +585,17 @@ Technically, a node-based system also supports an \gls{uber shader} approach, bu
 
 While not strictly limited to \gls{PBR}, the standard provides a wide range of features to describe physically based materials \cite{Harrysson2019}.
 
-
-
-
 \subsection{OpenPBR}
 
 \gls{OpenPBR}\cite{openPBRSpec} is a surface shading model hosted by the Academy Software Foundation as an open standard. It differs from \gls{MaterialX} in that it is providing an \gls{uber shader} approach instead of a node-based approach. Version 1.0 of the standard was released in June of 2024 \cite{openPBR1Dot0Release}.
 
 It serves as a combination of Autodesk Standard Surface and Adobe Standard Material and is being worked on by both companies. The potential of this standard is to provide a common shading model which can be used across different applications. One notable adopter of the standard is Nvidia Omniverse, which has shipped support of the standard \cite{omniverseOpenPBR}. Blender has reworked their Principled BSDF shader to be based on OpenPBR \cite{blenderOpenPBRInspiration}. These promising signs indicate that the standard has the potential to be widely adopted.
 
-The \gls{uber shader} approach is defined by having a fix set of inputs which can be adjusted, but it does not allow for custom node graphs as \gls{MaterialX} does.
+The \gls{uber shader} approach is defined by having a fix set of inputs which can be adjusted, but it does not allow for custom node graphs as \gls{MaterialX} does. The standard is designed for photorealistic material description and uses multiple layers to describe the material as visualized in \autoref{fig:openPBR}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{resources/openpbr.png}
+  \caption{The different layers of the OpenPBR shading model.}
+  \label{fig:openPBR}
+\end{figure}
