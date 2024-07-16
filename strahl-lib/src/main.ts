@@ -473,7 +473,7 @@ async function run() {
       specularRoughness: m.oSpecularRoughness,
       specularAnisotropy: m.oSpecularRoughnessAnisotropy,
       specularRotation: m.oSpecularRoughnessRotation,
-      specularIOR: m.oSpecularIOR,
+      specularIor: m.oSpecularIOR,
       coatWeight: m.oCoatWeight,
       coatColor: m.oCoatColor,
       coatRoughness: m.oCoatRoughness,
