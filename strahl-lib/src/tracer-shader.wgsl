@@ -817,6 +817,162 @@ fn diffuseBrdfSample(material: Material, pW: vec3f, basis: Basis, winputL: vec3f
   return diffuseBrdfEvalImplementation(winputL, *woutputL, material);
 }
 
+fn fresnelDielectricPolarizations(mui: f32, etaTi: f32) -> vec2f {
+  let mut2 = sqr(etaTi) - (1.0 - sqr(mui));
+  if (mut2 <= 0.0) {
+    return vec2f(1.0);
+  }
+
+  let mut1 = sqrt(mut2) / etaTi;
+  let rs = (mui - etaTi*mut1) / (mui + etaTi*mut1);
+  let rp = (mut1 - etaTi*mui) / (mut1 + etaTi*mui);
+  return vec2f(rs, rp);
+}
+
+fn fresnelDielectricReflectance(mui: f32, etaTi: f32) -> f32 {
+  let r = fresnelDielectricPolarizations(mui, etaTi);
+  return 0.5 * dot(r, r);
+}
+
+fn specularBrdfSample(material: Material, pW: vec3f, basis: Basis, winputL: vec3f, seed: ptr<function, u32>, woutputL: ptr<function, vec3f>, pdfWoutputL: ptr<function, f32>) -> vec3f {
+  let beamOutgoingL = winputL;
+  let externalReflection = beamOutgoingL.z > 0.0;
+
+  let etaIe = specularIorRatio(material);
+  let etaTiRefl = select(1.0/etaIe, etaIe, externalReflection);
+  if (abs(etaTiRefl - 1.0) < IOR_EPSILON) {
+    // (*pdfWoutputL) = PDF_EPSILON; // todo: reset?
+    return vec3f(0.0);
+  }
+
+  let tint = material.specularColor;
+
+  let alpha = specularNDFRoughness(material);
+
+  let rotation = getLocalFrameRotation(2*PI*material.specularRotation);
+  let winputR = localToRotated(winputL, rotation);
+
+  var mR: vec3f;
+  if (winputR.z > 0.0) {
+    mR = ggxNDFSample(winputR, alpha, seed);
+  } else {
+    var winputRReflected = winputR;
+    winputRReflected.z = -winputRReflected.z;
+    mR = ggxNDFSample(winputRReflected, alpha, seed);
+    mR.z = -mR.z;
+  }
+
+  var woutputR = -winputR + 2.0*dot(winputR, mR)*mR;
+  if (winputR.z * woutputR.z < 0.0) {
+    (*pdfWoutputL) = 1.0;
+    return vec3f(0.0);
+  }
+
+  (*woutputL) = rotatedToLocal(woutputR, rotation);
+
+  let D = ggxNDFEval(mR, alpha);
+  let DV = D * ggxG1(winputR, alpha) * abs(dot(winputR, mR)) / max(DENOM_TOLERANCE, abs(winputR.z));
+
+  let dwhDwo = 1.0 / max(abs(4.0*dot(winputR, mR)), DENOM_TOLERANCE);
+  (*pdfWoutputL) = DV * dwhDwo;
+
+  let G2 = ggxG2(winputR, woutputR, alpha);
+
+  // todo: coat workflow
+  let F = vec3f(fresnelDielectricReflectance(abs(dot(winputR, mR)), etaTiRefl));
+  
+  let f = F * D * G2 / max(4.0 * abs(woutputL.z) * abs(winputL.z), DENOM_TOLERANCE);
+
+  return f * tint;
+}
+
+fn specularBrdfEvaluate(material: Material, pW: vec3f, basis: Basis, winputL: vec3f, woutputL: vec3f, pdfWoutputL: ptr<function, f32>) -> vec3f {
+  let transmitted = woutputL.z * winputL.z < 0.0;
+  if (transmitted) {
+    // (*pdfWoutputL) = PDF_EPSILON; todo: reset?
+    return vec3f(0.0);
+  }
+
+  let beamOutgoingL = winputL;
+  let externalReflection = beamOutgoingL.z > 0.0;
+
+  let etaIe = specularIorRatio(material);
+  let etaTiRefl = select(1.0/etaIe, etaIe, externalReflection);
+  if (abs(etaTiRefl - 1.0) < IOR_EPSILON) {
+    return vec3f(0.0);
+  }
+
+  let tint = material.specularColor;
+
+  let alpha = specularNDFRoughness(material);
+
+  let rotation = getLocalFrameRotation(2*PI*material.specularRotation);
+  let winputR = localToRotated(winputL, rotation);
+  let woutputR = localToRotated(woutputL, rotation);
+
+  let mR = normalize(woutputR + winputR);
+
+  if (dot(mR, winputR) * winputR.z < 0.0 || dot(mR, woutputR) * woutputR.z < 0.0) {
+    return vec3f(0.0);
+  }
+
+  let D = ggxNDFEval(mR, alpha);
+  let DV = D * ggxG1(winputR, alpha) * max(0.0, dot(winputR, mR)) / max(DENOM_TOLERANCE, winputR.z);
+
+  let dwhDwo = 1.0 / max(abs(4.0*dot(winputR, mR)), DENOM_TOLERANCE);
+  (*pdfWoutputL) = DV * dwhDwo;
+
+  let G2 = ggxG2(winputR, woutputR, alpha);
+
+  // todo: coat workflow
+  let F = vec3f(fresnelDielectricReflectance(abs(dot(winputR, mR)), etaTiRefl));
+
+  let f = F * D * G2 / max(4.0 * abs(woutputL.z) * abs(winputL.z), DENOM_TOLERANCE);
+  return f * tint;
+}
+
+fn etaS(material: Material) -> f32 {
+  const ambientIor = 1.0;
+  let coatIorAverage = mix(ambientIor, material.coatIor, material.coatWeight);
+  let etaS = material.specularIor / coatIorAverage;
+  return etaS;
+}
+
+fn fresnelReflNormalIncidence(material: Material) -> f32 {
+  let etaS = etaS(material);
+  let Fs = sqr((etaS - 1.0)/(etaS + 1.0));
+  return Fs;
+}
+
+fn specularIorRatio(material: Material) -> f32 {
+  let Fs = fresnelReflNormalIncidence(material);
+  let xiS = clamp(material.specularWeight, 0.0, 1.0/max(Fs, DENOM_TOLERANCE));
+  let etaS = etaS(material);
+  let temp = min(1.0, sign(etaS - 1.0) * sqrt(xiS * Fs));
+  let etaSPrime = (1.0 + temp) / max(1.0 - temp, DENOM_TOLERANCE);
+  return etaSPrime;
+}
+
+fn specularBrdfAlbedo(material: Material, pW: vec3f, basis: Basis, winputL: vec3f, seed: ptr<function, u32>) -> vec3f {
+  let etaIe = specularIorRatio(material);
+  if (abs(etaIe - 1.0) < IOR_EPSILON) {
+    return vec3f(0.0);
+  }
+
+  const samples = 1;
+  var albedo = vec3f(0.0);
+  for (var n = 0; n < samples; n += 1) {
+    var woutputL: vec3f;
+    var pdfWoutputL: f32;
+    var f = specularBrdfSample(material, pW, basis, winputL, seed, &woutputL, &pdfWoutputL);
+    if (length(f) > RADIANCE_EPSILON) {
+      albedo += f * abs(woutputL.z) / max(DENOM_TOLERANCE, pdfWoutputL);
+    }
+  }
+  albedo /= f32(samples);
+
+  return albedo;
+}
 
 struct WeightsAndAlbedo {
   weights: LobeWeights,
@@ -841,7 +997,7 @@ fn openPbrLobeWeights(pW: vec3f, basis: Basis, winputL: vec3f, material: Materia
   var albedos = LobeAlbedos();
   albedos.m[ID_COAT_BRDF] = select(vec3f(0.0), placeholderBrdfAlbedo(), coated);
   albedos.m[ID_META_BRDF] = select(vec3f(0.0), metalBrdfAlbedo(material, pW, basis, winputL, seed), metallic);
-  albedos.m[ID_SPEC_BRDF] = select(vec3f(0.0), placeholderBrdfAlbedo(), !fullyMetallic);
+  albedos.m[ID_SPEC_BRDF] = select(vec3f(0.0), specularBrdfAlbedo(material, pW, basis, winputL, seed), !fullyMetallic);
   albedos.m[ID_SPEC_BTDF] = select(vec3f(0.0), placeholderBrdfAlbedo(), !fullyMetallic && transmissive);
   albedos.m[ID_DIFF_BRDF] = select(vec3f(0.0), diffuseBrdfAlbedo(material, pW, basis, winputL, seed), !fullyMetallic && !fullyTransmissive && !fullySubsurfaced);
   albedos.m[ID_SSSC_BTDF] = select(vec3f(0.0), placeholderBrdfAlbedo(), !fullyMetallic && !fullyTransmissive && subsurfaced);
@@ -906,6 +1062,7 @@ fn openPbrPrepare(pW: vec3f, basis: Basis, winputL: vec3f, material: Material, s
 }
 
 const PDF_EPSILON = 1.0e-6;
+const IOR_EPSILON = 1.0e-5;
 const RAY_OFFSET = 1.0e-4;
 
 fn pdfHemisphereCosineWeighted(wiL: vec3f) -> f32 {
@@ -996,7 +1153,7 @@ fn openpbrBsdfEvaluateLobes(pW: vec3f, basis: Basis, material:Material, winputL:
     //f += metalBrdfSample(pW, basis, winputL, material, seed, woutputL, &pdfs.m[ID_META_BRDF]); // fixme: evaluate???
     f += metalBrdfEvaluate(pW, basis, winputL, *woutputL, material, &pdfs.m[ID_META_BRDF]);
   } else if (skipLobeId != ID_SPEC_BRDF && lobeData.probs.m[ID_SPEC_BRDF] > 0.0) {
-    f += lobeData.weights.m[ID_SPEC_BRDF] * brdfEvaluatePlaceholder();
+    f += lobeData.weights.m[ID_SPEC_BRDF] * specularBrdfEvaluate(material, pW, basis, winputL, *woutputL, &pdfs.m[ID_SPEC_BRDF]);
   } else if (skipLobeId != ID_DIFF_BRDF && lobeData.probs.m[ID_DIFF_BRDF] > 0.0) {
     f += lobeData.weights.m[ID_DIFF_BRDF] * diffuseBrdfEvaluate(material, pW, basis, winputL, *woutputL, &pdfs.m[ID_DIFF_BRDF]);
   }
@@ -1042,7 +1199,9 @@ fn sampleBsdf(pW: vec3f, basis: Basis, winputL: vec3f, lobeData: LobeData, mater
       else if (lobeId == ID_META_BRDF) {
         fLobe = metalBrdfSample(pW, basis, winputL, material, seed, woutputL, &pdfLobe);
       }
-      else if (lobeId == ID_SPEC_BRDF) { fLobe = brdfSamplePlaceholder(); }
+      else if (lobeId == ID_SPEC_BRDF) {
+        fLobe = specularBrdfSample(material, pW, basis, winputL, seed, woutputL, &pdfLobe);
+      }
       else if (lobeId == ID_SPEC_BTDF) { fLobe = brdfSamplePlaceholder(); }
       else if (lobeId == ID_SSSC_BTDF) { fLobe = brdfSamplePlaceholder(); }
       else if (lobeId == ID_DIFF_BRDF) {
