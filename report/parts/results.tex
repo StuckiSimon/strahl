@@ -17,9 +17,12 @@ This section contains references to the implementation of the path tracer. Refer
 Lights, Materials, Camera, Objects
 \section{Implementation}
 \subsection{Ray Tracing}
-\subsubsection{Uber Shader}
+
+\subsubsection{OpenPBR}
 
 The \gls{OpenPBR} standard is based on an \gls{uber shader} approach. This differs from node-based approaches such as \gls{MaterialX} in that it uses a fixed set of inputs which can be configured. This approach offers a good balance between flexibility and performance.
+
+The surface shading method is based on \gls{OpenPBR} reference implementation in \gls{MaterialX} as well as the reference viewer by Portsmouth \cite{openPbrViewer}.
 
 \subsubsection{RGB, Spectral}
 \subsubsection{Memory}
