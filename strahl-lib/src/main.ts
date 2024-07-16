@@ -477,7 +477,7 @@ async function run() {
       coatWeight: m.oCoatWeight,
       coatColor: m.oCoatColor,
       coatRoughness: m.oCoatRoughness,
-      coatAnisotropy: m.oCoatRoughnessAnisotropy,
+      coatRoughnessAnisotropy: m.oCoatRoughnessAnisotropy,
       coatIor: m.oCoatIor,
       coatDarkening: m.oCoatDarkening,
       emissionLuminance: m.oEmissionLuminance,
