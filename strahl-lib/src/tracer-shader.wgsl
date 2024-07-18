@@ -62,9 +62,6 @@ struct UniformData {
 
 @group(1) @binding(2) var<uniform> uniformData: UniformData;
 
-// todo: This should not be hardcoded
-const indicesLength = 12636;
-
 const maxDepth = 10;
 
 const MINIMUM_FLOAT_EPSILON = 1e-8;
@@ -120,31 +117,6 @@ struct BinaryBvhNodeInfo {
 fn nearZero(v: vec3f) -> bool {
   let epsilon = vec3f(MINIMUM_FLOAT_EPSILON);
   return any(abs(v) < epsilon);
-}
-
-fn identical(v1: vec3f, v2: vec3f) -> bool {
-  return all(v1 == v2);
-}
-
-// Based on MaterialX ShaderGen implementation, which is in turn
-// based on the OSL implementation of Oren-Nayar diffuse, which is in turn
-// based on https://mimosa-pudica.net/improved-oren-nayar.html.
-fn orenNayarDiffuse(L: vec3f, V: vec3f, N: vec3f, NdotL: f32, roughness: f32) -> f32 {
-  let LdotV = clamp(dot(L, V), MINIMUM_FLOAT_EPSILON, 1.0);
-  let NdotV = clamp(dot(N, V), MINIMUM_FLOAT_EPSILON, 1.0);
-  let s = LdotV - NdotL * NdotV;
-  let stinv = select(0.0, s / max(NdotL, NdotV), s > 0.0f);
-
-  let sigma2 = pow(roughness * PI, 2);
-  let A = 1.0 - 0.5 * (sigma2 / (sigma2 + 0.33));
-  let B = 0.45 * sigma2 / (sigma2 + 0.09);
-
-  return A + B * stinv;
-}
-
-// Compute the average of an anisotropic alpha pair.
-fn averageAlpha(alpha: vec2<f32>) -> f32 {
-  return sqrt(alpha.x * alpha.y);
 }
 
 fn sqr(x: f32) -> f32 {
@@ -476,17 +448,6 @@ fn hittableListHit(ray: Ray, rayT: Interval, hitRecord: ptr<function, HitRecord>
   var hitAnything = false;
   var closestSoFar = rayT.max;
 
-  for (var i = 0; i < TRIANGLE_COUNT; i += 1) {
-    let triangle = triangles[i];
-    if (triangleHit(triangle, ray, Interval(rayT.min, closestSoFar), &tempRecord)) {
-      hitAnything = true;
-      closestSoFar = tempRecord.t;
-      (*hitRecord) = tempRecord;
-      (*hitRecord).material = triangle.material;
-    }
-  }
-
-
   // Inspired by https://github.com/gkjohnson/three-mesh-bvh/blob/master/src/gpu/glsl/bvh_ray_functions.glsl.js
   
   // BVH Intersection Detection
@@ -541,31 +502,6 @@ fn hittableListHit(ray: Ray, rayT: Interval, hitRecord: ptr<function, HitRecord>
       stack[sPtr] = c1;
     }
   }
-
-  // todo: remove this demo code
-  /*
-  for (var i = 0; i < indicesLength; i += 3) {
-    let v1Index = indices[i];
-    let v2Index = indices[i+1];
-    let v3Index = indices[i+2];
-    
-    let x = vec3f(positions[v1Index*3], positions[v1Index*3+1], positions[v1Index*3+2]);
-    let y = vec3f(positions[v2Index*3], positions[v2Index*3+1], positions[v2Index*3+2]);
-    let z = vec3f(positions[v3Index*3], positions[v3Index*3+1], positions[v3Index*3+2]);
-    
-    let Q = x;
-    let u = y - x;
-    let v = z - x;
-    
-    let triangle = Triangle(Q, u, v, defaultMaterial, defaultNormal,defaultNormal,defaultNormal);
-
-    if (triangleHit(triangle, ray, Interval(rayT.min, closestSoFar), &tempRecord)) {
-      hitAnything = true;
-      closestSoFar = tempRecord.t;
-      (*hitRecord) = tempRecord;
-      (*hitRecord).material = triangle.material;
-    }
-  } */
 
   return hitAnything;
 }
