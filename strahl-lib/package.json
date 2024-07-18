@@ -1,7 +1,19 @@
 {
   "name": "strahl",
-  "private": true,
-  "version": "0.0.1-alpha.0",
+  "private": false,
+  "version": "0.0.1-alpha.2",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StuckiSimon/strahl.git"
+  },
+  "author": "Simon Stucki",
+  "license": "MIT",
+  "description": "WebGPU based Path Tracer using OpenPBR",
+  "keywords": [
+    "webgpu",
+    "pathtracing",
+    "openpbr"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",
