@@ -1086,7 +1086,6 @@ fn openpbrBsdfEvaluateLobes(pW: vec3f, basis: Basis, material:Material, winputL:
   } else if (skipLobeId != ID_COAT_BRDF && lobeData.probs.m[ID_COAT_BRDF] > 0.0) {
     f += lobeData.weights.m[ID_COAT_BRDF] * brdfEvaluatePlaceholder();
   } else if (skipLobeId != ID_META_BRDF && lobeData.probs.m[ID_META_BRDF] > 0.0) {
-    //f += metalBrdfSample(pW, basis, winputL, material, seed, woutputL, &pdfs.m[ID_META_BRDF]); // fixme: evaluate???
     f += metalBrdfEvaluate(pW, basis, winputL, *woutputL, material, &pdfs.m[ID_META_BRDF]);
   } else if (skipLobeId != ID_SPEC_BRDF && lobeData.probs.m[ID_SPEC_BRDF] > 0.0) {
     f += lobeData.weights.m[ID_SPEC_BRDF] * specularBrdfEvaluate(material, pW, basis, winputL, *woutputL, &pdfs.m[ID_SPEC_BRDF]);
