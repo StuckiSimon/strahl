@@ -975,12 +975,12 @@ fn openPbrLobeWeights(pW: vec3f, basis: Basis, winputL: vec3f, material: Materia
 fn openPbrLobeProbabilities(weights: LobeWeights, albedos: LobeAlbedos) -> LobeProbs {
   var probs = LobeProbs();
   var Wtotal = 0.0;
-  for (var lobeId = 0; lobeId <= NUM_LOBES; lobeId += 1) {
+  for (var lobeId = 0; lobeId < NUM_LOBES; lobeId += 1) {
     probs.m[lobeId] = length(weights.m[lobeId] * albedos.m[lobeId]);
     Wtotal += probs.m[lobeId];
   }
   Wtotal = max(DENOM_TOLERANCE, Wtotal);
-  for (var lobeId = 0; lobeId <= NUM_LOBES; lobeId += 1) {
+  for (var lobeId = 0; lobeId < NUM_LOBES; lobeId += 1) {
     probs.m[lobeId] /= Wtotal;
   }
   return probs;
