@@ -1168,7 +1168,7 @@ fn sampleBsdf(pW: vec3f, basis: Basis, winputL: vec3f, lobeData: LobeData, mater
   return vec3f(0);
 }
 
-fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec3<f32> {
+fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec4f {
   var hitRecord: HitRecord;
   var ray = cameraRay;
 
@@ -1202,8 +1202,8 @@ fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec3<f32> {
         misWeightLight = powerHeuristic(bsdfPdfContinuation, lightPdf);
       } else {
         if (uniformData.enableClearColor == 1) {
-          return uniformData.clearColor;
-      }
+          return vec4f(uniformData.clearColor, 0.0);
+        }
       }
       L += throughput * misWeightLight * (sunRadiance(dW) + skyRadiance());
       break;
@@ -1271,16 +1271,16 @@ fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec3<f32> {
     }
   }
 
-  return L;
+  return vec4f(L, 1.0);
 }
 
-fn writeColor(pixelColor: vec3<f32>, x: i32, y: i32, samples: i32) {
-  let previousColor = textureLoad(readTexture, vec2<i32>(x, y)).xyz;
+fn writeColor(pixelColor: vec4f, x: i32, y: i32, samples: i32) {
+  let previousColor = textureLoad(readTexture, vec2<i32>(x, y));
   let previousColorAdjusted = previousColor * f32(uniformData.priorSamples);
   let samplesPerPixel = uniformData.samplesPerPixel;
   let scale = 1.0 / f32(uniformData.priorSamples + samplesPerPixel);
   let adjustedColor = (pixelColor + previousColorAdjusted) * scale;
-  textureStore(texture, vec2<i32>(x, y), vec4<f32>(adjustedColor, 1.0));
+  textureStore(texture, vec2<i32>(x, y), adjustedColor);
 }
 
 @must_use
@@ -1347,7 +1347,7 @@ fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
   let i = f32(local_id.x);
   let j = f32(local_id.y);
   
-  var pixelColor = vec3<f32>(0.0, 0.0, 0.0);
+  var pixelColor = vec4f(0.0, 0.0, 0.0, 0.0);
   
   let samplesPerPixel = i32(uniformData.samplesPerPixel);
   for (var sample = 0; sample < samplesPerPixel; sample += 1) {
