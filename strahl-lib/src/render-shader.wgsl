@@ -38,7 +38,7 @@ fn vertexMain(input: VertexInput) -> VertexOutput {
 
 // Khronos PBR neutral tone mapper
 // See: https://github.com/KhronosGroup/ToneMapping/blob/main/PBR_Neutral/pbrNeutral.glsl
-fn PBRNeutralToneMapping(colorP: vec3f) -> vec3f {
+fn khronosPBRNeutralToneMapping(colorP: vec3f) -> vec3f {
   var color = colorP;
   let startCompression = 0.8 - 0.04;
   let desaturation = 0.15;
@@ -69,6 +69,6 @@ fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
     return vec4f(hdrColor.rgb, 0.0);
   }
 
-  let tonemappedColor = PBRNeutralToneMapping(hdrColor.rgb);
+  let tonemappedColor = khronosPBRNeutralToneMapping(hdrColor.rgb);
   return vec4f(tonemappedColor, 1.0);
 }
