@@ -472,12 +472,12 @@ async function run() {
       specularColor: m.oSpecularColor,
       specularRoughness: m.oSpecularRoughness,
       specularAnisotropy: m.oSpecularRoughnessAnisotropy,
-      specularRotation: m.oSpecularRoughnessRotation,
       specularIor: m.oSpecularIOR,
       coatWeight: m.oCoatWeight,
       coatColor: m.oCoatColor,
       coatRoughness: m.oCoatRoughness,
       coatRoughnessAnisotropy: m.oCoatRoughnessAnisotropy,
+      // todo: Align casing for IOR parameter
       coatIor: m.oCoatIor,
       coatDarkening: m.oCoatDarkening,
       emissionLuminance: m.oEmissionLuminance,
