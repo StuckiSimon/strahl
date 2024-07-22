@@ -463,28 +463,34 @@ async function run() {
   });
 
   materialDataView.set(
-    materials.map((m) => ({
-      baseWeight: m.oBaseWeight,
-      baseColor: m.oBaseColor,
-      baseDiffuseRoughness: m.oBaseDiffuseRoughness,
-      baseMetalness: m.oBaseMetalness,
-      specularWeight: m.oSpecularWeight,
-      specularColor: m.oSpecularColor,
-      specularRoughness: m.oSpecularRoughness,
-      specularAnisotropy: m.oSpecularRoughnessAnisotropy,
-      specularIor: m.oSpecularIOR,
-      coatWeight: m.oCoatWeight,
-      coatColor: m.oCoatColor,
-      coatRoughness: m.oCoatRoughness,
-      coatRoughnessAnisotropy: m.oCoatRoughnessAnisotropy,
-      // todo: Align casing for IOR parameter
-      coatIor: m.oCoatIor,
-      coatDarkening: m.oCoatDarkening,
-      emissionLuminance: m.oEmissionLuminance,
-      emissionColor: m.oEmissionColor,
-      thinFilmThickness: m.oThinFilmThickness,
-      thinFilmIOR: m.oThinFilmIOR,
-    })),
+    materials.map((m) => {
+      if (!(m instanceof OpenPBRMaterial)) {
+        console.error("Invalid material type", m);
+        return;
+      }
+      return {
+        baseWeight: m.oBaseWeight,
+        baseColor: m.oBaseColor,
+        baseDiffuseRoughness: m.oBaseDiffuseRoughness,
+        baseMetalness: m.oBaseMetalness,
+        specularWeight: m.oSpecularWeight,
+        specularColor: m.oSpecularColor,
+        specularRoughness: m.oSpecularRoughness,
+        specularAnisotropy: m.oSpecularRoughnessAnisotropy,
+        specularIor: m.oSpecularIOR,
+        coatWeight: m.oCoatWeight,
+        coatColor: m.oCoatColor,
+        coatRoughness: m.oCoatRoughness,
+        coatRoughnessAnisotropy: m.oCoatRoughnessAnisotropy,
+        // todo: Align casing for IOR parameter
+        coatIor: m.oCoatIor,
+        coatDarkening: m.oCoatDarkening,
+        emissionLuminance: m.oEmissionLuminance,
+        emissionColor: m.oEmissionColor,
+        thinFilmThickness: m.oThinFilmThickness,
+        thinFilmIOR: m.oThinFilmIOR,
+      };
+    }),
   );
 
   device.queue.writeBuffer(materialBuffer, 0, materialDataView.arrayBuffer);
