@@ -7,8 +7,13 @@
 % !TEX encoding = UTF-8 Unicode
 % !TEX root = ../main.tex
 
-Ray tracing is a powerful technique for rendering photorealistic sceneries. Historically, ray tracing has been mainly used in offline rendering due to its computational complexity. However, advancements in hardware and software have enabled real-time ray tracing in a variety of domains.
-WebGPU is a new web standard that provides a robust \fGls{API}{\e{Application Programming Interface}} for leveraging the power of \glspl{GPU} across different platforms. It's designed to be more efficient and flexible than its predecessor, WebGL. This makes it ideal to be used for real-time ray tracing in the browser.
+This section provides an overview of applications of a real-time ray tracer and prior work conducted in this field, highlighting the base procedure and the novel aspects of this work. The goal is to demonstrate the potential and applicability of the developed solution. Details on the involved concepts will be discussed in \autoref{ch:theory}.
+
+Rasterization is a rendering technique that projects 3D scene geometry onto a 2D plane. Historically, the technique has been widely adopted in real-time rendering due to its efficiency. However, rasterization has limitations in achieving photorealism. One of the main limitations is the lack of support for global illumination. These phenomena can be observed in objects like mirrors or metallic surfaces. Effects such as refraction, reflection, and ambient occlusion require additional techniques.
+
+Various methods have been developed to address these limitations, but these approaches induce complexity, may need to be computed at the assembly level, and can be computationally expensive. An alternative rendering technique resembles reality more closely and inherently alleviates these limitations: ray tracing.
+
+Ray tracing is a powerful technique for rendering photorealistic scenes including global illumination. Historically, ray tracing has been mainly used in offline rendering due to its computational complexity. However, advancements in hardware have enabled real-time ray tracing in a variety of domains. In addition, the development of a new web \fGls{API}{\e{Application Programming Interface}} for leveraging the power of \fGlspl{GPU}{\e{Graphics Processing Unit}, specialized processor for parallel computation}, WebGPU, has opened up new possibilities for real-time ray tracing in the browser.
 
 \section{Use Cases}
 
