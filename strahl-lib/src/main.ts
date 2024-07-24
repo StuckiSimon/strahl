@@ -296,6 +296,9 @@ async function run() {
       ],
     },
   });
+  const model = duckMesh;
+
+  const sceneMatrixWorld = model.scene.matrixWorld;
 
   // Prepare Position Data
 
@@ -694,6 +697,7 @@ async function run() {
       uniformData.set({
         invProjectionMatrix: invProjectionMatrix.elements,
         cameraWorldMatrix: matrixWorld.elements,
+        invModelMatrix: sceneMatrixWorld.clone().invert().elements,
         seedOffset: Math.random() * Number.MAX_SAFE_INTEGER,
         priorSamples: currentSample,
         samplesPerPixel: SAMPLES_PER_ITERATION,

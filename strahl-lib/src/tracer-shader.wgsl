@@ -27,6 +27,7 @@ struct Material {
 struct UniformData {
   invProjectionMatrix: mat4x4<f32>,
   cameraWorldMatrix: mat4x4<f32>,
+  invModelMatrix: mat4x4<f32>,
   seedOffset: u32,
   priorSamples: u32,
   samplesPerPixel: u32,
@@ -1337,9 +1338,6 @@ fn getPixelJitter(seed: ptr<function, u32>) -> vec2f {
 @compute
 @workgroup_size(${maxWorkgroupDimension}, ${maxWorkgroupDimension}, 1)
 fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
-  // todo: use based on scene
-  let invModelMatrix = identityMatrix();
-
   var seed = local_id.x + local_id.y * ${imageWidth};
   xorshift32(&seed);
   seed ^= uniformData.seedOffset;
@@ -1356,11 +1354,12 @@ fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
     let pixel = vec2<f32>(i, j) + getPixelJitter(&seed);
     let ndc = -1.0 + 2.0*pixel / vec2<f32>(${imageWidth}, ${imageHeight});
     
-    var ray = ndcToCameraRay(ndc, invModelMatrix * uniformData.cameraWorldMatrix, uniformData.invProjectionMatrix, &seed);
+    var ray = ndcToCameraRay(ndc, uniformData.invModelMatrix * uniformData.cameraWorldMatrix, uniformData.invProjectionMatrix, &seed);
     ray.direction = normalize(ray.direction);
 
     pixelColor += rayColor(ray, &seed);
   }
+
   
   writeColor(pixelColor, i32(local_id.x), i32(local_id.y), samplesPerPixel);
 }
