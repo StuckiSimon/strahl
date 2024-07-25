@@ -37,6 +37,61 @@ For many applications, especially photorealistic rendering, perspective projecti
 
 The path tracer uses PCG-RXS-M-XS variant as described by O’Neill \cite{o2014pcg} in combination with Xorshift as described by Marsaglia \cite{marsaglia2003xorshift}. See \coderef{RNG} for implementation.
 
+In order to set up the Monte Carlo method, the \gls{RNG} needs to be employed in a suitable manner. As it is a pseudorandom generator, it necessitates a seed to start the generation. If the seed is identical for all pixels, the results of a single sample will frequently share similar patterns in adjacent surfaces as shown in \autoref{fig:rngBadSeed}. The result for independent seeds differs in a stark manner as shown in \autoref{fig:rngGoodSeed}.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{resources/single-sample-bad-seed.png}
+        \caption{identical seed for all pixels}
+        \label{fig:rngBadSeed}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{resources/single-sample-good-seed.png}
+        \caption{independent seed for every pixel}
+        \label{fig:rngGoodSeed}
+    \end{subfigure}
+    \caption{Both images consist of only one sample.}
+    \label{fig:rngSeed}
+\end{figure}
+
+When increasing the sample count, the differences in the setup remain visible. Adjacent surfaces show similar patterns as shown in \autoref{fig:rngNoiseArtifactsHighlightsBadNoisy}, which resemble image compression artifacts encountered in aggressively compressed \fGlspl{JPEG}{\e{Joint Photographic Experts Group}, common method for lossy image compression}. In contrast, the renderings with independent seeds show stark differences in adjacent pixels akin to noise as shown in \autoref{fig:rngNoiseArtifactsHighlightsGoodNoisy}. As shown in \autoref{fig:rngNoiseArtifactsHighlightsBadAnti} compared to \autoref{fig:rngNoiseArtifactsHighlightsGoodAnti}, the anti-aliasing is less noticeable when using independent seeds.
+
+\begin{figure}[H]
+    \centering
+    \hspace*{2cm}
+    \begin{subfigure}[t]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{resources/bad-seed-noisy.png}
+        \caption{Renderings which resemble lossy image compression artifacts.}
+        \label{fig:rngNoiseArtifactsHighlightsBadNoisy}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{resources/good-seed-noisy.png}
+        \caption{Noisy renderings with stark differences in adjacent pixels.}
+        \label{fig:rngNoiseArtifactsHighlightsGoodNoisy}
+    \end{subfigure}
+    \hspace*{2cm}
+    \vfill
+    \vspace*{0.5cm}
+    \hspace*{2cm}
+    \begin{subfigure}[t]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{resources/bad-seed-anti-aliasing.png}
+        \caption{On the right side, anti-aliasing is rather noticeable.}
+        \label{fig:rngNoiseArtifactsHighlightsBadAnti}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{resources/good-seed-anti-aliasing.png}
+        \caption{On the right side, anti-aliasing is less noticeable.}
+        \label{fig:rngNoiseArtifactsHighlightsGoodAnti}
+    \end{subfigure}
+    \hspace*{2cm}
+    \caption{Magnified images of renderings with low sample count showing difference based on seed setup. Left column has identical seed for all pixels of a sample, but varying seeds for different samples. Right column has independent seeds for every pixel of a sample as well as across samples.}
+    \label{fig:rngNoiseArtifactsHighlights}
+\end{figure}
+
 \subsection{Intersection Testing}
 
 For \gls{BVH} construction, well-established solutions for the web are available. The path tracer uses \texttt{three-mesh-bvh} \cite{threeMeshBvh}. This method builds the \gls{BVH} on the \gls{CPU}, the code for transfering the \gls{BVH} to the \gls{GPU} is in \coderef{BVH-TRANSFER}, intersection tests are implemented in \gls{WGSL}, see \coderef{BVH-TESTS}.
