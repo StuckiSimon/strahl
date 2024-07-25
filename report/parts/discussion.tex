@@ -30,7 +30,8 @@ Web Workers are a web technology that allows running scripts off the main thread
 
 \subsection{BVH Construction}
 
-The current implementation builds the \gls{BVH} on the \gls{CPU} and transfers it to the \gls{GPU}. Moving this to be built on the \gls{GPU} directly could improve performance. This would reduce the amount of data that needs to be transferred between the \gls{CPU} and the \gls{GPU}. The new \gls{GPGPU} capabilities of WebGPU further enable this approach.
+The current implementation builds the \gls{BVH} on the \gls{CPU} and transfers it to the \gls{GPU}. Corresponding research \cite{lauterbach2009GPUbvh} suggests that moving parts of the construction to the \gls{GPU} directly could improve performance. This would reduce the amount of data that needs to be transferred between the \gls{CPU} and the \gls{GPU}. The new \gls{GPGPU} capabilities of WebGPU further enable this approach.
+
 \subsection{ReSTIR}
 \subsection{SHaRC}
 
