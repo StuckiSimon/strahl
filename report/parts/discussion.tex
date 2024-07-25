@@ -22,6 +22,14 @@ The main browser which supports WebGPU to date is Chrome. WebGPU has shipped to 
 
 This means that it's straightforward to use WebGPU on most modern devices with the notable exception of Apple iOS and iPadOS devices.
 
+\subsubsection{Missing Features}
+
+To date, WebGPU does not support some features that are common in modern rendering APIs.
+
+\paragraph{Ray Tracing}
+
+\glspl{API} such as Vulkan support hardware-accelerated ray tracing \cite{vulkanRayTracing}. This entails helpers for building common acceleration structures, such as \gls{BVH}, as well as ray querying functions to determine intersections. WebGPU does not yet support these features.
+
 \section{Future Work}
 
 \subsection{Web Worker Support}
