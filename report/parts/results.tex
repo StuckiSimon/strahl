@@ -16,6 +16,9 @@ This section contains references to the implementation of the path tracer. Refer
 \section{Scene Description}
 Lights, Materials, Camera, Objects
 \section{Implementation}
+
+The goal of the implementation is to be compatible with a large variety of devices and make the setup for consumers simple. Therefore, it is implemented and tested mainly in Chrome, which uses \gls{Dawn} as the underlying implementation of WebGPU. Most notably, this means that dedicated features from other implementations such as \gls{wgpu} cannot be used. Neither can experimental extensions be leveraged.
+
 \subsection{Ray Tracing}
 
 \subsubsection{OpenPBR}
