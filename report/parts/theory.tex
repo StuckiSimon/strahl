@@ -203,18 +203,39 @@ These approaches induce complexity and can be computationally expensive. An alte
 
 Ray Tracing is a rendering technique which simulates light transport in a scene. The main idea is to cast rays from the camera into the scene and compute the color of the object the ray intersects with. By adding additional bounces of the light ray, the technique can simulate global illumination.
 
-Due to the computational complexity of early algorithms, ray tracing was not widely adopted until the 1980s. Some of the first widely used ray tracing software was POV-Ray, which was released in 1991 \cite{POV_Ray_Documentation}. Blue Moon Rendering Tools (\gls{BMRT}) \cite{bmrt}, a \fGls{RenderMan}{A rendering software for photorealistic 3D rendering developed by Pixar} compliant renderer, was released in the mid 90s and was one of the first ray tracing renderers to be used in the industry. In 2003 \gls{RenderMan} included ray tracing capabilities \cite{RenderMan_11_Release_Notes}.
+Early algorithms were based on recursive ray tracing \cite{whittedGlobalIllumination}. These algorithms determine intersection with geometry and iteratively generate branches as shown in \autoref{fig:recursiveRayTracing}.
 
-The rendering equation has been defined in 1986 in a paper which also coined the term path tracing. Generally, path tracing can be seen as a Monte Carlo integration of the rendering equation which is defined as
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+      \includegraphics[width=\textwidth]{resources/recursive-ray-tracing-visualized.png}
+      \caption{Incident ray hitting a surface generating two branches, $s_1$ and $t_1$.}
+      \label{fig:recursiveVisualized}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.3\textwidth}
+    \includegraphics[width=\textwidth]{resources/recursive-ray-tracing-tree.png}
+    \caption{Recursive ray tracing visualized as tree structure}
+    \label{fig:recursiveTree}
+  \end{subfigure}
+  \caption{Recursive ray tracing as described by Whitted \cite{whittedGlobalIllumination}.}
+  \label{fig:recursiveRayTracing}
+\end{figure}
+
+Due to the computational complexity of these early algorithms, ray tracing was not widely adopted until the 1980s.
+
+During these years, one of the main concepts was the introduction of the rendering equation by Kajiya in 1986 in a paper which also coined the term path tracing. Generally, path tracing can be seen as a Monte Carlo integration of the rendering equation which is defined as:
 
 \begin{equation}
   \label{eqn:rendering-equation}
   I(x, x') = g(x, x') [\epsilon(x, x') + \int_{S} p(x, x', x'')I(x', x'')dx'']
 \end{equation}
 
-Where $I(x, x')$ is the radiance from point $x$ to point $x'$. $x$ for example being the camera position and $x'$ the intersected object. $g(x, x')$ is a geometry term determining how much light is transmitted. This depends on the distance and possibly occlusions such as in the case of transparent surfaces. $\epsilon(x, x')$ is the emitted radiance, generally used for light sources. The integral term is taken over $S$ = $\cup S_i$ which is the union of all surfaces. $p(x, x', x'')$ is the bidirectional reflection function which describes how light is reflected at the surface. \cite{kajiya1986rendering}
+where $I(x, x')$ is the radiance from point $x$ to point $x'$. $x$ for example being the camera position and $x'$ the intersected object. $g(x, x')$ is a geometry term determining how much light is transmitted. This depends on the distance and possibly occlusions such as transparent surfaces. $\epsilon(x, x')$ is the emitted radiance, generally used for light sources. The integral term is taken over $S$ = $\cup S_i$ which is the union of all surfaces. $p(x, x', x'')$ is the bidirectional reflection function, which describes how light from all possible directions $x''$ is reflected at the surface. \cite{kajiya1986rendering}
 
-Further research into light transport techniques such as bidirectional ligh transport or Metropolis Light Transport has been conducted in the 1990s \cite{veachMonteCarloLightTransport}.
+Some of the first widely used ray tracing software was POV-Ray, which was released in 1991 \cite{POV_Ray_Documentation}. Blue Moon Rendering Tools (\gls{BMRT}) \cite{bmrt}, a \fGls{RenderMan}{A rendering software for photorealistic 3D rendering developed by Pixar} compliant renderer, was released in the mid 90s and was one of the first ray tracing renderers to be used in the industry. In 2003 \gls{RenderMan} included ray tracing capabilities \cite{RenderMan_11_Release_Notes}.
+
+Further research into light transport techniques such as bidirectional light transport or Metropolis Light Transport has been conducted in the 1990s \cite{veachMonteCarloLightTransport}.
 
 \subsubsection{Monte Carlo Ray Tracing}
 \subsubsection{Intersection Testing}
