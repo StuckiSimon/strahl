@@ -179,6 +179,53 @@
     year={1998}
 }
 
+@article{restir,
+author = {Bitterli, Benedikt and Wyman, Chris and Pharr, Matt and Shirley, Peter and Lefohn, Aaron and Jarosz, Wojciech},
+title = {Spatiotemporal reservoir resampling for real-time ray tracing with dynamic direct lighting},
+year = {2020},
+issue_date = {August 2020},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {39},
+number = {4},
+issn = {0730-0301},
+url = {https://doi.org/10.1145/3386569.3392481},
+doi = {10.1145/3386569.3392481},
+abstract = {Efficiently rendering direct lighting from millions of dynamic light sources using Monte Carlo integration remains a challenging problem, even for off-line rendering systems. We introduce a new algorithm---ReSTIR---that renders such lighting interactively, at high quality, and without needing to maintain complex data structures. We repeatedly resample a set of candidate light samples and apply further spatial and temporal resampling to leverage information from relevant nearby samples. We derive an unbiased Monte Carlo estimator for this approach, and show that it achieves equal-error 6\texttimes{}-60\texttimes{} faster than state-of-the-art methods. A biased estimator reduces noise further and is 35\texttimes{}-65\texttimes{} faster, at the cost of some energy loss. We implemented our approach on the GPU, rendering complex scenes containing up to 3.4 million dynamic, emissive triangles in under 50 ms per frame while tracing at most 8 rays per pixel.},
+journal = {ACM Trans. Graph.},
+month = {aug},
+articleno = {148},
+numpages = {17},
+keywords = {reservoir sampling, resampled importance sampling, real-time rendering, photorealistic rendering}
+}
+
+
+@article{restirAdvancements,
+author = {Ouyang, Y. and Liu, S. and Kettunen, M. and Pharr, M. and Pantaleoni, J.},
+title = {ReSTIR GI: Path Resampling for Real-Time Path Tracing},
+journal = {Computer Graphics Forum},
+volume = {40},
+number = {8},
+pages = {17-29},
+keywords = {CCS Concepts, • Computing methodologies → Rendering, Ray tracing},
+doi = {https://doi.org/10.1111/cgf.14378},
+url = {https://onlinelibrary.wiley.com/doi/abs/10.1111/cgf.14378},
+abstract = {Abstract Even with the advent of hardware-accelerated ray tracing in modern GPUs, only a small number of rays can be traced at each pixel in real-time applications. This presents a significant challenge for path tracing, even when augmented with state-of-the art denoising algorithms. While the recently-developed ReSTIR algorithm [BWP∗20] enables high-quality renderings of scenes with millions of light sources using just a few shadow rays at each pixel, there remains a need for effective algorithms to sample indirect illumination. We introduce an effective path sampling algorithm for indirect lighting that is suitable to highly parallel GPU architectures. Building on the screen-space spatio-temporal resampling principles of ReSTIR, our approach resamples multi-bounce indirect lighting paths obtained by path tracing. Doing so allows sharing information about important paths that contribute to lighting both across time and pixels in the image. The resulting algorithm achieves a substantial error reduction compared to path tracing: at a single sample per pixel every frame, our algorithm achieves MSE improvements ranging from 9.3× to 166× in our test scenes. In conjunction with a denoiser, it leads to high-quality path traced global illumination at real-time frame rates on modern GPUs.},
+year = {2021}
+}
+
+@article{restirGeneralized,
+  title={Generalized resampled importance sampling: Foundations of restir},
+  author={Lin, Daqi and Kettunen, Markus and Bitterli, Benedikt and Pantaleoni, Jacopo and Yuksel, Cem and Wyman, Chris},
+  journal={ACM Transactions on Graphics (TOG)},
+  volume={41},
+  number={4},
+  pages={1--23},
+  year={2022},
+  publisher={ACM New York, NY, USA}
+}
+
+
 @misc{nvidiaDlss,
   author = {NVIDIA Corporation},
   title = {NVIDIA DLSS},
@@ -203,7 +250,7 @@
 @article{bavoil2008ssao,
   title={Screen space ambient occlusion},
   author={Bavoil, Louis and Sainz, Miguel},
-  journal={NVIDIA developer information: http://developers. nvidia. com},
+  journal={NVIDIA developer information: http://developer.nvidia.com},
   volume={6},
   number={2},
   year={2008}
