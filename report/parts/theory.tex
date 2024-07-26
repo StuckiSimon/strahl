@@ -445,9 +445,21 @@ Since its introduction, WebGL has been extended with new features. WebGL 2.0, wh
 
 \subsection{WebGPU}
 
-WebGPU is a new web standard which is no longer based on OpenGL. One of the main capabilities is support for \gls{GPGPU} by design. While all major browser vendors have announced intent to support WebGPU, to date only Chrome has shipped WebGPU for general use on desktop as well as mobile.
+WebGPU is a new web standard, being developed by \fGls{W3C}{\e{World Wide Web Consortium}, a non-profit organization dedicated to developing web standards} which is no longer based on OpenGL. One of the main capabilities is support for \gls{GPGPU} by design. While all major browser vendors have announced intent to support WebGPU, to date only Chrome has shipped WebGPU for general use on desktop as well as mobile.
 The standard is still in development and new features are being added.
 Common 3D engines such as Babylon.js, Three.js, PlayCanvas and Unity have announced support for WebGPU.
+
+\subsubsection{Implementations}
+
+Three major implementations of WebGPU exist:
+
+\begin{itemize}
+    \item{\gls{Dawn}} — Developed by Google, \gls{Dawn} is a C++ library which provides a WebGPU implementation. It is used in Chromium-based browsers \cite{dawnImplementation}.
+    \item{\gls{wgpu}} — A Rust library which provides a WebGPU implementation. It is used in Firefox and \fGls{Deno}{JavaScript runtime, alternative to Node.js} \cite{wgpuImplementation}.
+    \item{WebKit WebGPU} — Developed by Apple, WebKit is used in Safari \cite{webKitWebGPUImplementation}.
+\end{itemize}
+
+As the standard is under active development, there are differences between the implementations as well as the specification \cite{wgpuStandardDeviation}. Thanks to alignment and the extensive conformance test suite \cite{WebGPUConformanceTestSuite}, the implementations are largely compatible.
 
 \subsubsection{Buffers}
 
