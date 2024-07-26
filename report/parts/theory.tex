@@ -163,6 +163,24 @@ This section provides an overview of computer graphics, including its history, k
 
 Since the early days of computing, researchers have explored ways to process visual information using computers. While the field also encompasses aspects such as image processing or two-dimensional graphics, the main focus of this thesis is on three-dimensional computer graphics. While this includes topics such as animation, geometry processing, the main topics covered are geometry representation, rendering and shading.
 
+\subsection{Global Illumination}
+
+Research to render advanced lighting effects using computer graphics was conducated as early as the 1960s. One of the earliest papers describing approaches to render shadow casting was written as early 1968 by Appel \cite{appel1968shading}. In order to describe the phenomena, encountered in real 
+
+The term global illumination was coined by Whitted in 1979 \cite{whittedGlobalIllumination}. It describes a complete shading model that simulates real lighting and reflection as accurately as possible \cite{whitted2020OriginsOfGlobalIllumination}.
+
+Simulating real lighting includes effects such as:
+
+\begin{itemize}
+  \item{Shadow Casting} — The absence of light as obstructed by other objects.
+  \item{Reflection} — As in the case of mirror-like objects, but also for specular and metallic reflection.
+  \item{Refraction} — As encountered when light passes through water.
+  \item{Color Bleeding} — Special type of reflection, where a surface is colored by reflection of colored light.
+  \item{Ambient Occlusion} — Special type of shadow casting, where light transport as impacted by nearby objects is considered.
+\end{itemize}
+
+\todo{Add illustrations for effects}
+
 \subsection{Rasterization}
 
 In order to visualize 3D scenes using a computer, different rendering approaches have been developed. Two of the most common approaches are rasterization and ray tracing and will be described in more detail in the following sections.
