@@ -448,6 +448,7 @@ async function run() {
 
   const materials = reducedModel.materials;
 
+  // CODE#MEMORY-VIEW
   const definitions = makeShaderDataDefinitions(tracerShaderCode);
   const { size: bytesPerMaterial } = getSizeAndAlignmentOfUnsizedArrayElement(
     definitions.storages.materials,
@@ -465,6 +466,7 @@ async function run() {
     //mappedAtCreation: true,
   });
 
+  // CODE#BUFFER-MAPPING
   materialDataView.set(
     materials.map((m) => {
       if (!(m instanceof OpenPBRMaterial)) {

@@ -41,6 +41,11 @@ Web Workers are a web technology that allows running scripts off the main thread
 
 The current implementation builds the \gls{BVH} on the \gls{CPU} and transfers it to the \gls{GPU}. Corresponding research \cite{lauterbach2009GPUbvh} suggests that moving parts of the construction to the \gls{GPU} directly could improve performance. This would reduce the amount of data that needs to be transferred between the \gls{CPU} and the \gls{GPU}. The new \gls{GPGPU} capabilities of WebGPU further enable this approach.
 
+\subsection{TypeScript Support for Memory Management}
+
+While \texttt{webgpu-utils} \cite{webgpuUtilsLib} is useful for memory management, it does not provide TypeScript support for the generated definitions based on the underlying WGSL code. Type safety could reduce the likelihood of errors in the code. As an alternative, runtime checks could be implemented to ensure that the data is correctly mapped to all fields of the underlying structure.
+
+
 \subsection{ReSTIR}
 \subsection{SHaRC}
 
