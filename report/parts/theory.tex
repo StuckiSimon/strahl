@@ -281,7 +281,7 @@ For ortographic projection, no such projection matrix is required in ray tracing
 \subsubsection{Random Number Generator}
 
   
-To simulate light transport, the path tracer needs to pick random directions. Generating a random direction vector, defined as $v = (x, y, z)$, can be achieved by picking three random numbers independent of one another. This pivotal part of path tracing is done using a random number generator (\gls{RNG}). In rasterization, the necessity for \gls{RNG} is less common, but may still be required for certain effects. Unlike other programming languages, WGSL does not have a built-in \gls{RNG}. Therefore, a custom \gls{RNG} is required. There are a variety of \gls{RNG}s available which differ in important characteristics. Some of the characteristics to consider when choosing a suitable \gls{RNG} are:
+To simulate light transport, the path tracer needs to pick random directions. Generating a random direction vector, defined as $v = (x, y, z)$, can be achieved by picking three random numbers independent of one another. This pivotal part of path tracing is done using a random number generator (\gls{RNG}). In rasterization, the necessity for \gls{RNG} is less common, but may still be required for certain effects. Unlike other programming languages, \gls{WGSL} does not have a built-in \gls{RNG}. Therefore, a custom \gls{RNG} is required. There are a variety of \gls{RNG}s available which differ in important characteristics. Some of the characteristics to consider when choosing a suitable \gls{RNG} are:
 
 \begin{itemize}
     \item{Statistical Quality} – The \gls{RNG} should generate numbers that are statistically random. This means that the numbers should be uniformly distributed and have a low correlation between them.
@@ -301,7 +301,7 @@ x ^= x << a;
 x ^= x >> b;
 x ^= x << c;
 \end{lstlisting}
-\caption{Xorshift \gls{RNG} implementation in WGSL.}
+\caption{Xorshift \gls{RNG} implementation in \gls{WGSL}.}
 \label{code:xorShift}
 \end{figure}
 
@@ -479,16 +479,16 @@ Storage Buffers are intended for read-write access on the GPU. The limits of the
 
 \subsubsection{Shading Language}
 
-WebGPU introduces a new shading language called WebGPU Shading Language (WGSL). The language is statically typed and supports a variety of data structures required for computer graphics as well as general-purpose computing.
+WebGPU introduces a new shading language called WebGPU Shading Language (\gls{WGSL}). The language is statically typed and supports a variety of data structures required for computer graphics as well as general-purpose computing.
 
-WGSL supports common high-level helpers such as Swizzling, which is a class of operations which facilitate managing vector elements. For example, given a vector \verb|let v = vec3f(x, y, z)|, the operation \verb|v.xy| returns a vector \verb|(x, y)|.
+\gls{WGSL} supports common high-level helpers such as Swizzling, which is a class of operations which facilitate managing vector elements. For example, given a vector \verb|let v = vec3f(x, y, z)|, the operation \verb|v.xy| returns a vector \verb|(x, y)|.
 
 \subsubsection{Memory Alignment}
 \label{ch:memoryAlignmentTheory}
 
-WGSL supports \verb|struct| for defining data structures. However, when passing data between the CPU and the GPU, memory alignment needs to be considered. Alignment is a constraint, restricting the memory address at which a data structure can be stored. Having strict memory alignment enables use of more efficient hardware instruction sets, or address hardware requirements.
+\gls{WGSL} supports \verb|struct| for defining data structures. However, when passing data between the CPU and the GPU, memory alignment needs to be considered. Alignment is a constraint, restricting the memory address at which a data structure can be stored. Having strict memory alignment enables use of more efficient hardware instruction sets, or address hardware requirements.
 
-Each type in WGSL has specific alignment requirements which are independent of the size. For example, a \verb|vec3f| has a size of 12 bytes, but requires an alignment of 16 bytes. So for a struct definition such as can be seen in \autoref{code:memoryAlignment}, the struct requires 32 bytes of memory to store 20 bytes of data as illustrated in \autoref{fig:memory-alignment}. The excess 12 bytes are used for padding.
+Each type in \gls{WGSL} has specific alignment requirements which are independent of the size. For example, a \verb|vec3f| has a size of 12 bytes, but requires an alignment of 16 bytes. So for a struct definition such as can be seen in \autoref{code:memoryAlignment}, the struct requires 32 bytes of memory to store 20 bytes of data as illustrated in \autoref{fig:memory-alignment}. The excess 12 bytes are used for padding.
 
 \begin{figure}[H]
   \begin{lstlisting}[style=wgsl]
@@ -498,7 +498,7 @@ Each type in WGSL has specific alignment requirements which are independent of t
     c: f32
   }
   \end{lstlisting}
-  \caption{WGSL \texttt{struct} containing three fields of type \texttt{f32} and \texttt{vec3f}.}
+  \caption{\gls{WGSL} \texttt{struct} containing three fields of type \texttt{f32} and \texttt{vec3f}.}
   \label{code:memoryAlignment}
   \end{figure}
 
@@ -509,7 +509,7 @@ Each type in WGSL has specific alignment requirements which are independent of t
   \label{fig:memory-alignment}
 \end{figure}
 
-Memory alignment is opaque while writing WGSL code, it is relevant when providing data to the GPU. For creating buffers, the alignment requirements need to be considered. When using JavaScript to create buffers, the standard Web \glspl{API} such as \texttt{Float32Array} or \texttt{Uint32Array} can be used to provide data. In order to write data to the \texttt{struct} in \autoref{code:memoryAlignment}, the views can be created as shown in \autoref{code:memoryAlignmentJs}.
+Memory alignment is opaque while writing \gls{WGSL} code, it is relevant when providing data to the GPU. For creating buffers, the alignment requirements need to be considered. When using JavaScript to create buffers, the standard Web \glspl{API} such as \texttt{Float32Array} or \texttt{Uint32Array} can be used to provide data. In order to write data to the \texttt{struct} in \autoref{code:memoryAlignment}, the views can be created as shown in \autoref{code:memoryAlignmentJs}.
 
 \begin{figure}[H]
   \begin{lstlisting}[style=JavaScript]
