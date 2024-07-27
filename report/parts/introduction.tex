@@ -9,7 +9,7 @@
 
 This section provides an overview of applications of a real-time ray tracer and prior work conducted in this field, highlighting the base procedure and the novel aspects of this work. The goal is to demonstrate the potential and applicability of the developed solution. Details on the involved concepts and technologies will be discussed in \autoref{ch:theory}, but may already be referenced during the introduction.
 
-Rasterization is a rendering technique that projects 3D scene geometry onto a 2D plane. Historically, the technique has been widely adopted in real-time rendering due to its efficiency. However, rasterization has limitations in achieving photorealism. One of the main limitations is the lack of support for global illumination. These phenomena can be observed in objects like mirrors or metallic surfaces. Effects such as refraction, reflection, and ambient occlusion require additional techniques.
+Rasterization is a rendering technique that projects 3D scene geometry onto a 2D plane. Historically, the technique has been widely adopted in real-time rendering due to its efficiency. However, rasterization has limitations in achieving photorealism. One of the main limitations is the lack of support for global illumination. These phenomena can be observed in objects like mirrors or metallic surfaces. Effects such as refraction and reflection require additional techniques.
 
 Various methods have been developed to address these limitations, but these approaches induce complexity, may need to be computed at the assembly level, and can be computationally expensive. An alternative rendering technique resembles reality more closely and inherently alleviates these limitations: ray tracing.
 
@@ -17,31 +17,46 @@ Ray tracing is a powerful technique for rendering photorealistic scenes includin
 
 \section{Use Cases}
 
-The web is a versatile platform which can be used for a variety of applications. This section outlines some real-world use cases for web-based 3D rendering.
+The web is a versatile platform which can be used for a variety of applications. Most consumer devices have access to a web browser, which makes it an ideal platform for reaching a broad audience. Compared to native applications, web applications have the advantage of being platform-independent and do not require installation. This facilitates the distribution of applications and reduces the barrier of entry for users.
 
-One such use case is e-commerce. Historically, companies with a vast portfolio of products have provided physical catalogues to their customers. This approach hit limits mainly for use cases where configurations of multiple components are possible and the number of combinations is vast or not enumerable. This is where real-time rendering can be used to provide a more interactive experience by showing the customer a realistic representation of the product instead of a list of static images.
+E-commerce represents a key use case for product renderings and frequently rely on taking pictures of the product. Similar to traditional physical catalogues, this approach struggles with highly configurable products due to the amount of images required to cover all possible configurations. Computer graphics addresses this challenge through product configurators for virtual assembly and visualization. They alleviate the need for physical processes, such as photography, and are scalable to a large number of configurations. This can be implemented by creating 3D models of the components and assembling them in a virtual environment. As the number of components grows, these components need to be kept in sync with the marketing models used for end user visualization.
 
-As long as the configurations are enumerable it is theoretically possible to pre-render the combinations using offline renderers. However, this induces cost in terms of required processing power and storage.
+In order to circumenvent this issue, leveraging existing CAD models, prevalent in mechanical engineering and product design, for end-user applications offers a significant advantage. These models contain geometric and material information, which eliminates the need for redundant 3D models for marketing purposes. One example is EAO, which manufactures highly customizable industrial pushbuttons and operator panels. Due to the nature of the product, the number of possible assemblies grows almost exponentially with the number of components.
 
-When opting to use real-time rendering, one option to choose is remote rendering which employs a server to render the scene and stream the visualization to the browser. The main drawbacks of this approach include network latency and full reliance on network stability. Additionally, the cost of running the server falls on the service provider.
-
-Another option is to use client-side rendering. Generally, rasterization approaches are used for real-time rendering. However, as will be discussed in the following sections, rasterization has limitations in terms of realism when having limited control over the models.
-
-When all these requirements are considered, the need for a real-time ray tracing solution in the web becomes apparent.
-
-\subsection{CAD Models}
-
-E-commerce represents a key use case for product renderings. Traditional catalogues struggle with highly configurable products. Computer graphics addresses this challenge through product configurators for virtual assembly and visualization.
-
-Leveraging existing CAD models, prevalent in mechanical engineering and product design, for end-user applications offers a significant advantage. These models contain geometric and material information, which eliminates the need for redundant 3D models for marketing purposes. One example is EAO, which manufactures highly customizable industrial pushbuttons and operator panels. Due to the nature of the product, the number of possible assemblies grows almost exponentially with the number of components. To facilitate the configuration process, a web-based configurator is optimal because it can be used on a large variety of devices without having to install additional software. Given the company's priority for photorealistic renderings of the assemblies, using ray tracing techniques is a compelling choice.
+\subsection{Process}
 
 Pre-rendering all product configurations is theoretically possible for a finite number of configurations, but computationally expensive. If this is not feasible, real-time rendering is an alternative. For real-time rendering, one option is remote rendering \cite{remoteRendering}, which employs a server to render the scene and stream the visualization to the browser. The main drawbacks of this approach are network latency, reliance on network stability, as well as operational cost for the server infrastructure, which frequently requires dedicated GPUs for rendering. Another option is client-side rendering. Most frequently, rasterization approaches are used for web-based renderings. However, due to the limitations in global illumination effects, the need for a real-time, client-side ray tracing solution for the web becomes apparent when considering the use case.
 
-\subsection{Industry Use Cases}
+CAD models require pre-processing as described in Figure~\ref{fig:cad-preprocessing}. This step involves surface triangulation, potential further refinement using algorithms used to generate level of detail (LOD) artifacts \cite{luebke2003level}, and measures to protect intellectual property (IP) rights by removing proprietary data. While numerous CAD formats include material information, it is often unsuitable for rendering. To address this, a material mapping can be defined, translating CAD materials to a suitable representation for the rendering pipeline.
 
-One example of such a use case can be found at the company EAO. They produce industrial pushbuttons, keypads and other operator panels. The products are highly customizable and can be configured in a variety of ways. In order to facilitate the configuration process, a web-based configurator is optimal because it can be used on a large variety of devices without having to install additional software.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\columnwidth]{resources/cad-pipeline-preprocessing.png}
+  \caption{A two-step pre-processing stage is employed for offline as well as real-time rendering pipelines.}
+  \label{fig:cad-preprocessing}
+\end{figure}
 
+The use of CAD models for designing and manufacturing processes is widespread in industry. These models often contain detailed information about the geometry as well as material properties. Such models are frequently used in mechanical engineering and product design.
+
+Some of the challenges when using CAD models is the lack of detailed material information. Another difficulty can be the complexity of the models. Frequently, the triangulated meshes are too fine-grained. There are approaches, such as algorithms used to generate level of detail (LOD) artifacts, to circumvent this issue.
+Another important consideration are intellectual property (IP) rights when using CAD models from production processes. The models may contain proprietary information which should not be disclosed to the end user.
 In addition to these factors, the pre-processing step should also define information on what kind of components can be added to the assembly and where they can be attached to. This can be done by providing meta information files containing the information. Alternatively, this can also be represented geometrically within the model by using identifiable shapes to attach components to.
+
+An offline rendering pipeline generates static images of the assembly, which are then displayed in the browser. This means that all possible assemblies need to be rendered and stored upfront. As the number of components increases, the number of possible combinations grows exponentially, which can lead to large amounts of storage and processing power being required, as shown in Figure~\ref{fig:cad-offline}.
+
+\begin{figure}[H]
+  \includegraphics[width=\columnwidth]{resources/cad-pipeline-offline.png}
+  \caption{In an offline rendering setup, the number of images grows exponentially. The number of images increases further when offering 360° viewing.}
+  \label{fig:cad-offline}
+\end{figure}
+
+This is the main benefit of using a real-time rendering pipeline, as illustrated in Figure~\ref{fig:cad-online}. The rendering is done in the browser, which means that the server only needs to provide the geometry and material information in an exchange format such as glTF. This approach is more flexible and can be used for a larger number of configurations. The amount of data to be stored and processed offline grows linearly with the number of components, independent of the number of possible configurations.
+
+\begin{figure}[H]
+  \includegraphics[width=\columnwidth]{resources/cad-pipeline-online.png}
+  \caption{A real-time rendering pipeline solely relies on having an adequate model for each component of the assembly. It does not require pre-rendering every possible configuration.}
+  \label{fig:cad-online}
+\end{figure}
 
 \section{Prior Work}
 
