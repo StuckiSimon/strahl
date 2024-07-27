@@ -21,7 +21,7 @@ The web is a versatile platform which can be used for a variety of applications.
 
 E-commerce represents a key use case for product renderings and frequently rely on taking pictures of the product. Similar to traditional physical catalogues, this approach struggles with highly configurable products due to the amount of images required to cover all possible configurations. Computer graphics addresses this challenge through product configurators for virtual assembly and visualization. They alleviate the need for physical processes, such as photography, and are scalable to a large number of configurations. This can be implemented by creating 3D models of the components and assembling them in a virtual environment. As the number of components grows, these components need to be kept in sync with the marketing models used for end user visualization.
 
-In order to circumenvent this issue, leveraging existing CAD models, prevalent in mechanical engineering and product design, for end-user applications offers a significant advantage. These models contain geometric and material information, which eliminates the need for redundant 3D models for marketing purposes. One such example is EAO, which manufactures highly customizable industrial pushbuttons and operator panels. Due to the nature of the product, the number of possible assemblies grows almost exponentially with the number of components.
+In order to circumenvent this issue, leveraging existing production CAD models, prevalent in mechanical engineering and product design, for end-user applications offers a significant advantage. These models contain geometric and material information, which eliminates the need for redundant 3D models for marketing purposes. One such example is EAO, which manufactures highly customizable industrial pushbuttons and operator panels. Due to the nature of the product, the number of possible assemblies grows almost exponentially with the number of components.
 
 To illustrate the use case more universally, consider a product which is assembled of $n$ component types. Each component type ($i$) has $o_i$ different options. This gives the total amount of possible configurations ($t$) as shown in \autoref{eq:assemblyConfigurations}.
 
@@ -32,11 +32,11 @@ To illustrate the use case more universally, consider a product which is assembl
 
 Essentially, for a product consisting of $n$ component types and each component type having the same amount of options ($o$), the equation can be simplified to $t = o^n$. This demonstrates the exponential growth of possible assemblies.
 
-\section{Procedure}
+Therefore, a web-based configurator leveraging computer graphics is well suited to address such use cases.
 
-Pre-rendering all product configurations is theoretically possible for a finite number of configurations, but computationally expensive. If this is not feasible, real-time rendering is an alternative. For real-time rendering, one option is remote rendering \cite{remoteRendering}, which employs a server to render the scene and stream the visualization to the browser. The main drawbacks of this approach are network latency, reliance on network stability, as well as operational cost for the server infrastructure, which frequently requires dedicated GPUs for rendering. Another option is client-side rendering. Most frequently, rasterization approaches are used for web-based renderings. However, due to the limitations in global illumination effects, the need for a real-time, client-side ray tracing solution for the web becomes apparent when considering the use case.
+\section{Process}
 
-CAD models require pre-processing as described in Figure~\ref{fig:cad-preprocessing}. This step involves surface triangulation, potential further refinement using algorithms used to generate level of detail (LOD) artifacts \cite{luebke2003level}, and measures to protect intellectual property (IP) rights by removing proprietary data. While numerous CAD formats include material information, it is often unsuitable for rendering. To address this, a material mapping can be defined, translating CAD materials to a suitable representation for the rendering pipeline.
+In order to leverage production CAD models, the models need to be pre-processed as visualized in Figure~\ref{fig:cad-preprocessing}. 
 
 \begin{figure}[H]
   \centering
@@ -45,11 +45,30 @@ CAD models require pre-processing as described in Figure~\ref{fig:cad-preprocess
   \label{fig:cad-preprocessing}
 \end{figure}
 
-The use of CAD models for designing and manufacturing processes is widespread in industry. These models often contain detailed information about the geometry as well as material properties. Such models are frequently used in mechanical engineering and product design.
+When exporting the CAD data, measures to protect intellectual property (IP) rights by removing proprietary data possibly need to be taken. In addition to these factors, the pre-processing step should also define information on what kind of components can be added to the assembly and where they can be attached to. This can be done by providing meta information files containing the information. Alternatively, this can also be represented geometrically within the model by using identifiable shapes to attach components to. \fGls{STEP}{\e{Standard for the Exchange of Product model data}, a standard formalized in ISO 10303 for product manufacturing information.} files are a common format for exchanging CAD data and can be used for this purpose, but as will be discussed in \autoref{ch:specializedFormats}, other formats may be more suitable for rendering.
 
-Some of the challenges when using CAD models is the lack of detailed material information. Another difficulty can be the complexity of the models. Frequently, the triangulated meshes are too fine-grained. There are approaches, such as algorithms used to generate level of detail (LOD) artifacts, to circumvent this issue.
+This includes triangulation of the meshes, which is a common requirement for rendering engines. Frequently, the triangulated meshes are fine-grained and consist of a large number of triangles. This can lead to performance issues when rendering the scene. One option to handle this is to simplify the meshes by decimating triangles. Procedures for this purpose are well established and include algorithms for generating level of detail (LOD) artifacts \cite{luebke2003level}.
+
 Another important consideration are intellectual property (IP) rights when using CAD models from production processes. The models may contain proprietary information which should not be disclosed to the end user.
-In addition to these factors, the pre-processing step should also define information on what kind of components can be added to the assembly and where they can be attached to. This can be done by providing meta information files containing the information. Alternatively, this can also be represented geometrically within the model by using identifiable shapes to attach components to.
+While numerous CAD formats include material information, it is often unsuitable for rendering. To address this, a material mapping can be defined, translating CAD materials to a suitable representation for the rendering pipeline.
+
+\section{Paradigms}
+
+In order to render the assemblies, three main paradigms can be employed for web-based applications: offline rendering, client side real-time rendering, and remote real-time rendering.
+
+\subsection{Offline Rendering}
+
+Offline rendering, requires pre-rendering all product configurations. This is theoretically possible for a finite number of configurations, but computationally expensive. 
+
+
+\subsection{Client Side Real-time Rendering}
+If this is not feasible, real-time rendering is an alternative. Another option is client-side rendering. Most frequently, rasterization approaches are used for web-based renderings. However, due to the limitations in global illumination effects, the need for a real-time, client-side ray tracing solution for the web becomes apparent when considering the use case.
+
+\subsection{Remote Real-time Rendering}
+
+For real-time rendering, an alternative paradigm is remote rendering \cite{remoteRendering}, which employs a server to render the scene and stream the visualization to the browser. The main drawbacks of this approach are network latency, reliance on network stability, as well as operational cost for the server infrastructure, which frequently requires dedicated GPUs for rendering.
+
+\todo{The following content needs to be integrated into the sections}
 
 An offline rendering pipeline generates static images of the assembly, which are then displayed in the browser. This means that all possible assemblies need to be rendered and stored upfront. As the number of components increases, the number of possible combinations grows exponentially, which can lead to large amounts of storage and processing power being required, as shown in Figure~\ref{fig:cad-offline}.
 
