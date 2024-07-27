@@ -60,16 +60,6 @@ In order to render the assemblies, three main paradigms can be employed for web-
 
 Offline rendering, requires pre-rendering all product configurations. This is theoretically possible for a finite number of configurations, but computationally expensive. 
 
-
-\subsection{Client Side Real-time Rendering}
-If this is not feasible, real-time rendering is an alternative. Another option is client-side rendering. Most frequently, rasterization approaches are used for web-based renderings. However, due to the limitations in global illumination effects, the need for a real-time, client-side ray tracing solution for the web becomes apparent when considering the use case.
-
-\subsection{Remote Real-time Rendering}
-
-For real-time rendering, an alternative paradigm is remote rendering \cite{remoteRendering}, which employs a server to render the scene and stream the visualization to the browser. The main drawbacks of this approach are network latency, reliance on network stability, as well as operational cost for the server infrastructure, which frequently requires dedicated GPUs for rendering.
-
-\todo{The following content needs to be integrated into the sections}
-
 An offline rendering pipeline generates static images of the assembly, which are then displayed in the browser. This means that all possible assemblies need to be rendered and stored upfront. As the number of components increases, the number of possible combinations grows exponentially, which can lead to large amounts of storage and processing power being required, as shown in Figure~\ref{fig:cad-offline}.
 
 \begin{figure}[H]
@@ -78,6 +68,12 @@ An offline rendering pipeline generates static images of the assembly, which are
   \label{fig:cad-offline}
 \end{figure}
 
+\subsection{Client Side Real-time Rendering}
+
+An alternative to offline rendering is real-time rendering. These approaches render the assemblies only as requested by the end user.
+
+For real-time rendering, client-side rendering is a frequently  used option. Most frequently, rasterization approaches are used for web-based renderings. However, due to the limitations in global illumination effects, the need for a real-time, client-side ray tracing solution for the web becomes apparent when considering the use case.
+
 This is the main benefit of using a real-time rendering pipeline, as illustrated in Figure~\ref{fig:cad-online}. The rendering is done in the browser, which means that the server only needs to provide the geometry and material information in an exchange format such as glTF. This approach is more flexible and can be used for a larger number of configurations. The amount of data to be stored and processed offline grows linearly with the number of components, independent of the number of possible configurations.
 
 \begin{figure}[H]
@@ -85,6 +81,16 @@ This is the main benefit of using a real-time rendering pipeline, as illustrated
   \caption{A real-time rendering pipeline solely relies on having an adequate model for each component of the assembly. It does not require pre-rendering every possible configuration.}
   \label{fig:cad-online}
 \end{figure}
+
+\subsection{Remote Real-time Rendering}
+
+For real-time rendering, an alternative paradigm is remote rendering \cite{remoteRendering}, which employs a server to render the scene and stream the visualization to the browser. The main drawbacks of this approach are network latency, reliance on network stability, as well as operational cost for the server infrastructure, which frequently requires dedicated GPUs for rendering.
+
+\todo{Draw schematics}
+
+\subsection{Assessment}
+
+
 
 \section{Prior Work}
 
