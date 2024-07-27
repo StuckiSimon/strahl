@@ -56,7 +56,7 @@ While numerous CAD formats include material information, it is often unsuitable 
 
 In order to render the assemblies based on the pre-processed information, three main paradigms can be employed for web-based applications: offline rendering, client side real-time rendering, and remote real-time rendering. These paradigms differ significantly and the technology stack varies significantly between them. Therefore, the choice of paradigm is crucial for the implementation of the application.
 
-\subsection{Offline Rendering}
+\subsection*{Offline Rendering}
 
 Offline rendering, requires pre-rendering all product configurations. This is theoretically possible for a finite number of configurations, but computationally expensive. 
 
@@ -68,7 +68,7 @@ An offline rendering pipeline generates static images of the assembly, which are
   \label{fig:cad-offline}
 \end{figure}
 
-\subsection{Client Side Real-time Rendering}
+\subsection*{Client Side Real-time Rendering}
 
 An alternative to offline rendering is real-time rendering. These approaches render the assemblies only as requested by the end user.
 
@@ -82,7 +82,7 @@ This is the main benefit of using a real-time rendering pipeline, as illustrated
   \label{fig:cad-online}
 \end{figure}
 
-\subsection{Remote Real-time Rendering}
+\subsection*{Remote Real-time Rendering}
 
 For real-time rendering, an alternative paradigm is remote rendering \cite{remoteRendering}, which employs a server to render the scene and stream the visualization to the browser. The main drawbacks of this approach are network latency, reliance on network stability, as well as operational cost for the server infrastructure, which frequently requires dedicated \glspl{GPU} for rendering.
 
@@ -92,7 +92,7 @@ For real-time rendering, an alternative paradigm is remote rendering \cite{remot
   \label{fig:cad-remote}
 \end{figure}
 
-\subsection{Assessment}
+\subsection*{Assessment}
 
 
 
@@ -100,14 +100,14 @@ For real-time rendering, an alternative paradigm is remote rendering \cite{remot
 
 Work has been conducted in related fields, this includes research into applicability of WebGPU as well as writing web based path tracers using WebGL. However, to the best of my knowledge, no open-source path tracing library using WebGPU has been developed.
 
-\subsection{WebGPU}
+\subsection*{WebGPU}
 
 Different other applications of WebGPU have been investigated in the past years. One such example is Dynamical.JS, a framework to visualize graphs \cite{dotson2022dynamicaljs}. Another example is RenderCore, a research-oriented rendering engine \cite{Bohak_Kovalskyi_Linev_Mrak_Tadel_Strban_Tadel_Yagil_2024}, or demonstrations on how to use WebGPU for client-side data aggregation \cite{kimmersdorfer2023webgpu}.
 
 Investigation into the performance of WebGPU have been conducted and show that WebGPU can be faster than WebGL \cite{webGPUWebGis, fransson2023performance, CHICKERUR2024919}.
  
 
-\subsection{Web Path Tracers}
+\subsection*{Web Path Tracers}
 
 There are a variety of path tracers available for the web. Most of them are based on WebGL, a web standard which will be highlighted in the following sections.
 
@@ -115,7 +115,7 @@ The first experiments of using WebGL for path tracing were implemented as early 
 
 Since then, a variety of open-source implementations for the web have been created.
 
-\subsection{Three.js-based Ray Tracers}
+\subsection*{Three.js-based Ray Tracers}
 
 Some of the most widely known path tracers are based on Three.js. Including:
 
