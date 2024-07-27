@@ -84,9 +84,13 @@ This is the main benefit of using a real-time rendering pipeline, as illustrated
 
 \subsection{Remote Real-time Rendering}
 
-For real-time rendering, an alternative paradigm is remote rendering \cite{remoteRendering}, which employs a server to render the scene and stream the visualization to the browser. The main drawbacks of this approach are network latency, reliance on network stability, as well as operational cost for the server infrastructure, which frequently requires dedicated GPUs for rendering.
+For real-time rendering, an alternative paradigm is remote rendering \cite{remoteRendering}, which employs a server to render the scene and stream the visualization to the browser. The main drawbacks of this approach are network latency, reliance on network stability, as well as operational cost for the server infrastructure, which frequently requires dedicated \glspl{GPU} for rendering.
 
-\todo{Draw schematics}
+\begin{figure}[H]
+  \includegraphics[width=\columnwidth]{resources/cad-pipeline-remote.png}
+  \caption{A remote rendering pipeline relies on a server to consistently stream the data in real-time to the client.}
+  \label{fig:cad-remote}
+\end{figure}
 
 \subsection{Assessment}
 
