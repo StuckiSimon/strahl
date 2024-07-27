@@ -1169,6 +1169,10 @@ fn sampleBsdf(pW: vec3f, basis: Basis, winputL: vec3f, lobeData: LobeData, mater
   return vec3f(0);
 }
 
+fn evaluateEdf(material: Material) -> vec3f {
+  return material.emissionColor * material.emissionLuminance;
+}
+
 fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec4f {
   var hitRecord: HitRecord;
   var ray = cameraRay;
@@ -1245,7 +1249,7 @@ fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec4f {
     let surfaceThroughput = f / max(PDF_EPSILON, bsdfPdfContinuation) * abs(dot(woutputW, basis.nW));
     dW = woutputW;
 
-    // todo: consider emission
+    L += throughput * evaluateEdf(material);
 
     pW += NgW * sign(dot(dW, NgW)) * RAY_OFFSET;
 
