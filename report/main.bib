@@ -477,6 +477,24 @@ year = {2021}
   DOI = {10.5194/isprs-archives-XLVIII-4-W9-2024-377-2024}
 }
 
+@inproceedings{fusionRenderWebGPU,
+  author = {Bi, Weichen and Ma, Yun and Han, Yudong and Chen, Yifan and Tian, Deyu and Du, Jiaqi},
+  title = {FusionRender: Harnessing WebGPU's Power for Enhanced Graphics Performance on Web Browsers},
+  year = {2024},
+  isbn = {9798400701719},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  url = {https://doi.org/10.1145/3589334.3645395},
+  doi = {10.1145/3589334.3645395},
+  abstract = {Graphics rendering on web browsers serves as the foundation for numerous web applications. Compared with the widely employed WebGL, the next-generation web graphics API, WebGPU, demonstrates an enhanced capacity to adapt to modern GPU features, boasting more significant potential. However, our experiment shows that the performance of current graphics rendering frameworks based on WebGPU lags behind those built on WebGL. Such discrepancy primarily arises from an incomplete alignment with WebGPU's distinctive features. The individual rendering of each graphic leads to redundant communication between the CPU and GPU. To enhance the graphics performance on the web, we introduce the FusionRender to harness the power of WebGPU. To mitigate redundant communication, FusionRender assigns a unique signature to each object and employs these signatures for grouping, enabling the consolidation of graphics rendering whenever possible. In simulated experiments involving the rendering of multiple objects, FusionRender improves the rendering performance by 29.3\%-122.1\% compared with the existing optimal baseline. In real cases with more complex features, performance improvement ranges from 9.4\% to 39.7\%. Additionally, FusionRender exhibits robust performance enhancement across various devices and browsers.},
+  booktitle = {Proceedings of the ACM on Web Conference 2024},
+  pages = {2890–2901},
+  numpages = {12},
+  keywords = {graphics, performance optimization, web applications, webgpu},
+  location = {Singapore, Singapore},
+  series = {WWW '24}
+}
+
 @article{fransson2023performance,
   title = {Performance comparison of WebGPU and WebGL in the Godot game engine},
   author = {Fransson, Emil and Hermansson, Jonatan},
