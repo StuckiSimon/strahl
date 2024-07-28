@@ -9,12 +9,6 @@
 
 This section provides an overview of applications of a real-time ray tracer and prior work conducted in this field, highlighting the base procedure and the novel aspects of this work. The goal is to demonstrate the potential and applicability of the developed solution. Details on the involved concepts and technologies will be discussed in \autoref{ch:theory}, but may already be referenced during the introduction.
 
-Rasterization is a rendering technique that projects 3D scene geometry onto a 2D plane. Historically, the technique has been widely adopted in real-time rendering due to its efficiency. However, rasterization has limitations in achieving photorealism. One of the main limitations is the lack of support for global illumination. These phenomena can be observed in objects like mirrors or metallic surfaces. Effects such as refraction and reflection require additional techniques.
-
-Various methods have been developed to address these limitations, but these approaches induce complexity, may need to be computed at the assembly level, and can be computationally expensive. An alternative rendering technique resembles reality more closely and inherently alleviates these limitations: ray tracing.
-
-Ray tracing is a powerful technique for rendering photorealistic scenes including global illumination. Historically, ray tracing has been mainly used in offline rendering due to its computational complexity. However, advancements in hardware have enabled real-time ray tracing in a variety of domains. In addition, the development of a new web \fGls{API}{\e{Application Programming Interface}} for leveraging the power of \fGlspl{GPU}{\e{Graphics Processing Unit}, specialized processor for parallel computation}, WebGPU, has opened up new possibilities for real-time ray tracing in the browser.
-
 \section{Use Cases}
 
 The web is a versatile platform which can be used for a variety of applications. Most consumer devices have access to a web browser, which makes it an ideal platform for reaching a broad audience. Compared to native applications, web applications have the advantage of being platform-independent and do not require installation. This facilitates the distribution of applications and reduces the barrier of entry for users.
@@ -78,7 +72,7 @@ In order to address latency, pre-loading images can be used. This may entail loa
 
 An alternative to offline rendering is real-time rendering. These approaches render the assemblies only as requested by the end user.
 
-For real-time rendering, client-side rendering is a frequently  used option. Most frequently, rasterization approaches are used for web-based renderings. However, due to the limitations in global illumination effects, the need for a real-time, client-side ray tracing solution for the web becomes apparent when considering the use case.
+For real-time rendering, client-side rendering is a frequently  used option. Most frequently, rasterization approaches are used for web-based renderings. However, due to the limitations in global illumination effects, the need for a real-time, client-side solution for the web becomes apparent when considering the use case.
 
 This is the main benefit of using a real-time rendering pipeline, as illustrated in Figure~\ref{fig:cad-online}. The rendering is done in the browser, which means that the server only needs to provide the geometry and material information in an exchange format such as glTF. This approach is more flexible and can be used for a larger number of configurations. The amount of data to be stored and processed offline grows linearly with the number of components, independent of the number of possible configurations.
 
@@ -90,7 +84,7 @@ This is the main benefit of using a real-time rendering pipeline, as illustrated
 
 \subsection*{Remote Real-time Rendering}
 
-For real-time rendering, an alternative paradigm is remote rendering \cite{remoteRendering}, which employs a server to render the scene and stream the visualization to the browser. The main drawbacks of this approach are network latency, reliance on network stability, as well as operational cost for the server infrastructure, which frequently requires dedicated \glspl{GPU} for rendering.
+For real-time rendering, an alternative paradigm is remote rendering \cite{remoteRendering}, which employs a server to render the scene and stream the visualization to the browser. The main drawbacks of this approach are network latency, reliance on network stability, as well as operational cost for the server infrastructure, which frequently requires dedicated \fGlspl{GPU}{\e{Graphics Processing Unit}, specialized processor for parallel computation} for rendering.
 
 \begin{figure}[H]
   \includegraphics[width=\columnwidth]{resources/cad-pipeline-remote.png}
@@ -154,6 +148,14 @@ Each of the paradigms has its own advantages, the following table highlights the
 \end{table}
 
 \section{Prior Work}
+
+This section highlights related work for web-based client side real-time rendering. More detailed information on the concepts, their strengths and weaknesses, and the technologies involved will be discussed in the following chapters \ref{ch:rasterizationTheory} and \ref{ch:rayTracingTheory}.
+
+Rasterization is a rendering technique that projects 3D scene geometry onto a 2D plane. Historically, the technique has been widely adopted in real-time rendering due to its efficiency. However, rasterization has limitations in achieving photorealism. One of the main limitations is the lack of support for global illumination. These phenomena can be observed in objects like mirrors or metallic surfaces. Effects such as refraction and reflection require additional techniques.
+
+Various methods have been developed to address these limitations, but these approaches induce complexity, may need to be computed at the assembly level, and can be computationally expensive. An alternative rendering technique resembles reality more closely and inherently alleviates these limitations: ray tracing.
+
+Ray tracing is a powerful technique for rendering photorealistic scenes including global illumination. Historically, ray tracing has been mainly used in offline rendering due to its computational complexity. However, advancements in hardware have enabled real-time ray tracing in a variety of domains. In addition, the development of a new web \fGls{API}{\e{Application Programming Interface}} for leveraging the power of \glspl{GPU}, WebGPU, has opened up new possibilities for real-time ray tracing in the browser.
 
 Work has been conducted in related fields, this includes research into applicability of WebGPU as well as writing web based path tracers using WebGL. However, to the best of my knowledge, no open-source path tracing library using WebGPU has been developed.
 
