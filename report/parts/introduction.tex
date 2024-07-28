@@ -70,17 +70,15 @@ In order to address latency, pre-loading images can be used. This may entail loa
 
 \subsection*{Client Side Real-time Rendering}
 
-An alternative to offline rendering is real-time rendering. These approaches render the assemblies only as requested by the end user.
-
-For real-time rendering, client-side rendering is a frequently  used option. Most frequently, rasterization approaches are used for web-based renderings. However, due to the limitations in global illumination effects, the need for a real-time, client-side solution for the web becomes apparent when considering the use case.
-
-This is the main benefit of using a real-time rendering pipeline, as illustrated in Figure~\ref{fig:cad-online}. The rendering is done in the browser, which means that the server only needs to provide the geometry and material information in an exchange format such as glTF. This approach is more flexible and can be used for a larger number of configurations. The amount of data to be stored and processed offline grows linearly with the number of components, independent of the number of possible configurations.
+An alternative to offline rendering is real-time rendering. For real-time rendering, client-side rendering is a frequently  used option. These approaches render the assemblies only as requested by the end user. This is the main benefit of using a real-time rendering pipeline, as illustrated in Figure~\ref{fig:cad-online}. The rendering is done in the browser, which means that the server only needs to provide the geometry and material information in a 3D exchange format such as \fgls{glTF}{\e{Graphics Library Transmission Format, common 3D exchange format optimized for transmission and real-time rendering.}}. This approach is more flexible and can be used for a larger number of configurations. The amount of data to be stored and processed offline grows linearly with the number of components, independent of the number of possible configurations.
 
 \begin{figure}[H]
   \includegraphics[width=\columnwidth]{resources/cad-pipeline-online.png}
   \caption{A real-time rendering pipeline solely relies on having an adequate model for each component of the assembly. It does not require pre-rendering every possible configuration.}
   \label{fig:cad-online}
 \end{figure}
+
+This approach limits the technology which can be used for rendering. The rendering is done in the browser, which means that it is dependent on the browser engine as well as the specific device hardware. This is also a limitation in terms of the complexity of the scene that can be rendered.
 
 \subsection*{Remote Real-time Rendering}
 
@@ -92,23 +90,23 @@ For real-time rendering, an alternative paradigm is remote rendering \cite{remot
   \label{fig:cad-remote}
 \end{figure}
 
-In order to be within thresholds frequently used for real-time rendering, the network latency should be below 20 ms. Recent studies on this have shown that this is still a challenge, even when considering the fastest networks available at a given location. Many locations do not have access to any cloud data centers with a latency below 20 ms. \cite{cloudLatency}
+To fulfill thresholds frequently used for real-time rendering, the network latency should be below 20 ms. Recent studies on this have shown that this is still a challenge, even when considering the fastest networks available at a given location. Many locations do not have access to any cloud data centers with a latency below 20 ms. \cite{cloudLatency}
 
 \subsection*{Comparison}
 
-In order to evaluate the different paradigms, a set of critera are defined. These criteria are used to demonstrate the advantages and disadvantages of each paradigm.
+To evaluate the different paradigms, a set of critera where the paradigms differ are defined. These criteria are used to demonstrate the advantages and disadvantages of each paradigm.
 
 \subsubsection{Pre-Processing Cost}
 
-This measure how much computation is required to prepare the data for rendering. Generally, lower is better. Offline rendering needs to pre-render all assemblies, essentially doing exhaustive rendering. Client side rendering and remote rendering need similar pre-processing.
+Measure how much computation effort is required to prepare the data for rendering. Generally, lower is better. Offline rendering needs to pre-render all assemblies, essentially doing exhaustive rendering. Client side rendering and remote rendering only need basic pre-processing.
 
 \subsubsection{Hosting Cost}
 
-The cost involved in hosting the application. Generally, lower is better. Offline rendering does not require application servers and mainly relies on storage for the generated images. Similarly, client side rendering needs storage for the models and textures. Remote rendering requires a rendering server, which can be costly and may induce additional complexity. In addition, bandwidth costs need to be considered.
+The infrastructure cost involved in hosting the application during operations. Generally, lower is better. Offline rendering does not require application servers and mainly relies on storage for the generated images. Similarly, client side rendering needs storage for the models. These two paradigms may employ classic \fglspl{CDN}{\e{Content Delivery Network}, distributed group of servers for caching content near end users.}. Remote rendering requires a rendering server, which can be costly and may induce additional complexity. In addition, bandwidth costs need to be considered.
 
 \subsubsection{Storage}
 
-The amount of storage required for the application. Generally, lower is better. Offline rendering requires storage for all rendered images. Client side rendering requires storage for the models and textures, as does remote rendering.
+The amount of data storage required for the application. Generally, lower is better. Offline rendering requires storage for all rendered images, possibly in multiple resolutions to support different types of devices. Client side rendering only requires storage for the models, as does remote rendering.
 
 \subsubsection{Main Performance Dependency}
 
@@ -116,7 +114,7 @@ The main bottleneck in terms of rendering performance for the end user. Offline 
 
 \subsubsection{Interactivity}
 
-The level of interactivity the user can expect. Generally, higher gives more flexibility. Offline rendering means all possible views need to be pre-rendered. Extending views requires additional pre-rendering, which optimally is done using a delta change detection to prevent re-rendering unchanged views. Client side rendering and remote rendering enable real-time interaction of the user without constraints. They also enable experimentation with different view configurations.
+The level of interactivity the user can expect. Generally, higher gives more flexibility. Offline rendering means all possible views need to be pre-rendered. Extending views requires additional pre-rendering, which optimally is done using a delta change detection to prevent re-rendering unchanged views. Client side rendering and remote rendering enable real-time interaction of the user without constraints. They also enable easier experimentation with different view configurations and possibly open up the possibility for using content provided by the end user in the rendering process. Such content could be lighting condition, background, or even additional objects.
 
 \subsubsection{Network Dependency}
 
@@ -124,9 +122,10 @@ The reliance on a stable network connection. Generally, lower is better. Offline
 
 \subsubsection{Maximum Scene Complexity Dependency}
 
-The main bottleneck in terms of the complexity of the scene that can be rendered. Generally, server gives more flexibility. Offline rendering can handle complex scenes given dedicated hardware. Client side rendering is dependent on the device, generally the weakest supported device defines the possible scene complexity. Remote rendering can handle complex scenes, similar to offline rendering.
+The main bottleneck in terms of the complexity of the scene that can be rendered. Generally, using a server gives more flexibility as the provider has full control over the hardware capabilities. Offline rendering can handle complex scenes given such dedicated hardware. Client side rendering is dependent on the device, generally the weakest supported device defines the possible scene complexity. Remote rendering can handle complex scenes, similar to offline rendering.
 
 \subsection*{Assessment}
+\label{ch:paradigmAssessment}
 
 Each of the paradigms has its own advantages, \autoref{tab:paradigmComparison} highlights the strengths and weaknesses of each approach and provides a comparison of the criteria.
 
@@ -150,8 +149,8 @@ Each of the paradigms has its own advantages, \autoref{tab:paradigmComparison} h
   \label{tab:paradigmComparison}
 \end{table}
 
-Offline rendering is suitable for applications where pre-processing is feasible and limited interactivity is acceptable. Real-time rendering, either client side or remote, is a suitable choice for aplications where the number of possible configurations is high and interactivity is important. The choice between client side and remote rendering depends on the network infrastructure and the complexity of the scene.
-Generally, client side rendering setups can be extended to support remote rendering as well as offline rendering, whereas offline rendering setups as well as remote rendering setups may not necessarily permit to do so due to technical constraints imposed by the available technology. Based on this assessment, this work focuses on client side rendering.
+Offline rendering is suitable for applications where pre-generating all images is feasible and limited interactivity is acceptable. Real-time rendering, either client side or remote, is a suitable choice for aplications where the number of possible configurations is high and interactivity is important. The choice between client side and remote rendering depends on the network infrastructure and the complexity of the scene.
+Generally, client side rendering setups can be extended to support remote rendering as well as offline rendering, whereas offline rendering setups as well as remote rendering setups are possibly not capable of client side rendering due to technical constraints imposed by the available technology. Based on this assessment, this work focuses on client side rendering, with the potential to extend to other paradigms in the future.
 
 \section{Prior Work}
 
@@ -204,4 +203,4 @@ Research on the performance comparison between existing 3D engines and WebGPU en
 
 \subsection*{Conclusion}
 
-Work has been conducted in related fields, this includes research into applicability of WebGPU as well as writing web based path tracers using WebGL. However, research suggests that no open-source path tracing library using WebGPU has been developed. In light of these findings, WebGPU presents a transformative opportunity. It is particularly well-suited for the development of a new real-time path tracing library for the web.
+Work has been conducted in related fields, this includes research into applicability of WebGPU as well as writing web based path tracers using WebGL. However, research suggests that no open-source path tracing library using WebGPU has been developed. In light of these findings, WebGPU presents a transformative opportunity. It is particularly well-suited for the development of a new real-time path tracing library for the web. It provides an alternative approach to existing rasterization-based rendering engines.
