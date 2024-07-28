@@ -154,13 +154,13 @@ Generally, client side rendering setups can be extended to support remote render
 
 \section{Prior Work}
 
-This section highlights related work for web-based client side real-time rendering. A rough overview of the different approaches is given, but more detailed information on the concepts, the technologies, their strengths and weaknesses, and the reasons on what benefits a path tracer provides will be discussed in \autoref{ch:computerGraphics}.
+This section highlights related work for web-based client side real-time rendering. A rough overview of the different approaches is given, but more detailed information on the concepts, the technologies, their strengths and weaknesses, and the the benefits ray tracing provides will be discussed in \autoref{ch:computerGraphics}.
 
 Rasterization is a rendering technique that projects 3D scene geometry onto a 2D plane. Historically, the technique has been widely adopted in real-time rendering due to its efficiency. However, rasterization has limitations in achieving photorealism. One of the main limitations is the lack of support for global illumination. These phenomena can be observed in objects like mirrors or metallic surfaces. Effects such as refraction and reflection require additional techniques.
 
 Various methods have been developed to address these limitations, but these approaches induce complexity, may need to be computed at the assembly level, and can be computationally expensive. An alternative rendering technique resembles reality more closely and inherently alleviates these limitations: ray tracing.
 
-Ray tracing is a powerful technique for rendering photorealistic scenes including global illumination. Historically, ray tracing has been mainly used in offline rendering due to its computational complexity. However, advancements in hardware have enabled real-time ray tracing in a variety of domains. In addition, the development of a new web \fGls{API}{\e{Application Programming Interface}} for leveraging the power of \glspl{GPU}, WebGPU, has opened up new possibilities for real-time ray tracing in the browser.
+Ray tracing is a powerful technique for rendering photorealistic scenes including global illumination. Historically, ray tracing has been mainly used in offline rendering due to its computational complexity. However, advancements in hardware have enabled real-time ray tracing in a variety of domains.
 
 \subsection*{Web-based Real-Time Renderers}
 
@@ -179,7 +179,7 @@ These engines focus on rasterization techniques and are widely used for web-base
 
 \subsection*{Web Path Tracers}
 
-There are a variety of path tracers available for the web. Most of them are based on WebGL. The first experiments of using WebGL for path tracing were implemented as early as 2010. One such example is the demo by Evan Wallace showcasing a Cornell Box with basic primitive shapes such as spheres and planes \cite{pathTracerWallace}.
+Path tracing is a specific ray tracing technique. There are a variety of path tracers available for the web. Most of them are based on WebGL. The first experiments of using WebGL for path tracing were implemented as early as 2010. One such example is the demo by Evan Wallace showcasing a Cornell Box with basic primitive shapes such as spheres and planes \cite{pathTracerWallace}.
 
 Since then, a variety of open-source implementations for the web have been created. Some of the most widely known path tracers are based on \gls{Three.js}.
 
@@ -197,10 +197,10 @@ The \texttt{dspbr-pt} by Dassault Systèmes \cite{PathTracerDassault} is a path 
 
 \subsection*{WebGPU}
 
-Various applications of WebGPU have been investigated in recent years. Examples include Dynamical.JS, a framework for visualizing graphs \cite{dotson2022dynamicaljs}; RenderCore, a research-oriented rendering engine \cite{Bohak_Kovalskyi_Linev_Mrak_Tadel_Strban_Tadel_Yagil_2024}; and demonstrations of how to use WebGPU for client-side data aggregation \cite{kimmersdorfer2023webgpu}.
+WebGPU is a new web \fGls{API}{\e{Application Programming Interface}} for leveraging the power of \glspl{GPU}. Various applications of WebGPU have been investigated in recent years. Examples include Dynamical.JS, a framework for visualizing graphs \cite{dotson2022dynamicaljs}; RenderCore, a research-oriented rendering engine \cite{Bohak_Kovalskyi_Linev_Mrak_Tadel_Strban_Tadel_Yagil_2024}; and demonstrations of how to use WebGPU for client-side data aggregation \cite{kimmersdorfer2023webgpu}.
 
 Research on the performance comparison between existing 3D engines and WebGPU engines has been conducted as part of the development of FusionRender, which concluded that measurable performance gains can be achieved by using WebGPU, but only when effectively leveraging its novel design principles \cite{fusionRenderWebGPU}. Similar findings have emerged from other independent studies, demonstrating that WebGPU can be faster than WebGL \cite{webGPUWebGis, fransson2023performance, CHICKERUR2024919}.
 
 \subsection*{Conclusion}
 
-Work has been conducted in related fields, this includes research into applicability of WebGPU as well as writing web based path tracers using WebGL. However, research suggests that no open-source path tracing library using WebGPU has been developed. In light of these findings, WebGPU presents a transformative opportunity. It is particularly well-suited for the development of a new real-time path tracing library for the web. It provides an alternative approach to existing rasterization-based rendering engines.
+Work has been conducted in related fields, this includes research into applicability of WebGPU as well as writing web based path tracers using WebGL. However, the research suggests that no open-source path tracing library using WebGPU has been developed. In light of these findings, WebGPU presents a transformative opportunity. It is particularly well-suited for the development of a new real-time path tracing library for the web which provides an alternative approach to existing rasterization-based rendering engines.
