@@ -163,7 +163,20 @@ Various methods have been developed to address these limitations, but these appr
 
 Ray tracing is a powerful technique for rendering photorealistic scenes including global illumination. Historically, ray tracing has been mainly used in offline rendering due to its computational complexity. However, advancements in hardware have enabled real-time ray tracing in a variety of domains. In addition, the development of a new web \fGls{API}{\e{Application Programming Interface}} for leveraging the power of \glspl{GPU}, WebGPU, has opened up new possibilities for real-time ray tracing in the browser.
 
-Work has been conducted in related fields, this includes research into applicability of WebGPU as well as writing web based path tracers using WebGL. However, to the best of my knowledge, no open-source path tracing library using WebGPU has been developed.
+\subsection*{Web-based Real-Time Renderers}
+
+A number of web-based real-time rasterizers exist. The main options include:
+
+\begin{itemize}
+  \item {\gls{Three.js}} \cite{threeJSWebsite} — popular web rendering engine.
+  \item {\texttt{Babylon.js}} \cite{babylonJSWebsite} — popular web rendering engine.
+  \item {\texttt{PlayCanvas}} \cite{playCanvasWebsite} — game engine for the web.
+  \item {\texttt{A-Frame}} \cite{aFrameWebsite} — web framework for building virtual reality experiences.
+\end{itemize}
+
+In addition, \gls{Unity}, a common game engine for desktop and mobile applications also supports WebGL \cite{unityWebGLCompatibility}.
+
+These engines focus on rasterization techniques and are widely used for web-based applications. The focus of these engines lies on real-time rendering performance as used in games, advertising campaigns, virtual reality (VR), augmented reality (AR), medical imaging, scientific visualization, and educational applications.
 
 \subsection*{WebGPU}
 
