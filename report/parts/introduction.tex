@@ -128,11 +128,13 @@ The complexity of the scene that can be rendered. Generally, higher gives more f
 
 \subsection*{Assessment}
 
-Each of the paradigms has its own advantages, the following table highlights the strengths and weaknesses of each approach and provides a comparison in terms of use cases.
+Each of the paradigms has its own advantages, \ref{tab:paradigmComparison} highlights the strengths and weaknesses of each approach and provides a comparison of the criteria.
 
 \todo{This table slightly overflows.}
 \begin{table}[H]\centering
   \ra{1.3}
+  \caption{High-level comparison between different rendering architecture paradigms.}
+  \label{tab:paradigmComparison}
   \begin{tabular}{@{}lccc@{}}\toprule
    & \bfseries Offline Rendering & \bfseries Client Side & \bfseries Remote \\
   Pre-Processing Cost & high & low & low \\
@@ -144,8 +146,10 @@ Each of the paradigms has its own advantages, the following table highlights the
   Possible Scene Complexity & high & device-dependent & high \\
   \bottomrule
   \end{tabular}
-  \caption{High-level comparison between different rendering architecture paradigms.}
 \end{table}
+
+Offline rendering is suitable for applications where pre-processing is feasible and limited interactivity is acceptable. Real-time rendering, either client side or remote, is a suitable choice for aplications where the number of possible configurations is high and interactivity is important. The choice between client side and remote rendering depends on the network infrastructure and the complexity of the scene.
+Generally, client side rendering setups can be extended to support remote rendering as well as offline rendering, whereas offline rendering setups as well as remote rendering setups may not necessarily permit to do so due to technical constraints imposed by the available technology. Based on this assessment, this work focuses on client side rendering.
 
 \section{Prior Work}
 
