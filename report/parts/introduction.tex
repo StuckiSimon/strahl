@@ -70,6 +70,10 @@ An offline rendering pipeline generates static images of the assembly, which are
   \label{fig:cad-offline}
 \end{figure}
 
+Interactivity is limited by requiring all desired viewing angles to be defined upfront. 360° viewing experience using a single degree of freedom can be provided by rendering images in regular intervals. 100 images would then be needed to get an image every 3.6°. These images can then be loaded in the browser as the user drags. However, if more degrees of freedom, different lighting situations, and zoom levels need to be supported, a similar growth in rendered images could be observed as for the assemblies.
+
+In order to address latency, pre-loading images can be used. This may entail loading additional images in the background to enable a smooth user experience. However, this leads to increased bandwith usage.
+
 \subsection*{Client Side Real-time Rendering}
 
 An alternative to offline rendering is real-time rendering. These approaches render the assemblies only as requested by the end user.
