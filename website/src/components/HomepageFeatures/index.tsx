@@ -10,11 +10,30 @@ type FeatureItem = {
 const FeatureList: FeatureItem[] = [
   {
     title: "Modern Technology",
-    description: <>Strahl leverages WebGPU, the latest web graphics API.</>,
+    description: (
+      <>
+        Strahl leverages WebGPU, the latest web graphics API built for years to
+        come.
+      </>
+    ),
+  },
+  {
+    title: "Fully Open-Source",
+    description: (
+      <>
+        Strahl is built out in public under MIT license, your feedback is
+        welcome.
+      </>
+    ),
   },
   {
     title: "Using OpenPBR",
-    description: <>Strahl is based on the OpenPBR surface shading model</>,
+    description: (
+      <>
+        Strahl supports Physically-based Rendering based on the OpenPBR surface
+        shading model.
+      </>
+    ),
   },
 ];
 
