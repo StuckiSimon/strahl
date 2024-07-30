@@ -464,17 +464,17 @@ OpenGL is an \gls{API} for rendering 3D graphics. After its introduction in 1992
 
 To date, OpenGL is still widely used in the industry, but it has been replaced by more modern \glspl{API} in recent years.
 
-\subsection{Vulkan, Metal, DirectX}
+\subsection{Modern Graphics APIs}
 
-While OpenGL and derivatives such as OpenGL ES have been widely adopted, the introduction of a number of new \glspl{API} has changed the landscape. Some of the most notable \glspl{API} are:
+While OpenGL and derivatives such as OpenGL ES have been widely adopted, the introduction of a number of new \glspl{API} has changed the landscape. The standards share an understanding of giving developers more control over the hardware and can be more efficient than OpenGL. Modern hardware-accelerated features such as ray tracing are more easily accessible using these new \glspl{API}. Some of the most notable \glspl{API} are:
 
 \begin{itemize}
-    \item{Vulkan} Developed by the Khronos Group, Vulkan is a low-level \gls{API} which is supported on a wide range of platforms.
-    \item{Metal} Developed by Apple, Metal is a low-level \gls{API} which is supported on Apple platforms.
-    \item{DirectX} Developed by Microsoft, DirectX is a collection of \glspl{API} which are supported on Windows platforms.
+    \item{Vulkan} — Developed by the Khronos Group, Vulkan is a low-level \gls{API} which is supported on a wide range of platforms.
+    \item{Metal} — Developed by Apple, Metal is a low-level \gls{API} which is supported on Apple devices.
+    \item{DirectX 12} — Developed by Microsoft, DirectX is a collection of \glspl{API} which are supported on Windows platforms.
 \end{itemize}
 
-\todo{Dawn's Vulkan backend used for WebGPU on Android and ChromeOS. Plan is to use it for Linux as well (Brandon Jones).}
+None of these \glspl{API} are supported in the browser, which makes them unsuitable for the discussed use case.
 
 \subsection{WebGL}
 
@@ -485,7 +485,7 @@ WebGL is designed to offer a rendering pipeline, but does not offer \gls{GPGPU} 
 In order to provide \gls{GPGPU} capabilities, workarounds have been developed. The basic idea is to render the output of a fragment shader to a texture and interpreting the output as binary data instead of color information.
 There are libraries such as GPU.js which provide \gls{GPGPU} capabilities using WebGL. Tensorflow.js, a library for training and deploying Machine Learning models, use similar techniques in the WebGL backend.
 
-Since its introduction, WebGL has been extended with new features. WebGL 2.0, which is based on OpenGL ES 3.0, was released in 2017. Of the major browsers, Safari was the last to support it out of the box in 2021. Since WebGL 2.0 no new major versions have been released but new features have been added.
+Since its introduction, WebGL has been extended with new features. WebGL 2.0, which is based on OpenGL ES 3.0, was released in 2017. Of the major browsers, Safari was the last to support it out of the box in 2021. Since WebGL 2.0 no new major versions have been released but new features have been added. This makes it evident that while WebGL is to remain a viable choice for rendering 3D graphics in the browser for the forseeable future, it is likely to be superseded by WebGPU in the long term.
 
 \subsection{WebGPU}
 
