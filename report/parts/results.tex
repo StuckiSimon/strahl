@@ -7,14 +7,20 @@
 % !TEX encoding = UTF-8 Unicode
 % !TEX root = ../main.tex
 
-The main goal is to implement a web-based path tracer addressing the problem of the large number of variants for CAD-based product visualization leveraging data close to the production CAD models.
+As discussed in the introduction and theory chapters, the goal of this work is to implement a web-based path tracer. The path tracer is designed to be used for product visualization based on CAD data, leveraging the \gls{OpenPBR} standard.
 
-The result of this work consists of multiple parts. The report serves as the primary documentation of the work, but does not contain the different details. The library and detailed code documentation are published under the MIT license on GitHub. See \url{https://www.github.com/StuckiSimon/strahl}. In addition, a dedicated short-paper has been published for WEB3D '24: The 29th International ACM Conference on 3D Web Technology \cite{ownShortPaper}. The short-paper includes the main insights and results of this work.
+The concrete result of this work consists of multiple parts. The report serves as the primary documentation of the work, but does not contain all details. The library and code documentation are published under the MIT license on GitHub with an accompanying website. See \url{https://www.github.com/StuckiSimon/strahl} for details on this. The library is published on the \fgls{npm}{package manager for JavaScript} registry as \texttt{strahl}. In addition, a dedicated short-paper has been published for WEB3D '24: The 29th International ACM Conference on 3D Web Technology \cite{ownShortPaper}. The short-paper includes the main insights and results of this work.
+
+This section focuses on the implementation details of the path tracer. It also highlights the reasoning behind design decisions and provides insights into the performance of the renderer.
 
 This section contains references to the implementation of the path tracer. References are formatted in a consistent manner and can be searched for in the code. All relevant places are marked in code using the same reference. For example \coderef{ABC} refers to the code with the same comment.
 
 \section{Scene Description}
-Lights, Materials, Camera, Objects
+
+In order to be easy to integrate for developers familiar with existing web-based rendering engines, the renderer utilizes many of the scene description constructs provided by \gls{Three.js}. This includes the representation of geometry using \texttt{BufferGeometry}, camera using \texttt{PerspectiveCamera}, and arbitrary camera controls such as \texttt{OrbitControls}.
+
+This also enables to use a variety of loaders for different file formats such as \gls{OBJ} or \gls{glTF}. The path tracer uses the \gls{glTF} loader provided by \gls{Three.js}.
+
 \section{Implementation}
 
 The goal of the implementation is to be compatible with a large variety of devices and make the setup for consumers simple. Therefore, it is implemented and tested mainly in Chrome, which uses \gls{Dawn} as the underlying implementation of WebGPU. Most notably, this means that dedicated features from other implementations such as \gls{wgpu} cannot be used. Neither can experimental extensions be leveraged.
