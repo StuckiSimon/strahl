@@ -175,34 +175,34 @@ A number of web-based real-time rasterizers exist. The main options include:
   \item {\texttt{A-Frame}} \cite{aFrameWebsite} — web framework for building virtual reality experiences.
 \end{itemize}
 
-In addition, \gls{Unity}, a common game engine for desktop and mobile applications also supports WebGL \cite{unityWebGLCompatibility}.
+In addition, \gls{Unity}, a common game engine for desktop and mobile applications also supports \fgls{WebGL}{\e{Web Graphics Library}, since 2011 the de-facto standard API for rendering 3D graphics on the web} \cite{unityWebGLCompatibility}.
 
 These engines focus on rasterization techniques and are widely used for web-based applications. The focus of these engines lies on real-time rendering performance as used in games, advertising campaigns, virtual reality (VR), augmented reality (AR), medical imaging, scientific visualization, and educational applications. However, they lack support for ray tracing techniques. 
 
 \subsection*{Web Path Tracers}
 
-Path tracing is a specific ray tracing technique. There are a variety of path tracers available for the web. Most of them are based on WebGL. The first experiments of using WebGL for path tracing were implemented as early as 2010. One such example is the demo by Evan Wallace showcasing a Cornell Box with basic primitive shapes such as spheres and planes \cite{pathTracerWallace}.
+Path tracing is a specific ray tracing technique. There are a variety of path tracers available for the web. Most of them are based on \gls{WebGL}. The first experiments of using \gls{WebGL} for path tracing were implemented as early as 2010. One such example is the demo by Evan Wallace showcasing a Cornell Box with basic primitive shapes such as spheres and planes \cite{pathTracerWallace}.
 
 Since then, a variety of open-source implementations for the web have been created. Some of the most widely known path tracers are based on \gls{Three.js}.
 
 \subsubsection{three-gpu-pathtracer}
 
-One of the most widely known path tracers for the web is the \texttt{three-gpu-pathtracer} by Johnson \cite{ThreeJsPathTracerJohnson}. This path tracer is implemented as a \gls{Three.js} plugin and uses WebGL for rendering.  It is bundled as a library and can be used to render scenes in the browser.
+One of the most widely known path tracers for the web is the \texttt{three-gpu-pathtracer} by Johnson \cite{ThreeJsPathTracerJohnson}. This path tracer is implemented as a \gls{Three.js} plugin and uses \gls{WebGL} for rendering.  It is bundled as a library and can be used to render scenes in the browser.
 
 \subsubsection{Three.js PathTracer}
 
-Another path tracer based on \gls{Three.js} is the \texttt{Three.js PathTracer} by Loftis \cite{ThreeJsPathTracerLoftis}. This path tracer is also implemented as a \gls{Three.js} plugin and uses WebGL for rendering. It does not provide a library, but can serve as a basis for further development.
+Another path tracer based on \gls{Three.js} is the \texttt{Three.js PathTracer} by Loftis \cite{ThreeJsPathTracerLoftis}. This path tracer is also implemented as a \gls{Three.js} plugin and uses \gls{WebGL} for rendering. It does not provide a library, but can serve as a basis for further development.
 
 \subsubsection{dspbr-pt}
 
-The \texttt{dspbr-pt} by Dassault Systèmes \cite{PathTracerDassault} is a path tracer implemented in WebGL. It is based on the \texttt{three-gpu-pathtracer} and provides additional features such as support for \gls{OBJ} files. It implements the Enterprise PBR Shading Model. However, the implementation does not provide a library and also hasn't been updated in the past years.
+The \texttt{dspbr-pt} by Dassault Systèmes \cite{PathTracerDassault} is a path tracer implemented in \gls{WebGL}. It is based on the \texttt{three-gpu-pathtracer} and provides additional features such as support for \gls{OBJ} files. It implements the Enterprise PBR Shading Model. However, the implementation does not provide a library and also hasn't been updated in the past years.
 
 \subsection*{WebGPU}
 
 WebGPU is a new web \fGls{API}{\e{Application Programming Interface}} for leveraging the power of \glspl{GPU}. Various applications of WebGPU have been investigated in recent years. Examples include Dynamical.JS, a framework for visualizing graphs \cite{dotson2022dynamicaljs}; RenderCore, a research-oriented rendering engine \cite{Bohak_Kovalskyi_Linev_Mrak_Tadel_Strban_Tadel_Yagil_2024}; and demonstrations of how to use WebGPU for client-side data aggregation \cite{kimmersdorfer2023webgpu}.
 
-Research on the performance comparison between existing 3D engines and WebGPU engines has been conducted as part of the development of FusionRender, which concluded that measurable performance gains can be achieved by using WebGPU, but only when effectively leveraging its novel design principles \cite{fusionRenderWebGPU}. Similar findings have emerged from other independent studies, demonstrating that WebGPU can be faster than WebGL \cite{webGPUWebGis, fransson2023performance, CHICKERUR2024919}.
+Research on the performance comparison between existing 3D engines and WebGPU engines has been conducted as part of the development of FusionRender, which concluded that measurable performance gains can be achieved by using WebGPU, but only when effectively leveraging its novel design principles \cite{fusionRenderWebGPU}. Similar findings have emerged from other independent studies, demonstrating that WebGPU can be faster than \gls{WebGL} \cite{webGPUWebGis, fransson2023performance, CHICKERUR2024919}.
 
 \subsection*{Conclusion}
 
-Work has been conducted in related fields, this includes research into applicability of WebGPU as well as writing web based path tracers using WebGL. However, the research suggests that no open-source path tracing library using WebGPU has been developed. In light of these findings, WebGPU presents a transformative opportunity. It is particularly well-suited for the development of a new real-time path tracing library for the web which provides an alternative approach to existing rasterization-based rendering engines.
+Work has been conducted in related fields, this includes research into applicability of WebGPU as well as writing web based path tracers using \gls{WebGL}. However, the research suggests that no open-source path tracing library using WebGPU has been developed. In light of these findings, WebGPU presents a transformative opportunity. It is particularly well-suited for the development of a new real-time path tracing library for the web which provides an alternative approach to existing rasterization-based rendering engines.
