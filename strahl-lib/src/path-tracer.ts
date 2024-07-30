@@ -231,7 +231,7 @@ async function runPathTracer(target: string, model: any) {
   const dir = new Vector3();
   camera.getWorldDirection(dir);
   const camTarget = camera.position.clone();
-  camTarget.addScaledVector(dir, 330.39613);
+  camTarget.addScaledVector(dir, 200);
   controls.target.copy(camTarget);
 
   controls.update();
