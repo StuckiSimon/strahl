@@ -1,0 +1,80 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.ray {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #ebedf0;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 6px rgba(235, 237, 240, 0.15),
+    0 0 0 12px rgba(235, 237, 240, 0.15);
+  animation:
+    position-animation var(--ray-animation-duration) ease-out
+      var(--ray-animation-delay) infinite,
+    pulsate-animation 2s ease-in-out infinite;
+  transform: rotate(-45deg) translateX(0);
+}
+
+@keyframes position-animation {
+  0% {
+    transform: rotate(-45deg) translateX(0);
+  }
+  100% {
+    transform: rotate(-45deg) translateX(-100vw);
+  }
+}
+
+@keyframes pulsate-animation {
+  0% {
+    box-shadow:
+      0 0 0 6px rgba(235, 237, 240, 0.15),
+      0 0 0 12px rgba(235, 237, 240, 0.15);
+  }
+  50% {
+    box-shadow:
+      0 0 0 4px rgba(235, 237, 240, 0.1),
+      0 0 0 8px rgba(235, 237, 240, 0.1);
+  }
+  100% {
+    box-shadow:
+      0 0 0 6px rgba(235, 237, 240, 0.15),
+      0 0 0 12px rgba(235, 237, 240, 0.15);
+  }
+}
+
+/* Trail */
+.ray::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 400px;
+  height: 1px;
+  background: linear-gradient(90deg, #ebedf0, transparent);
+}
+
+.ray:nth-child(1) {
+  --ray-animation-duration: 6s;
+  --ray-animation-delay: 2s;
+  top: -20vh;
+  right: 30vw;
+}
+
+.ray:nth-child(2) {
+  --ray-animation-duration: 4s;
+  --ray-animation-delay: 0s;
+  top: -20vh;
+  right: 15vw;
+}
+
+.ray:nth-child(3) {
+  --ray-animation-duration: 7s;
+  --ray-animation-delay: 4s;
+  top: -8vh;
+  right: -5vw;
+}

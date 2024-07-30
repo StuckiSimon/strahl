@@ -10,6 +10,7 @@ import Button from "../components/Button";
 import useTypewriter, { TypewriterState } from "../hooks/useTypewriter";
 import React from "react";
 import TracerDemo from "../components/TracerDemo";
+import ShootingRays from "../components/ShootingRays";
 
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
@@ -65,6 +66,7 @@ function HomepageHeader() {
           </Button>
         </div>
       </div>
+      <ShootingRays />
     </header>
   );
 }
