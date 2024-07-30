@@ -2,6 +2,9 @@
 
 WebGPU Path Tracer for the web.
 
+> [!NOTE]
+> This is still a work in progress, if you're interested in the work, take a look at the related short-paper on [arXiv](https://arxiv.org/abs/2407.19977).
+
 ## What is strahl?
 
 strahl is a path tracing library for web applications. Path tracing is a technique based on ray tracing to render 3D models to images with realistic reflections and ambient occlusion without the need for pregenerated artifacts. strahl leverages WebGPU for optimal performance and is based on OpenPBR surface shading model.
