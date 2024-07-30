@@ -13,12 +13,10 @@
             <link>https://stuckisimon.github.io/strahl/blog/welcome</link>
             <guid>https://stuckisimon.github.io/strahl/blog/welcome</guid>
             <pubDate>Mon, 29 Jul 2024 00:00:00 GMT</pubDate>
-            <description><![CDATA[Strahl has gone public.]]></description>
-            <content:encoded><![CDATA[<p>Strahl has gone public.</p>
-<p>Strahl is a web-based path tracer built using WebGPU. The goal is to provide a easy-to-use library for generating high-fidelity renderings in near-real time.
-Feedback and questions on direct channels is very much welcome, but please note that it's still early days and work on the path tracer is still ongoing. Especially the documentation and information on how to use it will be extended in the upcoming weeks.</p>
-<p>The plan is to get a ready-to-use version released until end of August. Until then, feel free to leave a star to be notified of changes down the road.</p>
-<p>Until then, feel free to read the short-paper published on <a href="https://arxiv.org/abs/2407.19977" target="_blank" rel="noopener noreferrer">arXiv</a>.</p>]]></content:encoded>
+            <description><![CDATA[Strahl, a web-based path tracer powered by WebGPU, is now publicly available. Designed for easy use and high-quality, near real-time rendering, strahl is still under development but eager for feedback.]]></description>
+            <content:encoded><![CDATA[<p>Strahl, a web-based path tracer powered by WebGPU, is now publicly available. Designed for easy use and high-quality, near real-time rendering, strahl is still under development but eager for feedback.</p>
+<p>While documentation and usage information are expanding, I welcome your questions and input. The goal is a fully functional release by the end of August.</p>
+<p>For a technical overview, check out our short paper on <a href="https://arxiv.org/abs/2407.19977" target="_blank" rel="noopener noreferrer">arXiv</a>:</p>]]></content:encoded>
         </item>
     </channel>
 </rss>
