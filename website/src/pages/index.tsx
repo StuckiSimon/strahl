@@ -47,7 +47,9 @@ function HomepageHeader() {
           <p
             className={clsx("hero__subtitle", styles.heroTypewriter)}
             ref={typewriterRef}
-          ></p>
+          >
+            &nbsp;
+          </p>
           <div className={styles.cursorContainer}>
             <div className={styles.cursor}></div>
           </div>
