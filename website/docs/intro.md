@@ -4,4 +4,6 @@ sidebar_position: 1
 
 # Tutorial Intro
 
-strahl
+The tutorial is not yet finished and will be following in the upcoming weeks.
+
+Stay tuned.
