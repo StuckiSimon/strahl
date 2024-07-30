@@ -9,6 +9,7 @@ import styles from "./index.module.css";
 import Button from "../components/Button";
 import useTypewriter, { TypewriterState } from "../hooks/useTypewriter";
 import React from "react";
+import TracerDemo from "../components/TracerDemo";
 
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
@@ -78,6 +79,7 @@ export default function Home(): JSX.Element {
       <HomepageHeader />
       <main>
         <HomepageFeatures />
+        <TracerDemo />
       </main>
     </Layout>
   );
