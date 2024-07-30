@@ -39,7 +39,7 @@ function getSunDirection() {
 
 async function runPathTracer(target: string, model: any) {
   const initLog = logGroup("init");
-  const canvas = document.getElementById("render-target");
+  const canvas = document.getElementById(target);
 
   if (!(canvas instanceof HTMLCanvasElement)) {
     console.error("No canvas found");
