@@ -1,6 +1,8 @@
+import clsx from "clsx";
 import Link from "@docusaurus/Link";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import styles from "./styles.module.css";
 
 type Props = {
   children: string;
@@ -18,7 +20,10 @@ export default function Button({
   return (
     <Link to={to} className={`button button--${variant} button--lg`}>
       {icon ? (
-        <FontAwesomeIcon icon={icon} className="margin-right--sm" />
+        <FontAwesomeIcon
+          icon={icon}
+          className={clsx("margin-right--sm", styles.icon)}
+        />
       ) : null}
       {children}
     </Link>
