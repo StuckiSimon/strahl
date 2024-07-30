@@ -4,7 +4,7 @@ export default {
   plugins: [basicSsl()],
   build: {
     lib: {
-      entry: "src/main.ts",
+      entry: "src/path-tracer.ts",
       name: "strahl",
     },
   },
