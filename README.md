@@ -6,6 +6,16 @@ WebGPU Path Tracer for the web.
 
 strahl is a path tracing library for web applications. Path tracing is a technique based on ray tracing to render 3D models to images with realistic reflections and ambient occlusion without the need for pregenerated artifacts. strahl leverages WebGPU for optimal performance and is based on OpenPBR surface shading model.
 
+## Current State
+
+The public documentation is still a work in progress and is expected to be finished until end of August. While you're here, feel free to checkout the short-paper describing the work on [arXiv](https://arxiv.org/abs/2407.19977).
+
+Feedback and questions are welcomed on any direct channel:
+
+1. https://x.com/StuckiSimon
+1. Mail (see Git commits)
+1. https://www.linkedin.com/in/stuckisimon/
+
 ## System Requirements
 
 Node.js, for version see `.nvmrc`.
