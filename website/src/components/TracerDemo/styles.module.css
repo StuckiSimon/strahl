@@ -7,3 +7,25 @@
   justify-content: center;
   align-items: center;
 }
+
+.heroTitle {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--ifm-color-primary);
+}
+
+.hero {
+  text-align: center;
+  padding-top: 2rem;
+}
+
+.lead {
+  color: var(--ifm-hero-background-color);
+  font-weight: 600;
+  font-size: 2rem;
+  margin-bottom: 0;
+}
+
+.text {
+  color: var(--ifm-hero-background-color);
+}

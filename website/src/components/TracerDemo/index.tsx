@@ -1,5 +1,6 @@
 import React from "react";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import Heading from "@theme/Heading";
 import runPathTracer, {
   OpenPBRMaterial as RawOpenPBRMaterial,
 } from "../../../../strahl-lib/dist/strahl";
@@ -146,8 +147,27 @@ export default function TracerDemo(): JSX.Element {
   }, []);
   return (
     <div className={styles.container}>
-      <div className={clsx("container", styles.wrapper)}>
-        <canvas width="512" height="512" id="render-target"></canvas>
+      <div className="container">
+        <div className="row">
+          <div className={clsx("col", styles.hero)}>
+            <p className={styles.lead}>Demo</p>
+            <Heading as="h2" className={styles.heroTitle}>
+              Show me
+            </Heading>
+          </div>
+        </div>
+        <div className="row">
+          <div className={clsx("col", styles.wrapper)}>
+            <canvas width="512" height="512" id="render-target"></canvas>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col">
+            <p className={styles.text}>
+              Make sure your browser supports WebGPU.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
