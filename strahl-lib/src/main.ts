@@ -12,8 +12,8 @@ import {
   makeShaderDataDefinitions,
   makeStructuredView,
 } from "webgpu-utils";
+import { bvhToTextures } from "./bvh-util";
 
-const DUCK_MODEL_URL = "models/duck/Duck.gltf";
 
 const gltfLoader = new GLTFLoader();
 
@@ -22,38 +22,6 @@ async function loadGltf(url: string) {
     gltfLoader.load(url, resolve, undefined, reject);
   });
 }
-
-// Build constants
-const BYTES_PER_NODE = 6 * 4 + 4 + 4;
-
-// See https://github.com/gkjohnson/three-mesh-bvh/blob/0eda7b718799e1709ad9efecdcc13c06ae3d5a55/src/core/utils/nodeBufferUtils.js
-function isLeaf(n16: number, uint16Array: Uint16Array) {
-  return uint16Array[n16 + 15] === 0xffff;
-}
-
-function getAtOffset(n32: number, uint32Array: Uint32Array) {
-  return uint32Array[n32 + 6];
-}
-
-function getCount(n16: number, uint16Array: Uint16Array) {
-  return uint16Array[n16 + 14];
-}
-
-function getRightNode(n32: number, uint32Array: Uint32Array) {
-  return uint32Array[n32 + 6];
-}
-
-function getSplitAxis(n32: number, uint32Array: Uint32Array) {
-  return uint32Array[n32 + 7];
-}
-
-function getBoundingDataIndex(n32: number) {
-  return n32;
-}
-
-type MeshBVHInternal = {
-  _roots: ArrayBuffer[];
-};
 
 const sunConfig = {
   skyPower: 0.4,
