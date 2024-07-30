@@ -39,7 +39,7 @@
   width: 6px;
   background-color: var(--ifm-color-primary);
   align-self: baseline;
-  margin-top: 12px;
+  margin-top: 16px;
   border-radius: 2px;
   animation: 0.9s infinite ease-in-out opacityFade;
 }
