@@ -781,3 +781,4 @@ async function runPathTracer(target: string, model: any) {
 }
 
 export default runPathTracer;
+export { OpenPBRMaterial };
