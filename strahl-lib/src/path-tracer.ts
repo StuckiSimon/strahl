@@ -37,7 +37,21 @@ function getSunDirection() {
   return [x, y, z];
 }
 
-async function runPathTracer(target: string, model: any) {
+async function runPathTracer(
+  target: string,
+  model: any,
+  {
+    targetSamples = 300,
+    kTextureWidth = 512,
+    matrixWorldContent = [
+      0.9348898557149565, 0, -0.354937963144642, 0, 0.04359232917084678,
+      0.992429364980685, 0.1148201391807842, 0, 0.3522508573711748,
+      -0.12281675587652569, 0.9278121458340784, 0, 63.44995297630283,
+      -44.22427925573443, 209.99999999999994, 1,
+    ],
+  } = {},
+) {
+  const TARGET_SAMPLES = targetSamples;
   const initLog = logGroup("init");
   const canvas = document.getElementById(target);
 
@@ -89,7 +103,6 @@ async function runPathTracer(target: string, model: any) {
     format,
   });
 
-  const kTextureWidth = 512;
   const kTextureHeight = kTextureWidth;
 
   const imageWidth = kTextureWidth;
@@ -200,23 +213,24 @@ async function runPathTracer(target: string, model: any) {
   let matrixWorld = new Matrix4();
 
   // 45-cleaned
+  // todo: handle appropriately
   matrixWorld.set(
-    0.9348898557149565,
-    0,
-    -0.354937963144642,
-    0,
-    0.04359232917084678,
-    0.992429364980685,
-    0.1148201391807842,
-    0,
-    0.3522508573711748,
-    -0.12281675587652569,
-    0.9278121458340784,
-    0,
-    63.44995297630283,
-    -44.22427925573443,
-    209.99999999999994,
-    1,
+    matrixWorldContent[0],
+    matrixWorldContent[1],
+    matrixWorldContent[2],
+    matrixWorldContent[3],
+    matrixWorldContent[4],
+    matrixWorldContent[5],
+    matrixWorldContent[6],
+    matrixWorldContent[7],
+    matrixWorldContent[8],
+    matrixWorldContent[9],
+    matrixWorldContent[10],
+    matrixWorldContent[11],
+    matrixWorldContent[12],
+    matrixWorldContent[13],
+    matrixWorldContent[14],
+    matrixWorldContent[15],
   );
   matrixWorld.transpose();
 
