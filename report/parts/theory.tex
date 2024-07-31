@@ -469,7 +469,7 @@ To date, \gls{OpenGL} is still widely used in the industry, but it has been repl
 While \gls{OpenGL} and derivatives such as \fgls{OpenGL ES}{\e{OpenGL for Embedded Systems}, subset of OpenGL designed for embedded systems like smartphones} have been widely adopted, the introduction of a number of new \glspl{API} has changed the landscape. The standards share an understanding of giving developers more control over the hardware and can be more efficient than \gls{OpenGL}. Modern hardware-accelerated features such as ray tracing are more easily accessible using these new \glspl{API}. Some of the most notable \glspl{API} are:
 
 \begin{itemize}
-    \item{Vulkan} — Developed by the Khronos Group, Vulkan is a low-level \gls{API} which is supported on a wide range of platforms.
+    \item{Vulkan} — Developed by the \fgls{Khronos Group}{consortium for developing interoperability standards for 3D graphics}, Vulkan is a low-level \gls{API} which is supported on a wide range of platforms.
     \item{Metal} — Developed by Apple, Metal is a low-level \gls{API} which is supported on Apple devices.
     \item{DirectX 12} — Developed by Microsoft, DirectX is a collection of \glspl{API} which are supported on Windows platforms.
 \end{itemize}
@@ -480,7 +480,7 @@ None of these \glspl{API} are supported in the browser, which makes them unsuita
 
 \gls{WebGL} is a graphics \gls{API} based on \gls{OpenGL ES} 2.0 for the web. It was initially released in 2011 and has since been adopted by all major browsers.
 
-\gls{WebGL} is designed to offer a rendering pipeline, but does not offer \gls{GPGPU} capabilities. There have been efforts to extend with compute shaders, but efforts by the Khronos Group have been halted in favor of focusing on WebGPU instead.
+\gls{WebGL} is designed to offer a rendering pipeline, but does not offer \gls{GPGPU} capabilities. There have been efforts to extend with compute shaders, but efforts by the \gls{Khronos Group} have been halted in favor of focusing on WebGPU instead.
 
 In order to provide \gls{GPGPU} capabilities, workarounds have been developed. The basic idea is to render the output of a fragment shader to a texture and interpreting the output as binary data instead of color information.
 There are libraries such as GPU.js which provide \gls{GPGPU} capabilities using \gls{WebGL}. Tensorflow.js, a library for training and deploying Machine Learning models, use similar techniques in the \gls{WebGL} backend.
@@ -596,13 +596,13 @@ Another such format is STL which is widely used in 3D printing and supports bina
 
 The aforementioned formats have shortcomings in terms of interoperability and feature set for complex 3D scenes. Special formats have been developed to address issues encountered in complex 3D scenes such as encountered in the film industry.
 
-Other formats such as COLLADA have been developed to improve transporting 3D scenes between different applications. It is XML-based and has been established in 2004 and has since been managed by the Khronos Group. The latest release of the format was in 2008.
+Other formats such as COLLADA have been developed to improve transporting 3D scenes between different applications. It is XML-based and has been established in 2004 and has since been managed by the \gls{Khronos Group}. The latest release of the format was in 2008.
 
 One notable format is USD, which has been open-sourced by Pixar in 2016. Similar to COLLADA, the format is designed with interoperability in mind. The main focus of USD is support for complex scenes and complex collaboration workflows. The format is widely supported by 3D engines and applications.
 
 \subsection{Runtime Formats}
 
-For usage in end-user applications, such as for the use cases in this thesis, the \gls{glTF} format is well-suited. It has been established in 2015 and is designed to be efficient for transmission and loading of 3D scenes. The standard is developed by the Khronos Group and is widely supported by 3D engines and applications. The format supports 3D geometry, materials, animations, scene graph and other features.
+For usage in end-user applications, such as for the use cases in this thesis, the \gls{glTF} format is well-suited. It has been established in 2015 and is designed to be efficient for transmission and loading of 3D scenes. The standard is developed by the \gls{Khronos Group} and is widely supported by 3D engines and applications. The format supports 3D geometry, materials, animations, scene graph and other features.
 
 Technically, the format offers two different encoding formats which differ in file ending:
 
