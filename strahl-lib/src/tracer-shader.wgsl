@@ -1175,6 +1175,7 @@ fn evaluateEdf(material: Material) -> vec3f {
 }
 
 const TRIANGLE_MIN_DISTANCE_THRESHOLD = 0.0005;
+const TRIANGLE_MAX_DISTANCE_THRESHOLD = 10e37f;
 
 fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec4f {
   var hitRecord: HitRecord;
@@ -1192,7 +1193,7 @@ fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec4f {
   var inDielectric = false;
 
   for (var i = 0; i < maxDepth; i += 1) {
-    hitRecord.t = 99999999999999999999.0;
+    hitRecord.t = TRIANGLE_MAX_DISTANCE_THRESHOLD;
     let hit = hittableListHit(ray, Interval(TRIANGLE_MIN_DISTANCE_THRESHOLD, 0xfffffffffffffff), &hitRecord);
 
     // todo: consider normal handling
