@@ -380,11 +380,11 @@ In rasterization, similar solution strategies can be employed. Supersampling is 
 
 Defining the geometry is one part of the equation. Another major part is defining materials. Materials define how a surface interacts with light. The core idea of physically based rendering (\gls{PBR}) is to simulate the interaction of light using physical models. Instead of fine-tuning parameters for a specific look and feel and having to adjust based on desired lighting situations, \gls{PBR} aims to define a material which behaves consistently in different lighting situations.
 
-Research into \gls{PBR} has been conducted for a similar amount of time as ray tracing. And just like ray tracing, the computational complexity of the algorithms has limited the adoption of \gls{PBR} in real-time rendering for a long time \todo{Quote some early adopters of 2000s?}. \gls{PBR} has generally coincided with the rise of ray tracing as it is a natural fit for the physics based rendering approach. However, \gls{PBR} and ray tracing are not mutually dependent as \gls{PBR} can be used in rasterization as well.
+Research into \gls{PBR} has been conducted for a similar amount of time as ray tracing. And just like ray tracing, the computational complexity of the algorithms has limited the adoption of \gls{PBR} in real-time rendering for a long time. \gls{PBR} has generally coincided with the rise of ray tracing as it is a natural fit for the physics based rendering approach. One prominent example of a PBR system is pbrt, an open-source renderer with an associated literate programming book which has won an Academy Award for formalizing and providing reference implementation for \gls{PBR} \cite{Pharr_Physically_Based_Rendering_2023}.
 
-In contrast to how ray tracing is inherently addressing shortcomings of rasterization by leveraging an entirely different approach, \gls{PBR} is a more incremental improvement extending existing shading techniques with more sophisticated models.
+\gls{PBR} and ray tracing are not mutually dependent as \gls{PBR} can be used in rasterization as well. In contrast to how ray tracing is inherently addressing shortcomings of rasterization by leveraging an entirely different approach, \gls{PBR} is a more incremental improvement extending existing shading techniques with more sophisticated models.
 
-In general, there is no \gls{PBR} standard. Instead, a variety of different models have been developed over time. In recent years however, a convergence towards a common set of principles has been observed. Nevertheless, certain aspects of \gls{PBR} are found in most models.
+In general, there is no \gls{PBR} standard. Instead, a variety of different models have been developed over time. In recent years however, a convergence towards a common set of principles has been observed and certain aspects of \gls{PBR} are found in most models.
 
 \subsection{BxDF}
 
