@@ -311,7 +311,7 @@ const PCG_MULTIPLIER = 747796405u;
 fn randomU32(seed: u32) -> u32 {
   let state = seed * PCG_MULTIPLIER + PCG_INC;
   let word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277803737u;
-  return u32((word >> 22u) ^ word);
+  return (word >> 22u) ^ word;
 }
 
 const range = 1.0 / f32(0xffffffffu);
