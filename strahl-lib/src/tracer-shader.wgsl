@@ -390,7 +390,7 @@ fn intersectsBVHNodeBounds(ray: Ray, currNodeIndex: u32, dist: ptr<function, f32
   return intersectsBounds(ray, boundsMin, boundsMax, dist);
 }
 
-fn intersectTriangles(offset: u32, count: u32, ray: Ray, hitRecord: ptr<function, HitRecord>) -> bool {
+fn intersectTriangles(offset: u32, count: u32, ray: Ray, rayT: Interval, hitRecord: ptr<function, HitRecord>) -> bool {
   var found = false;
   var localDist = hitRecord.t;
   let l = offset + count;
@@ -428,8 +428,7 @@ fn intersectTriangles(offset: u32, count: u32, ray: Ray, hitRecord: ptr<function
     let triangle = Triangle(Q, u, v, materialDefinition, normalX,normalY,normalZ);
 
     var tmpRecord: HitRecord;
-    // todo: reuse rayT.min
-    if (triangleHit(triangle, ray, Interval(0.0001, localDist), &tmpRecord)) {
+    if (triangleHit(triangle, ray, Interval(rayT.min, localDist), &tmpRecord)) {
       if (localDist < tmpRecord.t) {
         continue;
       }
@@ -481,6 +480,7 @@ fn hittableListHit(ray: Ray, rayT: Interval, hitRecord: ptr<function, HitRecord>
         offset,
         count,
         ray,
+        rayT,
         hitRecord
       );
       if (found2) {
@@ -1174,6 +1174,8 @@ fn evaluateEdf(material: Material) -> vec3f {
   return material.emissionColor * material.emissionLuminance;
 }
 
+const TRIANGLE_MIN_DISTANCE_THRESHOLD = 0.0005;
+
 fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec4f {
   var hitRecord: HitRecord;
   var ray = cameraRay;
@@ -1191,7 +1193,7 @@ fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec4f {
 
   for (var i = 0; i < maxDepth; i += 1) {
     hitRecord.t = 99999999999999999999.0;
-    let hit = hittableListHit(ray, Interval(0.001, 0xfffffffffffffff), &hitRecord);
+    let hit = hittableListHit(ray, Interval(TRIANGLE_MIN_DISTANCE_THRESHOLD, 0xfffffffffffffff), &hitRecord);
 
     // todo: consider normal handling
 
