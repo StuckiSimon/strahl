@@ -1194,7 +1194,7 @@ fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec4f {
 
   for (var i = 0; i < maxDepth; i += 1) {
     hitRecord.t = TRIANGLE_MAX_DISTANCE_THRESHOLD;
-    let hit = hittableListHit(ray, Interval(TRIANGLE_MIN_DISTANCE_THRESHOLD, 0xfffffffffffffff), &hitRecord);
+    let hit = hittableListHit(ray, Interval(TRIANGLE_MIN_DISTANCE_THRESHOLD, TRIANGLE_MAX_DISTANCE_THRESHOLD), &hitRecord);
 
     // todo: consider normal handling
 
