@@ -272,6 +272,19 @@ A bounding box ($b$) can be defined as $b = (min, max)$ where $min$ and $max$ ar
 
 \subsubsection{Importance Sampling}
 
+\subsubsection{Russian Roulette}
+
+Russian roulette is a technique for improving efficiency by employing probabilistic path termination. It selectively discards paths with low expected radiance contribution. If a path contributes zero radiance to the final image, it can be terminated early without affecting the radiance of the final image. However, if the path has a small but non-zero contribution, discarding it introduces bias into the calculation. Russian roulette solves this by introducing a probability of termination which is inversely proportional to the radiance of the path. Paths with low radiance are more likely to be terminated. Paths which are continued are scaled by the inverse probability of termination. This ensures to account for the bias introduced by the termination.
+
+Mathematically Russian roulette is commonly formulated as shown in equation \ref{eqn:russian-roulette} \cite{Pharr_Physically_Based_Rendering_2023}.
+
+\begin{equation}
+  \label{eqn:russian-roulette}
+  I' = \begin{cases} \frac{I-qc}{1-q} & \xi > q \\ c & otherwise \end{cases}
+\end{equation}
+  
+where $I$ is the radiance of the path. $q$ is the probability of termination, which can be calculated for example based on the radiance of the path. $\xi$ is a random number between 0 and 1. $c$ is the contribution of the path which is terminated, commonly set to zero. $I'$ is the scaled radiance of the path.
+
 \subsubsection{Hybrid Approaches}
 
 Ray Tracing and Rasterization are not mutually exclusive. Hybrid approaches have been developed which leverage a multi-paradigm approach. One such example is PICA PICA, a real-time ray tracing experiment developed by Nvidia \cite{hybridRenderingBarreBrisebois2019}. The rendering pipeline is split into multiple stages, consisting of global illumination, shadow, reflection, direct lighting. Each stage could be implemented using different techniques where the strategy could be chosen based on the requirements of the scene as well as the available computational resources.
