@@ -575,6 +575,7 @@ async function runPathTracer(target: string, model: any) {
   initLog.end();
 
   const TARGET_SAMPLES = 300;
+  const SAMPLES_PER_ITERATION = 1;
 
   const renderLoopStart = logGroup("render loop full");
   const buildRenderLoop = () => {
@@ -607,8 +608,6 @@ async function runPathTracer(target: string, model: any) {
         usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
         // mappedAtCreation: true,
       });
-
-      const SAMPLES_PER_ITERATION = 1;
 
       uniformData.set({
         invProjectionMatrix: invProjectionMatrix.elements,
