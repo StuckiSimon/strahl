@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebGPU Path Tracer Benchmark</title>
+  </head>
+  <body>
+    <h1>Benchmark Test ✨</h1>
+    <p>
+      Click <i>Start</i> button to run the benchmark test, while running, the
+      benchmark will reload the window a bunch of times.
+    </p>
+    <p>The test is expected to take between <b>10 and 20 minutes</b>.</p>
+    <p>Setup Instructions:</p>
+    <ul>
+      <li>Close all programs and background processes.</li>
+      <li>Ensure your computer is set to high-performance mode.</li>
+      <li>
+        Don't interact with the computer during the benchmark run except to
+        prevent sleep mode.
+      </li>
+    </ul>
+    <p>
+      When the test is finished, the canvas will remain blank and the detailed
+      report is ready to export at the bottom of the page (may need to scroll
+      down).
+    </p>
+    <button id="reset-button">Reset</button>
+    <button id="start-button">Start</button>
+    <div id="test-button-container"></div>
+    <div>
+      <canvas width="512" height="512" id="render-target"></canvas>
+    </div>
+    <script type="module" src="/src/benchmark.ts"></script>
+  </body>
+</html>
