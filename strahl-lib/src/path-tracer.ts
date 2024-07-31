@@ -49,6 +49,8 @@ async function runPathTracer(
       -0.12281675587652569, 0.9278121458340784, 0, 63.44995297630283,
       -44.22427925573443, 209.99999999999994, 1,
     ],
+    fov = 38.6701655,
+    finishedSampling,
   } = {},
 ) {
   const TARGET_SAMPLES = targetSamples;
@@ -234,7 +236,7 @@ async function runPathTracer(
   );
   matrixWorld.transpose();
 
-  const camera = new PerspectiveCamera(38, 1, 0.01, 1000);
+  const camera = new PerspectiveCamera(fov, 1, 0.01, 1000);
   const controls = new OrbitControls(camera, canvas);
   camera.matrixAutoUpdate = false;
   camera.applyMatrix4(matrixWorld);
@@ -250,6 +252,7 @@ async function runPathTracer(
 
   controls.update();
 
+  const cpuLogGroup = logGroup("cpu");
   const boundsTree = new MeshBVH(reducedModel.geometry, {
     // This property is not officially supported by three-mesh-bvh just yet
     // @ts-ignore
@@ -257,6 +260,7 @@ async function runPathTracer(
   });
 
   const { boundsArray, contentsArray } = bvhToTextures(boundsTree);
+  const bvhBuildTime = cpuLogGroup.end();
 
   const meshPositions = boundsTree.geometry.attributes.position.array;
 
@@ -588,7 +592,6 @@ async function runPathTracer(
 
   initLog.end();
 
-  const TARGET_SAMPLES = 300;
   const SAMPLES_PER_ITERATION = 1;
 
   const renderLoopStart = logGroup("render loop full");
@@ -600,6 +603,7 @@ async function runPathTracer(
     let currentAnimationFrameRequest: number | null = null;
     let currentSample = 0;
     let renderAgg = 0;
+    let renderTimes = [];
 
     const render = async () => {
       const matrixWorld = camera.matrixWorld;
@@ -759,7 +763,9 @@ async function runPathTracer(
         timestampQueryResultBuffer.unmap();
       }
 
-      renderAgg += renderLog.end();
+      const currentRenderTime = renderLog.end();
+      renderTimes.push(currentRenderTime);
+      renderAgg += currentRenderTime;
 
       if (currentSample < TARGET_SAMPLES && !isHalted()) {
         currentSample++;
@@ -767,9 +773,16 @@ async function runPathTracer(
       } else {
         console.log("Average render time", renderAgg / TARGET_SAMPLES);
         currentAnimationFrameRequest = null;
-        renderLoopStart.end();
+        const fullRenderLoopTime = renderLoopStart.end();
 
         state = "halted";
+
+        finishedSampling?.({
+          bvhBuildTime,
+          fullRenderLoopTime,
+          allRenderTime: renderAgg,
+          renderTimes: renderTimes,
+        });
       }
     };
     currentAnimationFrameRequest = requestAnimationFrame(render);
