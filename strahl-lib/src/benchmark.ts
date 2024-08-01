@@ -291,6 +291,18 @@ async function main() {
     window.location.reload();
   });
 
+  document
+    .getElementById("start-button-high-only")
+    ?.addEventListener("click", () => {
+      localStorage.setItem(
+        "strahl-path-tracer-state",
+        JSON.stringify({
+          max: [],
+        }),
+      );
+      window.location.reload();
+    });
+
   // @ts-ignore
   let state = JSON.parse(localStorage.getItem("strahl-path-tracer-state"));
   console.log(state);
@@ -300,15 +312,19 @@ async function main() {
     return;
   }
 
-  const RUNS = 30;
-  const totalRuns = RUNS * 3;
-  const hasStillSomeRunsToDo =
-    state.max.length < RUNS ||
-    state.mid.length < RUNS ||
-    state.min.length < RUNS;
+  const runKeys = ["max", "mid", "min"];
+  const activeRuns = runKeys.filter((key) => Array.isArray(state[key]));
 
-  const runsAlreadyDone =
-    state.max.length + state.mid.length + state.min.length;
+  const RUNS = 30;
+  const totalRuns = RUNS * activeRuns.length;
+  const hasStillSomeRunsToDo = activeRuns.some(
+    (key) => state[key].length < RUNS,
+  );
+
+  const runsAlreadyDone = activeRuns.reduce(
+    (acc, key) => acc + state[key].length,
+    0,
+  );
 
   const reportDiv = document.createElement("div");
   let text = `${runsAlreadyDone} / ${totalRuns} runs already done`;
@@ -347,14 +363,15 @@ async function main() {
   }
 
   const itemWithFewestRuns = Math.min(
-    state.max.length,
-    state.mid.length,
-    state.min.length,
+    state.max?.length ?? Infinity,
+    state.mid?.length ?? Infinity,
+    state.min?.length ?? Infinity,
   );
+
   const target =
-    itemWithFewestRuns === state.max.length
+    itemWithFewestRuns === state.max?.length
       ? 0
-      : itemWithFewestRuns === state.mid.length
+      : itemWithFewestRuns === state.mid?.length
         ? 1
         : 2;
 
