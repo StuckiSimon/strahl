@@ -125,9 +125,28 @@ Unless otherwise specified, the benchmarks are conducted on a MacBook Pro with A
 
 \begin{figure}[H]
     \includegraphics[width=0.9\columnwidth]{resources/benchmark-models.png}
-    \caption{The three LOD artifacts, from left to right: 1,068,735 triangles, 106,873 triangles, 10,687 triangles. The left and middle figures share similar visual fidelity characteristics.}
+    \caption{The three LOD artifacts and their short names in brackets, from left to right: 1,068,735 triangles (high), 106,873 triangles (mid), 10,687 triangles (low). The left and middle figures share similar visual fidelity characteristics.}
     \label{fig:benchmark-models}
 \end{figure}
+
+\subsection{Russian Roulette}
+
+As described in \autoref{ch:russianRoulette}, Russian roulette is a technique used to do probabilistic path termination. The code is implemented in \coderef{RUSSIAN-ROULETTE}. The benchmark results are shown in \autoref{tab:russian-roulette-measurements}.
+
+\begin{table}[H]
+    \centering
+    \ra{1.3}
+    \begin{tabular}{@{}lll@{}}
+    \toprule
+    & With Russian roulette & Without Russian roulette \\
+    High & 2361.77 ms $\pm$ 11.27 ms & 2583.40 ms $\pm$ 12.84 ms \\
+    Mid & 2018.03 ms $\pm$ 8.76 ms & 2135.94 ms $\pm$ 8.14 ms \\
+    Low & 2028.04 ms $\pm$ 10.78 ms & 2200.00 ms $\pm$ 8.91 ms \\
+    \bottomrule
+    \end{tabular}
+    \caption{Benchmark results for Russian roulette optimization.}
+    \label{tab:russian-roulette-measurements}
+\end{table}
 
 \section{Use Case Scenarios}
 \section{Performance}
