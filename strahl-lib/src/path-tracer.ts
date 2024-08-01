@@ -338,14 +338,21 @@ async function runPathTracer(
   contentsData.set(contentsArray);
   contentsBuffer.unmap();
 
+  // Prepare random seed data
+  const randomSeedData = new Uint32Array(kTextureWidth * kTextureHeight);
+  for (let i = 0; i < randomSeedData.length; i++) {
+    randomSeedData[i] = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+  }
+
   // todo: reconsider type cast
   // Prepare BVH indirect buffer
   const indirectBuffer = device.createBuffer({
     label: "BVH indirect buffer",
     size:
       Uint32Array.BYTES_PER_ELEMENT *
-      (boundsTree as unknown as { _indirectBuffer: ArrayLike<number> })
-        ._indirectBuffer.length,
+      ((boundsTree as unknown as { _indirectBuffer: ArrayLike<number> })
+        ._indirectBuffer.length +
+        +randomSeedData.length),
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
     mappedAtCreation: true,
   });
@@ -357,7 +364,16 @@ async function runPathTracer(
     (boundsTree as unknown as { _indirectBuffer: ArrayLike<number> })
       ._indirectBuffer,
   );
+  indirectData.set(
+    randomSeedData,
+    (boundsTree as unknown as { _indirectBuffer: ArrayLike<number> })
+      ._indirectBuffer.length,
+  );
   indirectBuffer.unmap();
+
+  const indirectBufferOffset = (
+    boundsTree as unknown as { _indirectBuffer: ArrayLike<number> }
+  )._indirectBuffer.length;
 
   // Prepare Object Definitions
   const OBJECT_DEFINITION_SIZE_PER_ENTRY = Uint32Array.BYTES_PER_ELEMENT * 3;
@@ -642,6 +658,7 @@ async function runPathTracer(
         sunColor: sunConfig.sunColor,
         clearColor: [1.0, 1.0, 1.0],
         enableClearColor: 1,
+        indirectBufferOffset,
         illuminationFactor: 2.4,
       });
       // todo: consider buffer writing

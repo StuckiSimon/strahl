@@ -40,6 +40,7 @@ struct UniformData {
   clearColor: Color,
   // bool is not supported in uniform
   enableClearColor: i32,
+  indirectBufferOffset: u32,
   illuminationFactor: f32,
 }
 
@@ -1348,9 +1349,10 @@ fn getPixelJitter(seed: ptr<function, u32>) -> vec2f {
 @compute
 @workgroup_size(${maxWorkgroupDimension}, ${maxWorkgroupDimension}, 1)
 fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
-  var seed = local_id.x + local_id.y * ${imageWidth};
-  xorshift32(&seed);
-  seed ^= uniformData.seedOffset;
+  let indicesOffset = uniformData.indirectBufferOffset;
+  let baseSeed = indirectIndices[indicesOffset + local_id.x + local_id.y * ${imageWidth}];
+
+  var seed = baseSeed;
   
   let i = f32(local_id.x);
   let j = f32(local_id.y);
@@ -1372,4 +1374,6 @@ fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
 
   
   writeColor(pixelColor, i32(local_id.x), i32(local_id.y), samplesPerPixel);
+
+  indirectIndices[indicesOffset + local_id.x + local_id.y * ${imageWidth}] = seed;
 }
