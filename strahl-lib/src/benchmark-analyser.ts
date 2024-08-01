@@ -5,9 +5,9 @@ type ReportEntry = {
 };
 
 type ReportStructure = {
-  max: ReportEntry[];
-  mid: ReportEntry[];
-  min: ReportEntry[];
+  max?: ReportEntry[];
+  mid?: ReportEntry[];
+  min?: ReportEntry[];
 };
 
 function getStandardDeviation(list: number[]) {
@@ -49,70 +49,58 @@ function calculateConfidenceIntervalForSamples(items: number[]) {
 export default function getStatsForReportStructure(
   reportStructure: ReportStructure,
 ) {
-  const averageBvhBuildTimeMax = getSampleMean(
-    reportStructure.max.map((entry) => entry.bvhBuildTime),
-  );
-  const averageBvhBuildTimeMid = getSampleMean(
-    reportStructure.mid.map((entry) => entry.bvhBuildTime),
-  );
-  const averageBvhBuildTimeMin = getSampleMean(
-    reportStructure.min.map((entry) => entry.bvhBuildTime),
-  );
-  const { marginOfError: marginOfErrorBvhBuildTimeMax } =
-    calculateConfidenceIntervalForSamples(
-      reportStructure.max.map((entry) => entry.bvhBuildTime),
-    );
+  const knownKeys = ["max", "mid", "min"] as const;
+  const MAX_KEY = 0;
+  const MID_KEY = 1;
+  const MIN_KEY = 2;
+  const activeStructures = knownKeys.filter((key) => reportStructure[key]);
 
-  const { marginOfError: marginOfErrorBvhBuildTimeMid } =
-    calculateConfidenceIntervalForSamples(
-      reportStructure.mid.map((entry) => entry.bvhBuildTime),
-    );
+  const orderedAverageBvhBuildTimes = activeStructures.map((key) =>
+    getSampleMean(reportStructure[key].map((entry) => entry.bvhBuildTime)),
+  );
 
-  const { marginOfError: marginOfErrorBvhBuildTimeMin } =
-    calculateConfidenceIntervalForSamples(
-      reportStructure.min.map((entry) => entry.bvhBuildTime),
-    );
+  const orderedMarginOfErrorBvhBuildTimes = activeStructures.map(
+    (key) =>
+      calculateConfidenceIntervalForSamples(
+        reportStructure[key].map((entry) => entry.bvhBuildTime),
+      ).marginOfError,
+  );
 
-  const averageAllRenderTimeMax = getSampleMean(
-    reportStructure.max.map((entry) => entry.allRenderTime),
+  const orderedAverageAllRenderTimes = activeStructures.map((key) =>
+    getSampleMean(reportStructure[key].map((entry) => entry.allRenderTime)),
   );
-  const averageAllRenderTimeMid = getSampleMean(
-    reportStructure.mid.map((entry) => entry.allRenderTime),
+
+  const orderedMarginOfErrorAllRenderTimes = activeStructures.map(
+    (key) =>
+      calculateConfidenceIntervalForSamples(
+        reportStructure[key].map((entry) => entry.allRenderTime),
+      ).marginOfError,
   );
-  const averageAllRenderTimeMin = getSampleMean(
-    reportStructure.min.map((entry) => entry.allRenderTime),
-  );
-  const { marginOfError: marginOfErrorAllRenderTimeMax } =
-    calculateConfidenceIntervalForSamples(
-      reportStructure.max.map((entry) => entry.allRenderTime),
-    );
-  const { marginOfError: marginOfErrorAllRenderTimeMid } =
-    calculateConfidenceIntervalForSamples(
-      reportStructure.mid.map((entry) => entry.allRenderTime),
-    );
-  const { marginOfError: marginOfErrorAllRenderTimeMin } =
-    calculateConfidenceIntervalForSamples(
-      reportStructure.min.map((entry) => entry.allRenderTime),
-    );
 
   return {
     max: {
-      averageBvhBuildTime: averageBvhBuildTimeMax.toFixed(2),
-      marginOfErrorBvhBuildTime: marginOfErrorBvhBuildTimeMax.toFixed(2),
-      averageAllRenderTime: averageAllRenderTimeMax.toFixed(2),
-      marginOfErrorAllRenderTime: marginOfErrorAllRenderTimeMax.toFixed(2),
+      averageBvhBuildTime: orderedAverageBvhBuildTimes[MAX_KEY]?.toFixed(2),
+      marginOfErrorBvhBuildTime:
+        orderedMarginOfErrorBvhBuildTimes[MAX_KEY]?.toFixed(2),
+      averageAllRenderTime: orderedAverageAllRenderTimes[MAX_KEY]?.toFixed(2),
+      marginOfErrorAllRenderTime:
+        orderedMarginOfErrorAllRenderTimes[MAX_KEY]?.toFixed(2),
     },
     mid: {
-      averageBvhBuildTime: averageBvhBuildTimeMid.toFixed(2),
-      marginOfErrorBvhBuildTime: marginOfErrorBvhBuildTimeMid.toFixed(2),
-      averageAllRenderTime: averageAllRenderTimeMid.toFixed(2),
-      marginOfErrorAllRenderTime: marginOfErrorAllRenderTimeMid.toFixed(2),
+      averageBvhBuildTime: orderedAverageBvhBuildTimes[MID_KEY]?.toFixed(2),
+      marginOfErrorBvhBuildTime:
+        orderedMarginOfErrorBvhBuildTimes[MID_KEY]?.toFixed(2),
+      averageAllRenderTime: orderedAverageAllRenderTimes[MID_KEY]?.toFixed(2),
+      marginOfErrorAllRenderTime:
+        orderedMarginOfErrorAllRenderTimes[MID_KEY]?.toFixed(2),
     },
     min: {
-      averageBvhBuildTime: averageBvhBuildTimeMin.toFixed(2),
-      marginOfErrorBvhBuildTime: marginOfErrorBvhBuildTimeMin.toFixed(2),
-      averageAllRenderTime: averageAllRenderTimeMin.toFixed(2),
-      marginOfErrorAllRenderTime: marginOfErrorAllRenderTimeMin.toFixed(2),
+      averageBvhBuildTime: orderedAverageBvhBuildTimes[MIN_KEY]?.toFixed(2),
+      marginOfErrorBvhBuildTime:
+        orderedMarginOfErrorBvhBuildTimes[MIN_KEY]?.toFixed(2),
+      averageAllRenderTime: orderedAverageAllRenderTimes[MIN_KEY]?.toFixed(2),
+      marginOfErrorAllRenderTime:
+        orderedMarginOfErrorAllRenderTimes[MIN_KEY]?.toFixed(2),
     },
   };
 }
