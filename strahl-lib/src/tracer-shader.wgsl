@@ -1271,6 +1271,7 @@ fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec4f {
 
     throughput *= surfaceThroughput;
 
+    // CODE#RUSSIAN-ROULETTE
     // Russian Roulette
     if (maxVec3(throughput) < 1.0 && i > 1) {
       let q = max(0.0, 1.0 - maxVec3(throughput));
