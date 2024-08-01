@@ -1355,7 +1355,7 @@ fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
   let i = f32(local_id.x);
   let j = f32(local_id.y);
   
-  var pixelColor = vec4f(0.0, 0.0, 0.0, 0.0);
+  var pixelColor = vec4f(0.0);
   
   let samplesPerPixel = i32(uniformData.samplesPerPixel);
   for (var sample = 0; sample < samplesPerPixel; sample += 1) {
