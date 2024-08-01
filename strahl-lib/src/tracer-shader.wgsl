@@ -1330,15 +1330,6 @@ fn ndcToCameraRay(coord: vec2f, cameraWorld: mat4x4<f32>, invProjectionMatrix: m
   );
 }
 
-fn xorshift32(seed: ptr<function, u32>) -> u32 {
-  var x = (*seed);
-  x ^= x << 13;
-  x ^= x >> 17;
-  x ^= x << 5;
-  (*seed) = x;
-  return x;
-}
-
 fn getPixelJitter(seed: ptr<function, u32>) -> vec2f {
   let jitterX = 0.5 * sampleTriangleFilter(randomF32(seed));
   let jitterY = 0.5 * sampleTriangleFilter(randomF32(seed));
@@ -1349,7 +1340,6 @@ fn getPixelJitter(seed: ptr<function, u32>) -> vec2f {
 @workgroup_size(${maxWorkgroupDimension}, ${maxWorkgroupDimension}, 1)
 fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
   var seed = local_id.x + local_id.y * ${imageWidth};
-  xorshift32(&seed);
   seed ^= uniformData.seedOffset;
   
   let i = f32(local_id.x);
