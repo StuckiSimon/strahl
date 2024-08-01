@@ -114,5 +114,20 @@ The implementation of the strategy indicated in \ref{sec:anti-aliasing} is imple
 
 \subsection{WebGPU}
 \subsection{Integration}
+
+\section{Benchmark}
+
+In order to assess the effectiveness of certain measures, a benchmark is defined to measure the performance of the path tracer. This benchmark is used for quantitative evaluation of the path tracer. Prior sections, such as anti-aliasing as described in \autoref{sec:anti-aliasing-implementation} focused on qualitative aspects of the path tracer. Depending on the use case, the benchmark can be adjusted to focus on different aspects. However, the core design of the benchmark remains the same.
+
+A total of 100 samples per pixel with a ray depth of five was used. The image was rendered in Chrome 126 at a resolution of 512$\times$512 pixels. Experiments were conducted with different model complexities. The simplified versions are decimated meshes of the original, which consists of roughly one million triangles. The LOD artifacts are shown in Figure~\ref{fig:benchmark-models}. The first two levels are intended to be visually similar, while the third level is a simplified version intended to demonstrate the effect of non-manifold geometry for ray tracing.
+
+Unless otherwise specified, the benchmarks are conducted on a MacBook Pro with Apple Silicon M1 Max.
+
+\begin{figure}[H]
+    \includegraphics[width=0.9\columnwidth]{resources/benchmark-models.png}
+    \caption{The three LOD artifacts, from left to right: 1,068,735 triangles, 106,873 triangles, 10,687 triangles. The left and middle figures share similar visual fidelity characteristics.}
+    \label{fig:benchmark-models}
+\end{figure}
+
 \section{Use Case Scenarios}
 \section{Performance}
