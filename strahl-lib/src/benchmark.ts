@@ -2,6 +2,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { logGroup } from "./cpu-performance-logger";
 import { OpenPBRMaterial } from "./openpbr-material";
 import runPathTracer from "./path-tracer";
+import getStatsForReportStructure from "./benchmark-analyser";
 
 const MODEL_URL_FULL = "models/series-61-rotated/61-serie-edit.gltf"; // 1'068'735
 const MODEL_URL_BARE_BONES = "models/series-61-simplified-2/61-serie-edit.gltf"; // 10'687
@@ -321,6 +322,10 @@ async function main() {
     const gpuInfo = await initWebGPUReport();
 
     const fullReport = { ...gpuInfo, ...state };
+
+    const stats = getStatsForReportStructure(fullReport);
+    console.log(stats);
+    console.table(stats);
 
     const downloadButton = document.createElement("button");
     downloadButton.textContent = "Download report";
