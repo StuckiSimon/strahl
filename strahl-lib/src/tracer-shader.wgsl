@@ -1164,8 +1164,82 @@ fn sampleBsdf(pW: vec3f, basis: Basis, winputL: vec3f, lobeData: LobeData, mater
   return vec3f(0);
 }
 
+fn evaluateBsdf(pW: vec3f, basis: Basis, winputL: vec3f, woutputL: vec3f, lobeData: LobeData, material: Material, pdfWoutputL: ptr<function, f32>) -> vec3f {
+  var pdfs: LobePDFs;
+  let f = openpbrBsdfEvaluateLobes(pW, basis, material, winputL, woutputL, -1, lobeData, &pdfs);
+  (*pdfWoutputL) = openpbrBsdfTotalPdf(pdfs, lobeData);
+  
+  return f;
+}
+
 fn evaluateEdf(material: Material) -> vec3f {
   return material.emissionColor * material.emissionLuminance;
+}
+
+fn sunSample(basis: Basis, sunBasis: Basis, woutputL: ptr<function, vec3f>, woutputW: ptr<function, vec3f>, pdfDir: ptr<function, f32>, seed: ptr<function, u32>) -> vec3f {
+  let thetaMax = uniformData.sunAngularSize * PI/180.0;
+  let theta = thetaMax * sqrt(randomF32(seed));
+  let cosTheta = cos(theta);
+  let sinTheta = sqrt(max(0, 1.0-cosTheta*cosTheta));
+  let phi = 2.0 * PI * randomF32(seed);
+  let cosPhi = cos(phi);
+  let sinPhi = sin(phi);
+  let x = sinTheta * cosPhi;
+  let y = sinTheta * sinPhi;
+  let z = cosTheta;
+  let solidAngle = 2.0 * PI * (1.0 - cos(thetaMax));
+  *pdfDir = 1.0 / solidAngle;
+  *woutputW = localToWorld(vec3f(x, y, z), sunBasis);
+  *woutputL = worldToLocal(*woutputW, basis);
+  return uniformData.sunPower * uniformData.sunColor;
+}
+
+fn skySample(basis: Basis, woutputL: ptr<function, vec3f>, woutputW: ptr<function, vec3f>, pdfDir: ptr<function, f32>, seed: ptr<function, u32>) -> vec3f {
+  *woutputL = sampleHemisphereCosineWeighted(pdfDir, seed);
+  *woutputW = localToWorld(*woutputL, basis);
+  return skyRadiance();
+}
+
+fn liDirect(pW: vec3f, basis: Basis, sunBasis: Basis, shadowL: ptr<function, vec3f>, shadowW: ptr<function, vec3f>, lightPdf: ptr<function, f32>, seed: ptr<function, u32>) -> vec3f {
+  var Li: vec3f;
+
+  let wSun = sunTotalPower();
+  let wSky = skyTotalPower();
+  let pSun = wSun / (wSun + wSky);
+  let pSky = max(0.0, 1.0 - pSun);
+  var pdfSun: f32;
+  var pdfSky: f32;
+  let r = randomF32(seed);
+  if (r < pSun) {
+    Li = sunSample(basis, sunBasis, shadowL, shadowW, &pdfSun, seed);
+    Li += skyRadiance();
+    pdfSky = skyPdf(*shadowL, *shadowW);
+  } else {
+    Li = skySample(basis, shadowL, shadowW, &pdfSky, seed);
+    Li += sunRadiance(*shadowW);
+    pdfSun = sunPdf(*shadowL, *shadowW);
+  }
+  *lightPdf = pSun * pdfSun + pSky * pdfSky;
+
+  if (shadowL.z < 0) {
+    return vec3f(0);
+  }
+  if (maxVec3(Li) < RADIANCE_EPSILON) {
+    return vec3f(0);
+  }
+
+  let occluded = isOccluded(Ray(pW, *shadowW), TRIANGLE_MAX_DISTANCE_THRESHOLD);
+  if (occluded) {
+    
+  }
+  let visibility = select(1.0, 0.0, occluded);
+
+  return visibility * Li;
+}
+
+fn isOccluded(ray: Ray, maxDistance: f32) -> bool {
+    var hitRecord = HitRecord();
+    return hittableListHit(ray, Interval(TRIANGLE_MIN_DISTANCE_THRESHOLD, TRIANGLE_MAX_DISTANCE_THRESHOLD), &hitRecord);
 }
 
 const TRIANGLE_MIN_DISTANCE_THRESHOLD = 0.0005;
@@ -1260,7 +1334,16 @@ fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec4f {
     }
 
     if (!inDielectric && !transmitted) {
-      // todo: 
+      var shadowL: vec3f;
+      var shadowW: vec3f;
+      var lightPdf: f32;
+      let Li = liDirect(pW, basis, sunBasis, &shadowL, &shadowW, &lightPdf, seed);
+      if (maxVec3(Li) > RADIANCE_EPSILON) {
+        var bsdfPdfShadow = PDF_EPSILON;
+        let fShadow = evaluateBsdf(pW, basis, winputL, shadowL, lobeData, material, &bsdfPdfShadow);
+        let misWeightLight = powerHeuristic(lightPdf, bsdfPdfShadow);
+        L += throughput * misWeightLight * fShadow * abs(dot(shadowW, basis.nW)) * Li / max(PDF_EPSILON, lightPdf);
+      }
     }
 
     throughput *= surfaceThroughput;
