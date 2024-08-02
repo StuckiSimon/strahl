@@ -1200,7 +1200,7 @@ fn skySample(basis: Basis, woutputL: ptr<function, vec3f>, woutputW: ptr<functio
   return skyRadiance();
 }
 
-fn liDirect(pW: vec3f, basis: Basis, sunBasis: Basis, shadowL: ptr<function, vec3f>, shadowW: ptr<function, vec3f>, lightPdf: ptr<function, f32>, seed: ptr<function, u32>) -> vec3f {
+fn getDirectLighting(pW: vec3f, basis: Basis, sunBasis: Basis, shadowL: ptr<function, vec3f>, shadowW: ptr<function, vec3f>, lightPdf: ptr<function, f32>, seed: ptr<function, u32>) -> vec3f {
   var Li: vec3f;
 
   let wSun = sunTotalPower();
@@ -1337,7 +1337,7 @@ fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec4f {
       var shadowL: vec3f;
       var shadowW: vec3f;
       var lightPdf: f32;
-      let Li = liDirect(pW, basis, sunBasis, &shadowL, &shadowW, &lightPdf, seed);
+      let Li = getDirectLighting(pW, basis, sunBasis, &shadowL, &shadowW, &lightPdf, seed);
       if (maxVec3(Li) > RADIANCE_EPSILON) {
         var bsdfPdfShadow = PDF_EPSILON;
         let fShadow = evaluateBsdf(pW, basis, winputL, shadowL, lobeData, material, &bsdfPdfShadow);
