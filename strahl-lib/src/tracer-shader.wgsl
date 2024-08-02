@@ -1071,19 +1071,22 @@ fn brdfEvaluatePlaceholder() -> vec3f {
   return vec3f(0.0);
 }
 
-fn openpbrBsdfEvaluateLobes(pW: vec3f, basis: Basis, material:Material, winputL: vec3f, woutputL: ptr<function, vec3f>, skipLobeId: i32, lobeData: LobeData, pdfs: ptr<function, LobePDFs>, seed: ptr<function, u32>
-) -> vec3f {
+fn openpbrBsdfEvaluateLobes(pW: vec3f, basis: Basis, material: Material, winputL: vec3f, woutputL: vec3f, skipLobeId: i32, lobeData: LobeData, pdfs: ptr<function, LobePDFs>) -> vec3f {
   var f = vec3f(0.0);
   if (skipLobeId != ID_FUZZ_BRDF && lobeData.probs.m[ID_FUZZ_BRDF] > 0.0) {
     f += vec3f(0.0);
-  } else if (skipLobeId != ID_COAT_BRDF && lobeData.probs.m[ID_COAT_BRDF] > 0.0) {
+  }
+  if (skipLobeId != ID_COAT_BRDF && lobeData.probs.m[ID_COAT_BRDF] > 0.0) {
     f += lobeData.weights.m[ID_COAT_BRDF] * brdfEvaluatePlaceholder();
-  } else if (skipLobeId != ID_META_BRDF && lobeData.probs.m[ID_META_BRDF] > 0.0) {
-    f += metalBrdfEvaluate(pW, basis, winputL, *woutputL, material, &pdfs.m[ID_META_BRDF]);
-  } else if (skipLobeId != ID_SPEC_BRDF && lobeData.probs.m[ID_SPEC_BRDF] > 0.0) {
-    f += lobeData.weights.m[ID_SPEC_BRDF] * specularBrdfEvaluate(material, pW, basis, winputL, *woutputL, &pdfs.m[ID_SPEC_BRDF]);
-  } else if (skipLobeId != ID_DIFF_BRDF && lobeData.probs.m[ID_DIFF_BRDF] > 0.0) {
-    f += lobeData.weights.m[ID_DIFF_BRDF] * diffuseBrdfEvaluate(material, pW, basis, winputL, *woutputL, &pdfs.m[ID_DIFF_BRDF]);
+  }
+  if (skipLobeId != ID_META_BRDF && lobeData.probs.m[ID_META_BRDF] > 0.0) {
+    f += metalBrdfEvaluate(pW, basis, winputL, woutputL, material, &pdfs.m[ID_META_BRDF]);
+  }
+  if (skipLobeId != ID_SPEC_BRDF && lobeData.probs.m[ID_SPEC_BRDF] > 0.0) {
+    f += lobeData.weights.m[ID_SPEC_BRDF] * specularBrdfEvaluate(material, pW, basis, winputL, woutputL, &pdfs.m[ID_SPEC_BRDF]);
+  }
+  if (skipLobeId != ID_DIFF_BRDF && lobeData.probs.m[ID_DIFF_BRDF] > 0.0) {
+    f += lobeData.weights.m[ID_DIFF_BRDF] * diffuseBrdfEvaluate(material, pW, basis, winputL, woutputL, &pdfs.m[ID_DIFF_BRDF]);
   }
 
   let evalSpecBtdf = skipLobeId != ID_SPEC_BTDF && lobeData.probs.m[ID_SPEC_BTDF] > 0.0;
@@ -1139,7 +1142,7 @@ fn sampleBsdf(pW: vec3f, basis: Basis, winputL: vec3f, lobeData: LobeData, mater
 
       var pdfs: LobePDFs;
       var skipLobeId = lobeId;
-      var f = openpbrBsdfEvaluateLobes(pW, basis, material, winputL, woutputL, skipLobeId, lobeData, &pdfs, seed);
+      var f = openpbrBsdfEvaluateLobes(pW, basis, material, winputL, *woutputL, skipLobeId, lobeData, &pdfs);
       f += lobeData.weights.m[lobeId] * fLobe;
 
       pdfs.m[lobeId] = pdfLobe;
