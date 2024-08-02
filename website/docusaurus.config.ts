@@ -54,7 +54,7 @@ const config: Config = {
           type: "docSidebar",
           sidebarId: "tutorialSidebar",
           position: "left",
-          label: "Tutorial",
+          label: "Documentation",
         },
         { to: "/blog", label: "Blog", position: "left" },
       ],
@@ -63,16 +63,20 @@ const config: Config = {
       style: "dark",
       links: [
         {
-          title: "Docs",
+          title: "Quick Navigation",
           items: [
             {
-              label: "Tutorial",
+              label: "Documentation",
               to: "/docs/intro",
+            },
+            {
+              label: "Blog",
+              to: "/blog",
             },
           ],
         },
         {
-          title: "Links",
+          title: "External",
           items: [
             {
               label: "GitHub",
@@ -81,10 +85,6 @@ const config: Config = {
             {
               label: "Twitter",
               href: "https://twitter.com/StuckiSimon",
-            },
-            {
-              label: "Blog",
-              to: "/blog",
             },
           ],
         },
