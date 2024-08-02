@@ -129,16 +129,7 @@ fn maxVec3(v: vec3f) -> f32 {
   return max(v.x, max(v.y, v.z));
 }
 
-// https://media.disneyanimation.com/uploads/production/publication_asset/48/asset/s2012_pbs_disney_brdf_notes_v3.pdf
-// Appendix B.2 Equation 13
 fn ggxNDF(H: vec3f, alpha: vec2<f32>) -> f32 {
-  let He = H.xy / alpha;
-  let denom = dot(He, He) + (H.z*H.z);
-  return 1.0 / (PI * alpha.x * alpha.y * denom * denom);
-}
-
-// todo: merge with ggxNDF
-fn ggxNDFV2(H: vec3f, alpha: vec2<f32>) -> f32 {
   let safeAlpha = clamp(alpha, vec2(DENOM_TOLERANCE, DENOM_TOLERANCE), vec2(1.0, 1.0));
   let Ddenom = PI * safeAlpha.x * safeAlpha.y * sqr(sqr(H.x/safeAlpha.x) + sqr(H.y/safeAlpha.y) + sqr(H.z));
   return 1.0 / max(Ddenom, DENOM_TOLERANCE);
@@ -675,7 +666,7 @@ fn metalBrdfSample(pW: vec3f, basis: Basis, winputL: vec3f, material: Material, 
   }
   (*woutputL) = rotatedToLocal(woutputR, rotation);
 
-  let D = ggxNDFV2(mR, alpha);
+  let D = ggxNDF(mR, alpha);
   let DV = D * ggxG1(winputR, alpha) * max(0.0, dot(winputR, mR)) / max(DENOM_TOLERANCE, winputR.z); // todo: should latter max term use abs for .z?
   
   let dwhDwo = 1.0 / max(abs(4.0*dot(winputR, mR)), DENOM_TOLERANCE);
