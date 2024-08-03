@@ -1,6 +1,6 @@
 import { Matrix4, PerspectiveCamera, Vector3 } from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { MeshBVH } from "three-mesh-bvh";
+import { getBVHExtremes, MeshBVH } from "three-mesh-bvh";
 import buildTracerShader from "./tracer-shader";
 import buildRenderShader from "./render-shader";
 import { logGroup } from "./cpu-performance-logger";
@@ -46,6 +46,10 @@ function prepareGeometry(model: any) {
     indirect: true,
   });
 
+  const extremes = getBVHExtremes(boundsTree);
+  const correspondingExtremesEntry = extremes[0];
+  const maxBvhDepth = correspondingExtremesEntry.depth.max;
+
   const { boundsArray, contentsArray } = bvhToTextures(boundsTree);
   const bvhBuildTime = cpuLogGroup.end();
 
@@ -70,6 +74,7 @@ function prepareGeometry(model: any) {
     meshIndices,
     modelGroups: reducedModel.geometry.groups,
     modelMaterials: reducedModel.materials,
+    maxBvhDepth,
     bvhBuildTime,
   };
 }
@@ -99,6 +104,7 @@ async function runPathTracer(
     contentsArray,
     positions,
     normals,
+    maxBvhDepth,
     modelGroups,
     modelMaterials,
     meshIndices,
@@ -166,6 +172,7 @@ async function runPathTracer(
     imageWidth,
     imageHeight,
     maxWorkgroupDimension,
+    maxBvhStackDepth: maxBvhDepth,
   });
 
   const textureData = new Uint8Array(kTextureWidth * kTextureHeight * 4);

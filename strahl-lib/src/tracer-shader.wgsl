@@ -432,9 +432,6 @@ fn intersectTriangles(offset: u32, count: u32, ray: Ray, rayT: Interval, hitReco
   return found;
 }
 
-// todo: lower is better, maybe this should be set based on the tree depth
-const maxBvhStackDepth = 60;
-
 fn hittableListHit(ray: Ray, rayT: Interval, hitRecord: ptr<function, HitRecord>) -> bool {
   var tempRecord: HitRecord;
   var hitAnything = false;
@@ -444,10 +441,10 @@ fn hittableListHit(ray: Ray, rayT: Interval, hitRecord: ptr<function, HitRecord>
   
   // BVH Intersection Detection
   var sPtr = 0;
-  var stack: array<u32, maxBvhStackDepth> = array<u32, maxBvhStackDepth>();
+  var stack: array<u32, ${maxBvhStackDepth}> = array<u32, ${maxBvhStackDepth}>();
   stack[sPtr] = 0u;
 
-  while (sPtr > -1 && sPtr < maxBvhStackDepth) {
+  while (sPtr > -1 && sPtr < ${maxBvhStackDepth}) {
     let currNodeIndex = stack[sPtr];
     sPtr -= 1;
 
