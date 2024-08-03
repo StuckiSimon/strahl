@@ -179,47 +179,6 @@ fn ggxG2(woL: vec3f, wiL: vec3f, alpha: vec2f) -> f32 {
   return 1.0 / (1.0 + ggxLambda(woL, alpha) + ggxLambda(wiL, alpha));
 }
 
-// Height-correlated Smith masking-shadowing
-// http://jcgt.org/published/0003/02/03/paper.pdf
-// Equations 72 and 99
-fn ggxSmithG2(NdotL: f32, NdotV: f32, alpha: f32) -> f32 {
-  let alpha2 = alpha * alpha;
-  let lambdaL = sqrt(alpha2 + (1.0 - alpha2) * (NdotL * NdotL));
-  let lambdaV = sqrt(alpha2 + (1.0 - alpha2) * (NdotV * NdotV));
-  return 2.0 / (lambdaL / NdotL + lambdaV / NdotV);
-}
-
-// todo: consider alternative DIRECTIONAL_ALBEDO_METHOD
-fn ggxDirAlbedo(NdotV: f32, alpha: f32, F0: vec3f, F90: vec3f) -> vec3f {
-  // Rational quadratic fit to Monte Carlo data for GGX directional albedo.
-  let x = NdotV;
-  let y = alpha;
-  let x2 = x * x;
-  let y2 = y * y;
-  let r = vec4(0.1003, 0.9345, 1.0, 1.0) +
-          vec4(-0.6303, -2.323, -1.765, 0.2281) * x +
-          vec4(9.748, 2.229, 8.263, 15.94) * y +
-          vec4(-2.038, -3.748, 11.53, -55.83) * x * y +
-          vec4(29.34, 1.424, 28.96, 13.08) * x2 +
-          vec4(-8.245, -0.7684, -7.507, 41.26) * y2 +
-          vec4(-26.44, 1.436, -36.11, 54.9) * x2 * y +
-          vec4(19.99, 0.2913, 15.86, 300.2) * x * y2 +
-          vec4(-5.448, 0.6286, 33.37, -285.1) * x2 * y2;
-  let AB = clamp(r.xy / r.zw, vec2(0.0, 0.0), vec2(1.0, 1.0));
-  return F0 * AB.x + F90 * AB.y;
-}
-
-fn ggxDirAlbedoFloat(NdotV: f32, alpha: f32, F0: f32, F90: f32) -> f32 {
-  return ggxDirAlbedo(NdotV, alpha, vec3f(F0), vec3f(F90)).x;
-}
-
-// https://blog.selfshadow.com/publications/turquin/ms_comp_final.pdf
-// Equations 14 and 16
-fn ggxEnergyCompensation(NdotV: f32, alpha: f32, Fss: vec3f) -> vec3f {
-  let Ess = ggxDirAlbedoFloat(NdotV, alpha, 1.0, 1.0);
-  return 1.0 + Fss * (Ess - 1.0) / Ess;
-}
-
 struct BsdfResponse {
   response: vec3f,
   throughput: vec3f,
