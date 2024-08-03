@@ -676,7 +676,7 @@ async function runPathTracer(
         sunColor: sunConfig.sunColor,
         clearColor: [1.0, 1.0, 1.0],
         enableClearColor: 1,
-        illuminationFactor: 2.4,
+        maxRayDepth: 5,
       });
       // todo: consider buffer writing
       device.queue.writeBuffer(uniformBuffer, 0, uniformData.arrayBuffer);

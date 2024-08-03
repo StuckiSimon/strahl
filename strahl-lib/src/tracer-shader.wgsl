@@ -41,6 +41,7 @@ struct UniformData {
   // bool is not supported in uniform
   enableClearColor: i32,
   illuminationFactor: f32,
+  maxRayDepth: i32,
 }
 
 @group(0) @binding(0) var<storage, read_write> positions: array<f32>;
@@ -63,8 +64,6 @@ struct UniformData {
 @group(1) @binding(1) var readTexture: texture_storage_2d<rgba8unorm, read>;
 
 @group(1) @binding(2) var<uniform> uniformData: UniformData;
-
-const maxDepth = 10;
 
 const MINIMUM_FLOAT_EPSILON = 1e-8;
 const FLT_EPSILON = 1.1920929e-7;
@@ -1257,7 +1256,7 @@ fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec4f {
 
   var inDielectric = false;
 
-  for (var i = 0; i < maxDepth; i += 1) {
+  for (var i = 0; i < uniformData.maxRayDepth; i += 1) {
     hitRecord.t = TRIANGLE_MAX_DISTANCE_THRESHOLD;
     let hit = hittableListHit(ray, Interval(TRIANGLE_MIN_DISTANCE_THRESHOLD, TRIANGLE_MAX_DISTANCE_THRESHOLD), &hitRecord);
 
