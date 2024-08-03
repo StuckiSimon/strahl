@@ -37,6 +37,43 @@ function getSunDirection() {
   return [x, y, z];
 }
 
+function prepareGeometry(model: any) {
+  const reducedModel = consolidateMesh([model.scene]);
+  const cpuLogGroup = logGroup("cpu");
+  const boundsTree = new MeshBVH(reducedModel.geometry, {
+    // This property is not officially supported by three-mesh-bvh just yet
+    // @ts-ignore
+    indirect: true,
+  });
+
+  const { boundsArray, contentsArray } = bvhToTextures(boundsTree);
+  const bvhBuildTime = cpuLogGroup.end();
+
+  const meshPositions = boundsTree.geometry.attributes.position.array;
+  const positions = meshPositions;
+
+  const meshIndices = boundsTree.geometry.index!.array;
+
+  const normals = boundsTree.geometry.attributes.normal.array;
+
+  return {
+    // todo: reconsider type cast
+    indirectBuffer: (
+      boundsTree as unknown as {
+        _indirectBuffer: ArrayLike<number>;
+      }
+    )._indirectBuffer,
+    boundsArray,
+    contentsArray,
+    positions,
+    normals,
+    meshIndices,
+    modelGroups: reducedModel.geometry.groups,
+    modelMaterials: reducedModel.materials,
+    bvhBuildTime,
+  };
+}
+
 async function runPathTracer(
   target: string,
   model: any,
@@ -55,6 +92,19 @@ async function runPathTracer(
 ) {
   const TARGET_SAMPLES = targetSamples;
   const initLog = logGroup("init");
+
+  const {
+    indirectBuffer: indirectBufferData,
+    boundsArray,
+    contentsArray,
+    positions,
+    normals,
+    modelGroups,
+    modelMaterials,
+    meshIndices,
+    bvhBuildTime,
+  } = prepareGeometry(model);
+
   const canvas = document.getElementById(target);
 
   if (!(canvas instanceof HTMLCanvasElement)) {
@@ -210,7 +260,6 @@ async function runPathTracer(
 
   // Prepare Position Data
 
-  const reducedModel = consolidateMesh([model.scene]);
 
   let matrixWorld = new Matrix4();
 
@@ -252,19 +301,6 @@ async function runPathTracer(
 
   controls.update();
 
-  const cpuLogGroup = logGroup("cpu");
-  const boundsTree = new MeshBVH(reducedModel.geometry, {
-    // This property is not officially supported by three-mesh-bvh just yet
-    // @ts-ignore
-    indirect: true,
-  });
-
-  const { boundsArray, contentsArray } = bvhToTextures(boundsTree);
-  const bvhBuildTime = cpuLogGroup.end();
-
-  const meshPositions = boundsTree.geometry.attributes.position.array;
-
-  const positions = meshPositions;
 
   const positionBuffer = device.createBuffer({
     label: "Position buffer",
@@ -280,7 +316,6 @@ async function runPathTracer(
   positionBuffer.unmap();
 
   // Prepare Indices
-  const meshIndices = boundsTree.geometry.index!.array;
 
   const indices = new Uint32Array(meshIndices);
 
@@ -298,7 +333,6 @@ async function runPathTracer(
   indicesBuffer.unmap();
 
   // Prepare Normal Data
-  const normals = boundsTree.geometry.attributes.normal.array;
 
   const normalBuffer = device.createBuffer({
     label: "Normal buffer",
@@ -342,26 +376,19 @@ async function runPathTracer(
   // Prepare BVH indirect buffer
   const indirectBuffer = device.createBuffer({
     label: "BVH indirect buffer",
-    size:
-      Uint32Array.BYTES_PER_ELEMENT *
-      (boundsTree as unknown as { _indirectBuffer: ArrayLike<number> })
-        ._indirectBuffer.length,
+    size: Uint32Array.BYTES_PER_ELEMENT * indirectBufferData.length,
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
     mappedAtCreation: true,
   });
 
   const indirectMapped = indirectBuffer.getMappedRange();
   const indirectData = new Uint32Array(indirectMapped);
-  // todo: reconsider type cast
-  indirectData.set(
-    (boundsTree as unknown as { _indirectBuffer: ArrayLike<number> })
-      ._indirectBuffer,
-  );
+  indirectData.set(indirectBufferData);
   indirectBuffer.unmap();
 
   // Prepare Object Definitions
   const OBJECT_DEFINITION_SIZE_PER_ENTRY = Uint32Array.BYTES_PER_ELEMENT * 3;
-  const groups = reducedModel.geometry.groups;
+  const groups = modelGroups;
 
   const objectDefinitionsBuffer = device.createBuffer({
     label: "Object definitions buffer",
@@ -379,7 +406,7 @@ async function runPathTracer(
   );
   objectDefinitionsBuffer.unmap();
 
-  const materials = reducedModel.materials;
+  const materials = modelMaterials;
 
   // CODE#MEMORY-VIEW
   const definitions = makeShaderDataDefinitions(tracerShaderCode);
