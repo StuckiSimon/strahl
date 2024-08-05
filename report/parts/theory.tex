@@ -12,7 +12,7 @@ This section provides an overview of the theoretical background required to deve
 
 \section{Mathematics}
 
-This section highlights some basics about the mathematics involved in computer graphics and establishes a common understanding of concepts and notations referenced in the following sections. The section covers topics such as notation of vectors, matrices, and integrals.
+This section highlights some basics about the mathematics involved in computer graphics and establishes a common understanding of concepts and notations referenced in the following sections. The section covers topics such as notation of vectors, matrices, integrals, and the Bachmann-Landau notation.
 
 \subsubsection{Vectors}
 
@@ -140,6 +140,35 @@ In order to take an integral over a different domain $S$, which may represent a 
   \label{eqn:integral-domain}
   \int_{S} f(x)
 \end{equation}
+
+\subsubsection{Bachmann-Landau Notation}
+
+The Bachmann-Landau notation, or more specifically, the Big O notation, is used to describe the behavior of a function as the input size grows. The notation is used to describe the upper bound of the function. For example, if a function $f(n)$ is $O(n^2)$, it means that the function grows at most quadratically with the input size $n$. The Landau notation is used to describe the growth of algorithms in terms of run time or space requirements.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+      \begin{axis}[
+          width=0.4\textwidth,
+          xlabel=$x$,
+          ylabel=$y$,
+          domain=0:10, 
+          samples=100,
+          axis lines=middle,
+          ymin=0, ymax=20,
+          xmin=0, xmax=11,
+          xtick={0},
+          ytick={0},
+          xticklabels={0},
+          ]
+          \addplot[blue, thick] {x} node[above,pos=1] {$O(n)$};
+          \addplot[green, thick] {x/2} node[below,pos=1] {$f(x)$};
+          \addplot[red, thick, domain=0:5.5] {(x^2)/2} node[above,pos=1] {$g(x)$};
+      \end{axis}
+  \end{tikzpicture}
+  \caption{Example of Big O notation, the function $f(x)$ is $O(n)$, but $g(x)$ is not.}
+  \label{fig:bigOVisualization}
+\end{figure}
 
 \section{Physics}
 
