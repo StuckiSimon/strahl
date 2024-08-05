@@ -249,6 +249,16 @@ Some of the first widely used ray tracing software was POV-Ray, which was releas
 Further research into light transport techniques such as bidirectional light transport or Metropolis Light Transport has been conducted in the 1990s \cite{veachMonteCarloLightTransport}.
 
 \subsubsection{Monte Carlo Ray Tracing}
+
+The Monte Carlo method is a statistical technique which utilizes random sampling to approximate the solution to a problem. The basic form can be defined as:
+
+\begin{equation}
+  G = \frac{1}{M}\sum_{i=1}^M g(X_i)
+  \label{eq:monteCarlo}
+\end{equation}
+
+where $G$ is the estimate of the solution, $g$ is the function to be approximated and $X_i$ is the random sample. Taking $M$ samples and averaging the results provides an estimate of the solution. \cite{kalos2009monte}
+
 \subsubsection{Intersection Testing}
 
 When casting a ray into the scene, the first step in a ray tracer is to determine where the ray intersects with the geometry of the scene.
