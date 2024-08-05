@@ -76,6 +76,10 @@ As highlighted in \autoref{ch:paradigmAssessment}, it is possible to extend a re
 
 For remote rendering, the renderer could be extended to render images on demand and encode them as video streams.
 
+\subsection{WebGPU Compatibility Mode}
+
+There is a proposal under active development which aims to extend the reach of WebGPU by providing a slighly restricted subset of WebGPU \cite{WebGPUCompatibilityModeProposal}. Considering the suggested limits of the compatibility mode, it could be possible to deploy the renderer onto a wider range of devices. However, it is important to consider that path tracing is a computationally expensive task and might not be suitable for all devices. Therefore, increasing the reach might not be beneficial in all cases.
+
 \subsection{Qualitative Assessment}
 
 The provided results highlight the quantitative performance of the renderer. However, due to the nature of a renderer, qualitative assessment based on visual inspection is also used to determine the quality of the rendered images. This could be extended to include more advanced metrics such as peak signal to noise ratio (PSNR), structural similarity (SSIM) \cite{ssim}, or learned perceptual image patch similarity (LPIPS) \cite{lpips}.
