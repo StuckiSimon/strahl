@@ -12,7 +12,7 @@ This section provides an overview of the theoretical background required to deve
 
 \section{Mathematics}
 
-This section highlights some basics about the mathematics involved in computer graphics and defines concepts and notations picked up in the following sections.
+This section highlights some basics about the mathematics involved in computer graphics and establishes a common understanding of concepts and notations referenced in the following sections. The section covers topics such as notation of vectors, matrices, and integrals.
 
 \subsubsection{Vectors}
 
@@ -99,6 +99,46 @@ The frustum is a geometric shape which is used to define the camera's view. See 
   \caption{Frustum shape, the green dot indicates the position of a camera in perspective projection.}
   \label{fig:camera-frustum}
 \end{figure}
+
+\subsubsection{Integral}
+
+An integral is used to determine the area under a curve. The integral of a function $f(x)$ over an interval $[a, b]$ is defined as:
+
+\begin{equation}
+  \label{eqn:integral}
+  \int_{a}^{b} f(x)
+\end{equation}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+      \begin{axis}[
+          width=0.4\textwidth,
+          xlabel=$x$,
+          ylabel=$y$,
+          domain=0:2, 
+          samples=100,
+          axis lines=middle,
+          ymin=0, ymax=3.5,
+          xmin=0, xmax=2.5,
+          xtick={0, 0.5, 1.5},
+          ytick={0},
+          xticklabels={0, $a$, $b$},
+          ]
+          \addplot[name path=A, blue, thick] {x/2.5+((x^2)/2)} node[above,pos=1] {$f(x)$};
+          \path[name path=B] (axis cs:0,0) -- (axis cs:2,0);
+          \addplot[blue!50, opacity=0.3] fill between[of=A and B, soft clip={domain=0.5:1.5}];
+      \end{axis}
+  \end{tikzpicture}
+  \caption{Visualization of integral, the area under the curve $f(x)$ between $a$ and $b$.}
+\end{figure}
+
+In order to take an integral over a different domain $S$, which may represent a set of vectors representing directions, the integral can be defined as:
+
+\begin{equation}
+  \label{eqn:integral-domain}
+  \int_{S} f(x)
+\end{equation}
 
 \section{Physics}
 
