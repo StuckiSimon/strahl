@@ -1184,9 +1184,6 @@ fn getDirectLighting(pW: vec3f, basis: Basis, sunBasis: Basis, shadowL: ptr<func
   }
 
   let occluded = isOccluded(Ray(pW, *shadowW), TRIANGLE_MAX_DISTANCE_THRESHOLD);
-  if (occluded) {
-    
-  }
   let visibility = select(1.0, 0.0, occluded);
 
   return visibility * Li;
