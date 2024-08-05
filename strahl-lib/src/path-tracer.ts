@@ -841,4 +841,3 @@ async function runPathTracer(
 }
 
 export default runPathTracer;
-export { OpenPBRMaterial };
