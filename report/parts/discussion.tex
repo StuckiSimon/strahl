@@ -33,6 +33,28 @@ To date, WebGPU does not support some features that are common in modern renderi
 
 \section{Future Work}
 
+\subsection{Rendering Effects}
+
+The focus on the defined use case means that certain rendering effects are not implemented. These include:
+
+\begin{itemize}
+    \item{Caustics}.
+    \item{Volumetric Effects} - Volumetric effects include fog, smoke and dust.
+    \item {Depth of Field} - Depth of field is the effect of objects at different distances from the camera being in focus or out of focus.
+    \item {Motion Blur} - Motion blur is the effect of objects moving quickly appearing blurred.
+\end{itemize}
+
+\subsection{Full OpenPBR support}
+
+The current implementation only supports the features of the OpenPBR surface shading model that are required for the given use case. The full OpenPBR specification includes additional features that could be implemented to improve the realism of the rendered images. These include:
+
+\begin{itemize}
+    \item{Subsurface Scattering} - Subsurface scattering is the effect of light entering a surface and being scattered beneath the surface before exiting at a different point. This effect is common in materials such as skin, wax, or marble.
+\end{itemize}
+
+\todo{list all features}
+
+
 \subsection{Web Worker Support}
 
 Web Workers are a web technology that allows running scripts off the main thread. This can be used to offload \gls{CPU}-heavy tasks to a separate thread to prevent blocking the main thread which is responsible for rendering the user interface.
