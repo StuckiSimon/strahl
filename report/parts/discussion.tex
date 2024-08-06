@@ -74,6 +74,10 @@ The current implementation builds the \gls{BVH} on the \gls{CPU} and transfers i
 
 While \texttt{webgpu-utils} \cite{webgpuUtilsLib} is useful for memory management, it does not provide TypeScript support for the generated definitions based on the underlying \gls{WGSL} code. Type safety could reduce the likelihood of errors in the code. As an alternative, runtime checks could be implemented to ensure that the data is correctly mapped to all fields of the underlying structure.
 
+\subsection{Independence of Three.js}
+
+For ease-of-use for developers, the renderer is using \gls{Three.js} helpers. This aids developers familiar with \gls{Three.js} to get started with the renderer as configuration for scene loading and camera configuration is similar. However, the renderer does not depend on \gls{Three.js} and could be used independently. The main drawback of the dependence on \gls{Three.js} is the increased bundle size. By removing the dependency, the bundle size could be reduced. To support developers, a binding to \gls{Three.js} could be provided on top of the independent renderer.
+
 \subsection{Offline and Remote Rendering}
 
 As highlighted in \autoref{ch:paradigmAssessment}, it is possible to extend a real-time client side renderer to be used in offline and remote rendering scenarios. In order to implement offline rendering, one could opt to use a headless browser such as Puppeteer, a \fgls{Node.js}{JavaScript runtime, frequently used for executing JavaScript outside of the browser} library which provides a high-level \gls{API} to control browsers. An alternative is to use \gls{wgpu}, but this would necessitate a rewrite of the renderer. Possibly, the rewritten renderer could also be used in the web context by using \fgls{WebAssembly}{Portable Binary-code format for executable programs available in modern browser engines}.
