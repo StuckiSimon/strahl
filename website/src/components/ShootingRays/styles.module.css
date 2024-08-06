@@ -59,9 +59,9 @@
 }
 
 .ray:nth-child(1) {
-  --ray-animation-duration: 6s;
-  --ray-animation-delay: 2s;
-  top: -20vh;
+  --ray-animation-duration: 5s;
+  --ray-animation-delay: 1s;
+  top: -30vh;
   right: 30vw;
 }
 
@@ -73,8 +73,8 @@
 }
 
 .ray:nth-child(3) {
-  --ray-animation-duration: 7s;
-  --ray-animation-delay: 4s;
+  --ray-animation-duration: 3.5s;
+  --ray-animation-delay: 2.5s;
   top: -8vh;
   right: -5vw;
 }
