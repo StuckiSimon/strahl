@@ -316,7 +316,7 @@ where $I(x, x')$ is the radiance from point $x$ to point $x'$. $x$ for example b
 
 Some of the first widely used ray tracing software was POV-Ray, which was released in 1991 \cite{POV_Ray_Documentation}. Blue Moon Rendering Tools (\gls{BMRT}) \cite{bmrt}, a \fGls{RenderMan}{A rendering software for photorealistic 3D rendering developed by Pixar} compliant renderer, was released in the mid 90s and was one of the first ray tracing renderers to be used in the industry. In 2003 \gls{RenderMan} included ray tracing capabilities \cite{RenderMan_11_Release_Notes}.
 
-Further research into light transport techniques such as bidirectional light transport or Metropolis Light Transport has been conducted in the 1990s \cite{veachMonteCarloLightTransport}.
+Further research into light transport techniques such as bidirectional light transport or Metropolis Light Transport has been conducted in the 1990s \cite{veachMonteCarloLightTransport}. Concrete techniques will be described in the next section.
 
 \subsubsection{Monte Carlo Ray Tracing}
 
@@ -328,6 +328,23 @@ Monte Carlo integration is a statistical technique to approximate the solution i
 \end{equation}
 
 where $G$ is the estimate of the solution, $g$ is the function to be approximated and $X_i$ is the random sample. Taking $M$ samples and averaging the results provides an estimate of the solution. \cite{kalos2009monte}
+
+\subsubsection{Importance Sampling}
+
+\subsubsection{Russian Roulette}
+\label{ch:russianRoulette}
+
+Russian roulette is a technique for improving efficiency by employing probabilistic path termination. It selectively discards paths with low expected radiance contribution. If a path contributes zero radiance to the final image, it can be terminated early without affecting the radiance of the final image. However, if the path has a small but non-zero contribution, discarding it introduces bias into the calculation. Russian roulette solves this by introducing a probability of termination which is inversely proportional to the radiance of the path. Paths with low radiance are more likely to be terminated. Paths which are continued are scaled by the inverse probability of termination. This ensures to account for the bias introduced by the termination.
+
+Mathematically Russian roulette is commonly formulated as shown in equation \ref{eqn:russian-roulette} \cite{Pharr_Physically_Based_Rendering_2023}.
+
+\begin{equation}
+  \label{eqn:russian-roulette}
+  I' = \begin{cases} \frac{I-qc}{1-q} & \xi > q \\ c & otherwise \end{cases}
+\end{equation}
+  
+where $I$ is the radiance of the path. $q$ is the probability of termination, which can be calculated for example based on the radiance of the path. $\xi$ is a random number between 0 and 1. $c$ is the contribution of the path which is terminated, commonly set to zero. $I'$ is the scaled radiance of the path.
+
 
 \subsubsection{Intersection Testing}
 
@@ -357,22 +374,6 @@ An \gls{AABB} ($b$) can be defined as $b = (min, max)$ where $min$ and $max$ are
   \caption{Sample 2D \gls{BVH} visualization which contains four triangles ($t_1$ to $t_4$) and their corresponding bounding boxes $b_1$ as parent and $b_2$ as well as $b_3$ as the children. $b_1$ is visualized bigger than need be to improve readability. The color of the triangles indicates to which bounding box they belong. $r$ indicates the ray to be tested for intersection.}
   \label{fig:bvhVisualized}
 \end{figure}
-
-\subsubsection{Importance Sampling}
-
-\subsubsection{Russian Roulette}
-\label{ch:russianRoulette}
-
-Russian roulette is a technique for improving efficiency by employing probabilistic path termination. It selectively discards paths with low expected radiance contribution. If a path contributes zero radiance to the final image, it can be terminated early without affecting the radiance of the final image. However, if the path has a small but non-zero contribution, discarding it introduces bias into the calculation. Russian roulette solves this by introducing a probability of termination which is inversely proportional to the radiance of the path. Paths with low radiance are more likely to be terminated. Paths which are continued are scaled by the inverse probability of termination. This ensures to account for the bias introduced by the termination.
-
-Mathematically Russian roulette is commonly formulated as shown in equation \ref{eqn:russian-roulette} \cite{Pharr_Physically_Based_Rendering_2023}.
-
-\begin{equation}
-  \label{eqn:russian-roulette}
-  I' = \begin{cases} \frac{I-qc}{1-q} & \xi > q \\ c & otherwise \end{cases}
-\end{equation}
-  
-where $I$ is the radiance of the path. $q$ is the probability of termination, which can be calculated for example based on the radiance of the path. $\xi$ is a random number between 0 and 1. $c$ is the contribution of the path which is terminated, commonly set to zero. $I'$ is the scaled radiance of the path.
 
 \subsubsection{Hybrid Approaches}
 
