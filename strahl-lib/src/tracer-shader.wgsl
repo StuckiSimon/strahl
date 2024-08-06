@@ -1197,7 +1197,7 @@ fn isOccluded(ray: Ray, maxDistance: f32) -> bool {
 const TRIANGLE_MIN_DISTANCE_THRESHOLD = 0.0005;
 const TRIANGLE_MAX_DISTANCE_THRESHOLD = 10e37f;
 
-fn rayColor(cameraRay: Ray, seed: ptr<function, u32>) -> vec4f {
+fn rayColor(cameraRay: Ray, seed: ptr<function, u32>, sunBasis: Basis) -> vec4f {
   var hitRecord: HitRecord;
   var ray = cameraRay;
 
@@ -1375,6 +1375,9 @@ fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
   let j = f32(local_id.y);
   
   var pixelColor = vec4f(0.0);
+
+  // todo: consider not re-creating the basis every time
+  var sunBasis = makeBasis(uniformData.sunDirection);
   
   let samplesPerPixel = i32(uniformData.samplesPerPixel);
   for (var sample = 0; sample < samplesPerPixel; sample += 1) {
@@ -1386,7 +1389,7 @@ fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
     var ray = ndcToCameraRay(ndc, uniformData.invModelMatrix * uniformData.cameraWorldMatrix, uniformData.invProjectionMatrix, &seed);
     ray.direction = normalize(ray.direction);
 
-    pixelColor += rayColor(ray, &seed);
+    pixelColor += rayColor(ray, &seed, sunBasis);
   }
 
   
