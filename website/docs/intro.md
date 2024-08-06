@@ -8,6 +8,10 @@ sidebar_position: 1
 The tutorial is not yet finished and will be following in the upcoming weeks.
 :::
 
+## Where to find what
+
+This is the minimal getting started documentation focusing on hands-on technical documentation. It is suitable if you are interested in creating renderings with `strahl`. However, if you're more interested in how it could be used, what the design decisions were and the internal working of the path tracer, there is a report with more extensive information available on the [Github](https://github.com/StuckiSimon/strahl) repository. If you're unsure about whether this is interesting to you, there is a short-paper which gives a brief introduction into the topic available on [arXiv](https://arxiv.org/abs/2407.19977).
+
 ## Installation
 
 The library is available in the npm registry. To install it using npm, run:
