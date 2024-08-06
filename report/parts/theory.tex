@@ -125,9 +125,9 @@ An integral is used to determine the area under a curve as visualized in \autore
           ytick={0},
           xticklabels={0, $a$, $b$},
           ]
-          \addplot[name path=A, blue, thick] {x/2.5+((x^2)/2)} node[above,pos=1] {$f(x)$};
+          \addplot[name path=A, rblue, thick] {x/2.5+((x^2)/2)} node[above,pos=1] {$f(x)$};
           \path[name path=B] (axis cs:0,0) -- (axis cs:2,0);
-          \addplot[blue!50, opacity=0.3] fill between[of=A and B, soft clip={domain=0.5:1.5}];
+          \addplot[rblue!50, opacity=0.5] fill between[of=A and B, soft clip={domain=0.5:1.5}];
       \end{axis}
   \end{tikzpicture}
   \caption{Visualization of integral, the area under the curve $f(x)$ between $a$ and $b$.}
@@ -161,9 +161,9 @@ The Bachmann-Landau notation, or more specifically, the Big O notation, is used 
           ytick={0},
           xticklabels={0},
           ]
-          \addplot[blue, thick] {x} node[above,pos=1] {$O(n)$};
-          \addplot[green, thick] {x/2} node[below,pos=1] {$f(x)$};
-          \addplot[red, thick, domain=0:5.5] {(x^2)/2} node[above,pos=1] {$g(x)$};
+          \addplot[rblue, thick] {x} node[above,pos=1] {$O(n)$};
+          \addplot[rgreen, thick] {x/2} node[below,pos=1] {$f(x)$};
+          \addplot[rred, thick, domain=0:5.5] {(x^2)/2} node[above,pos=1] {$g(x)$};
       \end{axis}
   \end{tikzpicture}
   \caption{Example of Big O notation, the function $f(x)$ is $O(n)$, but $g(x)$ is not.}
