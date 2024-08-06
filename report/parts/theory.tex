@@ -361,6 +361,7 @@ An \gls{AABB} ($b$) can be defined as $b = (min, max)$ where $min$ and $max$ are
 \subsubsection{Importance Sampling}
 
 \subsubsection{Russian Roulette}
+\label{ch:russianRoulette}
 
 Russian roulette is a technique for improving efficiency by employing probabilistic path termination. It selectively discards paths with low expected radiance contribution. If a path contributes zero radiance to the final image, it can be terminated early without affecting the radiance of the final image. However, if the path has a small but non-zero contribution, discarding it introduces bias into the calculation. Russian roulette solves this by introducing a probability of termination which is inversely proportional to the radiance of the path. Paths with low radiance are more likely to be terminated. Paths which are continued are scaled by the inverse probability of termination. This ensures to account for the bias introduced by the termination.
 
@@ -382,6 +383,7 @@ Ray Tracing and Rasterization are not mutually exclusive. Hybrid approaches have
 While rasterization and ray tracing are inherently different techniques, they face similar challenges. Notable frequently encountered challenges and their differences in rasterization and ray tracing are discussed in the following sections.
 
 \subsubsection{View Projection}
+\label{sec:viewProjection}
 
 In order to render an image, a virtual camera needs to be defined. Given a vertex as $p = (x, y, z)$, the view projection is responsible for transforming the vertex into normalized device coordinates. The view projection matrix is a 4x4 matrix which depends on the projection type.
 
