@@ -25,6 +25,14 @@ This also enables to use a variety of loaders for different file formats such as
 
 The goal of the implementation is to be compatible with a large variety of devices and make the setup for consumers simple. Therefore, it is implemented and tested mainly in Chrome, which uses \gls{Dawn} as the underlying implementation of WebGPU. Most notably, this means that dedicated features from other implementations such as \gls{wgpu} cannot be used. Neither can experimental extensions be leveraged.
 
+Figure~\ref{fig:path-tracer} illustrates the procedure of the path tracer. Scene preparation is performed on the CPU. This setup needs to be done once per visualization. Subsequent sampling of the scene is carried out repeatedly on the GPU, which constitutes the most computationally intensive part of the process.
+
+\begin{figure}[H]
+    \includegraphics[width=1.0\columnwidth]{resources/path-tracer-pipeline.png}
+    \caption{Path Tracer Pipeline, distinguishing GPU and CPU tasks. The stages of the compute pipeline and render pipeline are executed sequentially.}
+    \label{fig:path-tracer}
+\end{figure}
+
 \subsection{Ray Tracing}
 
 \subsubsection{OpenPBR}
