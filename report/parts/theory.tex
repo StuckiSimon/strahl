@@ -490,17 +490,17 @@ When simulating light transport, the radiance of the scene can exceed the displa
   \hspace*{2cm}
   \begin{subfigure}[t]{0.3\textwidth}
     \includegraphics[width=\textwidth]{resources/tonemapping-none.png}
-    \caption{Rendering without any tone mapping applied.}
+    \caption{Rendering without tone mapping.}
     \label{fig:tone-mapping-none}
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.3\textwidth}
     \includegraphics[width=\textwidth]{resources/tonemapping-khronos-pbr-neutraltone.png}
-    \caption{Rendering using Khronos PBR Neutral Tone Mapper.}
+    \caption{Rendering using tone mapper.}
     \label{fig:tone-mapping-applied}
   \end{subfigure}
   \hspace*{2cm}
-  \caption{Comparison of tone mapping with slight changes in luminance of specular reflection.}
+  \caption{Comparison of tone mapping with slight changes in luminance of specular reflection. The upper part is barely visible without tone mapping as it blends into the background due to the high luminance.}
   \label{fig:tone-mapping}
 \end{figure}
 
