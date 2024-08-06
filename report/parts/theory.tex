@@ -269,15 +269,21 @@ The process of rasterization can be broken down into multiple steps and is commo
 
 As a pre-requisite, the 3D scene is defined. The scene consists of vertices which are grouped to triangles forming the geometry. The geometry stage iterates over all triangles and uses camera configuration to perform view projection as described in \autoref{sec:viewProjection}, changing the position of the vertices to the camera's perspective. The rasterization stage converts the continuous geometry into discrete fragments. When having overlapping triangles, the depth buffer is used to determine which fragment is closer to the camera and therefore visible. The fragment processing stage determines the color of every pixel. Finally, the frame buffer is output to the screen.
 
-\subsubsection{Limitations}
+One of the main limitations is the lack of support for global illumination. For example, shadows are generally not cast, reflections are not visible, color bleeding is not considered, and ambient occlusion is not simulated.
 
 \subsubsection{Advanced Techniques}
 
+To address these limitations, the graphics pipeline can be extended with additional steps such as post-processing effects or advanced rendering techniques.
+
 Various methods have been developed to address these limitations, including pre-baked shadow, environment \cite{greene1986environment} and light maps; screen space reflections (SSR) \cite{screenSpaceReflectionsStackowiak}; screen space ambient occlusion (SSAO) \cite{bavoil2008ssao}; and screen space directional occlusion (SSDO) \cite{ritschel2009ssdo}.
 
-To obtain reflections, one frequently used technique is multi-pass rendering. The idea is to first render the scene from the perspective of the reflective object and then render a second pass from the camera while leveraging the first pass as a texture.
+\paragraph{Shadow Maps} are employed to store shadow information for a scene. These shadows are pre-generated, before being employed in the rendering process. While this technique is very suitable for certain use cases where the scene is static, there are limitations when the scene is dynamic and the different components of an assembly cast shadow on each other.
 
-These approaches induce complexity and can be computationally expensive. An alternative technique which resembles reality more closely could alleviate these issues: Ray Tracing.
+\paragraph{Multi-pass Rendering} is a technique which is used among other things to simulate reflections. The idea is to first render the scene from the perspective of the reflective object and then render a second pass from the camera while leveraging the first pass as a texture.
+
+\paragraph{Environment Maps} are used to simulate reflections. The technique uses a texture which is mapped to the environment of the scene and is used to simulate reflections. The technique does not support reflections occurring dynamically in the scene.
+
+\paragraph{Conclusion} Each of these methods addresses only a specific limitation of rasterization. Some of them only partially alleviate the issue. These approaches induce complexity and can be computationally expensive. An alternative technique which resembles reality more closely could alleviate these issues: ray tracing.
 
 \subsection{Ray Tracing}
 \label{ch:rayTracingTheory}
