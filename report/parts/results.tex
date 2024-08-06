@@ -42,6 +42,11 @@ The \gls{OpenPBR} standard is based on an \gls{uber shader} approach. This diffe
 The surface shading method is based on \gls{OpenPBR} reference implementation in \gls{MaterialX} as well as the reference viewer by Portsmouth \cite{openPbrViewer}.
 
 \subsubsection{RGB, Spectral}
+
+\subsubsection{Tone Mapping}
+
+Tone mapping is done using the Khronos PBR Neutral Tone Mapper described in \autoref{sec:toneMappingTheory}. See \coderef{TONE-MAPPER} for implementation.
+
 \subsubsection{Memory Management}
 
 In order to address memory alignment, as described in \autoref{ch:memoryAlignmentTheory}, the path tracer uses \texttt{webgpu-utils} \cite{webgpuUtilsLib}. The library enables a straightforward way to map data to buffers and align them correctly. See \coderef{MEMORY-VIEW} for creation of definition and \coderef{BUFFER-MAPPING} for mapping of data to buffers.

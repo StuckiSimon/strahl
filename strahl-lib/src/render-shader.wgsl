@@ -36,6 +36,7 @@ fn vertexMain(input: VertexInput) -> VertexOutput {
 @group(0) @binding(0) var texture_sampler: sampler;
 @group(0) @binding(1) var texture: texture_2d<f32>;
 
+// CODE#TONE-MAPPER
 // Khronos PBR neutral tone mapper
 // See: https://github.com/KhronosGroup/ToneMapping/blob/main/PBR_Neutral/pbrNeutral.glsl
 fn khronosPBRNeutralToneMapping(colorP: vec3f) -> vec3f {
