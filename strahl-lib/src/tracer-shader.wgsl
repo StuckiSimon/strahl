@@ -41,6 +41,7 @@ struct UniformData {
   // bool is not supported in uniform
   enableClearColor: i32,
   maxRayDepth: i32,
+  objectDefinitionLength: i32,
 }
 
 @group(0) @binding(0) var<storage, read_write> positions: array<f32>;
@@ -359,8 +360,7 @@ fn intersectTriangles(offset: u32, count: u32, ray: Ray, rayT: Interval, hitReco
     let v = z - x;
     
     var matchingObjectDefinition: ObjectDefinition = objectDefinitions[0];
-    // todo: consider more elegant limit than 100 object parts
-    for (var j = 0; j < 100; j++) {
+    for (var j = 0; j < uniformData.objectDefinitionLength ; j++) {
       let objectDefinition = objectDefinitions[j];
       if (objectDefinition.start <= vIndexOffset && objectDefinition.start + objectDefinition.count > vIndexOffset) {
         matchingObjectDefinition = objectDefinition;

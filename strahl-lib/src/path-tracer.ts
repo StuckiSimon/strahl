@@ -677,6 +677,7 @@ async function runPathTracer(
         clearColor: [1.0, 1.0, 1.0],
         enableClearColor: 1,
         maxRayDepth: 5,
+        objectDefinitionLength: groups.length,
       });
       // todo: consider buffer writing
       device.queue.writeBuffer(uniformBuffer, 0, uniformData.arrayBuffer);
