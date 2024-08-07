@@ -95,9 +95,16 @@
 \usepackage{pgfplots}
 \usepackage{pgfplotstable}
 \usepackage{sfmath}
+\usetikzlibrary{calc}
 \usetikzlibrary{patterns}
 \usetikzlibrary{intersections}
 \usepgfplotslibrary{fillbetween}
+
+% Draw arc centered on point
+% Syntax: [draw options] (center) (initial angle:final angle:radius)
+% Source: https://tex.stackexchange.com/questions/66216/draw-arc-in-tikz-when-center-of-circle-is-specified
+\def\centerarc[#1](#2)(#3:#4:#5)
+    { \draw[#1] ($(#2)+({#5*cos(#3)},{#5*sin(#3)})$) arc (#3:#4:#5); }
 
 % Set color style
 \definecolor{rblue}{HTML}{3F72AF}

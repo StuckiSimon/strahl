@@ -355,9 +355,167 @@ where $G$ is the estimate of the solution, $g$ is the function to be approximate
 
 In the context of ray tracing, Monte Carlo integration is used to approximate the rendering equation, as defined in \autoref{eqn:rendering-equation}. Applying the principle of Monte Carlo, the radiance of a pixel can be approximated by iteratively casting rays into the scene and averaging the results. 
 
-While Monte Carlo integration is a powerful technique, it heavily relies on the quality of the estimator which is employed. Using importance sampling can improve the rate of convergence. Importance sampling is a technique which leverages the probability distribution of the function to be approximated. By sampling more frequently in regions where the function has a higher value, the variance of the estimator can be reduced.
+While Monte Carlo integration is a powerful technique, it heavily relies on the quality of the estimator which is employed. Using importance sampling can improve the rate of convergence. Importance sampling is a technique which leverages the probability distribution of the function to be approximated. By sampling more frequently in regions where the function has a higher value, the variance of the estimator can be reduced. In order to account for the probability distribution and prevent bias in the estimator, the estimator can be defined as:
 
-Veach extended on this concept in 1997 \cite{veachMonteCarloLightTransport} by introducing multiple importance sampling (\gls{MIS}). THe idea is to combine multiple sampling strategies to improve the overall estimator.
+\begin{equation}
+  G = \frac{1}{M}\sum_{i=1}^M \frac{g(X_i)}{p(X_i)}
+  \label{eq:importanceSampling}
+\end{equation}
+
+where $p(X_i)$ is the probability distribution of the function to be approximated \cite{Pharr_Physically_Based_Rendering_2023}.
+
+To do the sampling, different strategies can be considered. For example, one can use the material properties to determine where to cast the rays. A highly-reflective surface such as a mirror will apply the law of reflection, while a diffuse surface will scatter the rays in all directions. This strategy is yielding solid results for scenes with large light sources and reflective surfaces as illustrated in \autoref{fig:material-sampling-good}. However, for scenes with small light sources and diffuse surfaces, the strategy can lead to high variance as shown in \autoref{fig:material-sampling-bad}. The variance is visible to the human eye as noise in the image.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.45\textwidth}
+    \begin{tikzpicture}
+      \coordinate (A) at (0,3);
+      \coordinate (AA) at (1,2);
+      \coordinate (BB) at (2,1);
+      \coordinate (B) at (3,0);
+  
+      \coordinate (L) at (4.66,2.9);
+  
+      \draw[dashed, thick] (A) -- (B);
+      \draw[-latex, thick] (AA) -- (BB);
+  
+      \def\radius{0.3}
+
+      \def\tangentx{3}
+      \def\tangenty{0}
+      \def\tangentr{3.04}
+  
+      \shade[ball color=yellow!50, opacity=0.3] (L) circle (\radius);
+      \draw[yellow!50!black] (L) circle (\radius);
+  
+      \foreach \angle in {-20, -40, -60, -80, -100, -140, -160} {
+        \draw[-latex, rred] (B) -- ($(\tangentx,\tangenty) - (\angle:\tangentr)$);
+      }
+      \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (-120:\tangentr)$);
+  
+      \fill[rgreen] (B) circle (0.1);
+      \centerarc[rgreen,ultra thick](B)(0:180:1)
+  
+      \fill[gray!20] (0,0) rectangle (6,-2);
+    \end{tikzpicture}
+    \caption{Ray hitting a diffuse surface with bad-performing material sampling.}
+    \label{fig:material-sampling-bad}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.45\textwidth}
+    \begin{tikzpicture}
+      \coordinate (A) at (0,3);
+      \coordinate (AA) at (1,2);
+      \coordinate (BB) at (2,1);
+      \coordinate (B) at (3,0);
+  
+      \coordinate (L) at (4.5,3);
+  
+      \draw[dashed, thick] (A) -- (B);
+      \draw[-latex, thick] (AA) -- (BB);
+  
+      \def\centerx{4.5}
+      \def\centery{3}
+      \def\radius{1.2}
+
+      \def\tangentx{3}
+      \def\tangenty{0}
+      \def\tangentr{3.04}
+  
+      \shade[ball color=yellow!50, opacity=0.3] (L) circle (\radius);
+      \draw[yellow!50!black] (L) circle (\radius);
+  
+      \draw[-latex, rgreen] (B) -- ($(\centerx,\centery) - (96:\radius)$);
+      \draw[-latex, rgreen] (B) -- ($(\centerx,\centery) - (108:\radius)$);
+
+      \draw[-latex, rred] (B) -- ($(\tangentx,\tangenty) - (-139:\tangentr)$);
+  
+      \fill[rgreen] (B) circle (0.1);
+      \centerarc[rgreen,ultra thick](B)(40:50:1)
+
+      \fill[gray!20] (0,0) rectangle (6,-2);
+    \end{tikzpicture}
+    \caption{Ray hitting a mirror-like surface with well-performing material sampling.}
+    \label{fig:material-sampling-good}
+  \end{subfigure}
+  \caption{Material sampling strategy weakness and strength}
+  \label{fig:material-sampling}
+\end{figure}
+
+Using light source sampling as an alternative sampling strategy can alleviate this issue. As shown in \autoref{fig:light-sampling-good}, it can significantly reduce the variance of the estimator when having diffuse surfaces and small light sources. Conversely, the strategy can lead to high variance when having large light sources and reflective surfaces as shown in \autoref{fig:light-sampling-bad}.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.45\textwidth}
+    \begin{tikzpicture}
+      \coordinate (A) at (0,3);
+      \coordinate (AA) at (1,2);
+      \coordinate (BB) at (2,1);
+      \coordinate (B) at (3,0);
+  
+      \coordinate (L) at (4.5,3);
+  
+      \draw[dashed, thick] (A) -- (B);
+      \draw[-latex, thick] (AA) -- (BB);
+  
+      \def\centerx{4.5}
+      \def\centery{3}
+      \def\radius{1.2}
+  
+      \shade[ball color=yellow!50, opacity=0.3] (L) circle (\radius);
+      \draw[yellow!50!black] (L) circle (\radius);
+  
+      \foreach \angle in {0,21.6,43.2,64.8,86.4} {
+        \draw[-latex, rred] (B) -- ($(\centerx,\centery) - (\angle:\radius)$);
+      }
+      \draw[-latex, rgreen] (B) -- ($(\centerx,\centery) - (108:\radius)$);
+  
+      \fill[rgreen] (B) circle (0.1);
+      \centerarc[rgreen,ultra thick](B)(40:50:1)
+  
+      \fill[gray!20] (0,0) rectangle (6,-2);
+    \end{tikzpicture}
+    \caption{Ray hitting a mirror-like surface with bad-performing light source sampling.}
+    \label{fig:light-sampling-bad}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.45\textwidth}
+    \begin{tikzpicture}
+      \coordinate (A) at (0,3);
+      \coordinate (AA) at (1,2);
+      \coordinate (BB) at (2,1);
+      \coordinate (B) at (3,0);
+  
+      \coordinate (L) at (4.5,3);
+  
+      \draw[dashed, thick] (A) -- (B);
+      \draw[-latex, thick] (AA) -- (BB);
+  
+      \def\centerx{4.5}
+      \def\centery{3}
+      \def\radius{0.3}
+  
+      \shade[ball color=yellow!50, opacity=0.3] (L) circle (\radius);
+      \draw[yellow!50!black] (L) circle (\radius);
+  
+      \foreach \angle in {0,21.6,43.2,64.8,86.4,108} {
+        \draw[-latex, rgreen] (B) -- ($(\centerx,\centery) - (\angle:\radius)$);
+      }
+  
+      \fill[rgreen] (B) circle (0.1);
+      \centerarc[rgreen,ultra thick](B)(0:180:1)
+  
+      \fill[gray!20] (0,0) rectangle (6,-2);
+    \end{tikzpicture}
+    \caption{Ray hitting a diffuse surface with well-performing light source sampling.}
+    \label{fig:light-sampling-good}
+  \end{subfigure}
+  \caption{Light source sampling strategy weakness and strength}
+  \label{fig:light-sampling}
+\end{figure}
+
+Both strategies are good candidates under different circumstances. To leverage the benefits of both strategies, Veach extended importance sampling in 1997 \cite{veachMonteCarloLightTransport} by introducing multiple importance sampling (\gls{MIS}). The idea is to combine multiple sampling strategies to improve the overall estimator.
 
 \subsubsection{Russian Roulette}
 \label{ch:russianRoulette}
