@@ -245,12 +245,22 @@ While global illumination commonly refers to a subset of effects, the term is us
 \begin{itemize}
   \item{Shadow Casting} — The absence of light as obstructed by other objects.
   \item{Reflection} — As in the case of mirror-like objects, but also for specular and metallic reflection.
-  \item{Refraction} — As encountered when light passes through water.
   \item{Color Bleeding} — Special type of reflection, where a surface is colored by reflection of colored light.
-  \item{Ambient Occlusion} — Special type of shadow casting, where light transport as impacted by nearby objects is considered.
+  \item{Ambient Occlusion} — Special type of shadow casting, where light transport as impacted by nearby objects is considered. This is frequently encountered on objects with complex topology.
+  \item{Refraction} — As encountered when light passes through a medium such as water or glass.
+  \item{Caustics} - Effect produced by either reflection or refraction of light.
 \end{itemize}
 
-\todo{Add illustrations for effects}
+Refraction and caustics were not encountered in the use cases of this thesis and are therefore not covered in detail.
+
+\autoref{fig:global-illumination-demo} shows a visualization of the most notable effects. The image shows a floor with a white diffuse material, two walls with a red diffuse material and a specular sphere. The sphere casts a shadow onto the floor, the walls are reflected onto the sphere, the prominent red color bleeds onto the white floor.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.3\columnwidth]{resources/global-illumination-demonstration.png}
+  \caption{Image showing the different kinds of effects which can be achieved using global illumination.}
+  \label{fig:global-illumination-demo}
+\end{figure}
 
 \subsection{Rasterization}
 \label{ch:rasterizationTheory}
