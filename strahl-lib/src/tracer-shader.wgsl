@@ -1191,7 +1191,8 @@ fn getDirectLighting(pW: vec3f, basis: Basis, sunBasis: Basis, shadowL: ptr<func
 
 fn isOccluded(ray: Ray, maxDistance: f32) -> bool {
   var hitRecord = HitRecord();
-  return hittableListHit(ray, Interval(TRIANGLE_MIN_DISTANCE_THRESHOLD, TRIANGLE_MAX_DISTANCE_THRESHOLD), &hitRecord);
+  hitRecord.t = maxDistance;
+  return hittableListHit(ray, Interval(TRIANGLE_MIN_DISTANCE_THRESHOLD, maxDistance), &hitRecord);
 }
 
 const TRIANGLE_MIN_DISTANCE_THRESHOLD = 0.0005;
