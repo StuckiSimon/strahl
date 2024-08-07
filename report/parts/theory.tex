@@ -277,13 +277,21 @@ To address these limitations, the graphics pipeline can be extended with additio
 
 Various methods have been developed to address these limitations, including pre-baked shadow, environment \cite{greene1986environment} and light maps; screen space reflections (SSR) \cite{screenSpaceReflectionsStackowiak}; screen space ambient occlusion (SSAO) \cite{bavoil2008ssao}; and screen space directional occlusion (SSDO) \cite{ritschel2009ssdo}.
 
-\paragraph{Shadow Maps} are employed to store shadow information for a scene. These shadows are pre-generated, before being employed in the rendering process. While this technique is very suitable for certain use cases where the scene is static, there are limitations when the scene is dynamic and the different components of an assembly cast shadow on each other.
+\paragraph{Environment Maps}
 
-\paragraph{Multi-pass Rendering} is a technique which is used among other things to simulate reflections. The idea is to first render the scene from the perspective of the reflective object and then render a second pass from the camera while leveraging the first pass as a texture.
+Environment maps can be used to simulate reflections. The technique uses a texture which is mapped to the environment of the scene and is used to simulate reflections. The technique does not support reflections occurring dynamically in the scene.
 
-\paragraph{Environment Maps} are used to simulate reflections. The technique uses a texture which is mapped to the environment of the scene and is used to simulate reflections. The technique does not support reflections occurring dynamically in the scene.
+\paragraph{Shadow Maps}
 
-\paragraph{Conclusion} Each of these methods addresses only a specific limitation of rasterization. Some of them only partially alleviate the issue. These approaches induce complexity and can be computationally expensive. An alternative technique which resembles reality more closely could alleviate these issues: ray tracing.
+Shadow maps are employed to store shadow information for a scene based on the available light sources. These shadows are pre-generated, before being employed in the rendering process. While this technique is very suitable for use cases where the scene is static, there are limitations when the scene is dynamic and the different components of an assembly cast shadow on each other.
+
+\paragraph{Multi-pass Rendering}
+
+Multi-pass rendering is a technique which is used for a multitude of use cases, but among other things can be used to simulate reflections. Instead of rendering the scene in a single pass, the scene is rendered multiple times with different configurations. For example, to simulate reflections, the scene is first rendered from the perspective of the reflective object and then renders a second pass from the camera while leveraging the first pass as a texture.
+
+\paragraph{Conclusion}
+
+Each of these methods addresses only a specific limitation of rasterization. Some of them only partially alleviate the issue. These approaches induce complexity and can be computationally expensive. An alternative technique which resembles reality more closely could alleviate these issues: ray tracing.
 
 \subsection{Ray Tracing}
 \label{ch:rayTracingTheory}
