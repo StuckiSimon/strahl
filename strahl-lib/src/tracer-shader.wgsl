@@ -363,7 +363,7 @@ fn intersectTriangles(offset: u32, count: u32, ray: Ray, rayT: Interval, hitReco
     // todo: consider more elegant limit than 100 object parts
     for (var j = 0; j < 100; j++) {
       let objectDefinition = objectDefinitions[j];
-      if (objectDefinition.start <= vIndexOffset && objectDefinition.start + objectDefinition.count >= vIndexOffset) {
+      if (objectDefinition.start <= vIndexOffset && objectDefinition.start + objectDefinition.count > vIndexOffset) {
         matchingObjectDefinition = objectDefinition;
         break;
       }
