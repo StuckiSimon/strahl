@@ -40,7 +40,6 @@ struct UniformData {
   clearColor: Color,
   // bool is not supported in uniform
   enableClearColor: i32,
-  illuminationFactor: f32,
   maxRayDepth: i32,
 }
 
@@ -1236,8 +1235,7 @@ fn rayColor(cameraRay: Ray, seed: ptr<function, u32>, sunBasis: Basis) -> vec4f 
           return vec4f(uniformData.clearColor, 0.0);
         }
       }
-      // todo: reconsider illumination factor
-      L += uniformData.illuminationFactor * throughput * misWeightLight * (sunRadiance(dW) + skyRadiance());
+      L += throughput * misWeightLight * (sunRadiance(dW) + skyRadiance());
       break;
     }
 
