@@ -1213,6 +1213,7 @@ fn rayColor(cameraRay: Ray, seed: ptr<function, u32>, sunBasis: Basis) -> vec4f 
   var inDielectric = false;
 
   for (var i = 0; i < uniformData.maxRayDepth; i += 1) {
+    // todo: handle setting t nicely
     hitRecord.t = TRIANGLE_MAX_DISTANCE_THRESHOLD;
     let hit = hittableListHit(ray, Interval(TRIANGLE_MIN_DISTANCE_THRESHOLD, TRIANGLE_MAX_DISTANCE_THRESHOLD), &hitRecord);
 
