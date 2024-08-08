@@ -141,6 +141,72 @@ In order to take an integral over a different domain $S$, which may represent a 
   \int_{S} f(x)
 \end{equation}
 
+\subsubsection{Probability Theory}
+
+Variance is a measure of dispersion, defining large the difference between the average and the individual values in a set of numbers. It is calculated as the average of the squared differences from the mean. The variance of a set of numbers $x_1, x_2, ..., x_n$ is defined as:
+
+\begin{equation}
+  \label{eqn:variance}
+  \sigma^2 = \frac{1}{n} \sum_{i=1}^{n} (x_i - \mu)^2
+\end{equation}
+
+where $\mu$ is the mean of the set of numbers.
+
+The probability density function (\gls{PDF}) describes the likelihood of a random variable to take on a specific value. It is related to the cumulative distribution function (\gls{CDF}) which describes the probability that the random variable will be less than or equal to a specific value.
+
+\begin{figure}[H]
+  \begin{subfigure}[b]{0.4\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[
+        width=4cm,
+        axis lines = left,
+        xlabel = $x$,
+        ylabel = $f(x)$,
+        domain=-4:4,
+        samples=100,
+        enlargelimits=upper,
+        xtick=\empty,
+        ytick=\empty,
+      ]
+      \addplot[
+        smooth,
+        ultra thick,
+        rblue,
+      ] {1/(sqrt(2*pi))*exp(-x^2/2)};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{PDF visualized}
+    \label{fig:pdf-theory}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.4\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[
+        width=4cm,
+        axis lines = left,
+        xlabel = $x$,
+        ylabel = $F(x)$,
+        samples=100,
+        enlargelimits=upper,
+        xtick=\empty,
+        ytick={0,1},
+      ]
+      \addplot[
+        smooth,
+        ultra thick,
+        rgreen,
+      ] {1/(1+e^(-1.65451*x))}; % See https://mathoverflow.net/q/273754
+      \end{axis}
+    \end{tikzpicture}
+    \caption{CDF visualized}
+    \label{fig:cdf-theory}
+  \end{subfigure}
+  \caption{\gls{PDF} and \gls{CDF} of normal distribution visualized}
+  \label{fig:probability-theory}
+\end{figure}
+
 \subsubsection{Bachmann-Landau Notation}
 
 The Bachmann-Landau notation, or more specifically, the Big O notation, is used to describe the behavior of a function as the input size grows. The notation is used to describe the upper bound of a function. For example, if a function $f(n)$ is $O(n^2)$, it means that the function grows at most quadratically with the input size $n$. The Big O notation is used to describe the growth of algorithms in terms of run time or space requirements.
