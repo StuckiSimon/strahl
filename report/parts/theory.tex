@@ -305,6 +305,74 @@ Leveraging Snell's law, Fresnel equations can be derived which describe not only
 
 Isotropy is a property of materials which have the same properties in all directions. An example of such a material is glass or water. Anisotropy on the other hand is a property of materials which have different properties in different directions. An example of such a material is wood or brushed metal. 
 
+\subsubsection{Approximation}
+
+The above-mentioned effects are rough approximations of the real world. Additional phenomena such as absorption and emission of light also affect the appearance. In general, many surfaces have a combination of these effects and need to consider the incidence as well as outgoing light, necessitating a bidirectional reflection model. This model defines where the largest contribution to overall radiance comes from, commonly referred to as the reflection lobe. Simplified, the main contribution can be visualized using an arc indicating the direction of the most significant contribution.
+ For example, a diffuse surface scatters light in all directions (\autoref{fig:reflection-lobe-intro-diffuse}), while a mirror-like surface reflects light in a specific direction (\autoref{fig:reflection-lobe-intro-specular}).
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.45\textwidth}
+    \begin{tikzpicture}
+      \coordinate (A) at (0,3);
+      \coordinate (AA) at (1,2);
+      \coordinate (BB) at (2,1);
+      \coordinate (B) at (3,0);
+
+      \draw[dashed, thick] (A) -- (B);
+      \draw[-latex, thick] (AA) -- (BB);
+
+      \def\radius{0.3}
+
+      \def\tangentx{3}
+      \def\tangenty{0}
+      \def\tangentr{3.04}
+
+      \foreach \angle in {-20, -40, -60, -80, -100, -120, -140, -160} {
+        \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (\angle:\tangentr)$);
+      }
+
+      \fill[rgreen] (B) circle (0.1);
+      \centerarc[rgreen,ultra thick](B)(0:180:1)
+
+      \fill[gray!20] (0,0) rectangle (6,-2);
+    \end{tikzpicture}
+    \caption{Diffuse surface with light scattering in all directions.}
+    \label{fig:reflection-lobe-intro-diffuse}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.45\textwidth}
+    \begin{tikzpicture}
+      \coordinate (A) at (0,3);
+      \coordinate (AA) at (1,2);
+      \coordinate (BB) at (2,1);
+      \coordinate (B) at (3,0);
+  
+      \coordinate (L) at (4.5,3);
+  
+      \draw[dashed, thick] (A) -- (B);
+      \draw[-latex, thick] (AA) -- (BB);
+  
+      \def\tangentx{3}
+      \def\tangenty{0}
+      \def\tangentr{3.04}
+  
+      \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (-131:\tangentr)$);
+      \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (-135:\tangentr)$);
+      \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (-139:\tangentr)$);
+  
+      \fill[rgreen] (B) circle (0.1);
+      \centerarc[rgreen,ultra thick](B)(40:50:1)
+
+      \fill[gray!20] (0,0) rectangle (6,-2);
+    \end{tikzpicture}
+    \caption{Mirror-like surface with small reflection lobe.}
+    \label{fig:reflection-lobe-intro-specular}
+  \end{subfigure}
+  \caption{Bidirectional reflection models for two different types of surfaces with green arc indicating reflection lobe.}
+  \label{fig:reflection-lobe-intro}
+\end{figure}
+
 \section{Computer Graphics}
 \label{ch:computerGraphics}
 
