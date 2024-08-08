@@ -21,3 +21,11 @@ export class SignalAlreadyAbortedError extends Error {
     );
   }
 }
+
+export class InvalidMaterialError extends Error {
+  constructor(public readonly invalidMaterial: unknown) {
+    super(
+      "Material is invalid. Make sure to configure all materials to be instances of OpenPBRMaterial.",
+    );
+  }
+}

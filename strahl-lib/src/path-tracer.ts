@@ -14,6 +14,7 @@ import {
 import { bvhToTextures } from "./bvh-util";
 import {
   CanvasReferenceError,
+  InvalidMaterialError,
   SignalAlreadyAbortedError,
   WebGPUNotSupportedError,
 } from "./exceptions";
@@ -449,12 +450,10 @@ async function runPathTracer(
   });
 
   // CODE#BUFFER-MAPPING
-  // todo: verify material type
   materialDataView.set(
     materials.map((m) => {
       if (!(m instanceof OpenPBRMaterial)) {
-        console.error("Invalid material type", m);
-        return;
+        throw new InvalidMaterialError(m);
       }
       return {
         baseWeight: m.oBaseWeight,
