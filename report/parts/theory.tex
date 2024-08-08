@@ -421,7 +421,7 @@ where $G$ is the estimate of the solution, $g$ is the function to be approximate
 
 In the context of ray tracing, Monte Carlo integration is used to approximate the rendering equation, as defined in \autoref{eqn:rendering-equation}. Applying the principle of Monte Carlo, the radiance of a pixel can be approximated by iteratively casting rays into the scene and averaging the results. 
 
-While Monte Carlo integration is a powerful technique, it heavily relies on the quality of the estimator which is employed. Using importance sampling can improve the rate of convergence. Importance sampling is a technique which leverages the probability distribution of the function to be approximated. By sampling more frequently in regions where the function has a higher value, the variance of the estimator can be reduced. In order to account for the probability distribution and prevent bias in the estimator, the estimator can be defined as:
+While Monte Carlo integration is a powerful technique, it heavily relies on the quality of the estimator which is employed. Using importance sampling can improve the rate of convergence. Importance sampling is a technique which leverages a proposal \gls{PDF}, different from the target \gls{PDF}, to estimate the expected value of a target function. By sampling more frequently in regions where the function has a higher value, the variance of the estimator can be reduced. In order to account for the probability distribution and prevent bias in the estimator, the estimator can be defined as:
 
 \begin{equation}
   G = \frac{1}{M}\sum_{i=1}^M \frac{g(X_i)}{p(X_i)}
