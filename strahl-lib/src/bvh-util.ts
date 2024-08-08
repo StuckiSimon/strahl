@@ -1,4 +1,5 @@
 import { MeshBVH } from "three-mesh-bvh";
+import { InternalError } from "./exceptions";
 
 // Build constants
 const BYTES_PER_NODE = 6 * 4 + 4 + 4;
@@ -32,11 +33,20 @@ type MeshBVHInternal = {
   _roots: ArrayBuffer[];
 };
 
+function assertMeshBVHInternalStructure(bvh: unknown): bvh is MeshBVHInternal {
+  return "_roots" in (bvh as MeshBVHInternal);
+}
+
 // CODE#BVH-TRANSFER
 // Inspired by https://github.com/gkjohnson/three-mesh-bvh/blob/0eda7b718799e1709ad9efecdcc13c06ae3d5a55/src/gpu/MeshBVHUniformStruct.js#L110C1-L191C2
 export function bvhToTextures(bvh: MeshBVH) {
-  const privateBvh = bvh as unknown as MeshBVHInternal;
-  const roots = privateBvh._roots;
+  const isStructureMatching = assertMeshBVHInternalStructure(bvh);
+  if (!isStructureMatching) {
+    throw new InternalError(
+      "MeshBVH internal structure does not match, this indicates a change in the library which is not supported.",
+    );
+  }
+  const roots = bvh._roots;
 
   if (roots.length !== 1) {
     throw new Error("MeshBVHUniformStruct: Multi-root BVHs not supported.");
