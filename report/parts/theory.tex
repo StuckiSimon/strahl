@@ -142,6 +142,7 @@ In order to take an integral over a different domain $S$, which may represent a 
 \end{equation}
 
 \subsubsection{Probability Theory}
+\label{sec:probabilityTheory}
 
 Variance is a measure of dispersion, defining large the difference between the average and the individual values in a set of numbers. It is calculated as the average of the squared differences from the mean. The variance of a set of numbers $x_1, x_2, ..., x_n$ is defined as:
 
@@ -152,7 +153,18 @@ Variance is a measure of dispersion, defining large the difference between the a
 
 where $\mu$ is the mean of the set of numbers.
 
-The probability density function (\gls{PDF}) describes the likelihood of a random variable to take on a specific value. It is related to the cumulative distribution function (\gls{CDF}) which describes the probability that the random variable will be less than or equal to a specific value.
+The standard deviation ($\sigma$) is the square root of the variance ($\sigma^2$). It is a measure of the dispersion of a set of numbers and can be used to determine a confidence interval. This interval is a range of values which has a certain probability of containing the value. High variance leads to a wide confidence interval which indicates that the data is spread out. The confidence interval as a $\pm$ margin of error deviation from the mean is then defined as:
+
+\begin{equation}
+  \label{eqn:confidence-interval}
+  z \frac{\sigma}{\sqrt{n}}
+\end{equation}
+
+where $z$ is the z-score of the desired confidence level, for example, $1.96$ for a $95\%$ confidence interval. $n$ is the number of samples.
+
+This can be used to assess the quality and realiability of measurements such as required for benchmarking.
+
+Another important concept is the probability density function (\gls{PDF}). It describes the likelihood of a random variable to take on a specific value. It is related to the cumulative distribution function (\gls{CDF}) which describes the probability that the random variable will be less than or equal to a specific value.
 
 \begin{figure}[H]
   \begin{subfigure}[b]{0.4\textwidth}
