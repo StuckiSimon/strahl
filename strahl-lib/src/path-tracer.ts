@@ -93,7 +93,8 @@ async function runPathTracer(
     ],
     cameraTargetDistance = 200,
     fov = 38.6701655,
-    finishedSampling,
+    // todo: add real type
+    finishedSampling = (_: any) => {},
   } = {},
 ) {
   const TARGET_SAMPLES = targetSamples;
