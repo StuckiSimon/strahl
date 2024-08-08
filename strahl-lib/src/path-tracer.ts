@@ -23,6 +23,7 @@ import {
   getSunDirection,
 } from "./environment-light";
 import { isNil } from "./is-nil";
+import { CustomCameraSetup, isCustomCameraSetup } from "./camera";
 
 function prepareGeometry(model: any) {
   const reducedModel = consolidateMesh([model.scene]);
@@ -64,27 +65,6 @@ function prepareGeometry(model: any) {
     maxBvhDepth,
     bvhBuildTime,
   };
-}
-
-type CustomCameraSetup = {
-  camera: Camera;
-  controls: {
-    addEventListener: (event: "change", listener: () => void) => void;
-  };
-};
-export type ViewProjectionConfiguration =
-  | CustomCameraSetup
-  | {
-      // todo: add more precise type
-      matrixWorldContent: number[];
-      fov: number;
-      cameraTargetDistance: number;
-    };
-
-export function isCustomCameraSetup(
-  viewProjectionConfiguration: ViewProjectionConfiguration,
-): viewProjectionConfiguration is CustomCameraSetup {
-  return !isNil((viewProjectionConfiguration as CustomCameraSetup).camera);
 }
 
 async function runPathTracer(
