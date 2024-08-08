@@ -12,6 +12,7 @@ import {
   makeStructuredView,
 } from "webgpu-utils";
 import { bvhToTextures } from "./bvh-util";
+import { SignalAlreadyAbortedError } from "./exceptions";
 
 const sunConfig = {
   skyPower: 0.5,
@@ -95,8 +96,13 @@ async function runPathTracer(
     fov = 38.6701655,
     // todo: add real type
     finishedSampling = (_: any) => {},
+    signal = new AbortController().signal,
   } = {},
 ) {
+  if (signal.aborted) {
+    throw new SignalAlreadyAbortedError();
+  }
+
   const TARGET_SAMPLES = targetSamples;
   const initLog = logGroup("init");
 
