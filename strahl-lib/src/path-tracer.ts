@@ -302,29 +302,7 @@ async function runPathTracer(
   } else {
     const matrixWorld = new Matrix4();
 
-    const matrixWorldContent = viewProjectionConfiguration.matrixWorldContent;
-
-    // todo: handle appropriately
-    matrixWorld.set(
-      matrixWorldContent[0],
-      matrixWorldContent[1],
-      matrixWorldContent[2],
-      matrixWorldContent[3],
-      matrixWorldContent[4],
-      matrixWorldContent[5],
-      matrixWorldContent[6],
-      matrixWorldContent[7],
-      matrixWorldContent[8],
-      matrixWorldContent[9],
-      matrixWorldContent[10],
-      matrixWorldContent[11],
-      matrixWorldContent[12],
-      matrixWorldContent[13],
-      matrixWorldContent[14],
-      matrixWorldContent[15],
-    );
-
-    matrixWorld.transpose();
+    matrixWorld.fromArray(viewProjectionConfiguration.matrixWorldContent);
 
     camera = new PerspectiveCamera(
       viewProjectionConfiguration.fov,
