@@ -17,30 +17,10 @@ import {
   SignalAlreadyAbortedError,
   WebGPUNotSupportedError,
 } from "./exceptions";
-
-const sunConfig = {
-  skyPower: 0.5,
-  skyColor: [1.0, 1.0, 1.0],
-  sunPower: 0.5,
-  sunAngularSize: 40,
-  sunLatitude: 45,
-  sunLongitude: 180,
-  sunColor: [1.0, 1.0, 0.9],
-};
-
-function getSunDirection() {
-  const { sunLatitude, sunLongitude } = sunConfig;
-  let latTheta = ((90.0 - sunLatitude) * Math.PI) / 180.0;
-  let lonPhi = (sunLongitude * Math.PI) / 180.0;
-  let cosTheta = Math.cos(latTheta);
-  let sinTheta = Math.sin(latTheta);
-  let cosPhi = Math.cos(lonPhi);
-  let sinPhi = Math.sin(lonPhi);
-  let x = sinTheta * cosPhi;
-  let z = sinTheta * sinPhi;
-  let y = cosTheta;
-  return [x, y, z];
-}
+import {
+  defaultEnvironmentLightConfig,
+  getSunDirection,
+} from "./environment-light";
 
 function prepareGeometry(model: any) {
   const reducedModel = consolidateMesh([model.scene]);
@@ -98,6 +78,7 @@ async function runPathTracer(
     ],
     cameraTargetDistance = 200,
     fov = 38.6701655,
+    environmentLightConfiguration = defaultEnvironmentLightConfig(),
     // todo: add real type
     finishedSampling = (_: any) => {},
     signal = new AbortController().signal,
@@ -656,7 +637,7 @@ async function runPathTracer(
     ],
   });
 
-  const sunDirection = getSunDirection();
+  const sunDirection = getSunDirection(environmentLightConfiguration.sun);
 
   initLog.end();
 
@@ -703,11 +684,11 @@ async function runPathTracer(
         priorSamples: currentSample,
         samplesPerPixel: SAMPLES_PER_ITERATION,
         sunDirection,
-        skyPower: sunConfig.skyPower,
-        skyColor: sunConfig.skyColor,
-        sunPower: Math.pow(10, sunConfig.sunPower),
-        sunAngularSize: sunConfig.sunAngularSize,
-        sunColor: sunConfig.sunColor,
+        skyPower: environmentLightConfiguration.sky.power,
+        skyColor: environmentLightConfiguration.sky.color,
+        sunPower: Math.pow(10, environmentLightConfiguration.sun.power),
+        sunAngularSize: environmentLightConfiguration.sun.angularSize,
+        sunColor: environmentLightConfiguration.sun.color,
         clearColor: [1.0, 1.0, 1.0],
         enableClearColor: 1,
         maxRayDepth: 5,
