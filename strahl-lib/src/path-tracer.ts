@@ -99,9 +99,29 @@ async function runPathTracer(
     signal = new AbortController().signal,
   } = {},
 ) {
+  /**
+   * Map storing state of the tracer instance.
+   * Routines with external resources should use this to be notified of aborts aka destruction of the path tracing process.
+   */
+  const instanceState = {
+    isRunning: true,
+    abortNotifiers: new Map<string, () => void>(),
+  };
+
+  const setDestructionNotifier = (id: string, notifier: () => void) => {
+    instanceState.abortNotifiers.set(id, notifier);
+  };
+
   if (signal.aborted) {
     throw new SignalAlreadyAbortedError();
   }
+  signal.addEventListener("abort", () => {
+    instanceState.isRunning = false;
+    for (const [, notifier] of instanceState.abortNotifiers) {
+      notifier();
+    }
+    instanceState.abortNotifiers.clear();
+  });
 
   const TARGET_SAMPLES = targetSamples;
   const initLog = logGroup("init");
@@ -139,6 +159,10 @@ async function runPathTracer(
 
   const device = await adapter.requestDevice({
     requiredFeatures: ["timestamp-query"],
+  });
+
+  setDestructionNotifier("device", () => {
+    device.destroy();
   });
 
   const timestampQuerySet = device.createQuerySet({
