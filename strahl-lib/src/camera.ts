@@ -4,7 +4,7 @@ import { OrbitControls } from "three/examples/jsm/Addons.js";
 
 export type CustomCameraSetup = {
   camera: Camera;
-  controls: {
+  controls?: {
     addEventListener: (event: "change", listener: () => void) => void;
   };
 };

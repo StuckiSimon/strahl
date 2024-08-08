@@ -833,7 +833,7 @@ async function runPathTracer(
 
   let renderLoop = buildRenderLoop();
 
-  cameraSetup.controls.addEventListener("change", () => {
+  cameraSetup.controls?.addEventListener("change", () => {
     renderLoop.terminateLoop();
 
     renderLoop = buildRenderLoop();
