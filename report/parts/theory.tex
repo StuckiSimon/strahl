@@ -301,13 +301,26 @@ where $n_1$ and $n_2$ are the refractive indices of the two media and $\theta$ a
 
 Leveraging Snell's law, Fresnel equations can be derived which describe not only the refraction but also the reflection of light when passing through a medium.
 
-\subsubsection{Isotropy}
+\subsubsection{Material Properties}
 
-Isotropy is a property of materials which have the same properties in all directions. An example of such a material is glass or water. Anisotropy on the other hand is a property of materials which have different properties in different directions. An example of such a material is wood or brushed metal. 
+Common terminology used to describe the optical properties of materials is helpful to understand the behavior of light and the challenge of simulating it. Some of the most common terms are:
 
-\subsubsection{Approximation}
+\begin{itemize}
+  \item{Diffuse Reflection} — light is scattered in all directions. An example of such a material is paper or chalk.
+  \item{Specular Reflection} — light is reflected in a specific direction. This leads to highlights on the surface.
+  \item{Roughness} — defines how smooth the surface of the material is. A rough surface scatters light in many directions, while a smooth surface reflects light in a specific direction.
+  \item{Metallic} — the material reflects light in a specific direction.
+  \item{Dielectric} — materials which do not conduct electricity. These materials are not using metallic reflection.
+  \item{Absorption} — defines how much of the light is absorbed by a material. In general, darker colors absorb more light than lighter colors.
+  \item{Emission} — the material emits light. An example of such a material is a light bulb or the sun.
+  \item{Scattering} — the material scatters light. An example of such a material is fog or clouds.
+  \item{Subsurface Scattering} — light penetrates the material and is scattered. An example of such a material is skin or marble.
+  \item{Isotropy} — property of materials which have the same properties in all directions. An example of such a material is glass or water. Anisotropy on the other hand is a property of materials which have different properties in different directions. An example of such a material is wood or brushed metal.
+\end{itemize}
 
-The above-mentioned effects are rough approximations of the real world. Additional phenomena such as absorption and emission of light also affect the appearance. In general, many surfaces have a combination of these effects and need to consider the incidence as well as outgoing light, necessitating a bidirectional reflection model. This model defines where the largest contribution to overall radiance comes from, commonly referred to as the reflection lobe. Simplified, the main contribution can be visualized using an arc indicating the direction of the most significant contribution.
+\subsubsection{Generalization}
+
+The mentioned laws are rough approximations of the real world. Additional phenomena such as absorption and emission of light also affect the appearance. In general, many surfaces have a combination of these effects and need to consider the incidence as well as outgoing light, necessitating a bidirectional reflection model. This model defines where the largest contribution to overall radiance comes from, commonly referred to as the reflection lobe. Simplified, the main contribution can be visualized using an arc indicating the direction of the most significant contribution.
  For example, a diffuse surface scatters light in all directions (\autoref{fig:reflection-lobe-intro-diffuse}), while a mirror-like surface reflects light in a specific direction (\autoref{fig:reflection-lobe-intro-specular}).
 
 \begin{figure}[H]
