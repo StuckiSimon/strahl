@@ -1,4 +1,4 @@
-import { Matrix4, PerspectiveCamera, Vector3 } from "three";
+import { Camera, Matrix4, PerspectiveCamera, Vector3 } from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { getBVHExtremes, MeshBVH } from "three-mesh-bvh";
 import buildTracerShader from "./tracer-shader";
@@ -66,20 +66,43 @@ function prepareGeometry(model: any) {
   };
 }
 
+type CustomCameraSetup = {
+  camera: Camera;
+  controls: {
+    addEventListener: (event: "change", listener: () => void) => void;
+  };
+};
+export type ViewProjectionConfiguration =
+  | CustomCameraSetup
+  | {
+      // todo: add more precise type
+      matrixWorldContent: number[];
+      fov: number;
+      cameraTargetDistance: number;
+    };
+
+export function isCustomCameraSetup(
+  viewProjectionConfiguration: ViewProjectionConfiguration,
+): viewProjectionConfiguration is CustomCameraSetup {
+  return !isNil((viewProjectionConfiguration as CustomCameraSetup).camera);
+}
+
 async function runPathTracer(
   target: string,
   model: any,
   {
     targetSamples = 300,
     kTextureWidth = 512,
-    matrixWorldContent = [
-      0.9348898557149565, 0, -0.354937963144642, 0, 0.04359232917084678,
-      0.992429364980685, 0.1148201391807842, 0, 0.3522508573711748,
-      -0.12281675587652569, 0.9278121458340784, 0, 63.44995297630283,
-      -44.22427925573443, 209.99999999999994, 1,
-    ],
-    cameraTargetDistance = 200,
-    fov = 38.6701655,
+    viewProjectionConfiguration = {
+      matrixWorldContent: [
+        0.9348898557149565, 0, -0.354937963144642, 0, 0.04359232917084678,
+        0.992429364980685, 0.1148201391807842, 0, 0.3522508573711748,
+        -0.12281675587652569, 0.9278121458340784, 0, 63.44995297630283,
+        -44.22427925573443, 209.99999999999994, 1,
+      ],
+      fov: 38.6701655,
+      cameraTargetDistance: 200,
+    },
     environmentLightConfiguration = defaultEnvironmentLightConfig(),
     samplesPerIteration = 1,
     clearColor = [1.0, 1.0, 1.0],
@@ -287,47 +310,66 @@ async function runPathTracer(
 
   // Prepare Position Data
 
-
-  let matrixWorld = new Matrix4();
-
-  // 45-cleaned
-  // todo: handle appropriately
-  matrixWorld.set(
-    matrixWorldContent[0],
-    matrixWorldContent[1],
-    matrixWorldContent[2],
-    matrixWorldContent[3],
-    matrixWorldContent[4],
-    matrixWorldContent[5],
-    matrixWorldContent[6],
-    matrixWorldContent[7],
-    matrixWorldContent[8],
-    matrixWorldContent[9],
-    matrixWorldContent[10],
-    matrixWorldContent[11],
-    matrixWorldContent[12],
-    matrixWorldContent[13],
-    matrixWorldContent[14],
-    matrixWorldContent[15],
+  const isCustomCameraConfiguration = isCustomCameraSetup(
+    viewProjectionConfiguration,
   );
-  matrixWorld.transpose();
 
-  const camera = new PerspectiveCamera(fov, 1, 0.01, 1000);
-  const controls = new OrbitControls(camera, canvas);
-  camera.matrixAutoUpdate = false;
-  camera.applyMatrix4(matrixWorld);
-  camera.matrixAutoUpdate = true;
+  let camera: CustomCameraSetup["camera"];
+  let controls: CustomCameraSetup["controls"];
+  if (isCustomCameraConfiguration) {
+    camera = viewProjectionConfiguration.camera;
+    controls = viewProjectionConfiguration.controls;
+  } else {
+    const matrixWorld = new Matrix4();
 
-  camera.updateMatrixWorld();
+    const matrixWorldContent = viewProjectionConfiguration.matrixWorldContent;
 
-  const dir = new Vector3();
-  camera.getWorldDirection(dir);
-  const camTarget = camera.position.clone();
-  camTarget.addScaledVector(dir, cameraTargetDistance);
-  controls.target.copy(camTarget);
+    // todo: handle appropriately
+    matrixWorld.set(
+      matrixWorldContent[0],
+      matrixWorldContent[1],
+      matrixWorldContent[2],
+      matrixWorldContent[3],
+      matrixWorldContent[4],
+      matrixWorldContent[5],
+      matrixWorldContent[6],
+      matrixWorldContent[7],
+      matrixWorldContent[8],
+      matrixWorldContent[9],
+      matrixWorldContent[10],
+      matrixWorldContent[11],
+      matrixWorldContent[12],
+      matrixWorldContent[13],
+      matrixWorldContent[14],
+      matrixWorldContent[15],
+    );
 
-  controls.update();
+    matrixWorld.transpose();
 
+    camera = new PerspectiveCamera(
+      viewProjectionConfiguration.fov,
+      1,
+      0.01,
+      1000,
+    );
+    const internalControls = (controls = new OrbitControls(camera, canvas));
+    camera.matrixAutoUpdate = false;
+    camera.applyMatrix4(matrixWorld);
+    camera.matrixAutoUpdate = true;
+
+    camera.updateMatrixWorld();
+
+    const dir = new Vector3();
+    camera.getWorldDirection(dir);
+    const camTarget = camera.position.clone();
+    camTarget.addScaledVector(
+      dir,
+      viewProjectionConfiguration.cameraTargetDistance,
+    );
+    internalControls.target.copy(camTarget);
+
+    internalControls.update();
+  }
 
   const positionBuffer = device.createBuffer({
     label: "Position buffer",
