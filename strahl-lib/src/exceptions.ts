@@ -29,3 +29,11 @@ export class InvalidMaterialError extends Error {
     );
   }
 }
+
+export class InternalError extends Error {
+  constructor(techReason: string) {
+    super(
+      `Library error occurred, please get in contact. (Reason: ${techReason})`,
+    );
+  }
+}
