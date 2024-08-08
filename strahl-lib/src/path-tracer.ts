@@ -821,7 +821,16 @@ async function runPathTracer(
       device.queue.submit([commandBuffer]);
 
       if (timestampQueryResultBuffer.mapState === "unmapped") {
-        await timestampQueryResultBuffer.mapAsync(GPUMapMode.READ);
+        try {
+          await timestampQueryResultBuffer.mapAsync(GPUMapMode.READ);
+        } catch (e) {
+          // In case of planned cancellation, this is expected
+          if (!instanceState.isRunning) {
+            console.warn("Aborted render loop");
+            return;
+          }
+          throw e;
+        }
         const data = new BigUint64Array(
           timestampQueryResultBuffer.getMappedRange(),
         );
