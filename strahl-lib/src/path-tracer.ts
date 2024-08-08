@@ -91,6 +91,7 @@ async function runPathTracer(
       -0.12281675587652569, 0.9278121458340784, 0, 63.44995297630283,
       -44.22427925573443, 209.99999999999994, 1,
     ],
+    cameraTargetDistance = 200,
     fov = 38.6701655,
     finishedSampling,
   } = {},
@@ -303,7 +304,7 @@ async function runPathTracer(
   const dir = new Vector3();
   camera.getWorldDirection(dir);
   const camTarget = camera.position.clone();
-  camTarget.addScaledVector(dir, 200);
+  camTarget.addScaledVector(dir, cameraTargetDistance);
   controls.target.copy(camTarget);
 
   controls.update();
