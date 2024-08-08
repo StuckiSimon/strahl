@@ -22,6 +22,7 @@ import {
   defaultEnvironmentLightConfig,
   getSunDirection,
 } from "./environment-light";
+import { isNil } from "./is-nil";
 
 function prepareGeometry(model: any) {
   const reducedModel = consolidateMesh([model.scene]);
@@ -80,6 +81,9 @@ async function runPathTracer(
     cameraTargetDistance = 200,
     fov = 38.6701655,
     environmentLightConfiguration = defaultEnvironmentLightConfig(),
+    samplesPerIteration = 1,
+    clearColor = [1.0, 1.0, 1.0],
+    maxRayDepth = 5,
     // todo: add real type
     finishedSampling = (_: any) => {},
     signal = new AbortController().signal,
@@ -640,8 +644,6 @@ async function runPathTracer(
 
   initLog.end();
 
-  const SAMPLES_PER_ITERATION = 1;
-
   const renderLoopStart = logGroup("render loop full");
   const buildRenderLoop = () => {
     let state: "running" | "halted" = "running";
@@ -681,16 +683,16 @@ async function runPathTracer(
         invModelMatrix: sceneMatrixWorld.clone().invert().elements,
         seedOffset: Math.random() * Number.MAX_SAFE_INTEGER,
         priorSamples: currentSample,
-        samplesPerPixel: SAMPLES_PER_ITERATION,
+        samplesPerPixel: samplesPerIteration,
         sunDirection,
         skyPower: environmentLightConfiguration.sky.power,
         skyColor: environmentLightConfiguration.sky.color,
         sunPower: Math.pow(10, environmentLightConfiguration.sun.power),
         sunAngularSize: environmentLightConfiguration.sun.angularSize,
         sunColor: environmentLightConfiguration.sun.color,
-        clearColor: [1.0, 1.0, 1.0],
-        enableClearColor: 1,
-        maxRayDepth: 5,
+        clearColor,
+        enableClearColor: !isNil(clearColor) ? 1 : 0,
+        maxRayDepth,
         objectDefinitionLength: groups.length,
       });
       // todo: consider buffer writing
