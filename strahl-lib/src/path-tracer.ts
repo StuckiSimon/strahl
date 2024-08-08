@@ -12,7 +12,11 @@ import {
   makeStructuredView,
 } from "webgpu-utils";
 import { bvhToTextures } from "./bvh-util";
-import { SignalAlreadyAbortedError } from "./exceptions";
+import {
+  CanvasReferenceError,
+  SignalAlreadyAbortedError,
+  WebGPUNotSupportedError,
+} from "./exceptions";
 
 const sunConfig = {
   skyPower: 0.5,
@@ -142,19 +146,18 @@ async function runPathTracer(
   const canvas = document.getElementById(target);
 
   if (!(canvas instanceof HTMLCanvasElement)) {
-    console.error("No canvas found");
-    return;
+    throw new CanvasReferenceError();
   }
 
   if (!navigator.gpu) {
-    console.error("WebGPU is not supported in your browser");
-    return;
+    throw new WebGPUNotSupportedError(
+      "navigator.gpu is not available, most likely due to browser",
+    );
   }
 
   const adapter = await navigator.gpu.requestAdapter();
   if (!adapter) {
-    console.error("No adapter found");
-    return;
+    throw new WebGPUNotSupportedError("No suitable WebGPU adapter available");
   }
 
   const device = await adapter.requestDevice({
@@ -183,8 +186,7 @@ async function runPathTracer(
   const context = canvas.getContext("webgpu");
 
   if (!context) {
-    console.error("No context found");
-    return;
+    throw new WebGPUNotSupportedError("No WebGPU context available");
   }
 
   const format = navigator.gpu.getPreferredCanvasFormat();
