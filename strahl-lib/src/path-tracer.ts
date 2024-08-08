@@ -1,5 +1,3 @@
-import { Camera, Matrix4, PerspectiveCamera, Vector3 } from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { getBVHExtremes, MeshBVH } from "three-mesh-bvh";
 import buildTracerShader from "./tracer-shader";
 import buildRenderShader from "./render-shader";
@@ -23,7 +21,11 @@ import {
   getSunDirection,
 } from "./environment-light";
 import { isNil } from "./is-nil";
-import { CustomCameraSetup, isCustomCameraSetup } from "./camera";
+import {
+  CustomCameraSetup,
+  isCustomCameraSetup,
+  makeRawCameraSetup,
+} from "./camera";
 
 function prepareGeometry(model: any) {
   const reducedModel = consolidateMesh([model.scene]);
@@ -294,39 +296,11 @@ async function runPathTracer(
     viewProjectionConfiguration,
   );
 
-  let camera: CustomCameraSetup["camera"];
-  let controls: CustomCameraSetup["controls"];
+  let cameraSetup: CustomCameraSetup;
   if (isCustomCameraConfiguration) {
-    camera = viewProjectionConfiguration.camera;
-    controls = viewProjectionConfiguration.controls;
+    cameraSetup = viewProjectionConfiguration;
   } else {
-    const matrixWorld = new Matrix4();
-
-    matrixWorld.fromArray(viewProjectionConfiguration.matrixWorldContent);
-
-    camera = new PerspectiveCamera(
-      viewProjectionConfiguration.fov,
-      1,
-      0.01,
-      1000,
-    );
-    const internalControls = (controls = new OrbitControls(camera, canvas));
-    camera.matrixAutoUpdate = false;
-    camera.applyMatrix4(matrixWorld);
-    camera.matrixAutoUpdate = true;
-
-    camera.updateMatrixWorld();
-
-    const dir = new Vector3();
-    camera.getWorldDirection(dir);
-    const camTarget = camera.position.clone();
-    camTarget.addScaledVector(
-      dir,
-      viewProjectionConfiguration.cameraTargetDistance,
-    );
-    internalControls.target.copy(camTarget);
-
-    internalControls.update();
+    cameraSetup = makeRawCameraSetup(viewProjectionConfiguration, canvas);
   }
 
   const positionBuffer = device.createBuffer({
@@ -656,8 +630,8 @@ async function runPathTracer(
     let renderTimes = [];
 
     const render = async () => {
-      const matrixWorld = camera.matrixWorld;
-      const invProjectionMatrix = camera.projectionMatrixInverse;
+      const matrixWorld = cameraSetup.camera.matrixWorld;
+      const invProjectionMatrix = cameraSetup.camera.projectionMatrixInverse;
 
       const renderLog = logGroup("render");
       const writeTexture = currentSample % 2 === 0 ? texture : textureB;
@@ -859,7 +833,7 @@ async function runPathTracer(
 
   let renderLoop = buildRenderLoop();
 
-  controls.addEventListener("change", () => {
+  cameraSetup.controls.addEventListener("change", () => {
     renderLoop.terminateLoop();
 
     renderLoop = buildRenderLoop();
