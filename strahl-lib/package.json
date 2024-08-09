@@ -29,7 +29,8 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist/**/*.js",
-    "dist/**/*.cjs"
+    "dist/**/*.cjs",
+    "dist/**/*.d.ts"
   ],
   "devDependencies": {
     "@types/three": "^0.165.0",
