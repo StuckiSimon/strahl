@@ -11,7 +11,7 @@ import clsx from "clsx";
 // todo: handle types for OpenPBRMaterial
 const OpenPBRMaterial = RawOpenPBRMaterial as any;
 
-async function init() {
+async function init(signal: AbortSignal) {
   const MODEL_URL =
     "https://stuckisimon.github.io/strahl-sample-models/45-series/45-series-cleaned.gltf";
 
@@ -134,7 +134,13 @@ async function init() {
       }
     });
 
-    await runPathTracer("render-target", model);
+    if (signal.aborted) {
+      return;
+    }
+    await runPathTracer("render-target", model, {
+      targetSamples: 100,
+      signal,
+    });
   }
 
   run();
@@ -143,10 +149,17 @@ async function init() {
 export default function TracerDemo(): JSX.Element {
   const loadingState = React.useRef(false);
   React.useEffect(() => {
+    const destroyController = new AbortController();
+    const signal = destroyController.signal;
+
     if (!loadingState.current) {
       loadingState.current = true;
-      init();
+      init(signal);
     }
+
+    return () => {
+      destroyController.abort();
+    };
   }, []);
   return (
     <div className={styles.container}>
