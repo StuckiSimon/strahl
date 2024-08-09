@@ -1,12 +1,16 @@
-import { Camera, Matrix4, PerspectiveCamera, Vector3 } from "three";
+import {
+  Camera,
+  EventDispatcher,
+  Matrix4,
+  PerspectiveCamera,
+  Vector3,
+} from "three";
 import { isNil } from "./is-nil";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 
 export type CustomCameraSetup = {
   camera: Camera;
-  controls?: {
-    addEventListener: (event: "change", listener: () => void) => void;
-  };
+  controls?: EventDispatcher;
 };
 
 type RawCameraSetup = {
