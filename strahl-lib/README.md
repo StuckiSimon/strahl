@@ -12,6 +12,8 @@ In order to expose in local network, run:
 
 ## Publish
 
+1. `git stash --include-untracked`
 1. `npm run build`
 1. `npm version prerelease --preid=alpha`
+1. `npm publish --dry-run`
 1. `npm publish`
