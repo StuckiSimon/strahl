@@ -104,7 +104,17 @@ async function runPathTracer(
   };
 
   const setDestructionNotifier = (id: string, notifier: () => void) => {
-    instanceState.abortNotifiers.set(id, notifier);
+    /**
+     * Instantly invoke notifier if instance is already aborted.
+     *
+     * During async operations it is possible that isRunning is updated before the notifier is set.
+     * This ensures that the notifier is invoked in such edge cases.
+     */
+    if (instanceState.isRunning) {
+      instanceState.abortNotifiers.set(id, notifier);
+    } else {
+      notifier();
+    }
   };
 
   if (signal.aborted) {
