@@ -23,3 +23,11 @@ runPathTracer(target, model, {
   },
 });
 ```
+
+### Sun Configuration
+
+Use `angularSize` to determine the size of the sun, `latitude` and `longitude` to change the position and therefore direction of light, `color` for different effects, and `power` for the intensity.
+
+### Sky Configuration
+
+Use `power` for intensity of ambient light and `color` for different effects.
