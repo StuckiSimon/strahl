@@ -6,7 +6,6 @@
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://stuckisimon.github.io/strahl/blog"/>
     <subtitle>strahl Blog</subtitle>
-    <icon>https://stuckisimon.github.io/strahl/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[Welcome]]></title>
         <id>https://stuckisimon.github.io/strahl/blog/welcome</id>
@@ -15,7 +14,7 @@
         <summary type="html"><![CDATA[Strahl, a web-based path tracer powered by WebGPU, is now publicly available. Designed for easy use and high-quality, near real-time rendering, strahl is still under development but eager for feedback.]]></summary>
         <content type="html"><![CDATA[<p>Strahl, a web-based path tracer powered by WebGPU, is now publicly available. Designed for easy use and high-quality, near real-time rendering, strahl is still under development but eager for feedback.</p>
 <p>While documentation and usage information are expanding, I welcome your questions and input. The goal is a fully functional release by the end of August.</p>
-<p>For a technical overview, check out our short paper on <a href="https://arxiv.org/abs/2407.19977" target="_blank" rel="noopener noreferrer">arXiv</a>:</p>]]></content>
+<p>For a technical overview, check out our short paper on <a href="https://arxiv.org/abs/2407.19977" target="_blank" rel="noopener noreferrer">arXiv</a>.</p>]]></content>
         <author>
             <name>Simon Stucki</name>
             <uri>https://github.com/StuckiSimon</uri>

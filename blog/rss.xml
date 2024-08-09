@@ -16,7 +16,7 @@
             <description><![CDATA[Strahl, a web-based path tracer powered by WebGPU, is now publicly available. Designed for easy use and high-quality, near real-time rendering, strahl is still under development but eager for feedback.]]></description>
             <content:encoded><![CDATA[<p>Strahl, a web-based path tracer powered by WebGPU, is now publicly available. Designed for easy use and high-quality, near real-time rendering, strahl is still under development but eager for feedback.</p>
 <p>While documentation and usage information are expanding, I welcome your questions and input. The goal is a fully functional release by the end of August.</p>
-<p>For a technical overview, check out our short paper on <a href="https://arxiv.org/abs/2407.19977" target="_blank" rel="noopener noreferrer">arXiv</a>:</p>]]></content:encoded>
+<p>For a technical overview, check out our short paper on <a href="https://arxiv.org/abs/2407.19977" target="_blank" rel="noopener noreferrer">arXiv</a>.</p>]]></content:encoded>
         </item>
     </channel>
 </rss>
