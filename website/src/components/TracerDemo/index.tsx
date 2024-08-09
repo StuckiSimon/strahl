@@ -1,7 +1,8 @@
 import React from "react";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import Heading from "@theme/Heading";
-import runPathTracer, {
+import {
+  runPathTracer,
   OpenPBRMaterial as RawOpenPBRMaterial,
 } from "../../../../strahl-lib/dist/strahl";
 import styles from "./styles.module.css";
@@ -36,8 +37,10 @@ async function init() {
   redPlasticMaterial.oBaseColor = [0.67, 0.18, 0.12];
   redPlasticMaterial.oSpecularColor = [1.0, 1.0, 0.9];
   redPlasticMaterial.oSpecularWeight = 0.2;
-  // for 45-cleaned
-  redPlasticMaterial.oSpecularWeight = 0.01;
+
+  const metalTestMaterial = new OpenPBRMaterial();
+  metalTestMaterial.oBaseColor = [0.9, 0.9, 0.9];
+  metalTestMaterial.oBaseMetalness = 1.0;
 
   const metalMaterial = new OpenPBRMaterial();
   metalMaterial.oBaseColor = [0.9, 0.9, 0.9];
@@ -65,7 +68,7 @@ async function init() {
   const blackPlastic = new OpenPBRMaterial();
   blackPlastic.oBaseColor = [0.25, 0.25, 0.25];
   // for 45-cleaned
-  blackPlastic.oSpecularWeight = 0.3;
+  blackPlastic.oSpecularWeight = 1.0;
 
   const whitePlastic = new OpenPBRMaterial();
   whitePlastic.oBaseColor = [0.8, 0.8, 0.8];
