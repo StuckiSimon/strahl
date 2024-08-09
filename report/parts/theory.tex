@@ -249,6 +249,7 @@ The Bachmann-Landau notation, or more specifically, the Big O notation, is used 
 \end{figure}
 
 \section{Physics}
+\label{ch:physics}
 
 In order to generate images using computer graphics, understanding the physics is crucial. More specifically, the study of light and its perception is important. In physics, optics is the study of light. The field encompasses topics such as light propagation and optical properties of matter. Maxwell's equations are a set of equations in electromagnetism that describe the behavior of electromagnetic fields. Formulated by James Clerk Maxwell in the 19th century, they provide a mathematical framework for understanding the propagation of electromagnetic waves, including, but not limited to, visible light. Light can be described as a wave or as a particle, this is generally known as the wave-particle duality. \cite{fowles1989introduction}
 
@@ -306,12 +307,12 @@ Leveraging Snell's law, Fresnel equations can be derived which describe not only
 Common terminology used to describe the optical properties of materials is helpful to understand the behavior of light and the challenge of simulating it. Some of the most common terms are:
 
 \begin{itemize}
-  \item{Diffuse Reflection} — light is scattered in all directions. An example of such a material is paper or chalk.
+  \item{Diffuse Reflection} — light is scattered in all directions, independent of the viewing angle. An example of such a material is paper or chalk. As early as the 18th century, Lambert described the reflection of light on a surface \cite{lambert1760photometria}. Lambertian reflection is still used as a term for diffuse reflection.
   \item{Specular Reflection} — light is reflected in a specific direction. This leads to highlights on the surface.
   \item{Roughness} — defines how smooth the surface of the material is. A rough surface scatters light in many directions, while a smooth surface reflects light in a specific direction.
   \item{Metallic} — the material reflects light in a specific direction.
   \item{Dielectric} — materials which do not conduct electricity. These materials are not using metallic reflection.
-  \item{Absorption} — defines how much of the light is absorbed by a material. In general, darker colors absorb more light than lighter colors.
+  \item{Absorption} — defines how much of the light is absorbed by a material. In general, darker colors absorb more light than lighter colors. One prominent example is Vantablack, a highly absorbant material.
   \item{Emission} — the material emits light. An example of such a material is a light bulb or the sun.
   \item{Scattering} — the material scatters light. An example of such a material is fog or clouds.
   \item{Subsurface Scattering} — light penetrates the material and is scattered. An example of such a material is skin or marble.
@@ -849,17 +850,17 @@ When simulating light transport, the radiance of the scene can exceed the displa
 
 \section{Physically Based Rendering}
 
-Defining the geometry is one part of the equation. Another major part is defining materials. Materials define how a surface interacts with light. The core idea of physically based rendering (\gls{PBR}) is to simulate the interaction of light using physical models. Instead of fine-tuning parameters for a specific look and feel and having to adjust based on desired lighting situations, \gls{PBR} aims to define a material which behaves consistently in different lighting situations.
+Defining the geometry is one part of the equation. Another major part is defining materials. Materials define how a surface interacts with light. The core idea of physically based rendering (\gls{PBR}) is to simulate the interaction of light using physical models. Instead of fine-tuning parameters for a specific look and feel and having to adjust based on desired lighting situations, \gls{PBR} aims to define a material which behaves consistently in different lighting situations. It is therefore an approach based on physical principles such as those described in \autoref{ch:physics}.
 
-Research into \gls{PBR} has been conducted for a similar amount of time as ray tracing. And just like ray tracing, the computational complexity of the algorithms has limited the adoption of \gls{PBR} in real-time rendering for a long time. \gls{PBR} has generally coincided with the rise of ray tracing as it is a natural fit for the physics based rendering approach. One prominent example of a PBR system is \gls{pbrt}, an open-source renderer with an associated literate programming book which has won an Academy Award for formalizing and providing reference implementation for \gls{PBR} \cite{Pharr_Physically_Based_Rendering_2023}.
+Research into \gls{PBR} has been conducted for a similar amount of time as ray tracing. And just like ray tracing, the computational complexity of the algorithms has limited the adoption of \gls{PBR} in real-time rendering for a long time. \gls{PBR} has generally coincided with the rise of ray tracing as it is a natural fit for the physics based approach on light transport. One prominent example of a PBR system is \gls{pbrt}, an open-source renderer with an associated literate programming book which has won an Academy Award for formalizing and providing reference implementation for \gls{PBR} \cite{Pharr_Physically_Based_Rendering_2023}.
 
 \gls{PBR} and ray tracing are not mutually dependent as \gls{PBR} can be used in rasterization as well. In contrast to how ray tracing is inherently addressing shortcomings of rasterization by leveraging an entirely different approach, \gls{PBR} is a more incremental improvement extending existing shading techniques with more sophisticated models.
 
-In general, there is no \gls{PBR} standard. Instead, a variety of different models have been developed over time. In recent years however, a convergence towards a common set of principles has been observed and certain aspects of \gls{PBR} are found in most models.
+In general, there is no \gls{PBR} standard. Instead, a variety of different models have been developed over time. In recent years however, a convergence towards a common set of principles has been observed and certain aspects of \gls{PBR} are found in most models. This section explains these common principles.
 
 \subsection{BxDF}
 
-The definition of the bidirectional distribution functions (BxDF) is a key concept in PBR. The $x$ stands for the different kinds of distributions to consider. In general, the functions describe how light is reflected or transmitted. The two functions are usually abbreviated as BRDF, the r standing for reflectance, and BTDF, the t standing for transmittance.
+The definition of the bidirectional distribution functions (\gls{BxDF}) is a key concept in PBR. The $x$ stands for the different kinds of distributions to consider. In general, the functions describe how light is reflected or transmitted. The two functions are usually abbreviated as \gls{BRDF}, the r standing for reflectance, and \gls{BTDF}, the t standing for transmittance. The combination of the two is often referred to as \gls{BSDF}, the s standing for scattering \cite{Pharr_Physically_Based_Rendering_2023}.
 
 These functions define the distribution of light in different directions. Samples of different kinds of reflectance distributions can be seen in \autoref{fig:brdf}. Many objects exhibit a combination of different reflectance distributions.
 
@@ -897,7 +898,7 @@ While the macroscopic appearance of a material is visible to the human eye, the 
 
 \subsection{Diffuse Reflection}
 
-As early as the 18th century, Lambert described the reflection of light on a surface \cite{lambert1760photometria}. Lambertian reflection is still used as a term for diffuse reflection. The core tenant of diffuse reflection is equally scattering light in all directions, independent of the viewing angle. In 1995, Oren and Nayar suggested a novel reflection model which extended the Lambertian model to include rough surfaces \cite{oren1994generalization}, commonly known as the Oren-Nayar model.
+In 1995, Oren and Nayar suggested a novel diffuse reflection model which extended the Lambertian model to include rough surfaces \cite{oren1994generalization}, commonly known as the Oren-Nayar model.
 
 \section{Computer Graphics Technology}
 
