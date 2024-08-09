@@ -58,7 +58,7 @@ function HomepageHeader() {
           strahl is an open-source path tracing library built using WebGPU.
         </p>
         <div className={styles.buttons}>
-          <Button to="/blog">Get Started</Button>
+          <Button to="/docs/intro">Get Started</Button>
           <Button
             to="https://github.com/StuckiSimon/strahl"
             icon={faGithub}
