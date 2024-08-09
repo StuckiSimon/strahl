@@ -23,7 +23,8 @@
   "exports": {
     ".": {
       "import": "./dist/strahl.js",
-      "require": "./dist/strahl.umd.cjs"
+      "require": "./dist/strahl.umd.cjs",
+      "types": "./dist/index.d.ts"
     }
   },
   "types": "dist/index.d.ts",
