@@ -19,6 +19,7 @@ import {
 } from "./exceptions";
 import {
   defaultEnvironmentLightConfig,
+  EnvironmentLightConfig,
   getSunDirection,
 } from "./environment-light";
 import { isNil } from "./is-nil";
@@ -26,6 +27,7 @@ import {
   CustomCameraSetup,
   isCustomCameraSetup,
   makeRawCameraSetup,
+  ViewProjectionConfiguration,
 } from "./camera";
 import { buildAbortEventHub } from "./abort-event-hub";
 
@@ -72,6 +74,19 @@ function prepareGeometry(model: any) {
   };
 }
 
+type PathTracerOptions = {
+  targetSamples?: number;
+  kTextureWidth?: number;
+  viewProjectionConfiguration?: ViewProjectionConfiguration;
+  environmentLightConfiguration?: EnvironmentLightConfig;
+  samplesPerIteration?: number;
+  clearColor?: number[];
+  maxRayDepth?: number;
+  // todo: add real type
+  finishedSampling?: (result: any) => void;
+  signal?: AbortSignal;
+};
+
 async function runPathTracer(
   target: string,
   model: any,
@@ -92,10 +107,10 @@ async function runPathTracer(
     samplesPerIteration = 1,
     clearColor = [1.0, 1.0, 1.0],
     maxRayDepth = 5,
-    // todo: add real type
-    finishedSampling = (_: any) => {},
+
+    finishedSampling = () => {},
     signal = new AbortController().signal,
-  } = {},
+  }: PathTracerOptions = {},
 ) {
   /**
    * Map storing state of the tracer instance.

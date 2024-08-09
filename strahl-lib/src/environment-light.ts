@@ -2,7 +2,7 @@ import { Vec3 } from "./types";
 
 type Color = [number, number, number];
 
-type EnvironmentLightConfig = {
+export type EnvironmentLightConfig = {
   sky: {
     power: number;
     color: Color;
