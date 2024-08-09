@@ -55,25 +55,26 @@ export default function getStatsForReportStructure(
   const MIN_KEY = 2;
   const activeStructures = knownKeys.filter((key) => reportStructure[key]);
 
+  // todo: consider alternative to type assertion
   const orderedAverageBvhBuildTimes = activeStructures.map((key) =>
-    getSampleMean(reportStructure[key].map((entry) => entry.bvhBuildTime)),
+    getSampleMean(reportStructure[key]!.map((entry) => entry.bvhBuildTime)),
   );
 
   const orderedMarginOfErrorBvhBuildTimes = activeStructures.map(
     (key) =>
       calculateConfidenceIntervalForSamples(
-        reportStructure[key].map((entry) => entry.bvhBuildTime),
+        reportStructure[key]!.map((entry) => entry.bvhBuildTime),
       ).marginOfError,
   );
 
   const orderedAverageAllRenderTimes = activeStructures.map((key) =>
-    getSampleMean(reportStructure[key].map((entry) => entry.allRenderTime)),
+    getSampleMean(reportStructure[key]!.map((entry) => entry.allRenderTime)),
   );
 
   const orderedMarginOfErrorAllRenderTimes = activeStructures.map(
     (key) =>
       calculateConfidenceIntervalForSamples(
-        reportStructure[key].map((entry) => entry.allRenderTime),
+        reportStructure[key]!.map((entry) => entry.allRenderTime),
       ).marginOfError,
   );
 
