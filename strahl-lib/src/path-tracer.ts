@@ -656,8 +656,8 @@ async function runPathTracer(
         sunPower: Math.pow(10, environmentLightConfiguration.sun.power),
         sunAngularSize: environmentLightConfiguration.sun.angularSize,
         sunColor: environmentLightConfiguration.sun.color,
-        clearColor,
-        enableClearColor: !isNil(clearColor) ? 1 : 0,
+        clearColor: isNil(clearColor) ? [0, 0, 0] : clearColor,
+        enableClearColor: isNil(clearColor) ? 0 : 1,
         maxRayDepth,
         objectDefinitionLength: groups.length,
       });
