@@ -9,9 +9,10 @@ import {
   makeShaderDataDefinitions,
   makeStructuredView,
 } from "webgpu-utils";
-import { bvhToTextures } from "./bvh-util";
+import { assertMeshBVHInternalStructure, bvhToTextures } from "./bvh-util";
 import {
   CanvasReferenceError,
+  InternalError,
   InvalidMaterialError,
   SignalAlreadyAbortedError,
   WebGPUNotSupportedError,
@@ -37,6 +38,12 @@ function prepareGeometry(model: any) {
     indirect: true,
   });
 
+  const isStructureMatching = assertMeshBVHInternalStructure(boundsTree);
+  if (!isStructureMatching) {
+    throw new InternalError(
+      "MeshBVH internal structure does not match, this indicates a change in the library which is not supported at prepareGeometry.",
+    );
+  }
   const extremes = getBVHExtremes(boundsTree);
   const correspondingExtremesEntry = extremes[0];
   const maxBvhDepth = correspondingExtremesEntry.depth.max;
@@ -52,12 +59,7 @@ function prepareGeometry(model: any) {
   const normals = boundsTree.geometry.attributes.normal.array;
 
   return {
-    // todo: reconsider type cast
-    indirectBuffer: (
-      boundsTree as unknown as {
-        _indirectBuffer: ArrayLike<number>;
-      }
-    )._indirectBuffer,
+    indirectBuffer: boundsTree._indirectBuffer,
     boundsArray,
     contentsArray,
     positions,

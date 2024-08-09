@@ -31,10 +31,16 @@ function getBoundingDataIndex(n32: number) {
 
 type MeshBVHInternal = {
   _roots: ArrayBuffer[];
+  _indirectBuffer: ArrayLike<number>;
 };
 
-function assertMeshBVHInternalStructure(bvh: unknown): bvh is MeshBVHInternal {
-  return "_roots" in (bvh as MeshBVHInternal);
+export function assertMeshBVHInternalStructure(
+  bvh: unknown,
+): bvh is MeshBVHInternal {
+  return (
+    "_roots" in (bvh as MeshBVHInternal) &&
+    "_indirectBuffer" in (bvh as MeshBVHInternal)
+  );
 }
 
 // CODE#BVH-TRANSFER
@@ -43,7 +49,7 @@ export function bvhToTextures(bvh: MeshBVH) {
   const isStructureMatching = assertMeshBVHInternalStructure(bvh);
   if (!isStructureMatching) {
     throw new InternalError(
-      "MeshBVH internal structure does not match, this indicates a change in the library which is not supported.",
+      "MeshBVH internal structure does not match, this indicates a change in the library which is not supported at bvhToTextures.",
     );
   }
   const roots = bvh._roots;
