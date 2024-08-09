@@ -26,6 +26,7 @@
       "require": "./dist/strahl.umd.cjs"
     }
   },
+  "types": "dist/index.d.ts",
   "files": [
     "dist/**/*.js",
     "dist/**/*.cjs"
@@ -35,7 +36,8 @@
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "@webgpu/types": "^0.1.43",
     "typescript": "^5.5.2",
-    "vite": "^5.3.1"
+    "vite": "^5.3.1",
+    "vite-plugin-dts": "^4.0.2"
   },
   "dependencies": {
     "three": "^0.165.0",
