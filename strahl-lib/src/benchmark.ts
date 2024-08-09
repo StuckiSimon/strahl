@@ -117,7 +117,6 @@ async function run(target: number, yielder: any) {
         : MODEL_URL_BARE_BONES;
 
   const model: any = await loadGltf(MODEL_URL);
-  const sceneMatrixWorld = model.scene.matrixWorld;
 
   model.scene.traverseVisible((object: any) => {
     if (object.material === undefined) {
