@@ -1,0 +1,25 @@
+# Environment Light
+
+Environment light is defined as the contribution of sky and sun. Sky settings are direction independent and are akin to `AmbientLight`. Sun is direction-dependent.
+
+## Configuration
+
+To configure the settings, you may pass your own environment light configuration to `strahl`.
+
+```js title="strahlConfiguration.js"
+runPathTracer(target, model, {
+  environmentLightConfiguration: {
+    sky: {
+      power: 0.5,
+      color: [0.8, 0.8, 1.0],
+    },
+    sun: {
+      power: 1.0,
+      angularSize: 35,
+      latitude: 40,
+      longitude: 160,
+      color: [1.0, 1.0, 0.9],
+    },
+  },
+});
+```
