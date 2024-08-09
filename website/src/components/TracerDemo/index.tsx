@@ -1,15 +1,9 @@
 import React from "react";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import Heading from "@theme/Heading";
-import {
-  runPathTracer,
-  OpenPBRMaterial as RawOpenPBRMaterial,
-} from "../../../../strahl-lib/dist/strahl";
+import { runPathTracer, OpenPBRMaterial } from "strahl";
 import styles from "./styles.module.css";
 import clsx from "clsx";
-
-// todo: handle types for OpenPBRMaterial
-const OpenPBRMaterial = RawOpenPBRMaterial as any;
 
 async function init(signal: AbortSignal) {
   const MODEL_URL =
