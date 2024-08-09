@@ -26,6 +26,7 @@ import {
   isCustomCameraSetup,
   makeRawCameraSetup,
 } from "./camera";
+import { buildAbortEventHub } from "./abort-event-hub";
 
 function prepareGeometry(model: any) {
   const reducedModel = consolidateMesh([model.scene]);
@@ -98,34 +99,13 @@ async function runPathTracer(
    * Map storing state of the tracer instance.
    * Routines with external resources should use this to be notified of aborts aka destruction of the path tracing process.
    */
-  const instanceState = {
-    isRunning: true,
-    abortNotifiers: new Map<string, () => void>(),
-  };
-
-  const setDestructionNotifier = (id: string, notifier: () => void) => {
-    /**
-     * Instantly invoke notifier if instance is already aborted.
-     *
-     * During async operations it is possible that isRunning is updated before the notifier is set.
-     * This ensures that the notifier is invoked in such edge cases.
-     */
-    if (instanceState.isRunning) {
-      instanceState.abortNotifiers.set(id, notifier);
-    } else {
-      notifier();
-    }
-  };
+  const abortEventHub = buildAbortEventHub();
 
   if (signal.aborted) {
     throw new SignalAlreadyAbortedError();
   }
   signal.addEventListener("abort", () => {
-    instanceState.isRunning = false;
-    for (const [, notifier] of instanceState.abortNotifiers) {
-      notifier();
-    }
-    instanceState.abortNotifiers.clear();
+    abortEventHub.triggerAbort();
   });
 
   const TARGET_SAMPLES = targetSamples;
@@ -165,7 +145,7 @@ async function runPathTracer(
     requiredFeatures: ["timestamp-query"],
   });
 
-  setDestructionNotifier("device", () => {
+  abortEventHub.setDestructionNotifier("device", () => {
     device.destroy();
   });
 
@@ -793,7 +773,7 @@ async function runPathTracer(
           await timestampQueryResultBuffer.mapAsync(GPUMapMode.READ);
         } catch (e) {
           // In case of planned cancellation, this is expected
-          if (!instanceState.isRunning) {
+          if (!abortEventHub.isRunning()) {
             console.warn("Aborted render loop");
             return;
           }
