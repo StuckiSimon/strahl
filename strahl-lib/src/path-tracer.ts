@@ -823,10 +823,14 @@ async function runPathTracer(
 
   let renderLoop = buildRenderLoop();
 
-  cameraSetup.controls?.addEventListener("change", () => {
+  const controlsChangeHandler = () => {
     renderLoop.terminateLoop();
 
     renderLoop = buildRenderLoop();
+  };
+  cameraSetup.controls?.addEventListener("change", controlsChangeHandler);
+  abortEventHub.setDestructionNotifier("controls", () => {
+    cameraSetup.controls?.removeEventListener("change", controlsChangeHandler);
   });
 }
 
