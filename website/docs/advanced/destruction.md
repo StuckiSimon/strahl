@@ -32,3 +32,7 @@ destroyController.abort();
 :::warning
 This action is irreversible, you need to setup a new instance when doing a new rendering.
 :::
+
+## API Design Consideration
+
+While it is more frequent to use a return type to cancel operations, signals have the unique advantage of being usable at all stages of the tracer even before the initial return. Their availability as part of the platform makes them easy to integrate and increases the likelihood of developers being familiar with them.
