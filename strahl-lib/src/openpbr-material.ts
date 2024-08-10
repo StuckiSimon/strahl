@@ -1,6 +1,5 @@
 import { MeshPhysicalMaterial } from "three";
-
-type Color = [number, number, number];
+import { Color } from "./types";
 
 export class OpenPBRMaterial extends MeshPhysicalMaterial {
   oBaseWeight: number = 1.0;
