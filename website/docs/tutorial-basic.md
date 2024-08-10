@@ -61,19 +61,18 @@ Make sure to assign `OpenPBRMaterial` to all materials within the scene.
 
 ```js title="materialMapper.js"
 const MATERIAL_MAP = {
-  'name': new OpenPBRMaterial()
-}
+  name: new OpenPBRMaterial(),
+};
 
-model.scene.traverseVisible((object: any) => {
+model.scene.traverseVisible((object) => {
   if (object.material === undefined) {
     return;
   }
   const materialName = object.material.name;
   if (materialName in MATERIAL_MAP) {
-    object.material =
-      MATERIAL_MAP[materialName as keyof typeof MATERIAL_MAP];
+    object.material = MATERIAL_MAP[materialName];
   } else {
-    console.log('unknown material', materialName);
+    console.log("unknown material", materialName);
     object.material = defaultBlueMaterial;
   }
 });
