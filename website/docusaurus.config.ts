@@ -22,6 +22,17 @@ const config: Config = {
     locales: ["en"],
   },
 
+  plugins: [
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        entryPoints: ["../strahl-lib/src/index.ts"],
+        tsconfig: "../strahl-lib/tsconfig.json",
+        watch: process.env.TYPEDOC_WATCH,
+      },
+    ],
+  ],
+
   presets: [
     [
       "classic",
