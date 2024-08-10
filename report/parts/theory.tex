@@ -926,19 +926,14 @@ As the standard is under active development, there are differences between the i
 
 \subsubsection{Buffers}
 
-Data needs to be transferred between the CPU and the GPU. Buffers are the primary method to do so. Depending on the type of data to be transferred, different types of buffers can be used.
+Data needs to be transferred between the CPU and the GPU. Buffers are the primary method to do so. Depending on the type of data to be transferred, different types of buffers can be used:
 
-\paragraph{Uniforms}
-
-Uniform Buffers are optimized for data which is read-only on the GPU and is the same for all vertices or fragments. Such information could be the projection matrix.
-
-\paragraph{Storage}
-
-Storage Buffers are intended for read-write access on the GPU. The limits of the buffer are higher than for uniform buffers.
-
-\paragraph{Vertex}
-
-\paragraph{Index}
+\begin{itemize}
+  \item{Uniforms} — Uniform Buffers are optimized for data which is read-only on the GPU and is the same for all vertices or fragments. Such information could be the projection matrix.
+  \item{Storage} — Storage Buffers are intended for read-write access on the GPU. The limits of the buffer are higher than for uniform buffers.
+  \item{Vertex} — Alternative to storage buffers, intended for vertex data.
+  \item{Index} - Buffers which contain indices for the vertices.
+\end{itemize}
 
 \subsubsection{Shading Language}
 
