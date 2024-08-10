@@ -1097,6 +1097,16 @@ The hierarchy structure of a \gls{glTF} file is shown in \autoref{fig:gltf-hiera
 
 While the principles of \gls{PBR} are well-established, the material description in 3D formats is not uniform. A variety of different approaches have been developed. In addition to many exchange formats such as \gls{glTF} having their own material definition, different shading models exist independent of these formats. Similar to exchange formats, a variety of different use cases are addressed by material description models. While some shading models are optimized for real-time rendering, others are optimized for film production.
 
+\paragraph{Shader Design}
+
+Based on the focus of the material description models, they differ in how they need to be implemented. Flexible node-based systems permit the creation of custom shaders. This gives a lot of flexibility to the user as arbitrary shaders can be created. However, this flexibility comes at a cost. The underlying implementation needs to convert the node graph into shader code which can be executed on the \gls{GPU}. The flexibility increases surface area of the \gls{API} and therefore increases the complexity of implementation and optimization. In addition, managing a large number of custom shaders can be challenging as many shaders have similar features.
+
+An alternative approach is to use an \gls{uber shader}. The term does not have a strict definition, but generally it is used to describe a shader program which can be adjusted using parameters to achieve different looks. The shader program is fixed and does not allow for customization of the shader graph. This approach often leads to a more complex shader with many parameters which can be difficult to manage, but it is easier to optimize as the shader program is fixed.
+
+Technically, a node-based system also supports an \gls{uber shader} approach, but a \gls{uber shader} does not support a node-based system.
+
+\paragraph{Material Description Standards}
+
 Many exchange formats, such as \gls{glTF}, support material description as part of the standard. The material description in \gls{glTF} supports a \gls{PBR} approach which is based on the metallic-roughness material model \todo{source?}. However, the \gls{PBR} material description in \gls{glTF} is limited in terms of feature set, by lacking features such as subsurface scattering, and is not intended to become an open standard across a variety of applications.
 
 Over the years, different parties have developed their own shading models. Some prominent options include:
@@ -1108,15 +1118,8 @@ Over the years, different parties have developed their own shading models. Some 
     \item {Enterprise PBR Shading Model} \cite{dspbrModel} – Developed by Dassault Systèmes, it is also influenced by the Disney Principled BRDF. The specification is detailed and the model is designed for industrial use cases.
 \end{itemize}
 
-In addition to these standards, many real-time rendering engines such as Unity and Unreal, modeling software such as 3ds Max and Maya have their own shading models. Supporting many different shading models in a web-based real-time rendering application can be challenging, making the need for a common material description standard more apparent. This is where new material description standards come into play. These are open standards developed by multiple companies to address the siloed development of prior shading models, intended to be used across different applications.
 
-\paragraph{Shader Design}
-
-Material description models differ in how they need to be implemented. Flexible node-based systems permit the creation of custom shaders. This gives a lot of possibility to the user. The underlying implementation needs to convert the node graph into shader code which can be executed on the \gls{GPU}. In addition, managing a large number of custom shaders can be challenging as many shaders have similar features.
-
-An alternative approach is to use an \gls{uber shader}. The term does not have a strict definition, but generally it is used to describe a shader program which can be adjusted using parameters to achieve different looks. The shader program is fixed and does not allow for customization of the shader graph. This approach often leads to a more complex shader with many parameters which can be difficult to manage.
-
-Technically, a node-based system also supports an \gls{uber shader} approach, but a \gls{uber shader} does not support a node-based system.
+In addition to these standards, many real-time rendering engines such as \gls{Unity} and \fGls{Unreal}{Unreal Engine, cross-platform game engine developed by Epic Games}, modeling software such as \fGls{Blender}{open-source 3D computer graphics software toolset} and \fGls{Rhino3D}{\e{Rhinoceros}, proprietary 3D computer graphics and \gls{CAD} toolset} have their own shading models. Supporting many different shading models in a web-based real-time rendering application can be challenging, making the need for a common material description standard more apparent. This is where new material description standards come into play. These are open standards developed by multiple companies to address the siloed development of prior shading models, intended to be used across different applications.
 
 \subsection{MaterialX}
 
