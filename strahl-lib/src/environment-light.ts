@@ -1,6 +1,4 @@
-import { Vec3 } from "./types";
-
-type Color = [number, number, number];
+import { Color, Vec3 } from "./types";
 
 export type EnvironmentLightConfig = {
   sky: {
