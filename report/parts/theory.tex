@@ -721,7 +721,7 @@ An \gls{AABB} ($b$) can be defined as $b = (min, max)$ where $min$ and $max$ are
 
 \subsubsection{Hybrid Approaches}
 
-Ray Tracing and Rasterization are not mutually exclusive. Hybrid approaches have been developed which leverage a multi-paradigm approach. One such example is PICA PICA, a real-time ray tracing experiment developed by Nvidia \cite{hybridRenderingBarreBrisebois2019}. The rendering pipeline is split into multiple stages, consisting of global illumination, shadow, reflection, direct lighting. Each stage could be implemented using different techniques where the strategy could be chosen based on the requirements of the scene as well as the available computational resources.
+Ray Tracing and Rasterization are not mutually exclusive. Hybrid approaches have been developed which leverage a multi-paradigm approach. One such example is PICA PICA, a real-time ray tracing experiment developed by NVIDIA \cite{hybridRenderingBarreBrisebois2019}. The rendering pipeline is split into multiple stages, consisting of global illumination, shadow, reflection, direct lighting. Each stage could be implemented using different techniques where the strategy could be chosen based on the requirements of the scene as well as the available computational resources.
 
 \subsection{Common Techniques}
 
@@ -822,7 +822,7 @@ Aliasing is a common issue in computer graphics. It occurs when the resolution o
 
 In ray tracing, aliasing can be alleviated by randomizing the direction of the rays for the different samples taken. The result of applying anti-aliasing can be seen in \autoref{fig:aliasingB}.
 
-In rasterization, similar solution strategies can be employed. Supersampling is a common technique which renders the scene at a higher resolution and then downsamples the image by averaging the colors of the pixels. More elaborate techniques such as deep learning super sampling (DLSS) implemented by Nvidia \cite{nvidiaDlss} can be used to further improve the quality of the image in real-time rendering.
+In rasterization, similar solution strategies can be employed. Supersampling is a common technique which renders the scene at a higher resolution and then downsamples the image by averaging the colors of the pixels. More elaborate techniques such as deep learning super sampling (DLSS) implemented by NVIDIA \cite{nvidiaDlss} can be used to further improve the quality of the image in real-time rendering.
 
 \subsubsection{Tone Mapping}
 \label{sec:toneMappingTheory}
@@ -916,7 +916,7 @@ Due to computational complexity, ray tracing techniques have been limited to off
 
 Nowadays GPUs are prevalent in consumer hardware such as smartphones, tablets, laptops and desktops and their use case is not limited to computer graphics. GPUs are used in a wide range of applications, such as machine learning, scientific computing and data processing. Devices, which do not have a discrete GPU, often use an integrated GPU which is part of the CPU.
 
-Modern GPU hardware offers support for hardware-accelerated ray tracing. Examples include Nvidia RTX \cite{nvidiaRtxRayTracing}, Apple Metal on M3 \cite{appleM3GpuAdvancements} and others. These examples demonstrate an increasing trend towards hardware-accelerated ray tracing in recent years, however many devices and \glspl{API}, including WebGPU, do not yet support hardware-accelerated ray tracing.
+Modern GPU hardware offers support for hardware-accelerated ray tracing. Examples include NVIDIA RTX \cite{nvidiaRtxRayTracing}, Apple Metal on M3 \cite{appleM3GpuAdvancements} and others. These examples demonstrate an increasing trend towards hardware-accelerated ray tracing in recent years, however many devices and \glspl{API}, including WebGPU, do not yet support hardware-accelerated ray tracing.
 
 \paragraph{Common Strategies}
 
@@ -1133,7 +1133,7 @@ While not strictly limited to \gls{PBR}, the standard provides a wide range of f
 
 \gls{OpenPBR}\cite{openPBRSpec} is a surface shading model hosted by the \gls{ASWF} as an open standard. It differs from \gls{MaterialX} in that it is providing an \gls{uber shader} approach instead of a node-based approach. Version 1.0 of the standard was released in June of 2024 \cite{openPBR1Dot0Release}.
 
-It serves as a combination of Autodesk Standard Surface and Adobe Standard Material and is being worked on by both companies. The potential of this standard is to provide a common shading model which can be used across different applications. One notable adopter of the standard is Nvidia Omniverse, which has shipped support of the standard \cite{omniverseOpenPBR}. Blender has reworked their Principled BSDF shader to be based on \gls{OpenPBR} \cite{blenderOpenPBRInspiration}. These promising signs indicate that the standard has the potential to be widely adopted.
+It serves as a combination of Autodesk Standard Surface and Adobe Standard Material and is being worked on by both companies. The potential of this standard is to provide a common shading model which can be used across different applications. One notable adopter of the standard is NVIDIA Omniverse, which has shipped support of the standard \cite{omniverseOpenPBR}. \gls{Blender} has reworked their Principled BSDF shader to be based on \gls{OpenPBR} \cite{blenderOpenPBRInspiration}. These promising signs indicate that the standard has the potential to be widely adopted.
 
 The \gls{uber shader} approach is defined by having a fix set of inputs which can be adjusted, but it does not allow for custom node graphs as \gls{MaterialX} does. The standard is designed for photorealistic material description and uses multiple layers to describe the material as visualized in \autoref{fig:openPBR}.
 
