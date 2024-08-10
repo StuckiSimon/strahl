@@ -1,7 +1,6 @@
-import { MeshPhysicalMaterial } from "three";
 import { Color } from "./types";
 
-export class OpenPBRMaterial extends MeshPhysicalMaterial {
+export class OpenPBRMaterial {
   oBaseWeight: number = 1.0;
   oBaseColor: Color = [0.8, 0.8, 0.8];
   oBaseMetalness: number = 0.0;
@@ -22,8 +21,4 @@ export class OpenPBRMaterial extends MeshPhysicalMaterial {
   // todo: add oThinFilmWeight
   oThinFilmThickness: number = 0.5;
   oThinFilmIOR: number = 1.5;
-
-  constructor() {
-    super();
-  }
 }
