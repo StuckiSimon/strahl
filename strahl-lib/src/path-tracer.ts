@@ -1,7 +1,7 @@
 import { getBVHExtremes, MeshBVH } from "three-mesh-bvh";
 import buildTracerShader from "./tracer-shader";
 import buildRenderShader from "./render-shader";
-import { logGroup } from "./cpu-performance-logger";
+import { logGroup } from "./benchmark/cpu-performance-logger.ts";
 import { consolidateMesh } from "./consolidate-mesh";
 import { OpenPBRMaterial } from "./openpbr-material";
 import {

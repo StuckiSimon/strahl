@@ -1,8 +1,8 @@
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { logGroup } from "./cpu-performance-logger";
-import { OpenPBRMaterial } from "./openpbr-material";
-import runPathTracer from "./path-tracer";
-import getStatsForReportStructure from "./benchmark-analyser";
+import { logGroup } from "./cpu-performance-logger.ts";
+import { OpenPBRMaterial } from "../openpbr-material.ts";
+import runPathTracer from "../path-tracer.ts";
+import getStatsForReportStructure from "./benchmark-analyser.ts";
 
 const MODEL_URL_FULL = "models/series-61-rotated/61-serie-edit.gltf"; // 1'068'735
 const MODEL_URL_BARE_BONES = "models/series-61-simplified-2/61-serie-edit.gltf"; // 10'687
