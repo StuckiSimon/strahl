@@ -1,5 +1,5 @@
-import { OpenPBRMaterial } from "./openpbr-material";
+export { OpenPBRMaterial } from "./openpbr-material";
 import runPathTracer from "./path-tracer";
-import type { PathTracerOptions } from "./path-tracer";
-
-export { OpenPBRMaterial, runPathTracer, PathTracerOptions };
+export type { PathTracerOptions } from "./path-tracer";
+export type { EnvironmentLightConfig } from "./environment-light";
+export { runPathTracer };
