@@ -16,7 +16,7 @@ import {
   InvalidMaterialError,
   SignalAlreadyAbortedError,
   WebGPUNotSupportedError,
-} from "./exceptions";
+} from "./core/exceptions.ts";
 import {
   defaultEnvironmentLightConfig,
   EnvironmentLightConfig,

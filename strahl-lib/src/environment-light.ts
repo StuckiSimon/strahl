@@ -1,4 +1,4 @@
-import { Color, Vec3 } from "./types";
+import { Color, Vec3 } from "./core/types.ts";
 
 /**
  * Configuration for the environment light consisting of ambient sky light and directional sun light.
