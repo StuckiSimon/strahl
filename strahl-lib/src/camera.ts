@@ -5,7 +5,7 @@ import {
   PerspectiveCamera,
   Vector3,
 } from "three";
-import { isNil } from "./is-nil";
+import { isNil } from "./util/is-nil.ts";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 
 export type CustomCameraSetup = {

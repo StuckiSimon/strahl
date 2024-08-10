@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isNil } from "./is-nil";
+import { isNil } from "./is-nil.ts";
 
 describe("isNil", () => {
   it("should return true for null", () => {

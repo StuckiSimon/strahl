@@ -22,14 +22,14 @@ import {
   EnvironmentLightConfig,
   getSunDirection,
 } from "./environment-light";
-import { isNil } from "./is-nil";
+import { isNil } from "./util/is-nil.ts";
 import {
   CustomCameraSetup,
   isCustomCameraSetup,
   makeRawCameraSetup,
   ViewProjectionConfiguration,
 } from "./camera";
-import { buildAbortEventHub } from "./abort-event-hub";
+import { buildAbortEventHub } from "./util/abort-event-hub.ts";
 
 function prepareGeometry(model: any) {
   const reducedModel = consolidateMesh([model.scene]);
