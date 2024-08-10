@@ -18,7 +18,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest"
   },
   "exports": {
     ".": {
@@ -39,7 +40,8 @@
     "@webgpu/types": "^0.1.43",
     "typescript": "^5.5.2",
     "vite": "^5.3.1",
-    "vite-plugin-dts": "^4.0.2"
+    "vite-plugin-dts": "^4.0.2",
+    "vitest": "^2.0.5"
   },
   "dependencies": {
     "three": "^0.165.0",
