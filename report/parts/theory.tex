@@ -848,58 +848,6 @@ When simulating light transport, the radiance of the scene can exceed the displa
   \label{fig:tone-mapping}
 \end{figure}
 
-\section{Physically Based Rendering}
-
-Defining the geometry is one part of the equation. Another major part is defining materials. Materials define how a surface interacts with light. The core idea of physically based rendering (\gls{PBR}) is to simulate the interaction of light using physical models. Instead of fine-tuning parameters for a specific look and feel and having to adjust based on desired lighting situations, \gls{PBR} aims to define a material which behaves consistently in different lighting situations. It is therefore an approach based on physical principles such as those described in \autoref{ch:physics}.
-
-Research into \gls{PBR} has been conducted for a similar amount of time as ray tracing. And just like ray tracing, the computational complexity of the algorithms has limited the adoption of \gls{PBR} in real-time rendering for a long time. \gls{PBR} has generally coincided with the rise of ray tracing as it is a natural fit for the physics based approach on light transport. One prominent example of a PBR system is \gls{pbrt}, an open-source renderer with an associated literate programming book which has won an Academy Award for formalizing and providing reference implementation for \gls{PBR} \cite{Pharr_Physically_Based_Rendering_2023}.
-
-\gls{PBR} and ray tracing are not mutually dependent as \gls{PBR} can be used in rasterization as well. In contrast to how ray tracing is inherently addressing shortcomings of rasterization by leveraging an entirely different approach, \gls{PBR} is a more incremental improvement extending existing shading techniques with more sophisticated models.
-
-In general, there is no \gls{PBR} standard. Instead, a variety of different models have been developed over time. In recent years however, a convergence towards a common set of principles has been observed and certain aspects of \gls{PBR} are found in most models. This section explains these common principles.
-
-\subsection{BxDF}
-
-The definition of the bidirectional distribution functions (\gls{BxDF}) is a key concept in PBR. The $x$ stands for the different kinds of distributions to consider. In general, the functions describe how light is reflected or transmitted. The two functions are usually abbreviated as \gls{BRDF}, the r standing for reflectance, and \gls{BTDF}, the t standing for transmittance. The combination of the two is often referred to as \gls{BSDF}, the s standing for scattering \cite{Pharr_Physically_Based_Rendering_2023}.
-
-These functions define the distribution of light in different directions. Samples of different kinds of reflectance distributions can be seen in \autoref{fig:brdf}. Many objects exhibit a combination of different reflectance distributions.
-
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[b]{0.45\textwidth}
-      \includegraphics[width=\textwidth]{resources/reflection-diffuse.png}
-      \caption{Diffuse reflection, as can be encountered in materials such as a paper.}
-      \label{fig:reflectionDiffuse}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.45\textwidth}
-      \includegraphics[width=\textwidth]{resources/reflection-retroreflective.png}
-      \caption{Retroreflective reflection, as can be encountered in materials such as velvet.}
-      \label{fig:reflectionRetroreflective}
-  \end{subfigure}
-  \begin{subfigure}[b]{0.45\textwidth}
-    \includegraphics[width=\textwidth]{resources/reflection-glossy-specular.png}
-    \caption{Glossy reflection, as can be encountered in materials such as plastic.}
-    \label{fig:reflectionGlossy}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.45\textwidth}
-    \includegraphics[width=\textwidth]{resources/reflection-specular.png}
-    \caption{Specular reflection, as can be encountered in objects such as a mirror.}
-    \label{fig:reflectionSpecular}
-  \end{subfigure}
-  \caption{Samples for different kinds of reflectance distributions. The blue line segment indicates the target of the reflection. \cite{Pharr_Physically_Based_Rendering_2023}}
-  \label{fig:brdf}
-\end{figure}
-
-\subsection{Microfacet Theory}
-
-While the macroscopic appearance of a material is visible to the human eye, the microscopic structure of the material is crucial in determining how light interacts with the material. Microfacet theory is a model which describes this microscopic structure. The distribution of the normals of the microfacet is described by a distribution function.
-
-\subsection{Diffuse Reflection}
-
-In 1995, Oren and Nayar suggested a novel diffuse reflection model which extended the Lambertian model to include rough surfaces \cite{oren1994generalization}, commonly known as the Oren-Nayar model.
-
 \section{Computer Graphics Technology}
 
 This section provides an overview of the technology used to render 3D scenes. It will introduce the hardware as well as the software used in the field with a focus on technology relevant for this thesis by introducing WebGPU and its core concepts.
@@ -1093,7 +1041,59 @@ The hierarchy structure of a \gls{glTF} file is shown in \autoref{fig:gltf-hiera
   \label{fig:gltf-hierarchy}
 \end{figure}
 
-\section{Material Description}
+\section{Physically Based Rendering}
+
+Defining the geometry is one part of the equation. Another major part is defining materials. Materials define how a surface interacts with light. The core idea of physically based rendering (\gls{PBR}) is to simulate the interaction of light using physical models. Instead of fine-tuning parameters for a specific look and feel and having to adjust based on desired lighting situations, \gls{PBR} aims to define a material which behaves consistently in different lighting situations. It is therefore an approach based on physical principles such as those described in \autoref{ch:physics}.
+
+Research into \gls{PBR} has been conducted for a similar amount of time as ray tracing. And just like ray tracing, the computational complexity of the algorithms has limited the adoption of \gls{PBR} in real-time rendering for a long time. \gls{PBR} has generally coincided with the rise of ray tracing as it is a natural fit for the physics based approach on light transport. One prominent example of a PBR system is \gls{pbrt}, an open-source renderer with an associated literate programming book which has won an Academy Award for formalizing and providing reference implementation for \gls{PBR} \cite{Pharr_Physically_Based_Rendering_2023}.
+
+\gls{PBR} and ray tracing are not mutually dependent as \gls{PBR} can be used in rasterization as well. In contrast to how ray tracing is inherently addressing shortcomings of rasterization by leveraging an entirely different approach, \gls{PBR} is a more incremental improvement extending existing shading techniques with more sophisticated models.
+
+In general, there is no \gls{PBR} standard. Instead, a variety of different models have been developed over time. In recent years however, a convergence towards a common set of principles has been observed and certain aspects of \gls{PBR} are found in most models. This section explains these common principles.
+
+\subsection{BxDF}
+
+The definition of the bidirectional distribution functions (\gls{BxDF}) is a key concept in PBR. The $x$ stands for the different kinds of distributions to consider. In general, the functions describe how light is reflected or transmitted. The two functions are usually abbreviated as \gls{BRDF}, the r standing for reflectance, and \gls{BTDF}, the t standing for transmittance. The combination of the two is often referred to as \gls{BSDF}, the s standing for scattering \cite{Pharr_Physically_Based_Rendering_2023}.
+
+These functions define the distribution of light in different directions. Samples of different kinds of reflectance distributions can be seen in \autoref{fig:brdf}. Many objects exhibit a combination of different reflectance distributions.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+      \includegraphics[width=\textwidth]{resources/reflection-diffuse.png}
+      \caption{Diffuse reflection, as can be encountered in materials such as a paper.}
+      \label{fig:reflectionDiffuse}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.45\textwidth}
+      \includegraphics[width=\textwidth]{resources/reflection-retroreflective.png}
+      \caption{Retroreflective reflection, as can be encountered in materials such as velvet.}
+      \label{fig:reflectionRetroreflective}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics[width=\textwidth]{resources/reflection-glossy-specular.png}
+    \caption{Glossy reflection, as can be encountered in materials such as plastic.}
+    \label{fig:reflectionGlossy}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics[width=\textwidth]{resources/reflection-specular.png}
+    \caption{Specular reflection, as can be encountered in objects such as a mirror.}
+    \label{fig:reflectionSpecular}
+  \end{subfigure}
+  \caption{Samples for different kinds of reflectance distributions. The blue line segment indicates the target of the reflection. \cite{Pharr_Physically_Based_Rendering_2023}}
+  \label{fig:brdf}
+\end{figure}
+
+\subsection{Microfacet Theory}
+
+While the macroscopic appearance of a material is visible to the human eye, the microscopic structure of the material is crucial in determining how light interacts with the material. Microfacet theory is a model which describes this microscopic structure. The distribution of the normals of the microfacet is described by a distribution function.
+
+\subsection{Diffuse Reflection}
+
+In 1995, Oren and Nayar suggested a novel diffuse reflection model which extended the Lambertian model to include rough surfaces \cite{oren1994generalization}, commonly known as the Oren-Nayar model.
+
+\subsection{Material Description}
 
 While the principles of \gls{PBR} are well-established, the material description in 3D formats is not uniform. A variety of different approaches have been developed. In addition to many exchange formats such as \gls{glTF} having their own material definition, different shading models exist independent of these formats. Similar to exchange formats, a variety of different use cases are addressed by material description models. While some shading models are optimized for real-time rendering, others are optimized for film production.
 
@@ -1118,16 +1118,9 @@ Over the years, different parties have developed their own shading models. Some 
     \item {Enterprise PBR Shading Model} \cite{dspbrModel} – Developed by Dassault Systèmes, it is also influenced by the Disney Principled BRDF. The specification is detailed and the model is designed for industrial use cases.
 \end{itemize}
 
-
 In addition to these standards, many real-time rendering engines such as \gls{Unity} and \fGls{Unreal}{Unreal Engine, cross-platform game engine developed by Epic Games}, modeling software such as \fGls{Blender}{open-source 3D computer graphics software toolset} and \fGls{Rhino3D}{\e{Rhinoceros}, proprietary 3D computer graphics and \gls{CAD} toolset} have their own shading models. Supporting many different shading models in a web-based real-time rendering application can be challenging, making the need for a common material description standard more apparent. This is where new material description standards come into play. These are open standards developed by multiple companies to address the siloed development of prior shading models, intended to be used across different applications.
 
-\subsection{MaterialX}
-
-\gls{MaterialX} is an open standard which was originally developed by Lucasfilm in 2012. The standard has since been adopted by the \fgls{ASWF}{\e{Academy Software Foundation}, organization promoting development and adoption of open-source software in the motion picture industry} as an open standard.
-
-While not strictly limited to \gls{PBR}, the standard provides a wide range of features to describe physically based materials \cite{Harrysson2019}.
-
-\gls{MaterialX} supports extensive shader generation capabilities. This permits to re-use shaders across different applications and frameworks and aids in understanding the used approximations.
+\gls{MaterialX} is an open standard which was originally developed by Lucasfilm in 2012. The standard has since been adopted by the \fgls{ASWF}{\e{Academy Software Foundation}, organization promoting development and adoption of open-source software in the motion picture industry} as an open standard with support from a variety of companies. While not strictly limited to \gls{PBR}, the standard provides a wide range of features to describe physically based materials \cite{Harrysson2019}. \gls{MaterialX} supports extensive shader generation capabilities. This permits to re-use shaders across different applications and frameworks and aids in understanding the used approximations.
 
 \subsection{OpenPBR}
 
