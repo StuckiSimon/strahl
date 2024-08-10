@@ -772,7 +772,7 @@ For ortographic projection, no such projection matrix is required in ray tracing
 
 \subsubsection{Random Number Generator}
   
-To simulate light transport, the path tracer needs to pick random directions. Generating a random direction vector, defined as $v = (x, y, z)$, can be achieved by picking three random numbers independent of one another. This pivotal part of path tracing is done using a random number generator (\gls{RNG}). In rasterization, the necessity for \gls{RNG} is less common, but may still be required for certain effects. Unlike other programming languages, \gls{WGSL} does not have a built-in \gls{RNG}. Therefore, a custom \gls{RNG} is required. There are a variety of \gls{RNG}s available which differ in important characteristics. Some of the characteristics to consider when choosing a suitable \gls{RNG} are:
+To simulate light transport, the path tracer needs to pick random directions. Generating a random direction vector, defined as $v = (x, y, z)$, can be achieved by picking three random numbers independent of one another. This pivotal part of path tracing is done using a random number generator (\gls{RNG}). In rasterization, the necessity for \gls{RNG} is less common, but may still be required for certain effects. Unlike other programming languages, \gls{WGSL} does not have a built-in \gls{RNG}. Therefore, a custom \gls{RNG} is required. There are a variety of \glspl{RNG} available which differ in important characteristics. Some of the characteristics to consider when choosing a suitable \gls{RNG} are:
 
 \begin{itemize}
     \item{Statistical Quality} – The \gls{RNG} should generate numbers that are statistically random. This means that the numbers should be uniformly distributed and have a low correlation between them.
