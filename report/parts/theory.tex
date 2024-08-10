@@ -1135,7 +1135,19 @@ While not strictly limited to \gls{PBR}, the standard provides a wide range of f
 
 It serves as a combination of Autodesk Standard Surface and Adobe Standard Material and is being worked on by both companies. The potential of this standard is to provide a common shading model which can be used across different applications. One notable adopter of the standard is NVIDIA Omniverse, which has shipped support of the standard \cite{omniverseOpenPBR}. \gls{Blender} has reworked their Principled BSDF shader to be based on \gls{OpenPBR} \cite{blenderOpenPBRInspiration}. These promising signs indicate that the standard has the potential to be widely adopted.
 
-The \gls{uber shader} approach is defined by having a fix set of inputs which can be adjusted, but it does not allow for custom node graphs as \gls{MaterialX} does. The standard is designed for photorealistic material description and uses multiple layers to describe the material as visualized in \autoref{fig:openPBR}. The first release of the standard is focused on surface shading and does not support specialized workflows such as hair or volumetric effects like fog, smoke, and dust.
+The \gls{OpenPBR} specification includes a reference implementation in \gls{MaterialX}. This allows to use the shader generation of \gls{MaterialX} in order to get a reference implementation in \gls{GLSL} or \gls{OSL}.
+
+The \gls{uber shader} approach is defined by having a fix set of inputs which can be adjusted, but it does not allow for custom node graphs as \gls{MaterialX} does. The standard is designed for photorealistic material description. The first release of the standard is focused on surface shading and does not support specialized workflows such as hair or volumetric effects like fog, smoke, and dust.
+
+\subsubsection{Formalism}
+
+The structures consists of multiple layers to describe the material as visualized in \autoref{fig:openPBR}. The layers are:
+
+\begin{itemize}
+  \item{Base} — Substrate of the material which can be a mixture of metal or dielectric.
+  \item{Coat} — An optional layer of dielectric material.
+  \item{Fuzz} — An optional layer representing reflection from micro-fibers.
+\end{itemize}
 
 \begin{figure}[H]
   \centering
@@ -1144,4 +1156,4 @@ The \gls{uber shader} approach is defined by having a fix set of inputs which ca
   \label{fig:openPBR}
 \end{figure}
 
-The \gls{OpenPBR} specification includes a reference implementation in \gls{MaterialX}. This allows to use the shader generation of \gls{MaterialX} in order to get a reference implementation in \gls{GLSL} or \gls{OSL}.
+The specification is focused on physical aspects and does not specify implementation details. Implementaitons have an unambiguous target in terms of how it should look like, but have flexibility in terms of the degree of fidelity. While this makes alignment between different applications harder, it also allows for flexibility in the implementation of the standard, which is especially important for real-time rendering.
