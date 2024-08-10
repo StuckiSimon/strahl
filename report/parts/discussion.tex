@@ -52,6 +52,11 @@ The focus on the defined use case means that certain rendering effects are not i
 
 While refraction, caustics, depth of field, and motion blur are a question of light transport, volumetric effects, hair and fur are features that are not part of the \gls{OpenPBR} specification.
 
+\subsection{Texture Support}
+
+While not critical for the given use case, texture support is a common feature in rendering engines. The current implementation does not use textures. THe renderer could be extended to support sampling \gls{OpenPBR} parameters from textures. This would enable more complex material variations and possibly improve the realism of the rendered images.
+
+This should not be confused with texture mapping frequently used in rasterization-based rendering engines. Texture mapping is a technique to apply images to surfaces to simulate surface details. In path tracing, textures are used to sample material properties such as base color, roughness, or metallicness.
 
 \subsection{Full OpenPBR support}
 
