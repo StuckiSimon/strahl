@@ -1,10 +1,19 @@
 import { Color, Vec3 } from "./types";
 
+/**
+ * Configuration for the environment light consisting of ambient sky light and directional sun light.
+ */
 export type EnvironmentLightConfig = {
+  /**
+   * Configuration for the ambient sky light.
+   */
   sky: {
     power: number;
     color: Color;
   };
+  /**
+   * Configuration for the directional sun light.
+   */
   sun: {
     power: number;
     angularSize: number;
