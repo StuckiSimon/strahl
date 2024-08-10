@@ -1089,10 +1089,6 @@ These functions define the distribution of light in different directions. Sample
 
 While the macroscopic appearance of a material is visible to the human eye, the microscopic structure of the material is crucial in determining how light interacts with the material. Microfacet theory is a model which describes this microscopic structure. The distribution of the normals of the microfacet is described by a distribution function.
 
-\subsection{Diffuse Reflection}
-
-In 1995, Oren and Nayar suggested a novel diffuse reflection model which extended the Lambertian model to include rough surfaces \cite{oren1994generalization}, commonly known as the Oren-Nayar model.
-
 \subsection{Material Description}
 
 While the principles of \gls{PBR} are well-established, the material description in 3D formats is not uniform. A variety of different approaches have been developed. In addition to many exchange formats such as \gls{glTF} having their own material definition, different shading models exist independent of these formats. Similar to exchange formats, a variety of different use cases are addressed by material description models. While some shading models are optimized for real-time rendering, others are optimized for film production.
@@ -1130,7 +1126,9 @@ It serves as a combination of Autodesk Standard Surface and Adobe Standard Mater
 
 The \gls{OpenPBR} specification includes a reference implementation in \gls{MaterialX}. This allows to use the shader generation of \gls{MaterialX} in order to get a reference implementation in \gls{GLSL} or \gls{OSL}.
 
-The \gls{uber shader} approach is defined by having a fix set of inputs which can be adjusted, but it does not allow for custom node graphs as \gls{MaterialX} does. The standard is designed for photorealistic material description. The first release of the standard is focused on surface shading and does not support specialized workflows such as hair or volumetric effects like fog, smoke, and dust.
+The \gls{uber shader} approach is defined by having a fix set of inputs which can be adjusted, but it does not allow for custom node graphs as \gls{MaterialX} does. The standard is designed for photorealistic material description. The first release of the standard is focused on surface shading and does not support specialized workflows such as advanced hair or volumetric effects like fog, smoke, and dust.
+
+The specification is focused on physical aspects and does not specify implementation details. Implementations have an unambiguous target in terms of how it should look like, but have flexibility in terms of the degree of fidelity. While this makes alignment between different applications harder, it also allows for flexibility in the implementation of the standard, which is especially important for real-time rendering.
 
 \subsubsection{Formalism}
 
@@ -1142,11 +1140,15 @@ The structures consists of multiple layers to describe the material as visualize
   \item{Fuzz} — An optional layer representing reflection from micro-fibers.
 \end{itemize}
 
+The layers are set up to be adjacent mediums where the \glspl{BSDF} of the individual interfaces are combined.
+
+The substrate is defined as a mixture of metal, translucent base, subsurface, and the gloss diffuse layer. These slabs are combined using a mix operation. The operation is defined as a weighted sum of the different layers. The weights are defined by the user and can be adjusted to achieve different looks.
+
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.5\textwidth]{resources/openpbr.png}
+  \includegraphics[width=0.8\textwidth]{resources/openpbr.png}
   \caption{The different layers of the \gls{OpenPBR} shading model. The workflow supports a variety of features such as metallic, glossy and diffuse reflection renderings which are important for industrial use cases.}
   \label{fig:openPBR}
 \end{figure}
 
-The specification is focused on physical aspects and does not specify implementation details. Implementaitons have an unambiguous target in terms of how it should look like, but have flexibility in terms of the degree of fidelity. While this makes alignment between different applications harder, it also allows for flexibility in the implementation of the standard, which is especially important for real-time rendering.
+Diffuse reflection is based on the Oren-Nayar model reflection model which extended the Lambertian model to include rough surfaces \cite{oren1994generalization}.
