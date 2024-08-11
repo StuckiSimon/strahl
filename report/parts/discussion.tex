@@ -24,6 +24,10 @@ WebGPU is a new technology and support for it is likely to become more important
 
 As discussed in \autoref{ch:materialDescriptionStandards}, a variety of standards exist for \gls{PBR}. While \gls{OpenPBR} is a new standard, it has already seen adoption by the industry. \texttt{three-gpu-pathtracer} and \texttt{Three.js PathTracer} currently use custom \gls{PBR} standards or partially support \gls{glTF} PBR extensions. \texttt{dspbr-pt} uses the \gls{DSPBR} standard.
 
+\subsection*{Documentation}
+
+In order to be usable by developers, the renderer should be well-documented. \texttt{strahl} and \texttt{three-gpu-pathtracer} provide documentation. \texttt{Three.js PathTracer} and \texttt{dspbr-pt} provide minimal documentation.
+
 \subsection*{npm Package}
 
 The availability of an \gls{npm} package can simplify the integration of the renderer into existing projects. \texttt{strahl}, \texttt{three-gpu-pathtracer}, and \texttt{dspbr-pt} provide an \gls{npm} package. \texttt{Three.js PathTracer} does not provide a package.
@@ -43,6 +47,7 @@ The last update of the renderer is an indicator of the activity of the project. 
      & \texttt{strahl} & \texttt{three-gpu-} \texttt{pathtracer} \cite{ThreeJsPathTracerJohnson} & \texttt{Three.js PathTracer} \cite{ThreeJsPathTracerLoftis} & \texttt{dspbr-pt} \cite{PathTracerDassault} \\
     WebGPU \newline Support & Yes & No & No & No \\
     \gls{PBR} Standard & \gls{OpenPBR} & Custom & Custom & \gls{DSPBR} \\
+    Documentation & yes & yes & minimal & minimal \\
     \gls{npm} Package & yes & yes & no & yes \\
     Last Update & 2024 & 2024 & 2024 & 2022 \\
     \bottomrule
