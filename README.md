@@ -1,6 +1,7 @@
 # strahl 🌅
 
 [![Test Pipeline](https://github.com/StuckiSimon/strahl/actions/workflows/test-pipeline.yml/badge.svg)](https://github.com/StuckiSimon/strahl/actions/workflows/test-pipeline.yml)
+[![Deploy Website](https://github.com/StuckiSimon/strahl/actions/workflows/deploy-website.yml/badge.svg)](https://github.com/StuckiSimon/strahl/actions/workflows/deploy-website.yml)
 
 WebGPU Path Tracer for the web.
 
