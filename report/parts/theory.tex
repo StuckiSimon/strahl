@@ -923,11 +923,25 @@ Three major implementations of WebGPU exist:
     \item{WebKit WebGPU} — Developed by Apple, WebKit is used in Safari \cite{webKitWebGPUImplementation}.
 \end{itemize}
 
-As the standard is under active development, there are differences between the implementations as well as the specification \cite{wgpuStandardDeviation}. Thanks to alignment and the extensive conformance test suite \cite{WebGPUConformanceTestSuite}, the implementations are largely compatible.
+  \node[concrete, below=of bgl] (bg) {Bind Group};
+  \node[concrete, right=of bg] (sm) {Shader Module};
+  \node[concrete, right=of sm] (cp) {Compute Pipeline};
+  \node[abstract, above=of cp] (pl) {Pipeline Layout};
+
+  \draw[-latex, thick] (bg) -- (bgl);
+  \draw[-latex, thick] (pl) -- (bgl);
+  \draw[-latex, thick] (cp) -- (sm);
+  \draw[-latex, thick] (cp) -- (pl);
+  \end{tikzpicture}
+  \caption{Core concepts in WebGPU, the arrow direction indicates references to. Blue elements are independent of concrete references to data and code while green elements are concrete references.}
+  \label{fig:webgpu-arch}
+\end{figure}
+
+Having set up the compute pipeline, one needs to define the bind groups which contain the data. Using a command encoder, the compute pipeline can be dispatched to the \gls{GPU} for execution.
 
 \subsubsection{Buffers}
 
-Data needs to be transferred between the CPU and the GPU. Buffers are the primary method to do so. Depending on the type of data to be transferred, different types of buffers can be used:
+Data needs to be transferred between the CPU and the GPU within bind groups. Buffers are the primary method to store data. Depending on the type of data to be transferred, different types of buffers can be used:
 
 \begin{itemize}
   \item{Uniforms} — Uniform Buffers are optimized for data which is read-only on the GPU and is the same for all vertices or fragments. Such information could be the projection matrix.
@@ -935,12 +949,6 @@ Data needs to be transferred between the CPU and the GPU. Buffers are the primar
   \item{Vertex} — Alternative to storage buffers, intended for vertex data.
   \item{Index} - Buffers which contain indices for the vertices.
 \end{itemize}
-
-\subsubsection{Shading Language}
-
-WebGPU introduces a new shading language called WebGPU Shading Language (\gls{WGSL}). The language is statically typed and supports a variety of data structures required for computer graphics as well as general-purpose computing.
-
-\gls{WGSL} supports common high-level helpers such as Swizzling, which is a class of operations which facilitate managing vector elements. For example, given a vector \verb|let v = vec3f(x, y, z)|, the operation \verb|v.xy| returns a vector \verb|(x, y)|.
 
 \subsubsection{Memory Alignment}
 \label{ch:memoryAlignmentTheory}
@@ -980,6 +988,12 @@ const c = new Float32Array(ValueBuffer, 28, 1);
   \caption{JS code providing views to access the \texttt{struct}.}
   \label{code:memoryAlignmentJs}
 \end{figure}
+
+\subsubsection{Shading Language}
+
+WebGPU introduces a new shading language called WebGPU Shading Language (\gls{WGSL}). The language is statically typed and supports a variety of data structures required for computer graphics as well as general-purpose computing.
+
+\gls{WGSL} supports common high-level helpers such as Swizzling, which is a class of operations which facilitate managing vector elements. For example, given a vector \verb|let v = vec3f(x, y, z)|, the operation \verb|v.xy| returns a vector \verb|(x, y)|.
 
 
 \section{Exchange Formats}
