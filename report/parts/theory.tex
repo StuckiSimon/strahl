@@ -1274,7 +1274,33 @@ The substrate is defined as a mixture of metal, translucent base, subsurface, an
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.8\textwidth]{resources/openpbr.png}
+  \begin{tikzpicture}[
+    every node/.style={font=\small},
+    layer/.style={draw, minimum height=1.4cm, minimum width=2.5cm, anchor=south west, text width=2cm, align=center},
+    mid/.style={draw, minimum height=0.7cm, minimum width=2.5cm, anchor=south west, align=center},
+    thin/.style={draw, minimum height=0.7cm, anchor=south west, minimum width=10cm, align=center},
+  ]
+  
+  \draw[dotted] (0,1) -- (0,-0.4);
+  \draw[dotted] (2.5,1) -- (2.5,-0.4);
+  \draw[dotted] (5,1) -- (5,-0.4);
+  \draw[dotted] (10,1) -- (10,-0.4);
+  
+  \node[layer, fill=lightgray] (metal) at (0,1) {metal};
+  \node[layer] (translucent) at (2.5,1) {translucent base};
+  \node[layer] (subsurface) at (5,1) {subsurface};
+  \node[mid] (gloss) at (7.5,1.7) {gloss};
+  \node[mid, fill=lightgray] (diffuse) at (7.5,1) {diffuse};
+  
+  \node[thin] (fuzz) at (0,3.1) {fuzz};
+  \node[thin] (coat) at (0,2.4) {coat};
+  
+  \draw[>=latex,thick,<->] (0,0.6) -- (10,0.6) node[midway, fill=white] {base};
+  \draw[>=latex,thick,<->] (5,-0.2) -- (10,-0.2) node[midway, fill=white] {opaque-base};
+  \draw[>=latex,thick,<->] (2.5,0.2) -- (10,0.2) node[midway, fill=white] {dielectric-base};
+  
+  
+  \end{tikzpicture}
   \caption{The different layers of the \gls{OpenPBR} shading model. The workflow supports a variety of features such as metallic, glossy and diffuse reflection renderings which are important for industrial use cases.}
   \label{fig:openPBR}
 \end{figure}
