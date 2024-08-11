@@ -7,14 +7,19 @@
 % !TEX encoding = UTF-8 Unicode
 % !TEX root = ../main.tex
 
-This section discusses the results in more detail. The experience gained by implementing a project using WebGPU is discussed. In addition, a more detailed discussion of the results is provided.
+This section discusses the results, and experience gained by implementing a project using WebGPU in detail. In addition, a discussion of the results is provided and possible future work is outlined.
 
-The ray tracer focuses on the given use case and is therefore not a general-purpose rendering engine. For example, it does not offer a physics engine, support for animations, or other features that are common in general-purpose rendering engines such as \gls{Three.js}, \gls{Babylon.js} or similar.
-
-Generally, the ray tracing technique will be slower than rasterization-based approaches and is therefore not a silver bullet for all use cases.
+The path tracer focuses on the given use case and is therefore not a general-purpose rendering engine. For example, it does not offer a physics engine, support for animations, or other features that are common in general-purpose rendering engines such as \gls{Three.js}, \gls{Babylon.js} or alternatives. Generally, the ray tracing technique is slower than rasterization-based approaches and is therefore not a silver bullet for all use cases. Yet, for the given use case of using production \gls{CAD} data with manifold assembly configurations and customer-specific materials, the path tracer is a suitable choice. THis makes it a viable option in the case of e-commerce. Additionally, operating costs can be reduced by eliminating the need to host a rendering pipeline or remote rendering service. WebGPU has significant potential for years to come and adoption of \gls{OpenPBR} by the wider industry is a promising sign of the possible longevity of the chosen technology and standards.
 
 \section{Findings}
-\subsection{WebGPU Stability and Adoption}
+
+The main novelty introduced in this work is the development of a path tracer with WebGPU using the \gls{OpenPBR} surface shading model. WebGPU and \gls{OpenPBR} are promising endeavors for the future of 3D rendering, but relatively new and not yet widely adopted.
+
+\subsection*{State of WebGPU}
+
+As highlighted in the report, WebGPU is a promising technology for \gls{GPGPU} computations in the browser. However, to date there are certain limitations in terms of support and features.
+
+\subsubsection*{Browser Support}
 
 Due to the current state of support for WebGPU in Safari and Mozilla Firefox, the production readiness of WebGPU is still limited. Safari has announced plans to support WebGPU and has launched a preview version \cite{SafariWebGPUSupport}. Firefox also has plans to support WebGPU \cite{FirefoxWebGPUSupport}. Thanks to the extensive conformance test suite \cite{WebGPUConformanceTestSuite}, it is more likely that the different implementations will be compatible with each other.
 
@@ -22,20 +27,32 @@ The main browser which supports WebGPU to date is Chrome. WebGPU has shipped to 
 
 This means that it's straightforward to use WebGPU on most modern devices with the notable exception of Apple iOS and iPadOS devices.
 
-\subsubsection{Missing Features}
+\subsubsection*{Ray Tracing}
 
-To date, WebGPU does not support some features that are common in modern rendering APIs.
+To date, WebGPU does not support some features that are common in modern rendering \glspl{API} and would be beneficial for the path tracer. The most prominent example is hardware-accelerated ray tracing. \glspl{API} such as Vulkan support hardware-accelerated ray tracing \cite{vulkanRayTracing}. This entails helpers for building common acceleration structures, such as \gls{BVH}, as well as ray querying functions to determine intersections. WebGPU does not yet support these features, but there are discussions ongoing to add extensions \cite{webGPURayTracing} as well as a demonstration implemented in a Dawn fork \cite{webGPURayTracingFork}.
 
-\paragraph{Ray Tracing}
-
-\glspl{API} such as Vulkan support hardware-accelerated ray tracing \cite{vulkanRayTracing}. This entails helpers for building common acceleration structures, such as \gls{BVH}, as well as ray querying functions to determine intersections. WebGPU does not yet support these features, but there are discussions ongoing to add extensions \cite{webGPURayTracing} as well as a demonstration implemented in a Dawn fork \cite{webGPURayTracingFork}.
-
-\paragraph{Debuggability}
+\subsubsection*{Debuggability}
 
 None of the major browser engines, Chrome, Firefox, and Safari, provide debugging as part of the developer tools. Tools for inspecting WebGPU applications exist \cite{webGpuDevToolsDuncan, webGpuDevToolsTakahiro}, but are limited in terms of feature set. While they are helpful to inspect the pipelines, capture frames, and inspect resources, they do not provide debugging capabilities such as breakpoints, stepping or variable inspection. For specific setups, there are methods to setup profiling \cite{webGpuProfilingWithPix}, but these are not integrated into the browser developer tools and are dependent on the concrete machine hardware. Improvements in this area would be beneficial for productivity.
 
+\subsubsection*{Stability}
+
+To date, there are reports of stability issues with WebGPU. This includes crashes of the browser, but on macOS using Chrome system-wide crashes have been observed with faulty WebGPU code. Such issues can look like shown in \autoref{fig:webgpu-crash}. This is likely due to the early stage of the technology and the complexity of the underlying system. As implementations mature, these issues are likely to be resolved.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.25\columnwidth]{resources/webgpu-crashes.png}
+  \caption{Example of a provoked WebGPU crash on macOS, note the black squares which correspond in size to the dispatched workgroup size.}
+  \label{fig:webgpu-crash}
+\end{figure}
+
+\subsection{OpenPBR}
+
+The integration of the \gls{OpenPBR} surface shading model enables realistic material representation. As it is a new standard and no stable version has been released when first implementing the path tracer, aligning it with the standard was challenging. As the standard has now reached a stable version, it is easier to align the implementation with the standard. The use of \gls{PBR} and the latest industry standards is beneficial, but few open-source projects have implemented the standard to date.
 
 \section{Future Work}
+
+In order to accomodate for other use cases, the renderer could be extended in various ways. The following section outlines possible future work.
 
 \subsection*{Rendering Effects}
 
@@ -72,6 +89,10 @@ The current implementation only supports the features of the \gls{OpenPBR} surfa
 
 \todo{list all features}
 
+\subsection*{Alignment of OpenPBR and glTF PBR}
+
+Further improvements can be achieved by aligning \gls{glTF} PBR with \gls{OpenPBR}, focusing on real-time rendering. This alignment could reduce the computational resources required for surface shading.
+
 \subsection*{Web Worker Support}
 
 Web Workers are a web technology that allows running scripts off the main thread. This can be used to offload \gls{CPU}-heavy tasks to a separate thread to prevent blocking the main thread which is responsible for rendering the user interface.
@@ -107,6 +128,14 @@ During the specification phase of WebGPU, the relation to \fgls{SPIR-V}{\e{Stand
 This target is likely at odds with the goal of providing automatic shader generation. The current implementation is not optimized for performance. Therefore, it is likely that optimizations of the \gls{WGSL} code could improve the performance of the renderer. Due to the nature of the design of \gls{OpenPBR}, it would be possible to do optimizations and get better real-time rendering performance.
 
 Automatic shader generation is helpful, but likely not as optimized as a carefully tuned implementation. However, both endeavors are of interest for potential benefits.
+
+\subsection*{Sampling Performance Optimizations}
+
+Path tracing is computationally expensive and requires multiple samples per pixel to achieve accurate results. Consequently, the sampling process is noticeable during interactions with the scene. One technique to improve perceived interaction quality is to overlay the rendering with a rasterization preview during interactions. To reduce the number of samples required for higher quality renderings, techniques like neural radiance caching (NRC) \cite{muller2021real} or reservoir-based spatio-temporal importance resampling (ReSTIR) \cite{restir} could be employed in future work.
+
+\subsection*{Denoisers}
+
+Optimizations in the render pipeline could also be achieved by using denoising algorithms applied as post-processing steps could enhance the quality of the results. Options include blockwise multi-order feature regression (BMFR) \cite{blockwise-multi-order-regresssion-for-rt-pt} and Open Image Denoise (OIDN) \cite{openImageDenoise}.
 
 \subsection*{Qualitative Assessment}
 

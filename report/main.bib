@@ -318,6 +318,54 @@ year = {2021}
   publisher={ACM New York, NY, USA}
 }
 
+@article{muller2021real,
+author = {M\"{u}ller, Thomas and Rousselle, Fabrice and Nov\'{a}k, Jan and Keller, Alexander},
+title = {Real-time neural radiance caching for path tracing},
+year = {2021},
+issue_date = {August 2021},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {40},
+number = {4},
+issn = {0730-0301},
+url = {https://doi.org/10.1145/3450626.3459812},
+doi = {10.1145/3450626.3459812},
+abstract = {We present a real-time neural radiance caching method for path-traced global illumination. Our system is designed to handle fully dynamic scenes, and makes no assumptions about the lighting, geometry, and materials. The data-driven nature of our approach sidesteps many difficulties of caching algorithms, such as locating, interpolating, and updating cache points. Since pretraining neural networks to handle novel, dynamic scenes is a formidable generalization challenge, we do away with pretraining and instead achieve generalization via adaptation, i.e. we opt for training the radiance cache while rendering. We employ self-training to provide low-noise training targets and simulate infinite-bounce transport by merely iterating few-bounce training updates. The updates and cache queries incur a mild overhead---about 2.6ms on full HD resolution---thanks to a streaming implementation of the neural network that fully exploits modern hardware. We demonstrate significant noise reduction at the cost of little induced bias, and report state-of-the-art, real-time performance on a number of challenging scenarios.},
+journal = {ACM Trans. Graph.},
+month = {jul},
+articleno = {36},
+numpages = {16},
+keywords = {deep learning, neural networks, path tracing, radiance caching, real-time, rendering}
+}
+
+@article{blockwise-multi-order-regresssion-for-rt-pt,
+author = {Koskela, Matias and Immonen, Kalle and M\"{a}kitalo, Markku and Foi, Alessandro and Viitanen, Timo and J\"{a}\"{a}skel\"{a}inen, Pekka and Kultala, Heikki and Takala, Jarmo},
+title = {Blockwise Multi-Order Feature Regression for Real-Time Path-Tracing Reconstruction},
+year = {2019},
+issue_date = {October 2019},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {38},
+number = {5},
+issn = {0730-0301},
+url = {https://doi.org/10.1145/3269978},
+doi = {10.1145/3269978},
+abstract = {Path tracing produces realistic results including global illumination using a unified simple rendering pipeline. Reducing the amount of noise to imperceptible levels without post-processing requires thousands of samples per pixel (spp), while currently it is only possible to render extremely noisy 1&nbsp;spp frames in real time with desktop GPUs. However, post-processing can utilize feature buffers, which contain noise-free auxiliary data available in the rendering pipeline. Previously, regression-based noise filtering methods have only been used in offline rendering due to their high computational cost. In this article we propose a novel regression-based reconstruction pipeline, called Blockwise Multi-Order Feature Regression (BMFR), tailored for path-traced 1 spp inputs that runs in real time. The high speed is achieved with a fast implementation of augmented QR factorization and by using stochastic regularization to address rank-deficient feature data. The proposed algorithm is 1.8\texttimes{} faster than the previous state-of-the-art real-time path-tracing reconstruction method while producing better quality frame sequences.},
+journal = {ACM Trans. Graph.},
+month = {jun},
+articleno = {138},
+numpages = {14},
+keywords = {Path tracing, real-time, reconstruction, regression}
+}
+
+@misc{openImageDenoise,
+  author = {Attila T. {\'A}fra},
+  title  = {{Intel\textsuperscript{\textregistered} Open Image Denoise}},
+  year   = {2024},
+  note   = {\url{https://www.openimagedenoise.org}}
+}
+
+
 @book{luebke2003level,
   title={Level of detail for 3D graphics},
   author={Luebke, David},
