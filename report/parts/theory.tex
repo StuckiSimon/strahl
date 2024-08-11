@@ -320,6 +320,7 @@ Common terminology used to describe the optical properties of materials is helpf
 \end{itemize}
 
 \subsubsection{Generalization}
+\label{sec:physics-generalization}
 
 The mentioned laws are rough approximations of the real world. Additional phenomena such as absorption and emission of light also affect the appearance. In general, many surfaces have a combination of these effects and need to consider the incidence as well as outgoing light, necessitating a bidirectional reflection model. This model defines where the largest contribution to overall radiance comes from, commonly referred to as the reflection lobe. Simplified, the main contribution can be visualized using an arc indicating the direction of the most significant contribution.
  For example, a diffuse surface scatters light in all directions (\autoref{fig:reflection-lobe-intro-diffuse}), while a mirror-like surface reflects light in a specific direction (\autoref{fig:reflection-lobe-intro-specular}).
@@ -1065,35 +1066,70 @@ In general, there is no \gls{PBR} standard. Instead, a variety of different mode
 
 The definition of the bidirectional distribution functions (\gls{BxDF}) is a key concept in PBR. The $x$ stands for the different kinds of distributions to consider. In general, the functions describe how light is reflected or transmitted. The two functions are usually abbreviated as \gls{BRDF}, the r standing for reflectance, and \gls{BTDF}, the t standing for transmittance. The combination of the two is often referred to as \gls{BSDF}, the s standing for scattering \cite{Pharr_Physically_Based_Rendering_2023}.
 
-These functions define the distribution of light in different directions. Samples of different kinds of reflectance distributions can be seen in \autoref{fig:brdf}. Many objects exhibit a combination of different reflectance distributions.
+These functions define the distribution of light in different directions as described in \autoref{sec:physics-generalization}. Samples of different kinds of \glspl{BRDF} can be seen in \autoref{fig:brdf-special}. Many objects exhibit a combination of different reflectance distributions.
 
 \begin{figure}[H]
   \centering
-  \begin{subfigure}[b]{0.45\textwidth}
-      \includegraphics[width=\textwidth]{resources/reflection-diffuse.png}
-      \caption{Diffuse reflection, as can be encountered in materials such as a paper.}
-      \label{fig:reflectionDiffuse}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.45\textwidth}
-      \includegraphics[width=\textwidth]{resources/reflection-retroreflective.png}
+  \begin{subfigure}[t]{0.45\textwidth}
+      \begin{tikzpicture}
+      \coordinate (A) at (0,3);
+      \coordinate (AA) at (1,2);
+      \coordinate (BB) at (2,1);
+      \coordinate (B) at (3,0);
+  
+      \coordinate (L) at (4.5,3);
+  
+      \draw[dashed, thick] (A) -- (B);
+      \draw[-latex, thick] (AA) -- (BB);
+  
+      \def\tangentx{3}
+      \def\tangenty{0}
+      \def\tangentr{3.04}
+  
+      \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (-41:\tangentr)$);
+      \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (-45:\tangentr)$);
+      \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (-49:\tangentr)$);
+  
+      \fill[rgreen] (B) circle (0.1);
+      \centerarc[rgreen,ultra thick](B)(120:150:1)
+  
+      \fill[gray!20] (0,0) rectangle (6,-2);
+      \end{tikzpicture}
       \caption{Retroreflective reflection, as can be encountered in materials such as velvet.}
       \label{fig:reflectionRetroreflective}
   \end{subfigure}
-  \begin{subfigure}[b]{0.45\textwidth}
-    \includegraphics[width=\textwidth]{resources/reflection-glossy-specular.png}
-    \caption{Glossy reflection, as can be encountered in materials such as plastic.}
-    \label{fig:reflectionGlossy}
-  \end{subfigure}
   \hfill
-  \begin{subfigure}[b]{0.45\textwidth}
-    \includegraphics[width=\textwidth]{resources/reflection-specular.png}
-    \caption{Specular reflection, as can be encountered in objects such as a mirror.}
-    \label{fig:reflectionSpecular}
+  \begin{subfigure}[t]{0.45\textwidth}
+      \begin{tikzpicture}
+      \coordinate (A) at (0,3);
+      \coordinate (AA) at (1,2);
+      \coordinate (BB) at (2,1);
+      \coordinate (B) at (3,0);
+  
+      \coordinate (L) at (4.5,3);
+  
+      \draw[dashed, thick] (A) -- (B);
+      \draw[-latex, thick] (AA) -- (BB);
+  
+      \def\tangentx{3}
+      \def\tangenty{0}
+      \def\tangentr{3.04}
+  
+      \foreach \angle in {-127, -131, -135, -139, -143} {
+          \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (\angle:\tangentr)$);
+      }
+  
+      \fill[rgreen] (B) circle (0.1);
+      \centerarc[rgreen,ultra thick](B)(30:60:1)
+  
+      \fill[gray!20] (0,0) rectangle (6,-2);
+      \end{tikzpicture}
+      \caption{Glossy reflection, as can be encountered in materials such as plastic.}
+      \label{fig:reflectionGlossy}
   \end{subfigure}
-  \caption{Samples for different kinds of reflectance distributions. The blue line segment indicates the target of the reflection. \cite{Pharr_Physically_Based_Rendering_2023}}
-  \label{fig:brdf}
-\end{figure}
+  \caption{Special types of reflectance distributions using the same visualization as \autoref{fig:reflection-lobe-intro}. \cite{Pharr_Physically_Based_Rendering_2023}.}
+  \label{fig:brdf-special}
+  \end{figure}
 
 \subsection{Microfacet Theory}
 
