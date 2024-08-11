@@ -219,38 +219,6 @@
   breaklines=true,
 }
 
-% glsl
-\lstdefinelanguage{glsl}{
-  morekeywords={void, attribute},
-  morecomment=[l]//,
-}
-\lstdefinestyle{glsl} {%
-  % General design
-  basicstyle={\footnotesize\ttfamily},
-  frame=b,
-  % line-numbers
-  xleftmargin={0.75cm},
-  numbers=left,
-  stepnumber=1,
-  firstnumber=1,
-  numberfirstline=true,
-  % Code design
-  identifierstyle=\color{black},
-  keywordstyle=\color{blue}\bfseries,
-  ndkeywordstyle=\color{editorGreen}\bfseries,
-  stringstyle=\color{editorOcher}\ttfamily,
-  commentstyle=\color{brown}\ttfamily,
-  % Code
-  language=glsl,
-  alsodigit={.:;},
-  tabsize=2,
-  showtabs=false,
-  showspaces=false,
-  showstringspaces=false,
-  extendedchars=true,
-  breaklines=true,
-}
-
 % wgsl
 \lstdefinelanguage{wgsl}{
   morekeywords={void, attribute},
@@ -283,28 +251,7 @@
   breaklines=true,
 }
 
-% json
 
-\lstdefinelanguage{json}{
-  basicstyle={\footnotesize\ttfamily},
-  frame=b,
-  % line-numbers
-  xleftmargin={0.75cm},
-  numbers=left,
-  stepnumber=1,
-  firstnumber=1,
-  numberfirstline=true,
-  tabsize=4,
-  string=[s]{"}{"},
-  stringstyle=\color{blue},
-  comment=[l]{:},
-  commentstyle=\color{black},
-}
-
-\lstdefinestyle{json} {%
-  % Code
-  language=json,
-}
 
 \makeatletter
 \renewcommand\listoffigures{%
