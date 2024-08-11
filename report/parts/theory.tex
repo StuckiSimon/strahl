@@ -867,6 +867,7 @@ Nowadays GPUs are prevalent in consumer hardware such as smartphones, tablets, l
 Modern GPU hardware offers support for hardware-accelerated ray tracing. Examples include NVIDIA RTX \cite{nvidiaRtxRayTracing}, Apple Metal on M3 \cite{appleM3GpuAdvancements} and others. These examples demonstrate an increasing trend towards hardware-accelerated ray tracing in recent years, however many devices and \glspl{API}, including WebGPU, do not yet support hardware-accelerated ray tracing.
 
 \paragraph{Common Strategies}
+\label{sec:commonGpuStrategies}
 
 Certain basic definitions have established as common practices for these \glspl{API}. The term shader is used to describe a program which runs on the \gls{GPU}. It is frequently used to describe in conjunction with different shader types which are used as part of the so-called graphics pipeline in rasterization. The pipeline in its basic form consists of two steps which are executed on the \gls{GPU} in sequence:
 
@@ -888,9 +889,9 @@ To date, \gls{OpenGL} is still widely used in the industry, but it has been repl
 While \gls{OpenGL} and derivatives such as \fgls{OpenGL ES}{\e{OpenGL for Embedded Systems}, subset of OpenGL designed for embedded systems like smartphones} have been widely adopted, the introduction of a number of new \glspl{API} has changed the landscape. The standards share an understanding of giving developers more control over the hardware and can be more efficient than \gls{OpenGL}. Modern hardware-accelerated features such as ray tracing are more easily accessible using these new \glspl{API}. Some of the most notable \glspl{API} are:
 
 \begin{itemize}
-    \item{Vulkan} — Developed by the \fgls{Khronos Group}{consortium for developing interoperability standards for 3D graphics}, Vulkan is a low-level \gls{API} which is supported on a wide range of platforms.
-    \item{Metal} — Developed by Apple, Metal is a low-level \gls{API} which is supported on Apple devices.
-    \item{DirectX 12} — Developed by Microsoft, DirectX is a collection of \glspl{API} which are supported on Windows platforms.
+    \item{\gls{Vulkan}} — Developed by the \fgls{Khronos Group}{consortium for developing interoperability standards for 3D graphics}, Vulkan is a low-level \gls{API} which is supported on a wide range of platforms.
+    \item{\gls{Metal}} — Developed by Apple, Metal is a low-level \gls{API} which is supported on Apple devices.
+    \item{\gls{DirectX 12}} — Developed by Microsoft, DirectX is a collection of \glspl{API} which are supported on Windows platforms.
 \end{itemize}
 
 None of these \glspl{API} are supported in the browser, which makes them unsuitable for the discussed use case.
