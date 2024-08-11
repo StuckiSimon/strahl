@@ -11,6 +11,46 @@ This section discusses the results, and experience gained by implementing a proj
 
 The path tracer focuses on the given use case and is therefore not a general-purpose rendering engine. For example, it does not offer a physics engine, support for animations, or other features that are common in general-purpose rendering engines such as \gls{Three.js}, \gls{Babylon.js} or alternatives. Generally, the ray tracing technique is slower than rasterization-based approaches and is therefore not a silver bullet for all use cases. Yet, for the given use case of using production \gls{CAD} data with manifold assembly configurations and customer-specific materials, the path tracer is a suitable choice. THis makes it a viable option in the case of e-commerce. Additionally, operating costs can be reduced by eliminating the need to host a rendering pipeline or remote rendering service. WebGPU has significant potential for years to come and adoption of \gls{OpenPBR} by the wider industry is a promising sign of the possible longevity of the chosen technology and standards.
 
+\section{Comparison to Prior Work}
+
+The three existing open-source path tracers for the web are alternatives to the renderer developed in this work. While comparing them based on quantitative measures such as \fGls{FPS}{\e{Frames per second}, measure of rate at which consecutive images are rendered and displayed} is not meaningful as the number of samples differs across the renderers, it is still possible to define a set of criteria to compare them.
+
+
+\subsection*{WebGPU Support}
+
+WebGPU is a new technology and support for it is likely to become more important in the future. The three alternatives currently do not support WebGPU and still rely on \gls{WebGL}.
+
+\subsection*{PBR Standard}
+
+As discussed in \autoref{ch:materialDescriptionStandards}, a variety of standards exist for \gls{PBR}. While \gls{OpenPBR} is a new standard, it has already seen adoption by the industry. \texttt{three-gpu-pathtracer} and \texttt{Three.js PathTracer} currently use custom \gls{PBR} standards or partially support \gls{glTF} PBR extensions. \texttt{dspbr-pt} uses the \gls{DSPBR} standard.
+
+\subsection*{npm Package}
+
+The availability of an \gls{npm} package can simplify the integration of the renderer into existing projects. \texttt{strahl}, \texttt{three-gpu-pathtracer}, and \texttt{dspbr-pt} provide an \gls{npm} package. \texttt{Three.js PathTracer} does not provide a package.
+
+\subsection*{Last Update}
+
+The last update of the renderer is an indicator of the activity of the project. \texttt{strahl}, \texttt{three-gpu-pathtracer}, and \texttt{Three.js PathTracer} have been updated in 2024. \texttt{dspbr-pt} has not been updated since 2022.
+
+\subsection*{Assessment}
+\autoref{tab:rendererComparison} contains a high-level comparison between the four renderers. The renderer developed in this work is the only one that supports WebGPU and uses the \gls{OpenPBR} standard. The renderer is also available as an \gls{npm} package and provides an alternative to the existing renderers.
+
+\begin{table}[H]
+    \centering
+    \ra{1.3}
+    \begin{tabular}{@{}p{3cm}p{2.5cm}p{2.5cm}p{2.5cm}p{2.5cm}@{}}
+    \toprule
+     & \texttt{strahl} & \texttt{three-gpu-} \texttt{pathtracer} \cite{ThreeJsPathTracerJohnson} & \texttt{Three.js PathTracer} \cite{ThreeJsPathTracerLoftis} & \texttt{dspbr-pt} \cite{PathTracerDassault} \\
+    WebGPU \newline Support & Yes & No & No & No \\
+    \gls{PBR} Standard & \gls{OpenPBR} & Custom & Custom & \gls{DSPBR} \\
+    \gls{npm} Package & yes & yes & no & yes \\
+    Last Update & 2024 & 2024 & 2024 & 2022 \\
+    \bottomrule
+    \end{tabular}
+    \caption{High-level comparison between the four open-source path tracers for the web.}
+    \label{tab:rendererComparison}
+  \end{table}
+
 \section{Findings}
 
 The main novelty introduced in this work is the development of a path tracer with WebGPU using the \gls{OpenPBR} surface shading model. WebGPU and \gls{OpenPBR} are promising endeavors for the future of 3D rendering, but relatively new and not yet widely adopted.
