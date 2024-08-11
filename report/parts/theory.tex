@@ -1077,7 +1077,7 @@ One notable format is USD, which has been open-sourced by Pixar in 2016. Similar
 
 \subsection*{Runtime Formats}
 
-For usage in end-user applications, such as for the use cases in this thesis, the \gls{glTF} format is well-suited. It has been established in 2015 and is designed to be efficient for transmission and loading of 3D scenes. The standard is developed by the \gls{Khronos Group} and is widely supported by 3D engines and applications. The format supports 3D geometry, materials, animations, scene graph and other features.
+For usage in end-user applications, such as for the use cases in this thesis, the \gls{glTF} format is well-suited \cite{gltfSpecification}. It has been established in 2015 and is designed to be efficient for transmission and loading of 3D scenes. The standard is developed by the \gls{Khronos Group} and is widely supported by 3D engines and applications. The format supports 3D geometry, materials, animations, scene graph and other features.
 
 Technically, the format offers two different encoding formats which differ in file ending:
 
@@ -1086,9 +1086,7 @@ Technically, the format offers two different encoding formats which differ in fi
     \item{\texttt{.gltf}} – Text-based format which is human-readable.
 \end{itemize}
 
-\gls{glTF} is designed to be extensible and a variety of extensions have been developed to support features such as mesh compression using Draco.
-
-The hierarchy structure of a \gls{glTF} file is shown in \autoref{fig:gltf-hierarchy}.
+\gls{glTF} is designed to be extensible and a variety of extensions have been developed to support features such as mesh compression using Draco. The hierarchy structure of a \gls{glTF} file is shown in \autoref{fig:gltf-hierarchy}. Many of the official extensions extend the material nodes to support more advanced features. Its focus on transmission and loading efficiency makes it well-suite for the web.
 
 \begin{figure}[H]
   \centering
@@ -1132,7 +1130,7 @@ The hierarchy structure of a \gls{glTF} file is shown in \autoref{fig:gltf-hiera
 
   \end{tikzpicture}
   }
-  \caption{glTF hierarchy starting with the \texttt{scene} object. Arrows indicate parent-child relationships. Gray objects are not mentioned in this thesis.}
+  \caption{\gls{glTF} hierarchy starting with the \texttt{scene} object. Arrows indicate parent-child relationships. Gray objects are not mentioned in this thesis.}
   \label{fig:gltf-hierarchy}
 \end{figure}
 
@@ -1233,7 +1231,7 @@ Technically, a node-based system also supports an \gls{uber shader} approach, bu
 
 \paragraph{Material Description Standards}
 
-Many exchange formats, such as \gls{glTF}, support material description as part of the standard. The material description in \gls{glTF} supports a \gls{PBR} approach which is based on the metallic-roughness material model \todo{source?}. However, the \gls{PBR} material description in \gls{glTF} is limited in terms of feature set, by lacking features such as subsurface scattering, and is not intended to become an open standard across a variety of applications.
+Many exchange formats, such as \gls{glTF}, support material description as part of the standard. The material description in \gls{glTF} supports a \gls{PBR} approach which is based on the metallic-roughness material model \cite{gltfSpecification}. However, the \gls{PBR} material description in \gls{glTF} is limited in terms of feature set, by lacking features such as subsurface scattering, and is not intended to become an open standard across a variety of applications.
 
 Over the years, different parties have developed their own shading models. Some prominent options include:
 
