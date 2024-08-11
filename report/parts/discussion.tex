@@ -52,6 +52,10 @@ The focus on the defined use case means that certain rendering effects are not i
 
 While refraction, caustics, depth of field, and motion blur are a question of light transport, volumetric effects, hair and fur are features that are not part of the \gls{OpenPBR} specification.
 
+\subsection*{Spectral Rendering}
+
+Instead of the \gls{RGB} color space, spectral rendering uses the full spectrum of visible light by modeling the light as a function of wavelength. This can improve the realism of the rendered images. Spectral rendering is well-suited for \gls{PBR} and is therefore a natural extension of the current implementation. It is also possible to support both \gls{RGB} and spectral rendering.
+
 \subsection*{Texture Support}
 
 While not critical for the given use case, texture support is a common feature in rendering engines. The current implementation does not use textures. THe renderer could be extended to support sampling \gls{OpenPBR} parameters from textures. This would enable more complex material variations and possibly improve the realism of the rendered images.
