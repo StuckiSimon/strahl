@@ -117,27 +117,17 @@ The implementation of the strategy indicated in \ref{sec:anti-aliasing} is imple
 
 Intersection tests based on the \gls{BVH} are implemented in \gls{WGSL}, see \coderef{BVH-TESTS}. For each intersection, sampling is done according to the \gls{MIS} scheme.
 
-\subsection{OpenPBR}
-
 The surface shading method is based on \gls{OpenPBR} reference implementation in \gls{MaterialX} as well as the reference viewer by Portsmouth \cite{openPbrViewer}.
 
 The renderer uses \fGls{RGB}{\e{red, green and blue}, common system for color representation in computer graphics} as the color space.
 
 \section{Render Pipeline}
 
-The output of the path tracing compute shader is a texture, which is then passed to a rasterizer. The rasterizer renders the texture to the canvas using a fullscreen quad consisting of two triangles.
-
-\subsection{Tone Mapping}
-
-Tone mapping is done using the Khronos PBR Neutral Tone Mapper described in \autoref{sec:toneMappingTheory}. See \coderef{TONE-MAPPER} for implementation.
-
-\subsubsection{Progressive Rendering}
-
-Progressive rendering is a technique to render an image in multiple passes. Each render pass improves the quality of the image. This enables the user to see the rough image quickly and refine it over time. 
+The output of the path tracing compute shader is a texture, which is then passed to a rasterizer. The rasterizer renders the texture to the canvas using a fullscreen quad consisting of two triangles. Tone mapping is done using the Khronos PBR Neutral Tone Mapper described in \autoref{sec:toneMappingTheory}. See \coderef{TONE-MAPPER} for implementation. Progressive rendering is a technique to render an image in multiple passes. Each render pass improves the quality of the image. This enables the user to see the rough image quickly and refine it over time. 
 
 \section{Library Integration}
 
-The path tracer is designed to be integrated into existing web projects. The package is installable via \gls{npm}, but could also be downloaded and included manually.
+The path tracer is designed to be integrated into existing web projects. The package is installable via \gls{npm}, but could also be downloaded and included manually. The full documentation is available on the website.
 
 \section{Benchmark}
 
@@ -173,3 +163,6 @@ As described in \autoref{ch:russianRoulette}, Russian roulette is a technique us
 \end{table}
 
 \section{Use Case Scenarios}
+
+The \gls{CAD} data used by EAO is a good fit for a path tracer. While not certain strengths of the ray tracing approach, such as caustics, are not relevant for the use case, and other strengths, such as reflections are not fully utilized, the path tracer still provides a suitable candidate for the use case. The complexity of the geometry does not pose a significant challenge for the path tracer, even for relatively high triangle counts. Using \gls{PBR} fits the use case and provides sufficient adjustment possibilities for the materials.
+
