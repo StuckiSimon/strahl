@@ -1092,7 +1092,46 @@ The hierarchy structure of a \gls{glTF} file is shown in \autoref{fig:gltf-hiera
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.6\textwidth]{resources/gltf-hierarchy.png}
+  \resizebox{0.6\textwidth}{!}{
+  \begin{tikzpicture}[
+    unused/.style={rectangle, draw=gray, ultra thick, inner sep=0.2cm, text width=2.5cm, align=center},
+    structure/.style={rectangle, draw=rblue, ultra thick, fill=rbblue, inner sep=0.2cm, text width=2.5cm, align=center},
+  ]
+
+  \node[structure] (scene) {scene};
+  \node[structure, below=0.6cm of scene] (node) {node};
+  \node[unused, right=4.5cm of node] (skin) {skin};
+  \node[unused, below right=-0.2cm and of node] (camera) {camera};
+  \node[structure, below=of node] (mesh) {mesh};
+  \node[structure, below=0.3cm of mesh] (accessor) {accessor};
+  \node[structure, below=0.3cm of accessor] (buffer view) {buffer view};
+  \node[structure, below=0.3cm of buffer view] (buffer) {buffer};
+
+  \node[unused, right=of accessor] (animation) {animation};
+
+  \node[structure, right=4.5cm of mesh] (material) {material};
+  \node[structure, below=0.3cm of material] (texture) {texture};
+  \node[unused, below=0.3cm of texture] (image) {image};
+  \node[unused, below left=0.43cm of texture] (sampler) {sampler};
+
+  \draw[-latex, thick] (scene) -- (node);
+  \draw[thick,-latex] (node.90)++(-1.04cm, 0) arc (0:264:4mm);
+  \draw[>=latex,thick,<->] (skin) -- (node);
+  \draw[-latex, thick] (node) -- (camera);
+  \draw[-latex, thick] (node) -- (mesh);
+  \draw[-latex, thick] (mesh) -- (accessor);
+  \draw[-latex, thick] (accessor) -- (buffer view);
+  \draw[-latex, thick] (buffer view) -- (buffer);
+
+  \draw[-latex, thick] (animation) -- (accessor);
+
+  \draw[-latex, thick] (mesh) -- (material);
+  \draw[-latex, thick] (material) -- (texture);
+  \draw[-latex, thick] (texture) -- (sampler);
+  \draw[-latex, thick] (texture) -- (image);
+
+  \end{tikzpicture}
+  }
   \caption{glTF hierarchy starting with the \texttt{scene} object. Arrows indicate parent-child relationships. Gray objects are not mentioned in this thesis.}
   \label{fig:gltf-hierarchy}
 \end{figure}
