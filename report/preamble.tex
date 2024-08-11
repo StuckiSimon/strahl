@@ -204,7 +204,7 @@
   numberfirstline=true,
   % Code design
   identifierstyle=\color{black},
-  keywordstyle=\color{blue}\bfseries,
+  keywordstyle=\color{rblue}\bfseries,
   ndkeywordstyle=\color{editorGreen}\bfseries,
   stringstyle=\color{editorOcher}\ttfamily,
   commentstyle=\color{brown}\ttfamily,
@@ -221,8 +221,10 @@
 
 % wgsl
 \lstdefinelanguage{wgsl}{
-  morekeywords={void, attribute},
+  morekeywords={void, attribute, struct, fn},
+  morecomment=[s]{/*}{*/},
   morecomment=[l]//,
+  keywords=[2]{vec2f, vec3f, vec4f, mat4x4, f32, i32, u32, vec3<u32>},
 }
 \lstdefinestyle{wgsl} {%
   % General design
@@ -236,12 +238,13 @@
   numberfirstline=true,
   % Code design
   identifierstyle=\color{black},
-  keywordstyle=\color{blue}\bfseries,
-  ndkeywordstyle=\color{editorGreen}\bfseries,
+  keywordstyle=\color{rblue},
+  ndkeywordstyle=\color{editorGreen},
+  keywordstyle=[2]\color{rred},
   stringstyle=\color{editorOcher}\ttfamily,
-  commentstyle=\color{brown}\ttfamily,
+  commentstyle=\color{gray}\ttfamily,
   % Code
-  language=glsl,
+  language=wgsl,
   alsodigit={.:;},
   tabsize=2,
   showtabs=false,
