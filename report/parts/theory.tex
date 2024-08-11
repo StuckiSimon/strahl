@@ -981,14 +981,14 @@ device.createComputePipeline({
 @compute
 @workgroup_size(1, 1, 1)
 fn computeMain(@builtin(global_invocation_id) global_id: vec3<u32>) {
-  
+  // ...
 }
   \end{lstlisting}
   \caption{\gls{WGSL} code defining the entry point for a compute pipeline.}
   \label{code:computePipelineWgsl}
 \end{figure}
 
-The use of attributes such as \texttt{@compute} are used to provide additional information to the compiler. In this case, it denotes the entry point for the compute pipeline and is mandatory as it enables specific attributes such as \texttt{@builtin} to be used.
+Attributes such as \texttt{@compute} are used to provide additional information to the compiler. In this case, it denotes the entry point for the compute pipeline and is mandatory as it enables usage of specific attributes such as \texttt{@builtin} which may only be used on entry points.
 
 Similar to other shading languages, it does not support recursion because cycles are not permitted in any kinds of declarations. \gls{WGSL} supports common high-level helpers such as Swizzling, which is a class of operations which facilitate managing vector elements. For example, given a vector \verb|let v = vec3f(x, y, z)|, the operation \verb|v.xy| returns a vector \verb|(x, y)|.
 
