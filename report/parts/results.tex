@@ -7,19 +7,13 @@
 % !TEX encoding = UTF-8 Unicode
 % !TEX root = ../main.tex
 
-As discussed in the introduction and theory chapters, the goal of this work is to implement a web-based path tracer. The path tracer is designed to be used for product visualization based on CAD data, leveraging the \gls{OpenPBR} standard.
+As discussed in the introduction and theory chapters, the goal of this work is to implement a web-based path tracer. The path tracer is designed to be used for product visualization based on \gls{CAD} data, leveraging the \gls{OpenPBR} surface shading model.
 
-The concrete result of this work consists of multiple parts. The report serves as the primary documentation of the work, but does not contain all details. The library and code documentation are published under the MIT license on GitHub with an accompanying website. See \url{https://www.github.com/StuckiSimon/strahl} for details on this. The library is published on the \fgls{npm}{package manager for JavaScript} registry as \texttt{strahl}. In addition, a dedicated short-paper has been published for WEB3D '24: The 29th International ACM Conference on 3D Web Technology \cite{ownShortPaper}. The short-paper includes the main insights and results of this work.
+The concrete result of this work consists of multiple parts. The report serves as the primary documentation of the work, but does not contain all details. The library and code documentation are published under the \fGls{MIT license}{Permissive license originating at the Massachusetts Institute of Technology (MIT)} on GitHub with an accompanying website. See \url{https://www.github.com/StuckiSimon/strahl} for details. The library is published on the \fgls{npm}{package manager for JavaScript} registry as \texttt{strahl}. In addition, a dedicated short paper has been published for WEB3D '24: The 29th International ACM Conference on 3D Web Technology \cite{ownShortPaper}. The short paper includes the main insights and results of this work.
 
-This section focuses on the implementation details of the path tracer. It also highlights the reasoning behind design decisions and provides insights into the performance of the renderer.
+This section focuses on the implementation details of the path tracer. It also highlights the reasoning behind design decisions and provides insights into the performance of the renderer and its usability for the described use case.
 
-This section contains references to the implementation of the path tracer. References are formatted in a consistent manner and can be searched for in the code. All relevant places are marked in code using the same reference. For example \coderef{ABC} refers to the code with the same comment.
-
-\section{Scene Description}
-
-In order to be easy to integrate for developers familiar with existing web-based rendering engines, the renderer utilizes many of the scene description constructs provided by \gls{Three.js}. This includes the representation of geometry using \texttt{BufferGeometry}, camera using \texttt{PerspectiveCamera}, and arbitrary camera controls such as \texttt{OrbitControls}.
-
-This also enables to use a variety of loaders for different file formats such as \gls{OBJ} or \gls{glTF}. The path tracer uses the \gls{glTF} loader provided by \gls{Three.js}.
+For references to the implementation of the path tracer, a consistent notation is used. For example \coderef{ABC} refers to the code with the same comment. All relevant places are marked in code using the same reference, this permits using search features to find all references to a specific code section.
 
 \section{Implementation}
 
@@ -33,25 +27,23 @@ Figure~\ref{fig:path-tracer} illustrates the procedure of the path tracer. Scene
     \label{fig:path-tracer}
 \end{figure}
 
-\subsection{Ray Tracing}
+\section{Scene Description}
 
-\subsubsection{OpenPBR}
+In order to be easy to integrate for developers familiar with existing web-based rendering engines, the renderer utilizes many of the scene description constructs provided by \gls{Three.js}. This includes the representation of geometry using \texttt{BufferGeometry}, camera using \texttt{PerspectiveCamera}, and arbitrary camera controls such as \texttt{OrbitControls}.
 
-The \gls{OpenPBR} standard is based on an \gls{uber shader} approach. This differs from node-based approaches such as \gls{MaterialX} in that it uses a fixed set of inputs which can be configured. This approach offers a good balance between flexibility and performance.
+This also enables to use a variety of loaders for different file formats such as \gls{OBJ} or \gls{glTF}. However, due to its advantages for transmission, it's advised to use the \gls{glTF} which can be imported using the loader provided by \gls{Three.js}.
 
-The surface shading method is based on \gls{OpenPBR} reference implementation in \gls{MaterialX} as well as the reference viewer by Portsmouth \cite{openPbrViewer}.
+\subsection{Scene Preparation}
 
-\subsubsection{RGB, Spectral}
-
-\subsubsection{Tone Mapping}
-
-Tone mapping is done using the Khronos PBR Neutral Tone Mapper described in \autoref{sec:toneMappingTheory}. See \coderef{TONE-MAPPER} for implementation.
-
-\subsubsection{Memory Management}
+The main process involved with setting up the scene is the preparation of the \gls{BVH}. For \gls{BVH} construction, well-established solutions for the web are available. The path tracer uses \texttt{three-mesh-bvh} \cite{threeMeshBvh}. This method builds the \gls{BVH} on the \gls{CPU}, the code for transfering the \gls{BVH} to the \gls{GPU} is in \coderef{BVH-TRANSFER}.
 
 In order to address memory alignment, as described in \autoref{ch:memoryAlignmentTheory}, the path tracer uses \texttt{webgpu-utils} \cite{webgpuUtilsLib}. The library enables a straightforward way to map data to buffers and align them correctly. See \coderef{MEMORY-VIEW} for creation of definition and \coderef{BUFFER-MAPPING} for mapping of data to buffers.
 
 \todo{Memory Management (GPU+CPU)}
+
+\section{Ray Generator}
+
+The ray generator is responsible for casting rays into the scene according to the view projection. The path tracer employs a backward ray tracing approach, tracing rays from the camera into the scene.
 
 \subsection{View Projection}
 
@@ -116,17 +108,36 @@ When increasing the sample count, the differences in the setup remain visible. A
     \label{fig:rngNoiseArtifactsHighlights}
 \end{figure}
 
-\subsection{Intersection Testing}
-
-For \gls{BVH} construction, well-established solutions for the web are available. The path tracer uses \texttt{three-mesh-bvh} \cite{threeMeshBvh}. This method builds the \gls{BVH} on the \gls{CPU}, the code for transfering the \gls{BVH} to the \gls{GPU} is in \coderef{BVH-TRANSFER}, intersection tests are implemented in \gls{WGSL}, see \coderef{BVH-TESTS}.
-
 \subsection{Anti-Aliasing}
+\label{sec:anti-aliasing-implementation}
 
 The implementation of the strategy indicated in \ref{sec:anti-aliasing} is implemented in \coderef{ALIASING}.
 
+\section{Path Tracer}
 
-\subsection{WebGPU}
-\subsection{Integration}
+Intersection tests based on the \gls{BVH} are implemented in \gls{WGSL}, see \coderef{BVH-TESTS}. For each intersection, sampling is done according to the \gls{MIS} scheme.
+
+\subsection{OpenPBR}
+
+The surface shading method is based on \gls{OpenPBR} reference implementation in \gls{MaterialX} as well as the reference viewer by Portsmouth \cite{openPbrViewer}.
+
+The renderer uses \fGls{RGB}{\e{red, green and blue}, common system for color representation in computer graphics} as the color space.
+
+\section{Render Pipeline}
+
+The output of the path tracing compute shader is a texture, which is then passed to a rasterizer. The rasterizer renders the texture to the canvas using a fullscreen quad consisting of two triangles.
+
+\subsection{Tone Mapping}
+
+Tone mapping is done using the Khronos PBR Neutral Tone Mapper described in \autoref{sec:toneMappingTheory}. See \coderef{TONE-MAPPER} for implementation.
+
+\subsubsection{Progressive Rendering}
+
+Progressive rendering is a technique to render an image in multiple passes. Each render pass improves the quality of the image. This enables the user to see the rough image quickly and refine it over time. 
+
+\section{Library Integration}
+
+The path tracer is designed to be integrated into existing web projects. The package is installable via \gls{npm}, but could also be downloaded and included manually.
 
 \section{Benchmark}
 
