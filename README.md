@@ -15,7 +15,7 @@ For more information, take a look at the [website](https://stuckisimon.github.io
 
 ## Current State
 
-The public documentation is still a work in progress and is expected to be finished until end of August. While you're here, feel free to checkout the short-paper describing the work on [arXiv](https://arxiv.org/abs/2407.19977).
+The public documentation is still a work in progress and is expected to be finished until end of August. While you're here, feel free to checkout the short paper describing the work on [arXiv](https://arxiv.org/abs/2407.19977).
 
 Feedback and questions are welcomed on any direct channel:
 
