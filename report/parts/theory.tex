@@ -910,7 +910,7 @@ Since its introduction, \gls{WebGL} has been extended with new features. \gls{We
 
 \subsection{WebGPU}
 
-WebGPU is a new web standard, being developed by \fGls{W3C}{\e{World Wide Web Consortium}, a non-profit organization dedicated to developing web standards} which is no longer based on \gls{OpenGL}, unlike its predecessor \gls{WebGL}. One of the main capabilities is support for \gls{GPGPU} by design. While all major browser vendors have announced intent to support WebGPU, to date only Chrome has shipped WebGPU for general use on desktop as well as mobile.
+WebGPU is a new web standard, being developed by \fGls{W3C}{\e{World Wide Web Consortium}, a non-profit organization dedicated to developing web standards} which is no longer based on \gls{OpenGL}, unlike its predecessor \gls{WebGL} \cite{webgpuSpecification}. One of the main capabilities is support for \gls{GPGPU} by design. While all major browser vendors have announced intent to support WebGPU, to date only Chrome has shipped WebGPU for general use on desktop as well as mobile.
 The standard is still in development and new features are being added.
 Common 3D engines such as \gls{Babylon.js}, \gls{Three.js}, \gls{PlayCanvas} and \gls{Unity} have announced support for WebGPU.
 
@@ -930,7 +930,7 @@ As the standard is under active development, there are differences between the i
 
 It is a low-level \gls{API} when compared to \gls{WebGL}. Users get access to the \gls{GPU} via adapters which abstract the underlying hardware. WebGPU fully supports common \gls{GPU} strategies as described in \autoref{sec:commonGpuStrategies}. Most of the commands are then executed on a logical device which is created using the adapter.
 
-For a compute pipeline, one needs to define a pipeline layout which consists of multiple bind group layouts. These define the memory layout of the data which is passed to the \gls{GPU}. The code to be executed is defined in a shader module. The compute pipeline is then created by combining the shader module and the pipeline layout. See \autoref{fig:webgpu-arch} for a visual representation of the core concepts in WebGPU.
+For a compute pipeline, one needs to define a pipeline layout which consists of multiple bind group layouts. These define the memory layout of the data which is passed to the \gls{GPU}. The code to be executed is defined in a shader module. The compute pipeline is then created by combining the shader module and the pipeline layout. See \autoref{fig:webgpu-arch} for a visual representation of the core concepts in WebGPU. When using a graphics pipeline, similar steps are required, but two shader module configurations are required.
 
 \begin{figure}[H]
   \centering
@@ -955,6 +955,28 @@ For a compute pipeline, one needs to define a pipeline layout which consists of 
 \end{figure}
 
 Having set up the compute pipeline, one needs to define the bind groups which contain the data. Using a command encoder, the compute pipeline can be dispatched to the \gls{GPU} for execution.
+
+\subsubsection{Shading Language}
+
+WebGPU introduces a new shading language called WebGPU Shading Language (\gls{WGSL}) \cite{wgslSpecification}. The language is statically typed and supports a variety of data structures required for computer graphics as well as general-purpose computing.
+
+Every compute pipeline, or render pipeline, requires an entry point as shown in \autoref{code:computePipelineJs}.
+
+\begin{figure}[H]
+  \begin{lstlisting}[style=JavaScript]
+device.createComputePipeline({
+  layout: computePipelineLayout,
+  compute: {
+    module: computeShaderModule,
+    entryPoint: "computeMain",
+  },
+});
+  \end{lstlisting}
+  \caption{JS code defining entry point for compute pipeline.}
+  \label{code:computePipelineJs}
+\end{figure}
+
+Similar to other shading languages, it does not support recursion because cycles are not permitted in any kinds of declarations. \gls{WGSL} supports common high-level helpers such as Swizzling, which is a class of operations which facilitate managing vector elements. For example, given a vector \verb|let v = vec3f(x, y, z)|, the operation \verb|v.xy| returns a vector \verb|(x, y)|.
 
 \subsubsection{Buffers}
 
@@ -1005,13 +1027,6 @@ const c = new Float32Array(ValueBuffer, 28, 1);
   \caption{JS code providing views to access the \texttt{struct}.}
   \label{code:memoryAlignmentJs}
 \end{figure}
-
-\subsubsection{Shading Language}
-
-WebGPU introduces a new shading language called WebGPU Shading Language (\gls{WGSL}). The language is statically typed and supports a variety of data structures required for computer graphics as well as general-purpose computing.
-
-\gls{WGSL} supports common high-level helpers such as Swizzling, which is a class of operations which facilitate managing vector elements. For example, given a vector \verb|let v = vec3f(x, y, z)|, the operation \verb|v.xy| returns a vector \verb|(x, y)|.
-
 
 \section{Exchange Formats}
 
