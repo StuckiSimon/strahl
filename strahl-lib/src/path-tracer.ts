@@ -74,7 +74,7 @@ function prepareGeometry(model: any) {
   };
 }
 
-type PathTracerOptions = {
+export type PathTracerOptions = {
   targetSamples?: number;
   kTextureWidth?: number;
   viewProjectionConfiguration?: ViewProjectionConfiguration;
