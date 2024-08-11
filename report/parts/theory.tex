@@ -910,7 +910,7 @@ Since its introduction, \gls{WebGL} has been extended with new features. \gls{We
 
 \subsection{WebGPU}
 
-WebGPU is a new web standard, being developed by \fGls{W3C}{\e{World Wide Web Consortium}, a non-profit organization dedicated to developing web standards} which is no longer based on \gls{OpenGL}. One of the main capabilities is support for \gls{GPGPU} by design. While all major browser vendors have announced intent to support WebGPU, to date only Chrome has shipped WebGPU for general use on desktop as well as mobile.
+WebGPU is a new web standard, being developed by \fGls{W3C}{\e{World Wide Web Consortium}, a non-profit organization dedicated to developing web standards} which is no longer based on \gls{OpenGL}, unlike its predecessor \gls{WebGL}. One of the main capabilities is support for \gls{GPGPU} by design. While all major browser vendors have announced intent to support WebGPU, to date only Chrome has shipped WebGPU for general use on desktop as well as mobile.
 The standard is still in development and new features are being added.
 Common 3D engines such as \gls{Babylon.js}, \gls{Three.js}, \gls{PlayCanvas} and \gls{Unity} have announced support for WebGPU.
 
@@ -924,6 +924,22 @@ Three major implementations of WebGPU exist:
     \item{WebKit WebGPU} — Developed by Apple, WebKit is used in Safari \cite{webKitWebGPUImplementation}.
 \end{itemize}
 
+As the standard is under active development, there are differences between the implementations as well as the specification \cite{wgpuStandardDeviation}. Thanks to alignment and the extensive conformance test suite \cite{WebGPUConformanceTestSuite}, the implementations are largely compatible. Generally, these implementations run natively on modern graphics \glspl{API} such as \gls{Vulkan}, \gls{Metal} and \gls{DirectX 12}. Some also support \gls{OpenGL} and \gls{WebGL} as a fallback.
+
+\subsubsection{Core Concepts}
+
+It is a low-level \gls{API} when compared to \gls{WebGL}. Users get access to the \gls{GPU} via adapters which abstract the underlying hardware. WebGPU fully supports common \gls{GPU} strategies as described in \autoref{sec:commonGpuStrategies}. Most of the commands are then executed on a logical device which is created using the adapter.
+
+For a compute pipeline, one needs to define a pipeline layout which consists of multiple bind group layouts. These define the memory layout of the data which is passed to the \gls{GPU}. The code to be executed is defined in a shader module. The compute pipeline is then created by combining the shader module and the pipeline layout. See \autoref{fig:webgpu-arch} for a visual representation of the core concepts in WebGPU.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    abstract/.style={rectangle, draw=rblue, ultra thick, fill=rbblue, inner sep=0.4cm},
+    concrete/.style={rectangle, draw=rgreen, ultra thick, fill=rbgreen, inner sep=0.4cm},
+  ]
+
+  \node[abstract] (bgl) {Bind Group Layout};
   \node[concrete, below=of bgl] (bg) {Bind Group};
   \node[concrete, right=of bg] (sm) {Shader Module};
   \node[concrete, right=of sm] (cp) {Compute Pipeline};
