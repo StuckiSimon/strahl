@@ -16,14 +16,11 @@ function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
 
   const typeWriterSuggestions = [
-    "fast",
-    "efficient",
-    "powerful",
-    "beautiful",
-    "simple",
     "open-source",
-    "understandable",
+    "web-based",
     "accessible",
+    "interactive",
+    "seamless",
   ];
 
   const typewriterRef = React.useRef<HTMLHeadingElement>(null);
