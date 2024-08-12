@@ -82,7 +82,7 @@ None of the major browser engines, Chrome, Firefox, and Safari, provide debuggin
 
 \subsubsection*{Stability}
 
-To date, there are reports of stability issues with WebGPU. This includes crashes of the browser, but on macOS using Chrome system-wide crashes have been observed with faulty WebGPU code. Such issues can look like shown in \autoref{fig:webgpu-crash}. This is likely due to the early stage of the technology and the complexity of the underlying system. As implementations mature, these issues are likely to be resolved.
+To date, there are reports of stability issues with WebGPU. This includes crashes of the browser, but on macOS using Chrome system-wide crashes have been observed with faulty WebGPU code. Such issues can look like shown in \autoref{fig:webgpu-crash}. Due to the early stage of the technology and the complexity of the underlying system, such stability issues ought to be expected. As implementations mature, these issues are likely to be resolved.
 
 \begin{figure}[H]
   \centering
@@ -91,13 +91,13 @@ To date, there are reports of stability issues with WebGPU. This includes crashe
   \label{fig:webgpu-crash}
 \end{figure}
 
-\subsection{OpenPBR}
+\subsection*{OpenPBR}
 
-The integration of the \gls{OpenPBR} surface shading model enables realistic material representation. As it is a new standard and no stable version has been released when first implementing the path tracer, aligning it with the standard was challenging. As the standard has now reached a stable version, it is easier to align the implementation with the standard. The use of \gls{PBR} and the latest industry standards is beneficial, but few open-source projects have implemented the standard to date.
+The integration of the \gls{OpenPBR} surface shading model enables realistic material representation. As it is a new standard and no stable version has been released when first implementing the path tracer, aligning it with the standard was challenging. To date only few open-source projects have implemented the standard. Since the standard has reached a stable version during the work on this thesis, aligning effort between the implementation and the standard has reduced. The use of \gls{PBR} and the latest industry standards is beneficial and provides good quality results. The adoption track of \gls{OpenPBR} is promising and the standard is likely to be extended in the future.
 
 \section{Future Work}
 
-In order to accomodate for other use cases, the renderer could be extended in various ways. The following section outlines possible future work.
+In order to accomodate for other use cases, the renderer could be extended in various ways. The following section outlines possible future work which includes extending \gls{PBR} capabilities, improving performance, extending to other rendering architecture paradigms, general improvements for the WebGPU community, and aligning the renderer with other standards.
 
 \subsection*{Rendering Effects}
 
@@ -143,6 +143,7 @@ Further improvements can be achieved by aligning \gls{glTF} PBR with \gls{OpenPB
 Web Workers are a web technology that allows running scripts off the main thread. This can be used to offload \gls{CPU}-heavy tasks to a separate thread to prevent blocking the main thread which is responsible for rendering the user interface.
 
 \subsection*{BVH Construction}
+\label{sec:bvhConstructionDiscussion}
 
 The current implementation builds the \gls{BVH} on the \gls{CPU} and transfers it to the \gls{GPU}. Corresponding research \cite{lauterbach2009GPUbvh} suggests that moving parts of the construction to the \gls{GPU} directly could improve performance. This would reduce the amount of data that needs to be transferred between the \gls{CPU} and the \gls{GPU}. The new \gls{GPGPU} capabilities of WebGPU further enable this approach.
 
@@ -152,7 +153,7 @@ While \texttt{webgpu-utils} \cite{webgpuUtilsLib} is useful for memory managemen
 
 \subsection*{Independence of Three.js}
 
-For ease-of-use for developers, the renderer is using \gls{Three.js} helpers. This aids developers familiar with \gls{Three.js} to get started with the renderer as configuration for scene loading and camera configuration is similar. However, the renderer does not depend on \gls{Three.js} and could be used independently. The main drawback of the dependence on \gls{Three.js} is the increased bundle size. By removing the dependency, the bundle size could be reduced. To support developers, a binding to \gls{Three.js} could be provided on top of the independent renderer.
+For ease-of-use for developers, the renderer is using \gls{Three.js} helpers. This aids developers familiar with \gls{Three.js} to get started with the renderer as configuration for scene loading and camera configuration is similar. However, the renderer does not depend on \gls{Three.js} and could be used independently. The main drawback of the dependence is the increased bundle size. Possibly, \texttt{three-mesh-bvh} \cite{threeMeshBvh} could also be exchanged for an alternative library or self-implemented as described in \autoref{sec:bvhConstructionDiscussion}. By removing the dependency, the bundle size could be reduced. To support developers, a binding to \gls{Three.js} could be provided on top of the independent renderer.
 
 \subsection*{Offline and Remote Rendering}
 
