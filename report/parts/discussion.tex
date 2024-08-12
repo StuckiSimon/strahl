@@ -9,7 +9,7 @@
 
 This section discusses the results, and experience gained by implementing a project using WebGPU in detail. In addition, a discussion of the results is provided and possible future work is outlined.
 
-The path tracer focuses on the given use case and is therefore not a general-purpose rendering engine. For example, it does not offer a physics engine, support for animations, or other features that are common in general-purpose rendering engines such as \gls{Three.js}, \gls{Babylon.js} or alternatives. Generally, the ray tracing technique is slower than rasterization-based approaches and is therefore not a silver bullet for all use cases. Yet, for the given use case of using production \gls{CAD} data with manifold assembly configurations and customer-specific materials, the path tracer is a suitable choice. This makes it a viable option in the case of e-commerce. Additionally, operating costs can be reduced by eliminating the need to host a rendering pipeline or remote rendering service. WebGPU has significant potential for years to come and adoption of \gls{OpenPBR} by the wider industry is a promising sign of the possible longevity of the chosen technology and standards.
+The path tracer focuses on the given use case and is therefore not a general-purpose rendering engine. For example, it does not offer a physics engine, support for animations, or other features that are common in general-purpose rendering engines such as \gls{Three.js}, \gls{Babylon.js} or alternatives. Generally, the ray tracing technique is slower than rasterization-based approaches and is therefore not a silver bullet for all use cases. The results indicate that the developed path tracer is a viable option in the discussed use case of e-commerce. Additionally, the proposed rendering architecture paradigm can reduce operating costs by eliminating the need to host a rendering pipeline or remote rendering service.
 
 \section{Comparison to Prior Work}
 
@@ -196,7 +196,6 @@ Such a comparison could be based on reference scenes such as the Cornell Box \ci
 \end{itemize}
 
 
-\subsection{ReSTIR}
-\subsection{SHaRC}
+\section{Conclusion}
 
-https://intro-to-restir.cwyman.org/
+For the given use case of using production \gls{CAD} data with manifold assembly configurations and customer-specific materials, the path tracer developed in this thesis is a suitable choice. WebGPU has significant potential for years to come and adoption of \gls{OpenPBR} by the wider industry is a promising sign of the possible longevity of the chosen technology and standards. As shown in \autoref{sec:benchmark}, the performance is sufficient for near real-time renderings of complex \gls{CAD} models on the web. The use of WebGPU over \gls{WebGL} as well as incorporating \gls{OpenPBR} provides a distinction to existing open-source path tracers for the web. The open-source nature of the project facilitates extension and serves as inspiration for other initiatives.
