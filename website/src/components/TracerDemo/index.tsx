@@ -5,7 +5,7 @@ import { runPathTracer, OpenPBRMaterial } from "strahl";
 import styles from "./styles.module.css";
 import clsx from "clsx";
 
-async function init(signal: AbortSignal) {
+async function init(signal: AbortSignal, kSize: number) {
   const MODEL_URL =
     "https://stuckisimon.github.io/strahl-sample-models/45-series/45-series-cleaned.gltf";
 
@@ -134,6 +134,7 @@ async function init(signal: AbortSignal) {
     await runPathTracer("render-target", model, {
       targetSamples: 100,
       signal,
+      kTextureWidth: kSize,
     });
   }
 
@@ -141,20 +142,26 @@ async function init(signal: AbortSignal) {
 }
 
 export default function TracerDemo(): JSX.Element {
+  const [canvasSize, setCanvasSize] = React.useState<number | null>(null);
   const loadingState = React.useRef(false);
   React.useEffect(() => {
     const destroyController = new AbortController();
     const signal = destroyController.signal;
 
-    if (!loadingState.current) {
+    if (!loadingState.current && canvasSize) {
       loadingState.current = true;
-      init(signal);
+      init(signal, canvasSize);
     }
 
     return () => {
       destroyController.abort();
     };
+  }, [canvasSize]);
+
+  React.useEffect(() => {
+    setCanvasSize(window.innerWidth > 512 ? 512 : 368);
   }, []);
+
   return (
     <div className={styles.container}>
       <div className="container">
@@ -168,7 +175,13 @@ export default function TracerDemo(): JSX.Element {
         </div>
         <div className="row">
           <div className={clsx("col", styles.wrapper)}>
-            <canvas width="512" height="512" id="render-target"></canvas>
+            {canvasSize === null ? null : (
+              <canvas
+                width={canvasSize}
+                height={canvasSize}
+                id="render-target"
+              ></canvas>
+            )}
           </div>
         </div>
         <div className="row">
