@@ -5,6 +5,9 @@ on:
     paths:
       - "strahl-lib/**"
       - "website/**"
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   build:
     name: Build Docusaurus

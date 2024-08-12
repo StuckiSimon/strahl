@@ -4,6 +4,9 @@ on:
     branches: [main]
     paths:
       - "report/**"
+concurrency:
+  group: build-report
+  cancel-in-progress: true
 jobs:
   build_latex:
     runs-on: ubuntu-latest
