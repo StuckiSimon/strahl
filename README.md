@@ -2,6 +2,7 @@
 
 [![Test Pipeline](https://github.com/StuckiSimon/strahl/actions/workflows/test-pipeline.yml/badge.svg)](https://github.com/StuckiSimon/strahl/actions/workflows/test-pipeline.yml)
 [![Deploy Website](https://github.com/StuckiSimon/strahl/actions/workflows/deploy-website.yml/badge.svg)](https://github.com/StuckiSimon/strahl/actions/workflows/deploy-website.yml)
+[![Build Report](https://github.com/StuckiSimon/strahl/actions/workflows/build-report.yml/badge.svg)](https://github.com/StuckiSimon/strahl/actions/workflows/build-report.yml)
 
 WebGPU Path Tracer for the web.
 
