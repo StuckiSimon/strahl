@@ -8,7 +8,7 @@
 % !TEX root = ../main.tex
 \label{ch:theory}
 
-This section provides an overview of the theoretical background required to develop a path tracer. It covers the basic concepts as well as details of the underlying algorithms and data structures. In addition, details about the involved technology are provided.
+This section provides an overview of the theoretical background required to develop a path tracer. It covers the basic concepts as well as details of the underlying algorithms and data structures. Additionally, details about the involved technology as well as a historic overview are provided.
 
 \section{Mathematics}
 
@@ -16,19 +16,21 @@ This section highlights some basics about the mathematics involved in computer g
 
 \subsubsection{Vectors}
 
-Euclidean vectors are fundamental in computer graphics and are generally defined by a magnitude and a direction. In a three-dimensional space, a vector can be defined as $v = (x, y, z)$. This definition can be used to represent a point in space (vertex) as well as a direction. The magnitude or length of the vector can be calculated using the Euclidean norm:
+Euclidean vectors are fundamental in computer graphics and are generally defined by a magnitude and a direction. In a three-dimensional space, a vector can be defined as $v = (x, y, z)$. This definition can be used to represent points in space (vertex) as well as directions.
 
-\begin{equation}
-  \label{eqn:euclidean-norm}
-  ||v|| = \sqrt{x^2 + y^2 + z^2}
-\end{equation}
+% The magnitude or length of the vector can be calculated using the Euclidean norm:
 
-The dot product (scalar $s$) of two vectors $v = (x_1, y_1, z_1)$ and $w = (x_2, y_2, z_2)$ is defined as:
+% \begin{equation}
+%   \label{eqn:euclidean-norm}
+%   ||v|| = \sqrt{x^2 + y^2 + z^2}
+% \end{equation}
 
-\begin{equation}
-  \label{eqn:dot-product}
-  s = v \cdot w = x_1 \cdot x_2 + y_1 \cdot y_2 + z_1 \cdot z_2
-\end{equation}
+% The dot product (scalar $s$) of two vectors $v = (x_1, y_1, z_1)$ and $w = (x_2, y_2, z_2)$ is defined as:
+
+% \begin{equation}
+%   \label{eqn:dot-product}
+%   s = v \cdot w = x_1 \cdot x_2 + y_1 \cdot y_2 + z_1 \cdot z_2
+% \end{equation}
 
 The cross product (vector $p$) of two vectors $v = (x_1, y_1, z_1)$ and $w = (x_2, y_2, z_2)$ is defined as:
 
@@ -48,7 +50,7 @@ As visualized in \autoref{fig:cross-product}, the cross product gives a vector $
 
 \subsubsection{Matrices}
 
-Matrices are used to represent transformations in computer graphics. A matrix can be defined using row-major order as:
+Matrices are used to represent transformations in computer graphics. A matrix can be defined in row-major order as:
 
 \begin{equation}
   \label{eqn:matrix}
@@ -57,11 +59,11 @@ Matrices are used to represent transformations in computer graphics. A matrix ca
 
 \subsubsection{Ray}
 
-A ray can be defined as $r = (Q, d)$ where $Q$ is the origin vertex of the ray and $d$ is the direction vector.
+A ray can be defined as $r = (Q, d)$ where $Q$ is the origin vertex of the ray and $d$ is the direction.
 
 \subsubsection{Triangle}
 
-The triangle can be defined as $t = (Q, u, v)$ where $Q$ is the position of the triangle and $u$ and $v$ are vectors defining the triangle. See \autoref{fig:q-u-v-parameterization} for a visual representation.
+A triangle can be defined as $t = (Q, u, v)$ where $Q$ is the position of the triangle and $u$ and $v$ are vectors defining the triangle. See \autoref{fig:q-u-v-parameterization} for a visual representation.
 
 \begin{figure}[H]
   \centering
@@ -106,7 +108,7 @@ An integral is used to determine the area under a curve as visualized in \autore
 
 \begin{equation}
   \label{eqn:integral}
-  \int_{a}^{b} f(x)
+  \int_{a}^{b} f(x) dx
 \end{equation}
 
 \begin{figure}[H]
@@ -138,7 +140,7 @@ In order to take an integral over a different domain $S$, which may represent a 
 
 \begin{equation}
   \label{eqn:integral-domain}
-  \int_{S} f(x)
+  \int_{S} f(x) dx
 \end{equation}
 
 \subsubsection{Probability Theory}
