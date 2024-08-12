@@ -7,7 +7,7 @@
 % !TEX encoding = UTF-8 Unicode
 % !TEX root = ../main.tex
 
-This section provides an overview of concrete applications and high-level procedures of 3D renderers. Furthermore, it introduces prior work conducted in this field, highlighting the novel aspects of this work. Details on the involved concepts and technologies will be discussed in \autoref{ch:theory}, but may already be referenced briefly during the introduction. The goal is to demonstrate the potential and applicability of the developed solution.
+This section provides an overview of concrete applications and high-level procedures of 3D renderers. Furthermore, it introduces prior work conducted in this field, highlighting the novel aspects of this work. The goal is to demonstrate the potential and applicability of the developed solution. Details on the involved concepts and technologies will be introduced in \autoref{ch:theory}, but may already be referenced briefly during the introduction.
 
 \section{Use Cases}
 
@@ -15,7 +15,7 @@ The web is a versatile platform which can be used for a variety of applications.
 
 E-commerce represents a key use case for product renderings. Commonly, these applications rely on taking pictures of the product. Similar to traditional physical catalogues, this approach struggles with highly configurable products due to the amount of images required to cover all possible configurations. Computer graphics addresses this challenge through product configurators for virtual assembly and visualization. They alleviate the need for physical processes, such as photography, and are scalable to a large number of configurations. This can be implemented by creating 3D models of the components and assembling them in a virtual environment.
 
-As the number of components grows and the product evolves, these production models need to be kept in sync with the marketing models used for end user visualization. In order to circumenvent this issue, leveraging existing production \gls{CAD} models, prevalent in mechanical engineering and product design, for end-user applications offers a significant advantage. These models contain geometric and material information, which eliminates the need for redundant 3D models for marketing purposes. One such example is EAO, which manufactures highly customizable industrial pushbuttons and operator panels. Due to the nature of the product, the number of possible assemblies grows almost exponentially with the number of components. The presented work uses EAO production models to demonstrate the feasibility and challenges of real-time rendering of highly configurable products.
+As the number of components grows and the product evolves, these production models need to be kept in sync with the marketing models used for end user visualization. In order to circumenvent this issue, leveraging existing production \gls{CAD} models, prevalent in mechanical engineering and product design, offers a significant advantage. These models contain geometric and material information, which eliminates the need for redundant 3D models for marketing purposes. Geometric information defines the shape of the product where material information in this context refers to the surface description of the shape. One real-world example of a company with production \gls{CAD} data is EAO. They manufacture highly customizable industrial pushbuttons and operator panels. Due to the nature of the product, the number of possible assemblies grows almost exponentially with the number of components.
 
 To illustrate the use case more universally, consider a product which is assembled of $n$ component types. Each component type ($i$) has $o_i$ different options. This gives the total amount of possible configurations ($t$) as shown in \autoref{eq:assemblyConfigurations}.
 
@@ -24,35 +24,36 @@ To illustrate the use case more universally, consider a product which is assembl
   \label{eq:assemblyConfigurations}
 \end{equation}
 
-Essentially, for a product consisting of $n$ component types and each component type having the same amount of options ($o$), the equation can be simplified to $t = o^n$. This demonstrates the exponential growth of possible assemblies.
+For a product consisting of $n$ component types where each component type has the same amount of options ($o$), the equation can be simplified to $t = o^n$. This demonstrates the exponential growth of possible assemblies.
 
-One example at EAO is a specific product family within the so-called series 45. It has 14 component types ($n$) and each component type has approximately 10 different options ($o$). This results in $10^{14}$ possible configurations ($t$) based on 140 different components. In addition, EAO has many more product series as well as product families with varying numbers of components and options. This constitutes the main use case considered for this thesis.
+One example at EAO is a specific product family within the so-called series 45. It has 14 component types ($n$) and each component type has approximately 10 different options ($o$). This results in $10^{14}$ possible configurations ($t$) based on 140 different components. In addition, EAO has many more product series as well as product families with varying numbers of components and options. This constitutes the main use case considered for this thesis. The presented work uses EAO production models to demonstrate the feasibility and challenges of real-time rendering of highly configurable products, but similar use cases can be found in other industries.
 
-Therefore, a web-based configurator leveraging computer graphics for virtual assembly is well suited to address such use cases where almost exponential growth in possible configurations is present.
+A web-based configurator leveraging computer graphics for virtual assembly is well suited to address such use cases where almost exponential growth in possible configurations is present.
 
-\section{CAD Data Processing}
+\section{CAD Data Preprocessing}
 
-In order to leverage production \gls{CAD} models, the models need to be pre-processed as visualized in Figure~\ref{fig:cad-preprocessing}. 
+In order to leverage production \gls{CAD} models, the models need to be preprocessed as visualized in Figure~\ref{fig:cad-preprocessing}.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.9\columnwidth]{resources/cad-pipeline-preprocessing.png}
-  \caption{A two-step pre-processing stage is employed for offline as well as real-time rendering pipelines.}
+  \caption{A two-step preprocessing stage is employed for offline as well as real-time rendering pipelines.}
   \label{fig:cad-preprocessing}
 \end{figure}
 
-The pre-processing step must define a rule set for the assembly. This rule set provides information on what kind of components can be added to the assembly and where they can be attached to. This can be done by providing meta information files containing the information. Alternatively, this can also be represented geometrically within the model by using identifiable shapes to attach components to. \fGls{STEP}{\e{Standard for the Exchange of Product model data}, a standard formalized in ISO 10303 for product manufacturing information.} files are a common format for exchanging \gls{CAD} data and can be used for this purpose, but as will be discussed in \autoref{ch:specializedFormats}, other formats are more suitable for rendering and address inheret limitations of \gls{STEP} files.
+The preprocessing step must define a rule set for the assembly. This rule set provides data on what kind of components can be added to the assembly and where they can be attached to. This interface definition can be provided using meta information files. Alternatively, this can also be represented geometrically within the model by using identifiable shapes to attach components to. \fGls{STEP}{\e{Standard for the Exchange of Product model data}, a standard formalized in ISO 10303 for product manufacturing information.} files are a common format for exchanging \gls{CAD} data and can be used for this purpose, but as will be discussed in \autoref{ch:specializedFormats}, other formats are more suitable for rendering and address inheret limitations of \gls{STEP} files.
 
-Pre-processing includes triangulation of the meshes, which is a common requirement for rendering engines. Frequently, the triangulated meshes are fine-grained and consist of a large number of triangles. This can lead to performance issues when rendering the scene. One option to handle this is to simplify the meshes by decimating triangles. Procedures for this purpose are well established and include algorithms for generating level of detail (\gls{LOD}) artifacts \cite{luebke2003level}.
+Another important consideration are intellectual property rights when using \gls{CAD} models from production processes. The models may contain proprietary information which should not be disclosed to the end user. As described by Stjepandić et al. \cite{ipr}, steps to circumvent this issue may include data filtering. Filtering can be implemented by removing meta information such as constraints or by removing occluded parts of the model, essentially limiting the model to the hull of the assembly. As a positive side-effect, this can also reduce the complexity of the model, which can be beneficial for rendering performance.
 
-Another important consideration are intellectual property rights when using \gls{CAD} models from production processes. The models may contain proprietary information which should not be disclosed to the end user. As described by Stjepandić et al. \cite{ipr}, steps to circumvent this issue may include data filtering. Filtering can occur by removing meta information such as constraints or by removing occluded parts of the model, essentially limiting the model to the hull of the assembly. As a positive side-effect, this can also reduce the complexity of the model, which can be beneficial for rendering performance.
-While numerous \gls{CAD} formats include material information, it is often unsuitable for rendering. To address this, a material mapping can be defined, translating \gls{CAD} materials to a suitable representation for the rendering pipeline.
+Preprocessing includes triangulation of the meshes, which is a common requirement for rendering engines. Frequently, the triangulated meshes are fine-grained and consist of a large number of triangles. This can lead to performance issues when rendering the scene. One option to handle this is to simplify the meshes by decimating triangles. Procedures for this purpose are well-established and include algorithms for generating level of detail (\gls{LOD}) artifacts \cite{luebke2003level}.
 
-After the preparation process, a rendering architecture paradigm can be employed to enable users to virtually assemble the product.
+While numerous \gls{CAD} formats include material information, it is often unsuitable for rendering because it does not describe optical properties. To address this, a material mapping can be defined, translating \gls{CAD} materials to a suitable representation for the rendering pipeline.
+
+The concrete formats used for the preprocessing step are dependent on the \gls{CAD} software. However, conversion tools exist for most common \gls{CAD} formats and the general approach remains similar. After the preparation process, a rendering architecture paradigm can be employed to enable users to virtually assemble the product.
 
 \section{Rendering Architecture Paradigms}
 
-In order to render the assemblies based on the pre-processed information, three main paradigms can be employed for web-based applications: offline rendering, client side real-time rendering, and remote real-time rendering. These paradigms differ significantly and the technology stack varies significantly between them. Therefore, the choice of paradigm is crucial for the implementation of the application.
+In order to render the assemblies based on the preprocessed information, three main paradigms can be employed for web-based applications: offline rendering, client side real-time rendering, and remote real-time rendering. These paradigms differ significantly and the technology stack varies between them. Therefore, the choice of a suitable paradigm is pivotal for the implementation of the application.
 
 \subsection*{Offline Rendering}
 
@@ -72,7 +73,7 @@ In order to address latency, pre-loading images can be used. This may entail loa
 
 \subsection*{Client Side Real-time Rendering}
 
-An alternative to offline rendering is real-time rendering. For real-time rendering, client-side rendering is a frequently  used option. These approaches render the assemblies only as requested by the end user. This is the main benefit of using a real-time rendering pipeline, as illustrated in Figure~\ref{fig:cad-online}. The rendering is done in the browser, which means that the server only needs to provide the geometry and material information in a 3D exchange format such as \fgls{glTF}{\e{Graphics Library Transmission Format, common 3D exchange format optimized for transmission and real-time rendering.}}. This approach is more flexible and can be used for a larger number of configurations. The amount of data to be stored and processed offline grows linearly with the number of components, independent of the number of possible configurations.
+An alternative to offline rendering is real-time rendering. For real-time rendering, client-side rendering is a frequently  used option. These approaches render the assemblies only as requested by the end user. This is the main benefit of using a real-time rendering pipeline, as illustrated in Figure~\ref{fig:cad-online}. The rendering is done in the browser, limiting the server to serve the role of a file host and provide the geometry and material information in a 3D exchange format such as \fgls{glTF}{\e{Graphics Library Transmission Format, common 3D exchange format optimized for transmission and real-time rendering.}}. This approach is more flexible and can be used for a large number of configurations. The amount of data to be stored and processed offline grows linearly with the number of components, independent of the number of possible configurations.
 
 \begin{figure}[H]
   \includegraphics[width=\columnwidth]{resources/cad-pipeline-online.png}
@@ -80,11 +81,11 @@ An alternative to offline rendering is real-time rendering. For real-time render
   \label{fig:cad-online}
 \end{figure}
 
-This approach limits the technology which can be used for rendering. The rendering is done in the browser, which means that it is dependent on the browser engine as well as the specific device hardware. This is also a limitation in terms of the complexity of the scene that can be rendered.
+This approach limits the technology which can be used for rendering. The rendering is done in the browser, which means that it is dependent on the browser engine as well as the specific device hardware. It restricts the complexity of the scene to the hardware constraints of th device.
 
 \subsection*{Remote Real-time Rendering}
 
-For real-time rendering, an alternative paradigm is remote rendering \cite{remoteRendering}, which employs a server to render the scene and stream the visualization to the browser. The main drawbacks of this approach are network latency, reliance on network stability, as well as operational cost for the server infrastructure, which frequently requires dedicated \fGlspl{GPU}{\e{Graphics Processing Unit}, specialized processor for parallel computation} for rendering.
+For real-time rendering, an alternative paradigm is remote rendering \cite{remoteRendering}, which employs a server to render the scene and stream the visualization to the browser. The main drawbacks of this approach are network latency, reliance on network stability, and operational cost for the server infrastructure, which frequently requires dedicated \fGlspl{GPU}{\e{Graphics Processing Unit}, specialized processor for parallel computation} for rendering.
 
 \begin{figure}[H]
   \includegraphics[width=\columnwidth]{resources/cad-pipeline-remote.png}
@@ -96,15 +97,15 @@ To fulfill thresholds frequently used for real-time rendering, the network laten
 
 \subsection*{Comparison}
 
-To evaluate the different paradigms, a set of criteria where the paradigms differ are defined. These criteria are used to demonstrate the advantages and disadvantages of each paradigm.
+To evaluate the different paradigms, a set of criteria are defined. These criteria are used to demonstrate the advantages and disadvantages of each paradigm. The importance of each criterion is dependent on the specific use case and can possibly be a primary determinant for the choice of paradigm.
 
-\subsubsection{Pre-Processing Cost}
+\subsubsection{Preprocessing Cost}
 
-Measure how much computation effort is required to prepare the data for rendering. Generally, lower is better. Offline rendering needs to pre-render all assemblies, essentially doing exhaustive rendering. Client side rendering and remote rendering only need basic pre-processing.
+Measure how much computation effort is required to prepare the data for rendering. Generally, lower is better. Offline rendering needs to pre-render all assemblies, essentially doing exhaustive rendering. Client side rendering and remote rendering only need basic preprocessing.
 
 \subsubsection{Hosting Cost}
 
-The infrastructure cost involved in hosting the application during operations. Generally, lower is better. Offline rendering does not require application servers and mainly relies on storage for the generated images. Similarly, client side rendering needs storage for the models. These two paradigms may employ classic \fglspl{CDN}{\e{Content Delivery Network}, distributed group of servers for caching content near end users.}. Remote rendering requires a rendering server, which can be costly and may induce additional complexity. In addition, bandwidth costs need to be considered.
+The infrastructure cost involved in hosting the application during operations. Generally, lower is better. Offline rendering does not require application servers and mainly relies on storage for the generated images. Similarly, client side rendering needs storage for the models. These two paradigms may employ \fglspl{CDN}{\e{Content Delivery Network}, distributed group of servers for caching content near end users.}. Remote rendering requires a rendering server, which can be costly and may induce additional complexity. In addition, bandwidth costs need to be considered.
 
 \subsubsection{Storage}
 
@@ -112,11 +113,11 @@ The amount of data storage required for the application. Generally, lower is bet
 
 \subsubsection{Main Performance Dependency}
 
-The main bottleneck in terms of rendering performance for the end user. Offline rendering generally sends static images, a highly optimized process. Rendering such images is generally faster than real-time rendering, which is heavily dependent on the device hardware. Remote rendering is also dependent on the network connection.
+The main bottleneck in terms of rendering performance for the end user. Offline rendering generally sends static images, a process which is highly optimized by browser engines and image compression algorithms. Rendering such images is generally faster than real-time rendering, which is heavily dependent on the device hardware. Remote rendering is dependent on the network connection.
 
 \subsubsection{Interactivity}
 
-The level of interactivity the user can expect. Generally, higher gives more flexibility. Offline rendering means all possible views need to be pre-rendered. Extending views requires additional pre-rendering, which optimally is done using a delta change detection to prevent re-rendering unchanged views. Client side rendering and remote rendering enable real-time interaction of the user without constraints. They also enable easier experimentation with different view configurations and possibly open up the possibility for using content provided by the end user in the rendering process. Such content could be lighting condition, background, or even additional objects.
+The level of interactivity the user can expect. Generally, higher gives more flexibility. Offline rendering means all possible views need to be pre-rendered. Extending views requires additional pre-rendering, which optimally is done using a delta change detection to prevent re-rendering unchanged views. Client side rendering and remote rendering enable real-time interaction of the user without constraints. They also enable easier experimentation with different view configurations and open up the possibility for using content provided by the end user in the rendering process. Such content could be lighting condition, background, or additional objects.
 
 \subsubsection{Network Dependency}
 
@@ -124,7 +125,7 @@ The reliance on a stable network connection. Generally, lower is better. Offline
 
 \subsubsection{Maximum Scene Complexity Dependency}
 
-The main bottleneck in terms of the complexity of the scene that can be rendered. Generally, using a server gives more flexibility as the provider has full control over the hardware capabilities. Offline rendering can handle complex scenes given such dedicated hardware. Client side rendering is dependent on the device, generally the weakest supported device defines the possible scene complexity. Remote rendering can handle complex scenes, similar to offline rendering.
+The main bottleneck in terms of the complexity of the scene that can be rendered. Generally, using a server gives more flexibility as the provider has full control over the hardware capabilities. Offline rendering can handle complex scenes given dedicated hardware. Client side rendering is dependent on the device, generally the weakest supported device defines the possible scene complexity. Nowadays, rendering models with millions of triangles is possible on mid-range devices. Remote rendering can handle complex scenes, similar to offline rendering.
 
 \subsection*{Assessment}
 \label{ch:paradigmAssessment}
@@ -138,7 +139,7 @@ Each of the paradigms has its own advantages, \autoref{tab:paradigmComparison} h
   \toprule
   Rendering Paradigm & \textbf{Offline} & \multicolumn{2}{c}{\textbf{Real-time}} \\
    &  & \textbf{Client Side} & \textbf{Remote} \\
-  Pre-Processing Cost & High & Low & Low \\
+  Preprocessing Cost & High & Low & Low \\
   Hosting Cost & Low & Low & High \\
   Storage & High & Low & Low \\
   Main Performance \newline Dependency & network & device & network \\
@@ -151,14 +152,14 @@ Each of the paradigms has its own advantages, \autoref{tab:paradigmComparison} h
   \label{tab:paradigmComparison}
 \end{table}
 
-Offline rendering is suitable for applications where pre-generating all images is feasible and limited interactivity is acceptable. Real-time rendering, either client side or remote, is a suitable choice for aplications where the number of possible configurations is high and interactivity is important. The choice between client side and remote rendering depends on the network infrastructure and the complexity of the scene.
-Generally, client side rendering setups can be extended to support remote rendering as well as offline rendering, whereas offline rendering setups as well as remote rendering setups are possibly not capable of client side rendering due to technical constraints imposed by the available technology. Based on this assessment, this work focuses on client side rendering, with the potential to extend to other paradigms in the future.
+Offline rendering is suitable for applications where pregenerating all images is feasible and limited interactivity is acceptable. Real-time rendering, either client side or remote, is a suitable choice for aplications where the number of possible configurations is high and interactivity is important. The choice between client side and remote rendering depends on the network infrastructure and the complexity of the scene.
+Generally, client side rendering setups can be extended to support remote rendering as well as offline rendering, whereas offline rendering setups as well as remote rendering setups are possibly not capable of client side rendering due to technical constraints imposed by the available technology. Based on this assessment, this work focuses on client side rendering, with the possibility to extend to other paradigms in the future.
 
 \section{Prior Work}
 
-This section highlights related work for web-based client side real-time rendering. A rough overview of the different approaches is given, but more detailed information on the concepts, the technologies, their strengths and weaknesses, and the the benefits ray tracing provides will be discussed in \autoref{ch:computerGraphics}.
+This section highlights related work for web-based client side real-time rendering. A rough overview of the different approaches is given, but more detailed information on concepts, technology, strengths and weaknesses, and the benefits ray tracing provides over rasterization will be discussed in \autoref{ch:computerGraphics}.
 
-Rasterization is a rendering technique that projects 3D scene geometry onto a 2D plane. Historically, the technique has been widely adopted in real-time rendering due to its efficiency. However, rasterization has limitations in achieving photorealism. One of the main limitations is the lack of support for global illumination. These phenomena can be observed in objects like mirrors or metallic surfaces. Effects such as refraction and reflection require additional techniques.
+Rasterization is a rendering technique that projects 3D scene geometry onto a 2D plane. Historically, the technique has been widely adopted in real-time rendering due to its efficiency. However, rasterization has limitations in achieving photorealism. One of the main limitations is the lack of support for global illumination. These phenomena can be observed in objects like mirrors or metallic surfaces. Effects such as shadow casting and reflection require additional techniques.
 
 Various methods have been developed to address these limitations, but these approaches induce complexity, may need to be computed at the assembly level, and can be computationally expensive. An alternative rendering technique resembles reality more closely and inherently alleviates these limitations: ray tracing.
 
@@ -169,37 +170,33 @@ Ray tracing is a powerful technique for rendering photorealistic scenes includin
 A number of web-based real-time rasterizers exist. The main options include:
 
 \begin{itemize}
-  \item {\gls{Three.js}} \cite{threeJSWebsite} — popular web rendering engine.
-  \item {\texttt{Babylon.js}} \cite{babylonJSWebsite} — popular web rendering engine.
-  \item {\texttt{PlayCanvas}} \cite{playCanvasWebsite} — game engine for the web.
-  \item {\texttt{A-Frame}} \cite{aFrameWebsite} — web framework for building virtual reality experiences.
+  \item {\gls{Three.js}} \cite{threeJSWebsite} — most widely used web rendering engine.
+  \item {\gls{Babylon.js}} \cite{babylonJSWebsite} — popular web rendering engine.
+  \item {\gls{PlayCanvas}} \cite{playCanvasWebsite} — game engine for the web.
+  \item {\gls{A-Frame}} \cite{aFrameWebsite} — web framework for building virtual reality experiences.
 \end{itemize}
 
 In addition, \gls{Unity}, a common game engine for desktop and mobile applications also supports \fgls{WebGL}{\e{Web Graphics Library}, since 2011 the de-facto standard API for rendering 3D graphics on the web} \cite{unityWebGLCompatibility}.
 
-These engines focus on rasterization techniques and are widely used for web-based applications. The focus of these engines lies on real-time rendering performance as used in games, advertising campaigns, virtual reality (VR), augmented reality (AR), medical imaging, scientific visualization, and educational applications. However, they lack support for ray tracing techniques. 
+These engines focus on rasterization techniques and are widely used for web-based applications. The focus of these engines lies on real-time rendering performance as used in games, advertising campaigns, virtual reality (VR), augmented reality (AR), medical imaging, scientific visualization, and educational applications. However, they lack support for ray tracing. 
 
 \subsection*{Web Path Tracers}
 
 Path tracing is a specific ray tracing technique. There are a variety of path tracers available for the web. Most of them are based on \gls{WebGL}. The first experiments of using \gls{WebGL} for path tracing were implemented as early as 2010. One such example is the Google experiment demonstrating a Cornell Box \cite{goral1984modeling} with basic primitive shapes such as spheres and planes \cite{pathTracerWallace}.
 
-Since then, a variety of open-source implementations for the web have been created. Some of the most widely known path tracers are based on \gls{Three.js}.
+Since then, a variety of open-source implementations for the web have been created. Some of the most widely known path tracers are based on \gls{Three.js}. A more detailed comparison of these path tracers is provided in \autoref{sec:comparisonToPriorWork}.
 
-\subsubsection{three-gpu-pathtracer}
+\begin{itemize}
+  \item{\texttt{three-gpu-pathtracer}} \cite{ThreeJsPathTracerJohnson} — One of the most widely known path tracers for the web developed by Johnson. This path tracer is implemented as a \gls{Three.js} plugin and uses \gls{WebGL} for rendering.  It is bundled as a library and can be used to render scenes in the browser.
+  \item{\texttt{Three.js PathTracer}} \cite{ThreeJsPathTracerLoftis} — Path tracer based on \gls{Three.js} developed by Loftis. This path tracer is also implemented as a \gls{Three.js} plugin and uses \gls{WebGL} for rendering. It does not provide a library, but can serve as a basis for further development.
+  \item{\texttt{dspbr-pt}} \cite{PathTracerDassault} — Path tracer by Dassault Systèmes implemented in \gls{WebGL}. It implements the Dassault Systèmes Enterprise PBR Shading Model (\gls{DSPBR}). However, the implementation has not been updated in recent years.
+\end{itemize}
 
-One of the most widely known path tracers for the web is the \texttt{three-gpu-pathtracer} by Johnson \cite{ThreeJsPathTracerJohnson}. This path tracer is implemented as a \gls{Three.js} plugin and uses \gls{WebGL} for rendering.  It is bundled as a library and can be used to render scenes in the browser.
-
-\subsubsection{Three.js PathTracer}
-
-Another path tracer based on \gls{Three.js} is the \texttt{Three.js PathTracer} by Loftis \cite{ThreeJsPathTracerLoftis}. This path tracer is also implemented as a \gls{Three.js} plugin and uses \gls{WebGL} for rendering. It does not provide a library, but can serve as a basis for further development.
-
-\subsubsection{dspbr-pt}
-
-The \texttt{dspbr-pt} by Dassault Systèmes \cite{PathTracerDassault} is a path tracer implemented in \gls{WebGL}. It is based on the \texttt{three-gpu-pathtracer} and provides additional features such as support for \gls{OBJ} files. It implements the Dassault Systèmes Enterprise PBR Shading Model (\gls{DSPBR}). However, the implementation does not provide a library and also hasn't been updated in the past years.
+All of these path tracers are based on \gls{WebGL} and are either plugins for \gls{Three.js} or support \gls{Three.js} scene description.
 
 \subsection*{WebGPU}
 
-WebGPU is a new web \fGls{API}{\e{Application Programming Interface}} for leveraging the power of \glspl{GPU}. Various applications of WebGPU have been investigated in recent years. Examples include Dynamical.JS, a framework for visualizing graphs \cite{dotson2022dynamicaljs}; RenderCore, a research-oriented rendering engine \cite{Bohak_Kovalskyi_Linev_Mrak_Tadel_Strban_Tadel_Yagil_2024}; and demonstrations of how to use WebGPU for client-side data aggregation \cite{kimmersdorfer2023webgpu}.
+WebGPU is a new web \fGls{API}{\e{Application Programming Interface}} for leveraging the power of \glspl{GPU} and serves as a successor to \gls{WebGL}. Various applications of WebGPU have been investigated in recent years. Examples include Dynamical.JS, a framework for visualizing graphs \cite{dotson2022dynamicaljs}; RenderCore, a research-oriented rendering engine \cite{Bohak_Kovalskyi_Linev_Mrak_Tadel_Strban_Tadel_Yagil_2024}; and demonstrations of how to use WebGPU for client-side data aggregation \cite{kimmersdorfer2023webgpu}.
 
 Research on the performance comparison between existing 3D engines and WebGPU engines has been conducted as part of the development of FusionRender, which concluded that measurable performance gains can be achieved by using WebGPU, but only when effectively leveraging its novel design principles \cite{fusionRenderWebGPU}. Similar findings have emerged from other independent studies, demonstrating that WebGPU can be faster than \gls{WebGL} \cite{webGPUWebGis, fransson2023performance, CHICKERUR2024919}.
 
