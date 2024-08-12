@@ -2,6 +2,9 @@ name: Deploy Website
 on:
   push:
     branches: [main]
+    paths:
+      - "strahl-lib/**"
+      - "website/**"
 jobs:
   build:
     name: Build Docusaurus

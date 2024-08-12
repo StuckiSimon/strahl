@@ -2,8 +2,12 @@ name: Test Pipeline
 on:
   push:
     branches: [main]
+    paths:
+      - "strahl-lib/**"
   pull_request:
     branches: [main]
+    paths:
+      - "strahl-lib/**"
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
