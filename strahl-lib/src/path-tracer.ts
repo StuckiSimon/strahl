@@ -85,6 +85,7 @@ export type PathTracerOptions = {
   // todo: add real type
   finishedSampling?: (result: any) => void;
   signal?: AbortSignal;
+  enableTimestampQuery?: boolean;
 };
 
 async function runPathTracer(
@@ -107,7 +108,7 @@ async function runPathTracer(
     samplesPerIteration = 1,
     clearColor = [1.0, 1.0, 1.0],
     maxRayDepth = 5,
-
+    enableTimestampQuery = true,
     finishedSampling = () => {},
     signal = new AbortController().signal,
   }: PathTracerOptions = {},
@@ -158,28 +159,45 @@ async function runPathTracer(
     throw new WebGPUNotSupportedError("No suitable WebGPU adapter available");
   }
 
+  const supportsTimestampQuery = adapter.features.has("timestamp-query");
+
+  let useTimestampQuery = enableTimestampQuery && supportsTimestampQuery;
+
   const device = await adapter.requestDevice({
-    requiredFeatures: ["timestamp-query"],
+    requiredFeatures: useTimestampQuery ? ["timestamp-query"] : [],
   });
 
   abortEventHub.setDestructionNotifier("device", () => {
     device.destroy();
   });
 
-  const timestampQuerySet = device.createQuerySet({
-    type: "timestamp",
-    count: 2,
-  });
+  let timestampQueryData: {
+    querySet: GPUQuerySet;
+    resolveBuffer: GPUBuffer;
+    resultBuffer: GPUBuffer;
+  } | null = null;
+  if (useTimestampQuery) {
+    const timestampQuerySet = device.createQuerySet({
+      type: "timestamp",
+      count: 2,
+    });
 
-  const timestampQueryResolveBuffer = device.createBuffer({
-    size: timestampQuerySet.count * 8,
-    usage: GPUBufferUsage.COPY_SRC | GPUBufferUsage.QUERY_RESOLVE,
-  });
+    const timestampQueryResolveBuffer = device.createBuffer({
+      size: timestampQuerySet.count * 8,
+      usage: GPUBufferUsage.COPY_SRC | GPUBufferUsage.QUERY_RESOLVE,
+    });
 
-  const timestampQueryResultBuffer = device.createBuffer({
-    size: timestampQueryResolveBuffer.size,
-    usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
-  });
+    const timestampQueryResultBuffer = device.createBuffer({
+      size: timestampQueryResolveBuffer.size,
+      usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
+    });
+
+    timestampQueryData = {
+      querySet: timestampQuerySet,
+      resolveBuffer: timestampQueryResolveBuffer,
+      resultBuffer: timestampQueryResultBuffer,
+    };
+  }
 
   const context = canvas.getContext("webgpu");
 
@@ -711,13 +729,17 @@ async function runPathTracer(
 
       const encoder = device.createCommandEncoder();
 
-      const computePass = encoder.beginComputePass({
-        timestampWrites: {
-          querySet: timestampQuerySet,
-          beginningOfPassWriteIndex: 0,
-          endOfPassWriteIndex: 1,
-        },
-      });
+      const computePass = encoder.beginComputePass(
+        isNil(timestampQueryData)
+          ? undefined
+          : {
+              timestampWrites: {
+                querySet: timestampQueryData.querySet,
+                beginningOfPassWriteIndex: 0,
+                endOfPassWriteIndex: 1,
+              },
+            },
+      );
       computePass.setBindGroup(0, computeBindGroup);
       computePass.setBindGroup(1, dynamicComputeBindGroup);
 
@@ -729,22 +751,24 @@ async function runPathTracer(
 
       computePass.end();
 
-      encoder.resolveQuerySet(
-        timestampQuerySet,
-        0,
-        2,
-        timestampQueryResolveBuffer,
-        0,
-      );
-
-      if (timestampQueryResultBuffer.mapState === "unmapped") {
-        encoder.copyBufferToBuffer(
-          timestampQueryResolveBuffer,
+      if (!isNil(timestampQueryData)) {
+        encoder.resolveQuerySet(
+          timestampQueryData.querySet,
           0,
-          timestampQueryResultBuffer,
+          2,
+          timestampQueryData.resolveBuffer,
           0,
-          timestampQueryResolveBuffer.size,
         );
+
+        if (timestampQueryData.resultBuffer.mapState === "unmapped") {
+          encoder.copyBufferToBuffer(
+            timestampQueryData.resolveBuffer,
+            0,
+            timestampQueryData.resultBuffer,
+            0,
+            timestampQueryData.resolveBuffer.size,
+          );
+        }
       }
 
       const pass = encoder.beginRenderPass({
@@ -785,9 +809,12 @@ async function runPathTracer(
 
       device.queue.submit([commandBuffer]);
 
-      if (timestampQueryResultBuffer.mapState === "unmapped") {
+      if (
+        !isNil(timestampQueryData) &&
+        timestampQueryData.resultBuffer.mapState === "unmapped"
+      ) {
         try {
-          await timestampQueryResultBuffer.mapAsync(GPUMapMode.READ);
+          await timestampQueryData.resultBuffer.mapAsync(GPUMapMode.READ);
         } catch (e) {
           // In case of planned cancellation, this is expected
           if (!abortEventHub.isRunning()) {
@@ -797,11 +824,11 @@ async function runPathTracer(
           throw e;
         }
         const data = new BigUint64Array(
-          timestampQueryResultBuffer.getMappedRange(),
+          timestampQueryData.resultBuffer.getMappedRange(),
         );
         const gpuTime = data[1] - data[0];
         console.log(`GPU Time: ${gpuTime}ns`);
-        timestampQueryResultBuffer.unmap();
+        timestampQueryData.resultBuffer.unmap();
       }
 
       const currentRenderTime = renderLog.end();
