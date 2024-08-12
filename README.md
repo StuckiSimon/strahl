@@ -4,36 +4,42 @@
 [![Deploy Website](https://github.com/StuckiSimon/strahl/actions/workflows/deploy-website.yml/badge.svg)](https://github.com/StuckiSimon/strahl/actions/workflows/deploy-website.yml)
 [![Build Report](https://github.com/StuckiSimon/strahl/actions/workflows/build-report.yml/badge.svg)](https://github.com/StuckiSimon/strahl/actions/workflows/build-report.yml)
 
-WebGPU Path Tracer for the web.
-
 > [!NOTE]
-> This is still a work in progress, if you're interested in the work, take a look at the related short paper on [arXiv](https://arxiv.org/abs/2407.19977).
+> This is still a work in progress, expect major changes.
 
 ## What is strahl?
 
-strahl is a path tracing library for web applications. Path tracing is a technique based on ray tracing to render 3D models to images with realistic reflections and ambient occlusion without the need for pregenerated artifacts. strahl leverages WebGPU for optimal performance and is based on OpenPBR surface shading model.
+**tl;dr** `strahl` is a WebGPU Path Tracer for the web.
 
-For more information, take a look at the [website](https://stuckisimon.github.io/strahl/).
+strahl is a path tracing library for web applications. Path tracing is a technique based on ray tracing to render 3D models to images with realistic reflections and ambient occlusion without the need for pregenerated artifacts. strahl leverages WebGPU for optimal performance and is based on the OpenPBR surface shading model.
 
-## Current State
+## Quick Links
 
-The public documentation is still a work in progress and is expected to be finished until end of August. While you're here, feel free to checkout the short paper describing the work on [arXiv](https://arxiv.org/abs/2407.19977).
+- [website](https://stuckisimon.github.io/strahl/) — documentation, demo, tutorial, and more information
+- [arXiv short paper](https://arxiv.org/abs/2407.19977) — summary of the work
+- [report](https://github.com/StuckiSimon/strahl/blob/report/report.pdf) — master thesis report with full details
+- [npm package](https://www.npmjs.com/package/strahl) — installable `strahl` package
 
-Feedback and questions are welcomed on any direct channel:
+## Support
+
+Feedback, questions, bug reports, and suggestions are welcome and encouraged. Please contact me directly via one of the following channels:
 
 1. https://x.com/StuckiSimon
 1. Mail (see Git commits)
 1. https://www.linkedin.com/in/stuckisimon/
 
-## System Requirements
+## Development
 
-Node.js, for version see `.nvmrc`.
+Instructions for working on the library, website, or report of strahl.
 
-Browser supporting WebGPU, e.g. Chrome.
+### System Requirements
 
-## Project Structure
+1. Node.js, for version see `.nvmrc`.
+1. Browser supporting WebGPU, e.g. Chrome.
 
-The repo is structured as a monorepo of independent packages. It does not leverage `npm workspaces` or similar. Therefore, each project folder is independent and has dedicated documentation.
+### Project Structure
+
+The repo is structured as a monorepo of independent packages. It does not leverage `npm workspaces` or similar. Each project folder is independent and has dedicated documentation.
 
 The packages are:
 
@@ -41,6 +47,9 @@ The packages are:
 - [`website`](./website/README.md) – public website, docs and information
 - [`report`](./report/README.md) – LaTeX report of the master thesis
 
-## Setup
+### Setup
 
 `npm ci`
+
+> [!NOTE]
+> The workspaces `strahl-lib` and `website` also require to run `npm ci` when first setting them up.
