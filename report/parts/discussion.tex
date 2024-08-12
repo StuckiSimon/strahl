@@ -12,6 +12,7 @@ This section discusses the results, and experience gained by implementing a proj
 The path tracer focuses on the given use case and is therefore not a general-purpose rendering engine. For example, it does not offer a physics engine, support for animations, or other features that are common in general-purpose rendering engines such as \gls{Three.js}, \gls{Babylon.js} or alternatives. Generally, the ray tracing technique is slower than rasterization-based approaches and is therefore not a silver bullet for all use cases. The results indicate that the developed path tracer is a viable option in the discussed use case of e-commerce. Additionally, the proposed rendering architecture paradigm can reduce operating costs by eliminating the need to host a rendering pipeline or remote rendering service.
 
 \section{Comparison to Prior Work}
+\label{sec:comparisonToPriorWork}
 
 The three existing open-source path tracers for the web are alternatives to the renderer developed in this work. While comparing them based on quantitative measures such as \fGls{FPS}{\e{Frames per second}, measure of rate at which consecutive images are rendered and displayed} is not meaningful as the number of samples differs across the renderers, it is still possible to define a set of criteria to compare them.
 
