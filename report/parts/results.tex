@@ -19,6 +19,8 @@ For references to the implementation of the path tracer, a consistent notation i
 
 The goal of the implementation is to be compatible with a large variety of devices and make the setup for consumers simple. Therefore, it is implemented and tested mainly in Chrome, which uses \gls{Dawn} as the underlying implementation of WebGPU. Most notably, this means that dedicated features from other implementations such as \gls{wgpu} cannot be used. Neither can experimental extensions be leveraged.
 
+The path tracer is designed to be integrated into existing web projects. The package is installable via \gls{npm}, but could also be downloaded and included manually. The full documentation is available on the website.
+
 Figure~\ref{fig:path-tracer} illustrates the procedure of the path tracer. Scene preparation is performed on the CPU. This setup needs to be done once per visualization. Subsequent sampling of the scene is carried out repeatedly on the GPU, which constitutes the most computationally intensive part of the process.
 
 \begin{figure}[H]
@@ -33,7 +35,7 @@ In order to be easy to integrate for developers familiar with existing web-based
 
 This also enables to use a variety of loaders for different file formats such as \gls{OBJ} or \gls{glTF}. However, due to its advantages for transmission, it's advised to use the \gls{glTF} which can be imported using the loader provided by \gls{Three.js}.
 
-\subsection{Scene Preparation}
+\subsection*{Scene Preparation}
 
 The main process involved with setting up the scene is the preparation of the \gls{BVH}. For \gls{BVH} construction, well-established solutions for the web are available. The path tracer uses \texttt{three-mesh-bvh} \cite{threeMeshBvh}. This method builds the \gls{BVH} on the \gls{CPU}, the code for transfering the \gls{BVH} to the \gls{GPU} is in \coderef{BVH-TRANSFER}.
 
@@ -45,11 +47,11 @@ In order to address memory alignment, as described in \autoref{ch:memoryAlignmen
 
 The ray generator is responsible for casting rays into the scene according to the view projection. The path tracer employs a backward ray tracing approach, tracing rays from the camera into the scene.
 
-\subsection{View Projection}
+\subsection*{View Projection}
 
 For many applications, especially photorealistic rendering, perspective projection is used. Based on the assessed use cases, the path tracer uses perspective projection only. See \coderef{VIEWPROJECTION} for implementation.
 
-\subsection{Random Number Generator}
+\subsection*{Random Number Generator}
 
 The path tracer uses PCG-RXS-M-XS variant as described by O’Neill \cite{o2014pcg} in combination with Xorshift as described by Marsaglia \cite{marsaglia2003xorshift}. See \coderef{RNG} for implementation.
 
@@ -108,7 +110,7 @@ When increasing the sample count, the differences in the setup remain visible. A
     \label{fig:rngNoiseArtifactsHighlights}
 \end{figure}
 
-\subsection{Anti-Aliasing}
+\subsection*{Anti-Aliasing}
 \label{sec:anti-aliasing-implementation}
 
 The implementation of the strategy indicated in \ref{sec:anti-aliasing} is implemented in \coderef{ALIASING}.
@@ -124,10 +126,6 @@ The renderer uses \fGls{RGB}{\e{red, green and blue}, common system for color re
 \section{Render Pipeline}
 
 The output of the path tracing compute shader is a texture, which is then passed to a rasterizer. The rasterizer renders the texture to the canvas using a fullscreen quad consisting of two triangles. Tone mapping is done using the Khronos PBR Neutral Tone Mapper described in \autoref{sec:toneMappingTheory}. See \coderef{TONE-MAPPER} for implementation. Progressive rendering is a technique to render an image in multiple passes. Each render pass improves the quality of the image. This enables the user to see the rough image quickly and refine it over time. 
-
-\section{Library Integration}
-
-The path tracer is designed to be integrated into existing web projects. The package is installable via \gls{npm}, but could also be downloaded and included manually. The full documentation is available on the website.
 
 \section{Benchmark}
 
