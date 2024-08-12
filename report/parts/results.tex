@@ -161,6 +161,42 @@ As described in \autoref{ch:russianRoulette}, Russian roulette is a technique us
     \label{tab:russian-roulette-measurements}
 \end{table}
 
+\subsection{Overall Performance}
+
+The results for CPU performance were recorded using the Performance API and are presented in Table~\ref{tab:cpuPerformance}. The results for GPU performance were recorded using WebGPU timestamp queries and are presented in Table~\ref{tab:gpuPerformance}. All measurements were calculated using the mean time of 30 benchmark samples, with a 95\% confidence interval given as $\pm$ standard deviation from the mean time in milliseconds.
+
+
+\begin{table}[H]
+  \centering
+  \ra{1.3}
+  \begin{tabular}{rrr}
+    \toprule
+    Triangles   & Apple M1 Max    & AMD/NVIDIA \\
+    1,068,735     & 327.57 ms $\pm$ 0.56 ms     & 383.10 ms $\pm$ 4.06 ms \\
+    106,873     & 45.49 ms $\pm$ 0.31 ms    & 41.77 ms $\pm$ 0.43 ms \\
+    10,687     & 10.53 ms $\pm$ 0.24 ms    & 8.43 ms $\pm$ 0.22 ms \\
+    \bottomrule
+  \end{tabular}
+  \caption{BVH setup time based on model complexity}
+  \label{tab:cpuPerformance}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \ra{1.3}
+  \begin{tabular}{rrr}
+    \toprule
+    Triangles   & Apple M1 Max    & AMD/NVIDIA \\
+    1,068,735     & 2,319.45 ms $\pm$ 11.14 ms    & 1,058.73 ms $\pm$ 59.47 ms \\
+    106,873     & 1,992.11 ms $\pm$ 8.49 ms    & 790.20 ms $\pm$ 3.79 ms\\
+    10,687     & 2,031.38 ms $\pm$ 9.87 ms    & 790.83 ms $\pm$ 4.18 ms \\
+    \bottomrule
+  \end{tabular}
+  \caption{GPU path tracer time based on model complexity}
+  \label{tab:gpuPerformance}
+\end{table}
+  
+
 \section{Use Case Scenarios}
 
 The \gls{CAD} data used by EAO is a good fit for a path tracer. While not certain strengths of the ray tracing approach, such as caustics, are not relevant for the use case, and other strengths, such as reflections are not fully utilized, the path tracer still provides a suitable candidate for the use case. The complexity of the geometry does not pose a significant challenge for the path tracer, even for relatively high triangle counts. Using \gls{PBR} fits the use case and provides sufficient adjustment possibilities for the materials.
