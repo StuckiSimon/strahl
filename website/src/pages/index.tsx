@@ -11,6 +11,7 @@ import useTypewriter, { TypewriterState } from "../hooks/useTypewriter";
 import React from "react";
 import TracerDemo from "../components/TracerDemo";
 import ShootingRays from "../components/ShootingRays";
+import CallToAction from "../components/CallToAction";
 
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
@@ -81,6 +82,7 @@ export default function Home(): JSX.Element {
       <main>
         <HomepageFeatures />
         <TracerDemo />
+        <CallToAction />
       </main>
     </Layout>
   );
