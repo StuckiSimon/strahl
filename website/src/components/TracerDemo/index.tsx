@@ -1,3 +1,4 @@
+import React from "react";
 import Heading from "@theme/Heading";
 import { OpenPBRMaterial } from "strahl";
 import styles from "./styles.module.css";
@@ -126,10 +127,11 @@ const MATERIAL_MAP = {
 }
 
 export default function TracerDemo(): JSX.Element {
+  const options = React.useMemo(() => ({}), []);
   const canvas = usePathTracer(
     "https://stuckisimon.github.io/strahl-sample-models/45-series/45-series-cleaned.gltf",
     MATERIAL_MAP,
-    {},
+    options,
   );
   return (
     <div className={styles.container}>

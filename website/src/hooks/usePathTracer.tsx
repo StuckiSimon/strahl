@@ -54,14 +54,12 @@ function usePathTracer(
   options: Parameters<typeof runPathTracer>[2],
 ) {
   const [canvasSize, setCanvasSize] = React.useState<number | null>(null);
-  const loadingState = React.useRef(false);
 
   React.useEffect(() => {
     const destroyController = new AbortController();
     const signal = destroyController.signal;
 
-    if (!loadingState.current && canvasSize) {
-      loadingState.current = true;
+    if (canvasSize) {
       init(modelUrl, materialMap, {
         signal,
         kTextureWidth: canvasSize,
@@ -72,7 +70,7 @@ function usePathTracer(
     return () => {
       destroyController.abort();
     };
-  }, [canvasSize]);
+  }, [canvasSize, options]);
 
   React.useEffect(() => {
     setCanvasSize(window.innerWidth > 512 ? 512 : 368);
