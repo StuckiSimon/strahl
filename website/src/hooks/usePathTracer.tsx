@@ -2,7 +2,7 @@ import React from "react";
 import { OpenPBRMaterial, runPathTracer } from "strahl";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
-let modelCache = new Map<string, any>();
+let modelCacheMap = new Map<string, any>();
 
 const gltfLoader = new GLTFLoader();
 
@@ -20,11 +20,14 @@ async function init(
   materialMap: Record<string, OpenPBRMaterial>,
   options: Parameters<typeof runPathTracer>[2],
 ) {
-  let model = modelCache.get(modelUrl);
-  if (model === undefined) {
-    model = await loadGltf(modelUrl);
-    modelCache.set(modelUrl, model);
+  let modelCache = modelCacheMap.get(modelUrl);
+  if (modelCache === undefined) {
+    modelCache = await loadGltf(modelUrl);
+    modelCacheMap.set(modelUrl, modelCache);
   }
+  const model = {
+    scene: modelCache.scene.clone(),
+  };
 
   model.scene.traverseVisible((object: any) => {
     if (object.material === undefined) {
