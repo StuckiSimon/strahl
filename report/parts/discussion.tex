@@ -7,7 +7,7 @@
 % !TEX encoding = UTF-8 Unicode
 % !TEX root = ../main.tex
 
-This section discusses the results, and experience gained by implementing a project using WebGPU in detail. In addition, a discussion of the results is provided and possible future work is outlined.
+This section discusses the results, and experience gained by implementing a project using \gls{WebGPU} in detail. In addition, a discussion of the results is provided and possible future work is outlined.
 
 The path tracer focuses on the given use case and is therefore not a general-purpose rendering engine. For example, it does not offer a physics engine, support for animations, or other features that are common in general-purpose rendering engines such as \gls{Three.js}, \gls{Babylon.js} or alternatives. Generally, the ray tracing technique is slower than rasterization-based approaches and is therefore not a silver bullet for all use cases. The results indicate that the developed path tracer is a viable option in the discussed use case of e-commerce. Additionally, the proposed rendering architecture paradigm can reduce operating costs by eliminating the need to host a rendering pipeline or remote rendering service.
 
@@ -19,7 +19,7 @@ The three existing open-source path tracers for the web are alternatives to the 
 
 \subsection*{WebGPU Support}
 
-WebGPU is a new technology and support for it is likely to become more important in the future. The three alternatives currently do not support WebGPU and still rely on \gls{WebGL}.
+\gls{WebGPU} is a new technology and support for it is likely to become more important in the future. The three alternatives currently do not support \gls{WebGPU} and still rely on \gls{WebGL}.
 
 \subsection*{PBR Standard}
 
@@ -38,7 +38,7 @@ The availability of an \gls{npm} package can simplify the integration of the ren
 The last update of the renderer is an indicator of the activity of the project. \texttt{strahl}, \texttt{three-gpu-pathtracer}, and \texttt{Three.js PathTracer} have been updated in 2024. \texttt{dspbr-pt} has not been updated since 2022.
 
 \subsection*{Assessment}
-\autoref{tab:rendererComparison} contains a high-level comparison between the four renderers. The renderer developed in this work is the only one that supports WebGPU and uses the \gls{OpenPBR} standard. The renderer is provides an alternative to the existing renderers.
+\autoref{tab:rendererComparison} contains a high-level comparison between the four renderers. The renderer developed in this work is the only one that supports \gls{WebGPU} and uses the \gls{OpenPBR} standard. The renderer is provides an alternative to the existing renderers.
 
 \begin{table}[H]
     \centering
@@ -46,7 +46,7 @@ The last update of the renderer is an indicator of the activity of the project. 
     \begin{tabular}{@{}p{3cm}p{2.5cm}p{2.5cm}p{2.5cm}p{2.5cm}@{}}
     \toprule
      & \texttt{strahl} & \texttt{three-gpu-} \texttt{pathtracer} \cite{ThreeJsPathTracerJohnson} & \texttt{Three.js PathTracer} \cite{ThreeJsPathTracerLoftis} & \texttt{dspbr-pt} \cite{PathTracerDassault} \\
-    WebGPU \newline Support & Yes & No & No & No \\
+    \gls{WebGPU} \newline Support & Yes & No & No & No \\
     \gls{PBR} Standard & \gls{OpenPBR} & Custom & Custom & \gls{DSPBR} \\
     Documentation & yes & yes & minimal & minimal \\
     \gls{npm} Package & yes & yes & no & yes \\
@@ -59,31 +59,31 @@ The last update of the renderer is an indicator of the activity of the project. 
 
 \section{Findings}
 
-The main novelty introduced in this work is the development of a path tracer with WebGPU using the \gls{OpenPBR} surface shading model. WebGPU and \gls{OpenPBR} are promising endeavors for the future of 3D rendering, but relatively new and not yet widely adopted.
+The main novelty introduced in this work is the development of a path tracer with \gls{WebGPU} using the \gls{OpenPBR} surface shading model. \gls{WebGPU} and \gls{OpenPBR} are promising endeavors for the future of 3D rendering, but relatively new and not yet widely adopted.
 
 \subsection*{State of WebGPU}
 
-As highlighted in the report, WebGPU is a promising technology for \gls{GPGPU} computations in the browser. However, to date there are certain limitations in terms of support and features.
+As highlighted in the report, \gls{WebGPU} is a promising technology for \gls{GPGPU} computations in the browser. However, to date there are certain limitations in terms of support and features.
 
 \subsubsection*{Browser Support}
 
-Due to the current state of support for WebGPU in Safari and Mozilla Firefox, the production readiness of WebGPU is still limited. Safari has announced plans to support WebGPU and has launched a preview version \cite{SafariWebGPUSupport}. Firefox also has plans to support WebGPU \cite{FirefoxWebGPUSupport}. Thanks to the extensive conformance test suite \cite{WebGPUConformanceTestSuite}, it is more likely that the different implementations will be compatible with each other.
+Due to the current state of support for \gls{WebGPU} in Safari and Mozilla Firefox, the production readiness of \gls{WebGPU} is still limited. Safari has announced plans to support \gls{WebGPU} and has launched a preview version \cite{SafariWebGPUSupport}. Firefox also has plans to support WebGPU \cite{FirefoxWebGPUSupport}. Thanks to the extensive conformance test suite \cite{WebGPUConformanceTestSuite}, it is more likely that the different implementations will be compatible with each other.
 
-The main browser which supports WebGPU to date is Chrome. WebGPU has shipped to general use on desktops in May of 2023 \cite{ChromeWebGPUSupport}. Since January 2024, WebGPU is also supported on modern Android devices \cite{ChromeAndroidWebGPUSupport}.
+The main browser which supports \gls{WebGPU} to date is Chrome. \gls{WebGPU} has shipped to general use on desktops in May of 2023 \cite{ChromeWebGPUSupport}. Since January 2024, \gls{WebGPU} is also supported on modern Android devices \cite{ChromeAndroidWebGPUSupport}.
 
-This means that it's straightforward to use WebGPU on most modern devices with the notable exception of Apple iOS and iPadOS devices.
+This means that it's straightforward to use \gls{WebGPU} on most modern devices with the notable exception of Apple iOS and iPadOS devices.
 
 \subsubsection*{Ray Tracing}
 
-To date, WebGPU does not support some features that are common in modern rendering \glspl{API} and would be beneficial for the path tracer. The most prominent example is hardware-accelerated ray tracing. \glspl{API} such as Vulkan support hardware-accelerated ray tracing \cite{vulkanRayTracing}. This entails helpers for building common acceleration structures, such as \gls{BVH}, as well as ray querying functions to determine intersections. WebGPU does not yet support these features, but there are discussions ongoing to add extensions \cite{webGPURayTracing} as well as a demonstration implemented in a Dawn fork \cite{webGPURayTracingFork}.
+To date, \gls{WebGPU} does not support some features that are common in modern rendering \glspl{API} and would be beneficial for the path tracer. The most prominent example is hardware-accelerated ray tracing. \glspl{API} such as Vulkan support hardware-accelerated ray tracing \cite{vulkanRayTracing}. This entails helpers for building common acceleration structures, such as \gls{BVH}, as well as ray querying functions to determine intersections. \gls{WebGPU} does not yet support these features, but there are discussions ongoing to add extensions \cite{webGPURayTracing} as well as a demonstration implemented in a Dawn fork \cite{webGPURayTracingFork}.
 
 \subsubsection*{Debuggability}
 
-None of the major browser engines, Chrome, Firefox, and Safari, provide debugging as part of the developer tools. Tools for inspecting WebGPU applications exist \cite{webGpuDevToolsDuncan, webGpuDevToolsTakahiro}, but are limited in terms of feature set. While they are helpful to inspect the pipelines, capture frames, and inspect resources, they do not provide debugging capabilities such as breakpoints, stepping or variable inspection. For specific setups, there are methods to setup profiling \cite{webGpuProfilingWithPix}, but these are not integrated into the browser developer tools and are dependent on the concrete machine hardware. Improvements in this area would be beneficial for productivity.
+None of the major browser engines, Chrome, Firefox, and Safari, provide debugging as part of the developer tools. Tools for inspecting \gls{WebGPU} applications exist \cite{webGpuDevToolsDuncan, webGpuDevToolsTakahiro}, but are limited in terms of feature set. While they are helpful to inspect the pipelines, capture frames, and inspect resources, they do not provide debugging capabilities such as breakpoints, stepping or variable inspection. For specific setups, there are methods to setup profiling \cite{webGpuProfilingWithPix}, but these are not integrated into the browser developer tools and are dependent on the concrete machine hardware. Improvements in this area would be beneficial for productivity.
 
 \subsubsection*{Stability}
 
-To date, there are reports of stability issues with WebGPU. This includes crashes of the browser, but on macOS using Chrome system-wide crashes have been observed with faulty WebGPU code. Such issues can look like shown in \autoref{fig:webgpu-crash}. Due to the early stage of the technology and the complexity of the underlying system, such stability issues ought to be expected. As implementations mature, these issues are likely to be resolved.
+To date, there are reports of stability issues with \gls{WebGPU}. This includes crashes of the browser, but on macOS using Chrome system-wide crashes have been observed with faulty \gls{WebGPU} code. Such issues can look like shown in \autoref{fig:webgpu-crash}. Due to the early stage of the technology and the complexity of the underlying system, such stability issues ought to be expected. As implementations mature, these issues are likely to be resolved.
 
 \begin{figure}[H]
   \centering
@@ -98,7 +98,7 @@ The integration of the \gls{OpenPBR} surface shading model enables realistic mat
 
 \section{Future Work}
 
-In order to accomodate for other use cases, the renderer could be extended in various ways. The following section outlines possible future work which includes extending \gls{PBR} capabilities, improving performance, extending to other rendering architecture paradigms, general improvements for the WebGPU community, and aligning the renderer with other standards.
+In order to accomodate for other use cases, the renderer could be extended in various ways. The following section outlines possible future work which includes extending \gls{PBR} capabilities, improving performance, extending to other rendering architecture paradigms, general improvements for the \gls{WebGPU} community, and aligning the renderer with other standards.
 
 \subsection*{Rendering Effects}
 
@@ -146,7 +146,7 @@ Web Workers are a web technology that allows running scripts off the main thread
 \subsection*{BVH Construction}
 \label{sec:bvhConstructionDiscussion}
 
-The current implementation builds the \gls{BVH} on the \gls{CPU} and transfers it to the \gls{GPU}. Corresponding research \cite{lauterbach2009GPUbvh} suggests that moving parts of the construction to the \gls{GPU} directly could improve performance. This would reduce the amount of data that needs to be transferred between the \gls{CPU} and the \gls{GPU}. The new \gls{GPGPU} capabilities of WebGPU further enable this approach.
+The current implementation builds the \gls{BVH} on the \gls{CPU} and transfers it to the \gls{GPU}. Corresponding research \cite{lauterbach2009GPUbvh} suggests that moving parts of the construction to the \gls{GPU} directly could improve performance. This would reduce the amount of data that needs to be transferred between the \gls{CPU} and the \gls{GPU}. The new \gls{GPGPU} capabilities of \gls{WebGPU} further enable this approach.
 
 \subsection*{TypeScript Support for Memory Management}
 
@@ -164,11 +164,11 @@ For remote rendering, the renderer could be extended to render images on demand 
 
 \subsection*{WebGPU Compatibility Mode}
 
-There is a proposal under active development which aims to extend the reach of WebGPU by providing a slighly restricted subset of WebGPU \cite{WebGPUCompatibilityModeProposal}. Considering the suggested limits of the compatibility mode, it could be possible to deploy the renderer onto a wider range of devices. However, it is important to consider that path tracing is a computationally expensive task and might not be suitable for all devices. Therefore, increasing the reach might not be beneficial in all cases.
+There is a proposal under active development which aims to extend the reach of \gls{WebGPU} by providing a slighly restricted subset of WebGPU \cite{WebGPUCompatibilityModeProposal}. Considering the suggested limits of the compatibility mode, it could be possible to deploy the renderer onto a wider range of devices. However, it is important to consider that path tracing is a computationally expensive task and might not be suitable for all devices. Therefore, increasing the reach might not be beneficial in all cases.
 
 \subsection*{Automatic Shader Conversion}
 
-During the specification phase of WebGPU, the relation to \fgls{SPIR-V}{\e{Standard Portable Intermediate Representation}, intermediate language for parallel computing and graphics developed by Khronos Group} was discussed \cite{webGPUSpirVRelation}. In general, many of the modern shading languages can be compiled to one another. Projects such as Tint, which is part of \gls{Dawn} \cite{dawnImplementation} or Naga \cite{nagaImplementation} could be used to compile shaders from different frontends to different backends. Similarly, other engines such as \gls{Three.js} with \fGls{TSL}{\e{Three.js Shading Language}, shading language used in \gls{Three.js} which supports \gls{GLSL} as well as \gls{WGSL}} have their own shading languages which support a variety of backends \cite{ThreeJSShadingLanguage}. Parts of \gls{MaterialX} shader generation could be used to generate shaders for WebGPU and update them automatically as \gls{OpenPBR} is updated.
+During the specification phase of \gls{WebGPU}, the relation to \fgls{SPIR-V}{\e{Standard Portable Intermediate Representation}, intermediate language for parallel computing and graphics developed by Khronos Group} was discussed \cite{webGPUSpirVRelation}. In general, many of the modern shading languages can be compiled to one another. Projects such as Tint, which is part of \gls{Dawn} \cite{dawnImplementation} or Naga \cite{nagaImplementation} could be used to compile shaders from different frontends to different backends. Similarly, other engines such as \gls{Three.js} with \fGls{TSL}{\e{Three.js Shading Language}, shading language used in \gls{Three.js} which supports \gls{GLSL} as well as \gls{WGSL}} have their own shading languages which support a variety of backends \cite{ThreeJSShadingLanguage}. Parts of \gls{MaterialX} shader generation could be used to generate shaders for \gls{WebGPU} and update them automatically as \gls{OpenPBR} is updated.
 
 \subsection*{Low-Level Performance Optimizations}
 
@@ -199,4 +199,4 @@ Such a comparison could be based on reference scenes such as the Cornell Box \ci
 
 \section{Conclusion}
 
-For the given use case of using production \gls{CAD} data with manifold assembly configurations and customer-specific materials, the path tracer developed in this thesis is a suitable choice. WebGPU has significant potential for years to come and adoption of \gls{OpenPBR} by the wider industry is a promising sign of the possible longevity of the chosen technology and standards. As shown in \autoref{sec:benchmark}, the performance is sufficient for near real-time renderings of complex \gls{CAD} models on the web. The use of WebGPU over \gls{WebGL} as well as incorporating \gls{OpenPBR} provides a distinction to existing open-source path tracers for the web. The open-source nature of the project facilitates extension and serves as inspiration for other initiatives.
+For the given use case of using production \gls{CAD} data with manifold assembly configurations and customer-specific materials, the path tracer developed in this thesis is a suitable choice. \gls{WebGPU} has significant potential for years to come and adoption of \gls{OpenPBR} by the wider industry is a promising sign of the possible longevity of the chosen technology and standards. As shown in \autoref{sec:benchmark}, the performance is sufficient for near real-time renderings of complex \gls{CAD} models on the web. The use of \gls{WebGPU} over \gls{WebGL} as well as incorporating \gls{OpenPBR} provides a distinction to existing open-source path tracers for the web. The open-source nature of the project facilitates extension and serves as inspiration for other initiatives.

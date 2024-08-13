@@ -853,7 +853,7 @@ When simulating light transport, the radiance of the scene can exceed the displa
 
 \section{Computer Graphics Technology}
 
-This section provides an overview of the technology used to render 3D scenes. It will introduce the hardware as well as the software used in the field with a focus on technology relevant for this thesis by introducing WebGPU and its core concepts.
+This section provides an overview of the technology used to render 3D scenes. It will introduce the hardware as well as the software used in the field with a focus on technology relevant for this thesis by introducing \gls{WebGPU} and its core concepts.
 
 \paragraph{Parallel Processing}
 
@@ -867,7 +867,7 @@ Due to computational complexity, ray tracing techniques have been limited to off
 
 Nowadays GPUs are prevalent in consumer hardware such as smartphones, tablets, laptops and desktops and their use case is not limited to computer graphics. GPUs are used in a wide range of applications, such as machine learning, scientific computing and data processing. Devices, which do not have a discrete GPU, often use an integrated GPU which is part of the CPU.
 
-Modern GPU hardware offers support for hardware-accelerated ray tracing. Examples include NVIDIA RTX \cite{nvidiaRtxRayTracing}, Apple Metal on M3 \cite{appleM3GpuAdvancements} and others. These examples demonstrate an increasing trend towards hardware-accelerated ray tracing in recent years, however many devices and \glspl{API}, including WebGPU, do not yet support hardware-accelerated ray tracing.
+Modern GPU hardware offers support for hardware-accelerated ray tracing. Examples include NVIDIA RTX \cite{nvidiaRtxRayTracing}, Apple Metal on M3 \cite{appleM3GpuAdvancements} and others. These examples demonstrate an increasing trend towards hardware-accelerated ray tracing in recent years, however many devices and \glspl{API}, including \gls{WebGPU}, do not yet support hardware-accelerated ray tracing.
 
 \paragraph{Common Strategies}
 \label{sec:commonGpuStrategies}
@@ -903,26 +903,26 @@ None of these \glspl{API} are supported in the browser, which makes them unsuita
 
 \gls{WebGL} is a graphics \gls{API} based on \gls{OpenGL ES} 2.0 for the web. It was initially released in 2011 and has since been adopted by all major browsers.
 
-\gls{WebGL} is designed to offer a rendering pipeline, but does not offer \gls{GPGPU} capabilities. There have been efforts to extend with compute shaders, but efforts by the \gls{Khronos Group} have been halted in favor of focusing on WebGPU instead.
+\gls{WebGL} is designed to offer a rendering pipeline, but does not offer \gls{GPGPU} capabilities. There have been efforts to extend with compute shaders, but efforts by the \gls{Khronos Group} have been halted in favor of focusing on \gls{WebGPU} instead.
 
 In order to provide \gls{GPGPU} capabilities, workarounds have been developed. The basic idea is to render the output of a fragment shader to a texture and interpreting the output as binary data instead of color information.
 There are libraries such as GPU.js which provide \gls{GPGPU} capabilities using \gls{WebGL}. Tensorflow.js, a library for training and deploying Machine Learning models, use similar techniques in the \gls{WebGL} backend.
 
-Since its introduction, \gls{WebGL} has been extended with new features. \gls{WebGL} 2.0, which is based on \gls{OpenGL ES} 3.0, was released in 2017. Of the major browsers, Safari was the last to support it out of the box in 2021. Since \gls{WebGL} 2.0 no new major versions have been released but new features have been added. This makes it evident that while \gls{WebGL} is to remain a viable choice for rendering 3D graphics in the browser for the forseeable future, it is likely to be superseded by WebGPU in the long term.
+Since its introduction, \gls{WebGL} has been extended with new features. \gls{WebGL} 2.0, which is based on \gls{OpenGL ES} 3.0, was released in 2017. Of the major browsers, Safari was the last to support it out of the box in 2021. Since \gls{WebGL} 2.0 no new major versions have been released but new features have been added. This makes it evident that while \gls{WebGL} is to remain a viable choice for rendering 3D graphics in the browser for the forseeable future, it is likely to be superseded by \gls{WebGPU} in the long term.
 
 \subsection{WebGPU}
 
-WebGPU is a new web standard, being developed by \fGls{W3C}{\e{World Wide Web Consortium}, a non-profit organization dedicated to developing web standards} which is no longer based on \gls{OpenGL}, unlike its predecessor \gls{WebGL} \cite{webgpuSpecification}. One of the main capabilities is support for \gls{GPGPU} by design. While all major browser vendors have announced intent to support WebGPU, to date only Chrome has shipped WebGPU for general use on desktop as well as mobile.
+\gls{WebGPU} is a new web standard, being developed by \fGls{W3C}{\e{World Wide Web Consortium}, a non-profit organization dedicated to developing web standards} which is no longer based on \gls{OpenGL}, unlike its predecessor \gls{WebGL} \cite{webgpuSpecification}. One of the main capabilities is support for \gls{GPGPU} by design. While all major browser vendors have announced intent to support \gls{WebGPU}, to date only Chrome has shipped \gls{WebGPU} for general use on desktop as well as mobile.
 The standard is still in development and new features are being added.
-Common 3D engines such as \gls{Babylon.js}, \gls{Three.js}, \gls{PlayCanvas} and \gls{Unity} have announced support for WebGPU.
+Common 3D engines such as \gls{Babylon.js}, \gls{Three.js}, \gls{PlayCanvas} and \gls{Unity} have announced support for \gls{WebGPU}.
 
 \subsubsection{Implementations}
 
-Three major implementations of WebGPU exist:
+Three major implementations of \gls{WebGPU} exist:
 
 \begin{itemize}
-    \item{\gls{Dawn}} — Developed by Google, \gls{Dawn} is a C++ library which provides a WebGPU implementation. It is used in Chromium-based browsers \cite{dawnImplementation}.
-    \item{\gls{wgpu}} — A Rust library which provides a WebGPU implementation. It is used in Firefox and \fGls{Deno}{JavaScript runtime, alternative to Node.js} \cite{wgpuImplementation}.
+    \item{\gls{Dawn}} — Developed by Google, \gls{Dawn} is a C++ library which provides a \gls{WebGPU} implementation. It is used in Chromium-based browsers \cite{dawnImplementation}.
+    \item{\gls{wgpu}} — A Rust library which provides a \gls{WebGPU} implementation. It is used in Firefox and \fGls{Deno}{JavaScript runtime, alternative to Node.js} \cite{wgpuImplementation}.
     \item{WebKit WebGPU} — Developed by Apple, WebKit is used in Safari \cite{webKitWebGPUImplementation}.
 \end{itemize}
 
@@ -930,9 +930,9 @@ As the standard is under active development, there are differences between the i
 
 \subsubsection{Core Concepts}
 
-It is a low-level \gls{API} when compared to \gls{WebGL}. Users get access to the \gls{GPU} via adapters which abstract the underlying hardware. WebGPU fully supports common \gls{GPU} strategies as described in \autoref{sec:commonGpuStrategies}. Most of the commands are then executed on a logical device which is created using the adapter.
+It is a low-level \gls{API} when compared to \gls{WebGL}. Users get access to the \gls{GPU} via adapters which abstract the underlying hardware. \gls{WebGPU} fully supports common \gls{GPU} strategies as described in \autoref{sec:commonGpuStrategies}. Most of the commands are then executed on a logical device which is created using the adapter.
 
-For a compute pipeline, one needs to define a pipeline layout which consists of multiple bind group layouts. These define the memory layout of the data which is passed to the \gls{GPU}. The code to be executed is defined in a shader module. The compute pipeline is then created by combining the shader module and the pipeline layout. See \autoref{fig:webgpu-arch} for a visual representation of the core concepts in WebGPU. When using a graphics pipeline, similar steps are required, but two shader module configurations are required.
+For a compute pipeline, one needs to define a pipeline layout which consists of multiple bind group layouts. These define the memory layout of the data which is passed to the \gls{GPU}. The code to be executed is defined in a shader module. The compute pipeline is then created by combining the shader module and the pipeline layout. See \autoref{fig:webgpu-arch} for a visual representation of the core concepts in \gls{WebGPU}. When using a graphics pipeline, similar steps are required, but two shader module configurations are required.
 
 \begin{figure}[H]
   \centering
@@ -960,7 +960,7 @@ Having set up the compute pipeline, one needs to define the bind groups which co
 
 \subsubsection{Shading Language}
 
-WebGPU introduces a new shading language called WebGPU Shading Language (\gls{WGSL}) \cite{wgslSpecification}. The language is statically typed and supports a variety of data structures required for computer graphics as well as general-purpose computing.
+\gls{WebGPU} introduces a new shading language called \gls{WebGPU} Shading Language (\gls{WGSL}) \cite{wgslSpecification}. The language is statically typed and supports a variety of data structures required for computer graphics as well as general-purpose computing.
 
 Every compute pipeline, or render pipeline, requires an entry point as shown in \autoref{code:computePipelineJs}, which can then be defined as shown in \autoref{code:computePipelineWgsl}. Note that for \gls{WGSL} functions, the return type definition is optional.
 

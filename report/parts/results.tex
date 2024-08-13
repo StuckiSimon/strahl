@@ -17,7 +17,7 @@ For references to the implementation of the path tracer, a consistent notation i
 
 \section{Implementation}
 
-The goal of the implementation is to be compatible with a large variety of devices and make the setup for consumers simple. Therefore, it is implemented and tested mainly in Chrome, which uses \gls{Dawn} as the underlying implementation of WebGPU. Most notably, this means that dedicated features from other implementations such as \gls{wgpu} cannot be used. Neither can experimental extensions be leveraged.
+The goal of the implementation is to be compatible with a large variety of devices and make the setup for consumers simple. Therefore, it is implemented and tested mainly in Chrome, which uses \gls{Dawn} as the underlying implementation of \gls{WebGPU}. Most notably, this means that dedicated features from other implementations such as \gls{wgpu} cannot be used. Neither can experimental extensions be leveraged.
 
 The path tracer is designed to be integrated into existing web projects. The package is installable via \gls{npm}, but could also be downloaded and included manually. The full documentation is available on the website.
 
@@ -163,7 +163,7 @@ As described in \autoref{ch:russianRoulette}, Russian roulette is a technique us
 
 \subsection{Overall Performance}
 
-The results for CPU performance were recorded using the Performance API and are presented in Table~\ref{tab:cpuPerformance}. The results for GPU performance were recorded using WebGPU timestamp queries and are presented in Table~\ref{tab:gpuPerformance}. All measurements were calculated using the mean time of 30 benchmark samples, with a 95\% confidence interval given as $\pm$ standard deviation from the mean time in milliseconds.
+The results for CPU performance were recorded using the Performance API and are presented in Table~\ref{tab:cpuPerformance}. The results for GPU performance were recorded using \gls{WebGPU} timestamp queries and are presented in Table~\ref{tab:gpuPerformance}. All measurements were calculated using the mean time of 30 benchmark samples, with a 95\% confidence interval given as $\pm$ standard deviation from the mean time in milliseconds.
 
 
 \begin{table}[H]
