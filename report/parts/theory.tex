@@ -67,7 +67,14 @@ A triangle can be defined as $t = (Q, u, v)$ where $Q$ is the position of the tr
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.25\textwidth]{resources/q-u-v-parameterization.png}
+  \begin{tikzpicture}
+    \draw[fill=lightgray]   (0,0) coordinate[label=below:$Q$] (q) --
+      (2,1) coordinate[label=right:$v$] (v) --
+      (0.2,1) coordinate[label=above:$u$] (u) -- cycle;
+
+    \draw[-latex, thick] (q) -- (u);
+    \draw[-latex, thick] (q) -- (v);
+    \end{tikzpicture}
   \caption{Triangle defined using three vertices, $Q$ as the position and $u$,$v$ as direction vectors starting at $Q$.}
   \label{fig:q-u-v-parameterization}
 \end{figure}
