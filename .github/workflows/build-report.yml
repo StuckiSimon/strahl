@@ -20,6 +20,7 @@ jobs:
         with:
           working_directory: report/
           root_file: main.tex
+          latexmk_shell_escape: true
       - name: Upload artifact 📦
         uses: actions/upload-artifact@v4
         with:
