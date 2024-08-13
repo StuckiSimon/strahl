@@ -43,7 +43,22 @@ As visualized in \autoref{fig:cross-product}, the cross product gives a vector $
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.2\textwidth]{resources/cross-product.png}
+  \begin{tikzpicture}
+    \coordinate (O) at (0,0);
+    \coordinate (P) at (0,1);
+    \coordinate (V) at (-1,0.25);
+    \coordinate (W) at (-0.8,-0.7);
+
+    \draw[thick,fill=lightgray] (-0.3,0.08) -- (-0.3,0.36) -- (0.0,0.3) -- (0,0);
+
+    \draw[thick] (O) -- (P);
+    \draw[thick] (V) -- (O);
+    \draw[thick] (W) -- (O);
+    
+    \node[above] at (P) {p};
+    \node[left] at (V) {v};
+    \node[below] at (W) {w};
+    \end{tikzpicture}
   \caption{Cross product of two vectors $v$ and $w$, resulting in a vector $p$ orthogonal to $v$ and $w$.}
   \label{fig:cross-product}
 \end{figure}
