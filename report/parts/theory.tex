@@ -497,7 +497,7 @@ Each of these methods addresses only a specific limitation of rasterization. Som
 \subsection{Ray Tracing}
 \label{ch:rayTracingTheory}
 
-Ray Tracing is a rendering technique which simulates light transport in a scene. The main idea is to cast rays from the camera into the scene and compute the color of the object the ray intersects with. In contrast to a rasterizer, which iterates over the triangles of the scene, ray tracing iterates over the pixels of the image. For each pixel, a ray is cast into the scene. By adding additional bounces of the light ray, the technique can simulate global illumination.
+Ray tracing is a rendering technique which simulates light transport in a scene. Forward ray tracing traces the photons, commonly referred to as rays, from the light source onto the objects. These algorithms are inefficient as most rays do not contribute to the illumination visible in the viewport. Therefore, backward ray tracing is more commonly used. The main idea is to cast rays from the camera into the scene and compute the color of the object that the ray intersects with. In contrast to a rasterizer, which iterates over the triangles of the scene, ray tracing iterates over the pixels of the image. For each pixel, a ray is cast into the scene. By adding additional bounces of the light ray, the technique can simulate global illumination.
 
 Early algorithms were based on recursive ray tracing \cite{whittedGlobalIllumination}. These algorithms determine intersection with geometry and iteratively generate branches as shown in \autoref{fig:recursiveRayTracing}. For each pixel, a primary ray is cast into the scene. When intersecting with a surface, the algorithm considers the light sources and generates secondary rays. These rays are then recursively traced and radiance is calculated until a maximum depth is reached.
 
@@ -594,9 +594,7 @@ Early algorithms were based on recursive ray tracing \cite{whittedGlobalIllumina
   \label{fig:recursiveRayTracing}
 \end{figure}
 
-Due to the computational complexity of these early algorithms, ray tracing was not widely adopted until the 1980s.
-
-During these years, one of the main concepts was the introduction of the rendering equation by Kajiya in 1986 in a paper which also coined the term path tracing. Generally, path tracing can be seen as a Monte Carlo integration of the rendering equation which is defined as:
+Due to the computational complexity of these early algorithms, ray tracing was not widely adopted until the 1980s. During these years, one of the main contributions was the introduction of the rendering equation by Kajiya in 1986 in a paper which also coined the term path tracing. Generally, path tracing can be seen as a Monte Carlo integration of the rendering equation which is defined as:
 
 \begin{equation}
   \label{eqn:rendering-equation}
