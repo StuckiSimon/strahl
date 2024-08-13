@@ -164,7 +164,7 @@ The standard deviation ($\sigma$) is the square root of the variance ($\sigma^2$
 
 where $z$ is the z-score of the desired confidence level, for example, $1.96$ for a $95\%$ confidence interval. $n$ is the number of samples.
 
-This can be used to assess the quality and realiability of measurements such as required for benchmarking.
+This can be used to assess the quality and reliability of measurements such as required for benchmarking.
 
 Another important concept is the probability density function (\gls{PDF}). It describes the likelihood of a random variable to take on a specific value. It is related to the cumulative distribution function (\gls{CDF}) which describes the probability that the random variable will be less than or equal to a specific value.
 
@@ -314,7 +314,7 @@ Common terminology used to describe the optical properties of materials is helpf
   \item{Roughness} — defines how smooth the surface of the material is. A rough surface scatters light in many directions, while a smooth surface reflects light in a specific direction.
   \item{Metallic} — the material reflects light in a specific direction.
   \item{Dielectric} — materials which do not conduct electricity. These materials are not using metallic reflection.
-  \item{Absorption} — defines how much of the light is absorbed by a material. In general, darker colors absorb more light than lighter colors. One prominent example is Vantablack, a highly absorbant material.
+  \item{Absorption} — defines how much of the light is absorbed by a material. In general, darker colors absorb more light than lighter colors. One prominent example is Vantablack, a highly absorbent material.
   \item{Emission} — the material emits light. An example of such a material is a light bulb or the sun.
   \item{Scattering} — the material scatters light. An example of such a material is fog or clouds.
   \item{Subsurface Scattering} — light penetrates the material and is scattered. An example of such a material is skin or marble.
@@ -503,7 +503,7 @@ Further research into light transport techniques such as bidirectional light tra
 
 \subsubsection{Monte Carlo Integration}
 
-Monte Carlo integration is a statistical technique to approximate the solution integral numerically. At the core of the integration lies an an estimator which can be defined as:
+Monte Carlo integration is a statistical technique to approximate the solution integral numerically. At the core of the integration lies an estimator which can be defined as:
 
 \begin{equation}
   G = \frac{1}{M}\sum_{i=1}^M g(X_i)
@@ -769,7 +769,7 @@ The clipping plane parameters $n$ and $f$ are primarily used in rasterization to
 
 The elements $P_{1,1}$ and $P_{2,2}$ adjust the field of view and therefore the perspective effect. The elements $P_{3,3}$, $P_{3,4}$ and $P_{4,3}$ adjust the near and far clipping planes. In comparison to rasterization, the view projection matrix is used differently in ray tracing. In rasterization, every vertex is transformed by the view projection matrix. In ray tracing, the view projection matrix is only applied to the camera rays.
 
-For ortographic projection, no such projection matrix is required in ray tracing. Instead, parallel rays are cast from the camera grid.
+For orthographic projection, no such projection matrix is required in ray tracing. Instead, parallel rays are cast from the camera grid.
 
 \subsubsection{Random Number Generator}
   
@@ -782,7 +782,7 @@ To simulate light transport, the path tracer needs to pick random directions. Ge
     \item{Space Usage} – The amount of memory required to store state.
 \end{itemize}
 
-Based on the use case, other factors such as prediction difficulty or others such as highlighted by O’Neill \cite{o2014pcg} may be important. Cryptography for example requires randomness of the \gls{RNG} to prevent an adversary from predicting secret keys. Options to generate the randomness require additional signals \cite{randomnessCryptography} or may require special hardware such as LavaRand \cite{cloudflareLavaRand}. Many generators are pseudorandom generators. These generators are deterministic and require a seed to start the sequence. For crypographically secure generators, the seed must be random.
+Based on the use case, other factors such as prediction difficulty or others such as highlighted by O’Neill \cite{o2014pcg} may be important. Cryptography for example requires randomness of the \gls{RNG} to prevent an adversary from predicting secret keys. Options to generate the randomness require additional signals \cite{randomnessCryptography} or may require special hardware such as LavaRand \cite{cloudflareLavaRand}. Many generators are pseudorandom generators. These generators are deterministic and require a seed to start the sequence. For cryptographically secure generators, the seed must be random.
 However, for a path tracer, there is no need for cryptographic security. Instead, it is more important to have high performance and having a long period to avoid repetition. Therefore, a pseudorandom number generator with non-cryptographically secure seed is used.
 
 One option for such a pseudorandom generator is using Xorshifts such as described by Marsaglia \cite{marsaglia2003xorshift}. The algorithm can be defined as shown in Figure \ref{code:xorShift}. $x$ is the state of the \gls{RNG} and $a$, $b$ and $c$ are constants which are chosen to achieve good statistical properties. Frequent choices for these constants are $a = 13$, $b = 17$ and $c = 5$.
@@ -906,7 +906,7 @@ None of these \glspl{API} are supported in the browser, which makes them unsuita
 In order to provide \gls{GPGPU} capabilities, workarounds have been developed. The basic idea is to render the output of a fragment shader to a texture and interpreting the output as binary data instead of color information.
 There are libraries such as GPU.js which provide \gls{GPGPU} capabilities using \gls{WebGL}. Tensorflow.js, a library for training and deploying Machine Learning models, use similar techniques in the \gls{WebGL} backend.
 
-Since its introduction, \gls{WebGL} has been extended with new features. \gls{WebGL} 2.0, which is based on \gls{OpenGL ES} 3.0, was released in 2017. Of the major browsers, Safari was the last to support it out of the box in 2021. Since \gls{WebGL} 2.0 no new major versions have been released but new features have been added. This makes it evident that while \gls{WebGL} is to remain a viable choice for rendering 3D graphics in the browser for the forseeable future, it is likely to be superseded by \gls{WebGPU} in the long term.
+Since its introduction, \gls{WebGL} has been extended with new features. \gls{WebGL} 2.0, which is based on \gls{OpenGL ES} 3.0, was released in 2017. Of the major browsers, Safari was the last to support it out of the box in 2021. Since \gls{WebGL} 2.0 no new major versions have been released but new features have been added. This makes it evident that while \gls{WebGL} is to remain a viable choice for rendering 3D graphics in the browser for the foreseeable future, it is likely to be superseded by \gls{WebGPU} in the long term.
 
 \subsection{WebGPU}
 
