@@ -16,6 +16,7 @@ const defaultBlueMaterial = new OpenPBRMaterial();
 defaultBlueMaterial.oBaseColor = [0.0, 0.9, 1.0];
 
 async function init(
+  target: string,
   modelUrl: string,
   materialMap: Record<string, OpenPBRMaterial>,
   options: Parameters<typeof runPathTracer>[2],

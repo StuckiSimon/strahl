@@ -96,38 +96,8 @@ const MATERIAL_MAP = {
   material_name_kunststoff_weissDCDCDC_transparent_trueb_18_mtl: whitePlastic,
 };
 
-  async function run() {
-    const model: any = await loadGltf(MODEL_URL);
-
-    model.scene.traverseVisible((object: any) => {
-      if (object.material === undefined) {
-        return;
-      }
-      const materialName = object.material.name;
-      if (materialName in MATERIAL_MAP) {
-        object.material =
-          MATERIAL_MAP[materialName as keyof typeof MATERIAL_MAP];
-      } else {
-        console.log(materialName);
-        object.material = defaultBlueMaterial;
-      }
-    });
-
-    if (signal.aborted) {
-      return;
-    }
-    await runPathTracer("render-target", model, {
-      targetSamples: 100,
-      signal,
-      kTextureWidth: kSize,
-    });
-  }
-
-  run();
-}
-
 export default function TracerDemo(): JSX.Element {
-  const options = React.useMemo(() => ({}), []);
+  const [options] = React.useState({});
   const canvas = usePathTracer(
     "https://stuckisimon.github.io/strahl-sample-models/45-series/45-series-cleaned.gltf",
     MATERIAL_MAP,
