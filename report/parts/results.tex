@@ -9,7 +9,7 @@
 
 As discussed in the introduction and theory chapters, the goal of this work is to implement a web-based path tracer. The path tracer is designed to be used for product visualization based on \gls{CAD} data, leveraging the \gls{OpenPBR} surface shading model.
 
-The concrete result of this work consists of multiple parts. The report serves as the primary documentation of the work, but does not contain all details. The library and code documentation are published under the \fGls{MIT license}{Permissive license originating at the Massachusetts Institute of Technology (MIT)} on GitHub with an accompanying website. See \url{https://www.github.com/StuckiSimon/strahl} for details. The library is published on the \fgls{npm}{package manager for JavaScript} registry as \texttt{strahl}. In addition, a dedicated short paper has been published for WEB3D '24: The 29th International ACM Conference on 3D Web Technology \cite{ownShortPaper}. The short paper includes the main insights and results of this work.
+The concrete result of this work consists of multiple parts. The report serves as the primary documentation of the work but does not contain all details. The library and code documentation is published under the \fGls{MIT license}{Permissive license originating at the Massachusetts Institute of Technology (MIT)} on GitHub with an accompanying website. See \url{https://www.github.com/StuckiSimon/strahl} for details. The library is published on the \fgls{npm}{package manager for JavaScript} registry as \texttt{strahl}. In addition, a dedicated short paper has been published for WEB3D '24: The 29th International ACM Conference on 3D Web Technology \cite{ownShortPaper}. The short paper includes the main insights and results of this work.
 
 This section focuses on the implementation details of the path tracer. It also highlights the reasoning behind design decisions and provides insights into the performance of the renderer and its usability for the described use case.
 
@@ -37,7 +37,7 @@ This also enables to use a variety of loaders for different file formats such as
 
 \subsection*{Scene Preparation}
 
-The main process involved with setting up the scene is the preparation of the \gls{BVH}. For \gls{BVH} construction, well-established solutions for the web are available. The path tracer uses \texttt{three-mesh-bvh} \cite{threeMeshBvh}. This method builds the \gls{BVH} on the \gls{CPU}, the code for transfering the \gls{BVH} to the \gls{GPU} is in \coderef{BVH-TRANSFER}.
+The main process involved with setting up the scene is the preparation of the \gls{BVH}. For \gls{BVH} construction, well-established solutions for the web are available. The path tracer uses \texttt{three-mesh-bvh} \cite{threeMeshBvh}. This method builds the \gls{BVH} on the \gls{CPU}, the code for transferring the \gls{BVH} to the \gls{GPU} is in \coderef{BVH-TRANSFER}.
 
 In order to address memory alignment, as described in \autoref{ch:memoryAlignmentTheory}, the path tracer uses \texttt{webgpu-utils} \cite{webgpuUtilsLib}. The library enables a straightforward way to map data to buffers and align them correctly. See \coderef{MEMORY-VIEW} for creation of definition and \coderef{BUFFER-MAPPING} for mapping of data to buffers.
 
@@ -121,7 +121,7 @@ Intersection tests based on the \gls{BVH} are implemented in \gls{WGSL}, see \co
 
 The surface shading method is based on \gls{OpenPBR} reference implementation in \gls{MaterialX} as well as the reference viewer by Portsmouth \cite{openPbrViewer}.
 
-The renderer uses \fGls{RGB}{\e{red, green and blue}, common system for color representation in computer graphics} as the color space.
+The renderer uses \fGls{RGB}{\e{red, green, and blue}, common system for color representation in computer graphics} as the color space.
 
 \section{Render Pipeline}
 
