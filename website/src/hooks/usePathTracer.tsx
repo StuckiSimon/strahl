@@ -75,7 +75,7 @@ function usePathTracer(
     return () => {
       destroyController.abort();
     };
-  }, [canvasSize, options]);
+  }, [canvasSize, options, materialMap]);
 
   React.useEffect(() => {
     setCanvasSize(window.innerWidth > 512 ? 512 : 368);
