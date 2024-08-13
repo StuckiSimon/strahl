@@ -471,14 +471,88 @@ Early algorithms were based on recursive ray tracing \cite{whittedGlobalIllumina
 
 \begin{figure}[H]
   \centering
-  \begin{subfigure}[b]{0.45\textwidth}
-      \includegraphics[width=\textwidth]{resources/recursive-ray-tracing-visualized.png}
-      \caption{Incident ray hitting a surface generating two branches, $s_1$ and $t_1$.}
-      \label{fig:recursiveVisualized}
+  \begin{subfigure}[t]{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \coordinate (A) at (0,2);
+      \coordinate (AB) at (0.5,1.5);
+      \coordinate (BA) at (1.5,0.5);
+      \coordinate (B) at (2,0);
+      \coordinate (BBl) at (2,-0.5);
+      \coordinate (BlB) at (2,-1.0);
+      \coordinate (Bl) at (2,-1.5);
+      \coordinate (C) at (4,2);
+      \coordinate (BC) at (2.5,0.5);
+      \coordinate (CB) at (3.5,1.5);
+      \coordinate (CCl) at (4,2.5);
+      \coordinate (ClC) at (4,3);
+      \coordinate (Cl) at (4,3.5);
+      \coordinate (D) at (6,0);
+      \coordinate (CD) at (4.5,1.5);
+      \coordinate (DC) at (5.5,0.5);
+
+
+      \fill[gray!20] (0,0) rectangle (6,-1.5);
+      \fill[gray!20] (2,2) rectangle (6,3.5);
+  
+      \draw[dashed, thick] (A) -- node[midway, right] {$i$} (B);
+      \draw[-latex, thick] (AB) -- (BA);
+
+      \draw[dashed, thick] (B) -- node[midway, right] {$t_1$} (Bl);
+      \draw[-latex, thick] (BBl) -- (BlB);
+
+      \draw[dashed, thick] (B) -- node[midway, right] {$s_1$} (C);
+      \draw[-latex, thick] (BC) -- (CB);
+
+      \draw[dashed, thick] (C) -- node[midway, right] {$t_2$} (Cl);
+      \draw[-latex, thick] (CCl) -- (ClC);
+
+      \draw[dashed, thick] (C) -- node[midway, right] {$s_2$} (D);
+      \draw[-latex, thick] (CD) -- (DC);
+  
+ 
+      \fill[rgray] (B) circle (0.1);
+      \fill[rgray] (C) circle (0.1);
+    \end{tikzpicture}
+    \caption{Incident ray hitting a surface generating two branches, $s_1$ and $t_1$.}
+    \label{fig:recursiveVisualized}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[b]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{resources/recursive-ray-tracing-tree.png}
+  \begin{subfigure}[t]{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \coordinate (A0) at (0,1);
+      \coordinate (A0A) at (0,0.75);
+      \coordinate (AA0) at (0,0.25);
+      \coordinate (A) at (0,0);
+      \coordinate (AB1) at (-0.25, -0.25);
+      \coordinate (B1A) at (-0.75, -0.75);
+      \coordinate (B1) at (-1,-1);
+      \coordinate (AB2) at (0.25, -0.25);
+      \coordinate (B2A) at (0.75, -0.75);
+      \coordinate (B2) at (1,-1);
+
+      \coordinate (B1B11) at (-1.25, -1.25);
+      \coordinate (B11B1) at (-1.75, -1.75);
+      \coordinate (B11) at (-2,-2);
+      \coordinate (B1B12) at (-0.75, -1.25);
+      \coordinate (B12B1) at (-0.25, -1.75);
+      \coordinate (B12) at (0,-2);
+ 
+      \draw[dashed, thick] (A0) -- node[midway, right] {$i$} (A);
+      \draw[-latex, thick] (A0A) -- (AA0);
+      \draw[dashed, thick] (A) -- node[midway, right] {$s_1$} (B1);
+      \draw[-latex, thick] (AB1) -- (B1A);
+      \draw[dashed, thick] (B1) -- node[midway, right] {$s_2$} (B11);
+      \draw[-latex, thick] (B1B11) -- (B11B1);
+      \draw[dashed, thick] (B1) -- node[midway, right] {$t_2$} (B12);
+      \draw[-latex, thick] (B1B12) -- (B12B1);
+      \draw[dashed, thick] (A) -- node[midway, right] {$t_1$} (B2);
+      \draw[-latex, thick] (AB2) -- (B2A);
+ 
+      \fill[rgray] (A) circle (0.1);
+      \fill[rgray] (B1) circle (0.1);
+    \end{tikzpicture}
     \caption{Recursive ray tracing visualized as tree structure}
     \label{fig:recursiveTree}
   \end{subfigure}
