@@ -129,6 +129,7 @@ export default function TracerDemo(): JSX.Element {
   const canvas = usePathTracer(
     "https://stuckisimon.github.io/strahl-sample-models/45-series/45-series-cleaned.gltf",
     MATERIAL_MAP,
+    {},
   );
   return (
     <div className={styles.container}>

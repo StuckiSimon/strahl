@@ -18,8 +18,7 @@ defaultBlueMaterial.oBaseColor = [0.0, 0.9, 1.0];
 async function init(
   modelUrl: string,
   materialMap: Record<string, OpenPBRMaterial>,
-  signal: AbortSignal,
-  kSize: number,
+  options: Parameters<typeof runPathTracer>[2],
 ) {
   let model = modelCache.get(modelUrl);
   if (model === undefined) {
@@ -40,19 +39,19 @@ async function init(
     }
   });
 
-  if (signal.aborted) {
+  if (options.signal.aborted) {
     return;
   }
   await runPathTracer("render-target", model, {
     targetSamples: 100,
-    signal,
-    kTextureWidth: kSize,
+    ...options,
   });
 }
 
 function usePathTracer(
   modelUrl: string,
   materialMap: Record<string, OpenPBRMaterial>,
+  options: Parameters<typeof runPathTracer>[2],
 ) {
   const [canvasSize, setCanvasSize] = React.useState<number | null>(null);
   const loadingState = React.useRef(false);
@@ -63,7 +62,11 @@ function usePathTracer(
 
     if (!loadingState.current && canvasSize) {
       loadingState.current = true;
-      init(modelUrl, materialMap, signal, canvasSize);
+      init(modelUrl, materialMap, {
+        signal,
+        kTextureWidth: canvasSize,
+        ...options,
+      });
     }
 
     return () => {
