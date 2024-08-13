@@ -12,6 +12,9 @@ async function loadGltf(url: string) {
   });
 }
 
+const defaultBlueMaterial = new OpenPBRMaterial();
+defaultBlueMaterial.oBaseColor = [0.0, 0.9, 1.0];
+
 async function init(
   modelUrl: string,
   materialMap: Record<string, OpenPBRMaterial>,
@@ -23,9 +26,6 @@ async function init(
     model = await loadGltf(modelUrl);
     modelCache.set(modelUrl, model);
   }
-
-  const defaultBlueMaterial = new OpenPBRMaterial();
-  defaultBlueMaterial.oBaseColor = [0.0, 0.9, 1.0];
 
   model.scene.traverseVisible((object: any) => {
     if (object.material === undefined) {
