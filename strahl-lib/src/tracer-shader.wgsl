@@ -1367,12 +1367,11 @@ fn getPixelJitter(seed: ptr<function, u32>) -> vec2f {
 
 @compute
 @workgroup_size(${maxWorkgroupDimension}, ${maxWorkgroupDimension}, 1)
-fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
-  var seed = local_id.x + local_id.y * ${imageWidth};
+fn computeMain(@builtin(global_invocation_id) globalId: vec3<u32>) {
+  var seed = globalId.x + globalId.y * ${imageWidth};
   seed ^= uniformData.seedOffset;
-  
-  let i = f32(local_id.x);
-  let j = f32(local_id.y);
+
+  let pixelOrigin = vec2f(f32(globalId.x), f32(globalId.y));
   
   var pixelColor = vec4f(0.0);
 
@@ -1383,7 +1382,7 @@ fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
   for (var sample = 0; sample < samplesPerPixel; sample += 1) {
     // CODE#ALIASING
     // anti-aliasing
-    let pixel = vec2<f32>(i, j) + getPixelJitter(&seed);
+    let pixel = pixelOrigin + getPixelJitter(&seed);
     let ndc = -1.0 + 2.0*pixel / vec2<f32>(${imageWidth}, ${imageHeight});
     
     var ray = ndcToCameraRay(ndc, uniformData.invModelMatrix * uniformData.cameraWorldMatrix, uniformData.invProjectionMatrix, &seed);
@@ -1393,5 +1392,5 @@ fn computeMain(@builtin(global_invocation_id) local_id: vec3<u32>) {
   }
 
   
-  writeColor(pixelColor, i32(local_id.x), i32(local_id.y), samplesPerPixel);
+  writeColor(pixelColor, i32(globalId.x), i32(globalId.y), samplesPerPixel);
 }
