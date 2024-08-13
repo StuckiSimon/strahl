@@ -134,7 +134,7 @@ In order to assess the effectiveness of certain measures, a benchmark is defined
 
 A total of 100 samples per pixel with a ray depth of five was used. The image was rendered in Chrome 126 at a resolution of 512$\times$512 pixels. Experiments were conducted with different model complexities. The simplified versions are decimated meshes of the original, which consists of roughly one million triangles. The LOD artifacts are shown in Figure~\ref{fig:benchmark-models}. The first two levels are intended to be visually similar, while the third level is a simplified version intended to demonstrate the effect of non-manifold geometry for ray tracing.
 
-Unless otherwise specified, the benchmarks are conducted on a MacBook Pro with Apple Silicon M1 Max. The measurements were calculated using the mean time of 30 runs with a confidence interval of 95\% given as $\pm$ standard deviation from the mean time in milliseconds as discussed in \autoref{sec:probabilityTheory}.
+Unless otherwise specified, the benchmarks are conducted on a MacBook Pro with Apple Silicon M1 Max. The measurements were calculated using the mean time of 30 runs with a confidence interval of 95\% given as $\pm$ standard deviation from the mean time in milliseconds (ms) as discussed in \autoref{sec:probabilityTheory}.
 
 \begin{figure}[H]
     \includegraphics[width=0.9\columnwidth]{resources/benchmark-models.png}
@@ -163,7 +163,7 @@ As described in \autoref{ch:russianRoulette}, Russian roulette is a technique us
 
 \subsection{Overall Performance}
 
-The results for CPU performance were recorded using the Performance API and are presented in Table~\ref{tab:cpuPerformance}. The results for GPU performance were recorded using \gls{WebGPU} timestamp queries and are presented in Table~\ref{tab:gpuPerformance}. All measurements were calculated using the mean time of 30 benchmark samples, with a 95\% confidence interval given as $\pm$ standard deviation from the mean time in milliseconds.
+The results for CPU performance were recorded using the Performance API and are presented in Table~\ref{tab:cpuPerformance}. The results for GPU performance were recorded using \gls{WebGPU} timestamp queries and are presented in Table~\ref{tab:gpuPerformance}.
 
 
 \begin{table}[H]
