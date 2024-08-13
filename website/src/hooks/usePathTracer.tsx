@@ -46,7 +46,7 @@ async function init(
   if (options.signal.aborted) {
     return;
   }
-  await runPathTracer("render-target", model, {
+  await runPathTracer(target, model, {
     targetSamples: 100,
     ...options,
   });
@@ -57,6 +57,7 @@ function usePathTracer(
   materialMap: Record<string, OpenPBRMaterial>,
   options: Parameters<typeof runPathTracer>[2],
 ) {
+  const id = React.useId();
   const [canvasSize, setCanvasSize] = React.useState<number | null>(null);
 
   React.useEffect(() => {
@@ -64,7 +65,7 @@ function usePathTracer(
     const signal = destroyController.signal;
 
     if (canvasSize) {
-      init(modelUrl, materialMap, {
+      init(`render-target-${id}`, modelUrl, materialMap, {
         signal,
         kTextureWidth: canvasSize,
         ...options,
@@ -81,7 +82,11 @@ function usePathTracer(
   }, []);
 
   return canvasSize === null ? null : (
-    <canvas width={canvasSize} height={canvasSize} id="render-target"></canvas>
+    <canvas
+      width={canvasSize}
+      height={canvasSize}
+      id={`render-target-${id}`}
+    ></canvas>
   );
 }
 
