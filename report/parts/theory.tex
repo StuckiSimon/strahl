@@ -43,6 +43,7 @@ As visualized in \autoref{fig:cross-product}, the cross product gives a vector $
 
 \begin{figure}[H]
   \centering
+  \tikzsetnextfilename{cross-product}
   \begin{tikzpicture}
     \coordinate (O) at (0,0);
     \coordinate (P) at (0,1);
@@ -82,6 +83,7 @@ A triangle can be defined as $t = (Q, u, v)$ where $Q$ is the position of the tr
 
 \begin{figure}[H]
   \centering
+  \tikzsetnextfilename{q-u-v-parameterization}
   \begin{tikzpicture}
     \draw[fill=lightgray]   (0,0) coordinate[label=below:$Q$] (q) --
       (2,1) coordinate[label=right:$v$] (v) --
@@ -135,6 +137,7 @@ An integral is used to determine the area under a curve as visualized in \autore
 
 \begin{figure}[H]
   \centering
+  \tikzsetnextfilename{integral}
   \begin{tikzpicture}
       \begin{axis}[
           width=0.4\textwidth,
@@ -193,6 +196,7 @@ Another important concept is the probability density function (\gls{PDF}). It de
 \begin{figure}[H]
   \begin{subfigure}[b]{0.4\textwidth}
     \centering
+    \tikzsetnextfilename{pdf-theory}
     \begin{tikzpicture}
       \begin{axis}[
         width=4cm,
@@ -218,6 +222,7 @@ Another important concept is the probability density function (\gls{PDF}). It de
   \hfill
   \begin{subfigure}[b]{0.4\textwidth}
     \centering
+    \tikzsetnextfilename{cdf-theory}
     \begin{tikzpicture}
       \begin{axis}[
         width=4cm,
@@ -249,6 +254,7 @@ The Bachmann-Landau notation, or more specifically, the Big O notation, is used 
 
 \begin{figure}[H]
   \centering
+  \tikzsetnextfilename{big-o-visualization}
   \begin{tikzpicture}
       \begin{axis}[
           width=0.4\textwidth,
@@ -352,6 +358,7 @@ The mentioned laws are rough approximations of the real world. Additional phenom
 \begin{figure}[H]
   \centering
   \begin{subfigure}[t]{0.45\textwidth}
+    \tikzsetnextfilename{reflection-lobe-intro-diffuse}
     \begin{tikzpicture}
       \coordinate (A) at (0,3);
       \coordinate (AA) at (1,2);
@@ -379,6 +386,7 @@ The mentioned laws are rough approximations of the real world. Additional phenom
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.45\textwidth}
+    \tikzsetnextfilename{reflection-lobe-intro-specular}
     \begin{tikzpicture}
       \coordinate (A) at (0,3);
       \coordinate (AA) at (1,2);
@@ -495,6 +503,7 @@ Early algorithms were based on recursive ray tracing \cite{whittedGlobalIllumina
   \centering
   \begin{subfigure}[t]{0.45\textwidth}
     \centering
+    \tikzsetnextfilename{recursive-ray-tracing}
     \begin{tikzpicture}
       \coordinate (A) at (0,2);
       \coordinate (AB) at (0.5,1.5);
@@ -542,6 +551,7 @@ Early algorithms were based on recursive ray tracing \cite{whittedGlobalIllumina
   \hfill
   \begin{subfigure}[t]{0.45\textwidth}
     \centering
+    \tikzsetnextfilename{recursive-tree}
     \begin{tikzpicture}
       \coordinate (A0) at (0,1);
       \coordinate (A0A) at (0,0.75);
@@ -624,6 +634,7 @@ To do the sampling, different strategies can be considered. For example, one can
 \begin{figure}[H]
   \centering
   \begin{subfigure}[t]{0.45\textwidth}
+    \tikzsetnextfilename{material-sampling-bad}
     \begin{tikzpicture}
       \coordinate (A) at (0,3);
       \coordinate (AA) at (1,2);
@@ -659,6 +670,7 @@ To do the sampling, different strategies can be considered. For example, one can
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.45\textwidth}
+    \tikzsetnextfilename{material-sampling-good}
     \begin{tikzpicture}
       \coordinate (A) at (0,3);
       \coordinate (AA) at (1,2);
@@ -703,6 +715,7 @@ Using light source sampling as an alternative sampling strategy can alleviate th
 \begin{figure}[H]
   \centering
   \begin{subfigure}[t]{0.45\textwidth}
+    \tikzsetnextfilename{light-sampling-bad}
     \begin{tikzpicture}
       \coordinate (A) at (0,3);
       \coordinate (AA) at (1,2);
@@ -736,6 +749,7 @@ Using light source sampling as an alternative sampling strategy can alleviate th
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.45\textwidth}
+    \tikzsetnextfilename{light-sampling-good}
     \begin{tikzpicture}
       \coordinate (A) at (0,3);
       \coordinate (AA) at (1,2);
@@ -1030,6 +1044,7 @@ For a compute pipeline, one needs to define a pipeline layout which consists of 
 
 \begin{figure}[H]
   \centering
+  \tikzsetnextfilename{webgpu-arch}
   \begin{tikzpicture}[
     abstract/.style={rectangle, draw=rblue, ultra thick, fill=rbblue, inner sep=0.4cm},
     concrete/.style={rectangle, draw=rgreen, ultra thick, fill=rbgreen, inner sep=0.4cm},
@@ -1187,6 +1202,7 @@ Technically, the format offers two different encoding formats which differ in fi
 \begin{figure}[H]
   \centering
   \resizebox{0.6\textwidth}{!}{
+  \tikzsetnextfilename{gltf-hierarchy}
   \begin{tikzpicture}[
     unused/.style={rectangle, draw=gray, ultra thick, inner sep=0.2cm, text width=2.5cm, align=center},
     structure/.style={rectangle, draw=rblue, ultra thick, fill=rbblue, inner sep=0.2cm, text width=2.5cm, align=center},
@@ -1249,6 +1265,7 @@ These functions define the distribution of light in different directions as desc
 \begin{figure}[H]
   \centering
   \begin{subfigure}[t]{0.45\textwidth}
+      \tikzsetnextfilename{reflection-retroreflective}
       \begin{tikzpicture}
       \coordinate (A) at (0,3);
       \coordinate (AA) at (1,2);
@@ -1278,6 +1295,7 @@ These functions define the distribution of light in different directions as desc
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.45\textwidth}
+      \tikzsetnextfilename{reflection-glossy}
       \begin{tikzpicture}
       \coordinate (A) at (0,3);
       \coordinate (AA) at (1,2);
@@ -1371,6 +1389,7 @@ The substrate is defined as a mixture of metal, translucent base, subsurface, an
 
 \begin{figure}[H]
   \centering
+  \tikzsetnextfilename{open-pbr}
   \begin{tikzpicture}[
     every node/.style={font=\small},
     layer/.style={draw, minimum height=1.4cm, minimum width=2.5cm, anchor=south west, text width=2cm, align=center},

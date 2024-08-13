@@ -101,6 +101,9 @@
 \usepgfplotslibrary{fillbetween}
 \tikzset{every picture/.style={/utils/exec={\bfseries}}}
 
+\usetikzlibrary{external}
+\tikzexternalize[prefix=externalized-figures/]
+
 % Draw arc centered on point
 % Syntax: [draw options] (center) (initial angle:final angle:radius)
 % Source: https://tex.stackexchange.com/questions/66216/draw-arc-in-tikz-when-center-of-circle-is-specified

@@ -16,7 +16,9 @@
 *.bbl
 *.blg
 *.run.xml
+*.auxlock
 
 main.pdf
+main.txt
 
 __latexindent_temp.tex
