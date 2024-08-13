@@ -98,7 +98,7 @@ The integration of the \gls{OpenPBR} surface shading model enables realistic mat
 
 \section{Future Work}
 
-In order to accomodate for other use cases, the renderer could be extended in various ways. The following section outlines possible future work which includes extending \gls{PBR} capabilities, improving performance, extending to other rendering architecture paradigms, general improvements for the \gls{WebGPU} community, and aligning the renderer with other standards.
+In order to accommodate for other use cases, the renderer could be extended in various ways. The following section outlines possible future work which includes extending \gls{PBR} capabilities, improving performance, extending to other rendering architecture paradigms, general improvements for the \gls{WebGPU} community, and aligning the renderer with other standards.
 
 \subsection*{Rendering Effects}
 
@@ -121,7 +121,7 @@ Instead of the \gls{RGB} color space, spectral rendering uses the full spectrum 
 
 \subsection*{Texture Support}
 
-While not critical for the given use case, texture support is a common feature in rendering engines. The current implementation does not use textures. THe renderer could be extended to support sampling \gls{OpenPBR} parameters from textures. This would enable more complex material variations and possibly improve the realism of the rendered images.
+While not critical for the given use case, texture support is a common feature in rendering engines. The current implementation does not use textures. The renderer could be extended to support sampling \gls{OpenPBR} parameters from textures. This would enable more complex material variations and possibly improve the realism of the rendered images.
 
 This should not be confused with texture mapping frequently used in rasterization-based rendering engines. Texture mapping is a technique to apply images to surfaces to simulate surface details. In path tracing, textures are used to sample material properties such as base color, roughness, or metallicness.
 
@@ -164,7 +164,7 @@ For remote rendering, the renderer could be extended to render images on demand 
 
 \subsection*{WebGPU Compatibility Mode}
 
-There is a proposal under active development which aims to extend the reach of \gls{WebGPU} by providing a slighly restricted subset of WebGPU \cite{WebGPUCompatibilityModeProposal}. Considering the suggested limits of the compatibility mode, it could be possible to deploy the renderer onto a wider range of devices. However, it is important to consider that path tracing is a computationally expensive task and might not be suitable for all devices. Therefore, increasing the reach might not be beneficial in all cases.
+There is a proposal under active development which aims to extend the reach of \gls{WebGPU} by providing a slightly restricted subset of WebGPU \cite{WebGPUCompatibilityModeProposal}. Considering the suggested limits of the compatibility mode, it could be possible to deploy the renderer onto a wider range of devices. However, it is important to consider that path tracing is a computationally expensive task and might not be suitable for all devices. Therefore, increasing the reach might not be beneficial in all cases.
 
 \subsection*{Automatic Shader Conversion}
 
