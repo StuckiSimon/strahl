@@ -428,9 +428,7 @@ Refraction and caustics were not encountered in the use cases of this thesis and
 
 In order to visualize 3D scenes using a computer, different rendering approaches have been developed. Two of the most common approaches are rasterization and ray tracing. Rasterization will be described in more detail in this section, ray tracing will be discussed in the next section.
 
-Rasterization is a rendering technique which maps the geometry of a 3D scene onto a 2D plane. Historically, the technique has been widely adopted in real-time rendering due to its efficiency. However, there are inherent limitations in terms of realism.
-
-The process of rasterization can be broken down into multiple steps and is commonly referred to as the graphics pipeline. The stages of the pipeline are shown in \autoref{fig:graphics-pipeline}.
+Rasterization is a rendering technique which maps the geometry of a 3D scene onto a 2D plane. It is well-suited for real-time rendering due to its efficiency. The process of rasterization can be broken down into multiple steps and is commonly referred to as the graphics pipeline. The stages of the pipeline are shown in \autoref{fig:graphics-pipeline}.
 
 \begin{figure}[H]
   \includegraphics[width=\columnwidth]{resources/graphics-pipeline.png}
@@ -462,7 +460,7 @@ Multi-pass rendering is a technique which is used for a multitude of use cases, 
 
 \paragraph{Conclusion}
 
-Each of these methods addresses only a specific limitation of rasterization. Some of them only partially alleviate the issue. These approaches induce complexity and can be computationally expensive. An alternative technique which resembles reality more closely could alleviate these issues: ray tracing.
+Each of these methods addresses only a specific limitation of rasterization. Some of them only partially alleviate the issue. These approaches induce complexity, may need to be computed at the assembly level, and can be computationally expensive. An alternative technique which resembles reality more closely could alleviate these issues: ray tracing.
 
 \subsection{Ray Tracing}
 \label{ch:rayTracingTheory}
