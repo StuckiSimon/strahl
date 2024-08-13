@@ -5,6 +5,7 @@ on:
     paths:
       - "strahl-lib/**"
       - "website/**"
+      - ".github/workflows/deploy-website.yml"
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true

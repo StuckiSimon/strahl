@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - "report/**"
+      - ".github/workflows/build-report.yml"
 concurrency:
   group: build-report
   cancel-in-progress: true

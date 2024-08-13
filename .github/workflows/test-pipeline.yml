@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - "strahl-lib/**"
+      - ".github/workflows/test-pipeline.yml"
   pull_request:
     branches: [main]
     paths:
