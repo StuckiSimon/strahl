@@ -1,4 +1,4 @@
-# Website
+# website
 
 Documentation for strahl built using [Docusaurus](https://docusaurus.io/).
 
