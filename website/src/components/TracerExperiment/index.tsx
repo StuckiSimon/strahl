@@ -1,22 +1,18 @@
 import React from "react";
 import { Pane } from "tweakpane";
-import { OpenPBRMaterial } from "strahl";
+import { convertHexToRGB, OpenPBRMaterial } from "strahl";
 import styles from "./styles.module.css";
 import clsx from "clsx";
 import usePathTracer from "@site/src/hooks/usePathTracer";
 
-function convertHexToRGB(hex: string) {
-  return [
-    parseInt(hex.slice(1, 3), 16) / 255,
-    parseInt(hex.slice(3, 5), 16) / 255,
-    parseInt(hex.slice(5, 7), 16) / 255,
-  ] as const;
-}
-
 export default function TracerExperiment(): JSX.Element {
   const defaultColor = "#ff0055";
   const [materialMap, setMaterialMap] = React.useState({
-    floor: new OpenPBRMaterial(),
+    floor: (() => {
+      let m = new OpenPBRMaterial();
+      m.oSpecularWeight = 0.0;
+      return m;
+    })(),
     sphere: (() => {
       let m = new OpenPBRMaterial();
       m.oBaseColor = convertHexToRGB(defaultColor);
@@ -34,7 +30,7 @@ export default function TracerExperiment(): JSX.Element {
         -3.6120942140398014, 0.16869853590213923, -2.0157257065629848, 1,
       ],
       fov: 38.6701655,
-      cameraTargetDistance: 200,
+      cameraTargetDistance: 4,
     },
   });
 
