@@ -1,0 +1,16 @@
+---
+sidebar_position: 5
+---
+
+import TracerExperiment from "@site/src/components/TracerExperiment";
+
+# Emission
+
+<TracerExperiment
+  propertiesForConfiguration={["oEmissionLuminance", "oEmissionColor"]}
+  defaultMaterialProperties={{
+    oEmissionLuminance: 10.0,
+    // default color as rgb
+    oEmissionColor: [0.9490196078431372, 0, 0.5372549019607843],
+  }}
+/>

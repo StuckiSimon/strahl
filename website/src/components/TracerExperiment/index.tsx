@@ -50,6 +50,11 @@ const defaultConfiguration: Partial<
       convertRGBToHex(value as ReturnType<typeof convertHexToRGB>),
     convertToMaterialValue: (value) => convertHexToRGB(value as string),
   },
+  oBaseDiffuseRoughness: {
+    configKey: "baseDiffuseRoughness",
+    value: 0.0,
+    bindingParams: { min: 0, max: 1 },
+  },
   oSpecularWeight: {
     configKey: "specularWeight",
     value: 0.0,
@@ -66,6 +71,23 @@ const defaultConfiguration: Partial<
     configKey: "specularRoughness",
     value: 0.3,
     bindingParams: { min: 0, max: 1 },
+  },
+  oBaseMetalness: {
+    configKey: "baseMetalness",
+    value: 0.0,
+    bindingParams: { min: 0, max: 1 },
+  },
+  oEmissionLuminance: {
+    configKey: "emissionLuminance",
+    value: 0.0,
+    bindingParams: { min: 0, max: 1000 },
+  },
+  oEmissionColor: {
+    configKey: "emissionColor",
+    value: [1.0, 1.0, 1.0],
+    convertToPaneValue: (value) =>
+      convertRGBToHex(value as ReturnType<typeof convertHexToRGB>),
+    convertToMaterialValue: (value) => convertHexToRGB(value as string),
   },
 };
 
