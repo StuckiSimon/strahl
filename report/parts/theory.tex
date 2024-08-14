@@ -281,7 +281,7 @@ The Bachmann-Landau notation, or more specifically, the Big O notation, is used 
 \section{Physics}
 \label{ch:physics}
 
-In order to generate images using computer graphics, understanding the physics is crucial. More specifically, the study of light and its perception is important. In physics, optics is the study of light. The field encompasses topics such as light propagation and optical properties of matter. Maxwell's equations are a set of equations in electromagnetism that describe the behavior of electromagnetic fields. Formulated by James Clerk Maxwell in the 19th century, they provide a mathematical framework for understanding the propagation of electromagnetic waves, including, but not limited to, visible light. Light can be described as a wave or as a particle, this is generally known as the wave-particle duality. \cite{fowles1989introduction} In a simplified model, the particles, called photons, are emitted by a light source and travel in straight lines until they hit a surface. The interaction of light with surfaces is described by the laws of reflection and refraction.
+In order to generate images using computer graphics, understanding the physics is crucial. More specifically, optics, the study of light and its perception, is important. The field encompasses topics such as light propagation and optical properties of matter. Maxwell's equations are a set of equations in electromagnetism that describe the behavior of electromagnetic fields. Formulated by James Clerk Maxwell in the 19th century, they provide a mathematical framework for understanding the propagation of electromagnetic waves, including, but not limited to, visible light. Light can be described as a wave or as a particle, this is generally known as the wave-particle duality. \cite{fowles1989introduction} In a simplified model, the particles, called photons, are emitted by a light source and travel in straight lines until they hit a surface. The interaction of light with surfaces can be described as a combination of absorption, the law of reflection, and the law of refraction. Absorption is the process of light being converted into other forms of energy, such as heat.
 
 \subsubsection{Reflection}
 
@@ -294,18 +294,18 @@ Reflection is the process of light bouncing off a surface. The angle of incidenc
   \label{fig:reflection}
 \end{figure}
 
-This can be described using the law of reflection:
+This can be described using the law of reflection \cite{fowles1989introduction}:
 
 \begin{equation}
   \label{eqn:law-of-reflection}
   \theta = \theta'
 \end{equation}
 
-Where $\theta$ is the angle of incidence and $\theta'$ is the angle of reflection.
+where $\theta$ is the angle of incidence and $\theta'$ is the angle of reflection.
 
 \subsubsection{Refraction}
 
-Refraction is the bending of light when passing through a medium as visualized in \autoref{fig:refraction}. An example of such an effect is the distortion of underwater objects.
+Refraction is the bending of light when passing through a medium as visualized in \autoref{fig:refraction}. The distortion of objects underwater is an example of such an effect.
 
 \begin{figure}[H]
   \centering
@@ -314,7 +314,7 @@ Refraction is the bending of light when passing through a medium as visualized i
   \label{fig:refraction}
 \end{figure}
 
-It can roughly be defined by using Snell's law:
+It can roughly be defined by using Snell's law \cite{fowles1989introduction}:
 
 \begin{equation}
   \label{eqn:snells-law}
@@ -330,29 +330,30 @@ or in a more general form:
 
 where $n_1$ and $n_2$ are the refractive indices of the two media and $\theta$ and $\phi$ are the angles of incidence and refraction respectively.
 
-Leveraging Snell's law, Fresnel equations can be derived which describe not only the refraction but also the reflection of light when passing through a medium.
+Leveraging Snell's law, Fresnel equations can be derived which describe not only the refraction but also the reflection of light when passing through a medium \cite{fowles1989introduction}.
 
 \subsubsection{Material Properties}
 
 Common terminology used to describe the optical properties of materials is helpful to understand the behavior of light and the challenge of simulating it. Some of the most common terms are:
 
 \begin{itemize}
+  \item{Scattering} — the material scatters light. This can be observed in fog or clouds.
   \item{Diffuse Reflection} — light is scattered in all directions, independent of the viewing angle. An example of such a material is paper or chalk. As early as the 18th century, Lambert described the reflection of light on a surface \cite{lambert1760photometria}. Lambertian reflection is still used as a term for diffuse reflection.
   \item{Specular Reflection} — light is reflected in a specific direction. This leads to highlights on the surface.
   \item{Roughness} — defines how smooth the surface of the material is. A rough surface scatters light in many directions, while a smooth surface reflects light in a specific direction.
+  \item{Subsurface Scattering} — light penetrates the material and is scattered. An example of such a material is skin or marble.
   \item{Metallic} — the material reflects light in a specific direction.
   \item{Dielectric} — materials which do not conduct electricity. These materials are not using metallic reflection.
   \item{Absorption} — defines how much of the light is absorbed by a material. In general, darker colors absorb more light than lighter colors. One prominent example is Vantablack, a highly absorbent material.
   \item{Emission} — the material emits light. An example of such a material is a light bulb or the sun.
-  \item{Scattering} — the material scatters light. An example of such a material is fog or clouds.
-  \item{Subsurface Scattering} — light penetrates the material and is scattered. An example of such a material is skin or marble.
-  \item{Isotropy} — property of materials which have the same properties in all directions. An example of such a material is glass or water. Anisotropy on the other hand is a property of materials which have different properties in different directions. An example of such a material is wood or brushed metal.
+  \item{Isotropy} — property of materials which have the same properties in all directions. An example of such a material is glass or water. Anisotropy on the other hand is a property of materials which have different properties in different directions. An example of such a material is wood or brushed metal. In everyday life, polarized sunglasses are an example of the practical application of anisotropy.
+  \item{Radiance} — the amount of light emitted by a surface in a specific direction.
 \end{itemize}
 
 \subsubsection{Generalization}
 \label{sec:physics-generalization}
 
-The mentioned laws are rough approximations of the real world. Additional phenomena such as absorption and emission of light also affect the appearance. In general, many surfaces have a combination of these effects and need to consider the incidence as well as outgoing light, necessitating a bidirectional reflection model. This model defines where the largest contribution to overall radiance comes from, commonly referred to as the reflection lobe. Simplified, the main contribution can be visualized using an arc indicating the direction of the most significant contribution.
+Many surfaces have a combination of these effects and need to consider the incidence as well as outgoing light, necessitating a bidirectional reflection model. This model defines where the largest contribution to overall radiance comes from, commonly referred to as the reflection lobe. Simplified, the main contribution can be visualized using an arc indicating the direction of the most significant contribution.
  For example, a diffuse surface scatters light in all directions (\autoref{fig:reflection-lobe-intro-diffuse}), while a mirror-like surface reflects light in a specific direction (\autoref{fig:reflection-lobe-intro-specular}).
 
 \begin{figure}[H]
@@ -414,7 +415,7 @@ The mentioned laws are rough approximations of the real world. Additional phenom
     \caption{Mirror-like surface with small reflection lobe.}
     \label{fig:reflection-lobe-intro-specular}
   \end{subfigure}
-  \caption{Bidirectional reflection models for two different types of surfaces with green arc indicating reflection lobe.}
+  \caption{Bidirectional reflection models for two different types of surfaces with green arc indicating direction of largest contribution to reflection.}
   \label{fig:reflection-lobe-intro}
 \end{figure}
 
@@ -423,13 +424,13 @@ The mentioned laws are rough approximations of the real world. Additional phenom
 
 This section provides an overview of computer graphics, including its history, key concepts and applications.
 
-Since the early days of computing, researchers have explored ways to process visual information using computers. While the field also encompasses aspects such as image processing or two-dimensional graphics, the main focus of this thesis is on three-dimensional computer graphics. While this includes topics such as animation, geometry processing, the main topics covered are geometry representation, rendering and shading.
+Since the early days of computing, researchers have explored ways to process visual information using computers. While the field also encompasses aspects such as image processing or two-dimensional graphics, the main focus of this thesis is on three-dimensional computer graphics. Topics such as animation and geometry processing will not be covered. The main topics for this thesis are geometry representation, rendering and shading.
 
 A 3D scene can be defined as a collection of objects in a three-dimensional space. The basic building blocks of a 3D scene are the triangles which form the geometry of the objects. The goal is to get this abstract representation of a scene onto a 2D screen. However, for the purpose of obtaining photorealistic images, the rendering needs to consider advanced lighting effects.
 
 \subsection{Global Illumination}
 
-Research to render advanced lighting effects using computer graphics was conducated as early as the 1960s. One of the earliest papers describing approaches to render shadow casting was written as early 1968 by Appel \cite{appel1968shading}. In order to describe the phenomena, encountered in real life, a more advanced shading model was required.
+Research to render advanced lighting effects using computer graphics was conducated as early as the 1960s. One of the earliest papers describing approaches to render shadow casting was written in 1968 by Appel \cite{appel1968shading}. In order to describe the phenomena, a more advanced shading model was required.
 
 To describe these phenomena, the term global illumination was coined by Whitted in 1979 \cite{whittedGlobalIllumination}. It describes a complete shading model that simulates real lighting and reflection as accurately as possible \cite{whitted2020OriginsOfGlobalIllumination}. 
 
@@ -437,16 +438,16 @@ While global illumination commonly refers to a subset of effects, the term is us
 
 \begin{itemize}
   \item{Shadow Casting} — The absence of light as obstructed by other objects.
-  \item{Reflection} — As in the case of mirror-like objects, but also for specular and metallic reflection.
+  \item{Reflection}
   \item{Color Bleeding} — Special type of reflection, where a surface is colored by reflection of colored light.
   \item{Ambient Occlusion} — Special type of shadow casting, where light transport as impacted by nearby objects is considered. This is frequently encountered on objects with complex topology.
-  \item{Refraction} — As encountered when light passes through a medium such as water or glass.
+  \item{Refraction}
   \item{Caustics} - Effect produced by either reflection or refraction of light.
 \end{itemize}
 
-Refraction and caustics were not encountered in the use cases of this thesis and are therefore not covered in detail.
+The importance of achieving these effects is based on the use case. For the use case of this thesis, shadows and reflections are pivotal for the realism and perceived quality of the images. Refraction and caustics were not encountered in the use cases of this thesis and are therefore not covered in detail.
 
-\autoref{fig:global-illumination-demo} shows a visualization of the most notable effects. The image shows a floor with a white diffuse material, two walls with a red diffuse material and a specular sphere. The sphere casts a shadow onto the floor, the walls are reflected onto the sphere, the prominent red color bleeds onto the white floor.
+\autoref{fig:global-illumination-demo} shows a visualization of the most notable effects. The image shows a floor with a white diffuse material, two walls with a red diffuse material and a sphere with specular reflection. The sphere casts a shadow onto the floor, the walls are reflected onto the sphere, the prominent red color bleeds onto the white floor.
 
 \begin{figure}[H]
   \centering
@@ -468,15 +469,13 @@ Rasterization is a rendering technique which maps the geometry of a 3D scene ont
   \label{fig:graphics-pipeline}
 \end{figure}
 
-As a pre-requisite, the 3D scene is defined. The scene consists of vertices which are grouped to triangles forming the geometry. The geometry stage iterates over all triangles and uses camera configuration to perform view projection as described in \autoref{sec:viewProjection}, changing the position of the vertices to the camera's perspective. The rasterization stage converts the continuous geometry into discrete fragments. When having overlapping triangles, the depth buffer is used to determine which fragment is closer to the camera and therefore visible. The fragment processing stage determines the color of every pixel. Finally, the frame buffer is output to the screen.
+As a pre-requisite, the 3D scene is defined. The scene consists of vertices which are grouped to triangles forming the geometry. The geometry stage iterates over all triangles and uses the camera configuration to perform view projection as described in \autoref{sec:viewProjection}, changing the position of the vertices to the camera's perspective. The rasterization stage converts the continuous geometry into discrete fragments. When having overlapping triangles, the depth buffer is used to determine which fragment is closer to the camera and therefore visible. The fragment processing determines the color of every pixel. Finally, the frame buffer is output to the screen.
 
 One of the main limitations is the lack of support for global illumination. For example, shadows are generally not cast, reflections are not visible, color bleeding is not considered, and ambient occlusion is not simulated.
 
 \subsubsection{Advanced Techniques}
 
-To address these limitations, the graphics pipeline can be extended with additional steps such as post-processing effects or advanced rendering techniques.
-
-Various methods have been developed to address these limitations, including pre-baked shadow, environment \cite{greene1986environment} and light maps; screen space reflections (SSR) \cite{screenSpaceReflectionsStackowiak}; screen space ambient occlusion (SSAO) \cite{bavoil2008ssao}; and screen space directional occlusion (SSDO) \cite{ritschel2009ssdo}.
+To address these limitations, the graphics pipeline can be extended with additional steps such as post-processing effects or advanced rendering techniques. Various methods have been developed, including pre-baked shadow, environment \cite{greene1986environment} and light maps; screen space reflections (SSR) \cite{screenSpaceReflectionsStackowiak}; screen space ambient occlusion (SSAO) \cite{bavoil2008ssao}; and screen space directional occlusion (SSDO) \cite{ritschel2009ssdo}.
 
 \paragraph{Environment Maps}
 
@@ -484,11 +483,11 @@ Environment maps can be used to simulate reflections. The technique uses a textu
 
 \paragraph{Shadow Maps}
 
-Shadow maps are employed to store shadow information for a scene based on the available light sources. These shadows are pregenerated, before being employed in the rendering process. While this technique is very suitable for use cases where the scene is static, there are limitations when the scene is dynamic and the different components of an assembly cast shadow on each other.
+Shadow maps are employed to store shadow information for a scene based on the available light sources. These shadows are pregenerated, before being employed in the rendering process. While this technique is suitable for static scenes, there are limitations in dynamic lighting situations and scenes where different components of an assembly cast shadow on one another.
 
 \paragraph{Multi-pass Rendering}
 
-Multi-pass rendering is a technique which is used for a multitude of use cases, but among other things can be used to simulate reflections. Instead of rendering the scene in a single pass, the scene is rendered multiple times with different configurations. For example, to simulate reflections, the scene is first rendered from the perspective of the reflective object and then renders a second pass from the camera while leveraging the first pass as a texture.
+Multi-pass rendering is a technique which, among other effects, can be used to simulate reflections. Instead of rendering the scene in a single pass, the scene is rendered multiple times with different configurations. For example, to simulate reflections, one first renders from the perspective of the reflective object and then renders a second pass from the camera while leveraging the first pass as a texture. When having multiple reflective objects, the technique can become computationally expensive.
 
 \paragraph{Conclusion}
 
@@ -497,7 +496,7 @@ Each of these methods addresses only a specific limitation of rasterization. Som
 \subsection{Ray Tracing}
 \label{ch:rayTracingTheory}
 
-Ray tracing is a rendering technique which simulates light transport in a scene. Forward ray tracing traces the photons, commonly referred to as rays, from the light source onto the objects. These algorithms are inefficient as most rays do not contribute to the illumination visible in the viewport. Therefore, backward ray tracing is more commonly used. The main idea is to cast rays from the camera into the scene and compute the color of the object that the ray intersects with. In contrast to a rasterizer, which iterates over the triangles of the scene, ray tracing iterates over the pixels of the image. For each pixel, a ray is cast into the scene. By adding additional bounces of the light ray, the technique can simulate global illumination.
+Ray tracing is a rendering technique which simulates light transport in a scene. Forward ray tracing traces the photons, commonly referred to as rays, from the light source onto the objects. These algorithms are inefficient as most rays do not contribute to the illumination visible in the viewport. Therefore, backward ray tracing is more commonly used. Rays are cast from the camera into the scene and compute the color of the object that the ray intersects with. In contrast to a rasterizer, which iterates over the triangles of the scene, ray tracing iterates over the pixels of the image. For each pixel, a ray is cast into the scene. By adding additional bounces of the light ray, the technique can simulate global illumination.
 
 Early algorithms were based on recursive ray tracing \cite{whittedGlobalIllumination}. These algorithms determine intersection with geometry and iteratively generate branches as shown in \autoref{fig:recursiveRayTracing}. For each pixel, a primary ray is cast into the scene. When intersecting with a surface, the algorithm considers the light sources and generates secondary rays. These rays are then recursively traced and radiance is calculated until a maximum depth is reached.
 
@@ -607,7 +606,7 @@ Further research into light transport techniques such as bidirectional light tra
 
 \subsubsection{Monte Carlo Integration}
 
-Monte Carlo integration is a statistical technique to approximate the solution integral numerically. At the core of the integration lies an estimator which can be defined as:
+Monte Carlo integration is a statistical technique to approximate the solution of an integral numerically for cases where the integral cannot be solved analytically. At the core of the integration lies an estimator ($G$) which can be defined as:
 
 \begin{equation}
   G = \frac{1}{M}\sum_{i=1}^M g(X_i)
@@ -616,7 +615,7 @@ Monte Carlo integration is a statistical technique to approximate the solution i
 
 where $G$ is the estimate of the solution, $g$ is the function to be approximated and $X_i$ is the random sample. Taking $M$ samples and averaging the results provides an estimate of the solution. \cite{kalos2009monte}
 
-In the context of ray tracing, Monte Carlo integration is used to approximate the rendering equation, as defined in \autoref{eqn:rendering-equation}. Applying the principle of Monte Carlo, the radiance of a pixel can be approximated by iteratively casting rays into the scene and averaging the results. 
+In the context of ray tracing, a path tracing algorithm leverages Monte Carlo integration to approximate the rendering equation, as defined in \autoref{eqn:rendering-equation}. The radiance of a pixel can be approximated by iteratively casting rays into the scene and averaging the results. 
 
 While Monte Carlo integration is a powerful technique, it heavily relies on the quality of the estimator which is employed. Using importance sampling can improve the rate of convergence. Importance sampling is a technique which leverages a proposal \gls{PDF}, different from the target \gls{PDF}, to estimate the expected value of a target function. By sampling more frequently in regions where the function has a higher value, the variance of the estimator can be reduced. In order to account for the probability distribution and prevent bias in the estimator, the estimator can be defined as:
 
@@ -625,9 +624,9 @@ While Monte Carlo integration is a powerful technique, it heavily relies on the 
   \label{eq:importanceSampling}
 \end{equation}
 
-where $p(X_i)$ is the probability distribution of the function to be approximated \cite{Pharr_Physically_Based_Rendering_2023}.
+where $p(X_i)$ is the proposal \gls{PDF} \cite{Pharr_Physically_Based_Rendering_2023}.
 
-To do the sampling, different strategies can be considered. For example, one can use the material properties to determine where to cast the rays. A highly-reflective surface such as a mirror will apply the law of reflection, while a diffuse surface will scatter the rays in all directions. This strategy is yielding solid results for scenes with large light sources and reflective surfaces as illustrated in \autoref{fig:material-sampling-good}. However, for scenes with small light sources and diffuse surfaces, the strategy can lead to high variance as shown in \autoref{fig:material-sampling-bad}. The variance is visible to the human eye as noise in the image.
+To do the sampling, different strategies can be considered. For example, one can use the material properties to determine where to cast the rays. A highly-reflective surface such as a mirror will apply the law of reflection, while a diffuse surface will scatter the rays in all directions. This strategy is yielding solid results for scenes with large light sources and reflective surfaces as illustrated in \autoref{fig:material-sampling-good}. However, for scenes with small light sources and diffuse surfaces, the strategy can lead to high variance due to rays which miss the emissive surfaces most of the time as shown in \autoref{fig:material-sampling-bad}. The variance is visible to the human eye as noise in the image.
 
 \begin{figure}[H]
   \centering
@@ -708,7 +707,7 @@ To do the sampling, different strategies can be considered. For example, one can
   \label{fig:material-sampling}
 \end{figure}
 
-Using light source sampling as an alternative sampling strategy can alleviate this issue. As shown in \autoref{fig:light-sampling-good}, it can significantly reduce the variance of the estimator when having diffuse surfaces and small light sources. Conversely, the strategy can lead to high variance when having large light sources and reflective surfaces as shown in \autoref{fig:light-sampling-bad}.
+Light source sampling is an alternative sampling strategy that can alleviate this issue. As shown in \autoref{fig:light-sampling-good}, it can significantly reduce the variance of the estimator when having diffuse surfaces and small light sources. Conversely, the strategy can lead to high variance when having large light sources and reflective surfaces as shown in \autoref{fig:light-sampling-bad}.
 
 \begin{figure}[H]
   \centering
@@ -796,19 +795,17 @@ Mathematically Russian roulette is commonly formulated as shown in equation \ref
   I' = \begin{cases} \frac{I-qc}{1-q} & \xi > q \\ c & otherwise \end{cases}
 \end{equation}
   
-where $I$ is the radiance of the path. $q$ is the probability of termination, which can be calculated for example based on the radiance of the path. $\xi$ is a random number between 0 and 1. $c$ is the contribution of the path which is terminated, commonly set to zero. $I'$ is the scaled radiance of the path.
+where $I$ is the radiance of the path. $q$ is the probability of termination, which can, for instance, be calculated based on the radiance of the path. $\xi$ is a random number between 0 and 1. $c$ is the contribution of the path which is terminated, commonly set to zero. $I'$ is the scaled radiance of the path.
 
 \subsubsection{Intersection Testing}
 
-When casting a ray into the scene, the first step in a ray tracer is to determine where the ray intersects with the geometry of the scene.
-
-A brute force approach could be to determine the intersection distance for each object to the ray and picking the one with the lowest distance. Given the fact, that common objects consist of thousands of triangles ($n$) and ray tracing many rays, this approach is not efficient as it would worst case require $O(n)$ intersection tests for each ray.
+When casting a ray into the scene, the first step in a ray tracer is to determine where the ray intersects with the geometry of the scene. A brute force approach could determine the intersection distance for each object to the ray and picking the one with the lowest distance. Given the fact, that common objects consist of thousands of triangles ($n$) and require tracing many rays, this approach is not efficient as it would require $O(n)$ intersection tests for each ray.
 
 In order to accelerate the intersection testing, various approaches have been developed.
 
-The bounding volume hierarchy (\gls{BVH}) is an acceleration structure which is leveraged to speed up the ray intersection tests. This method is widely used in ray tracing and has been studied for a long time \cite{rubinWhittedBvh}. The core idea is to group adjacent objects in a bounding volume and structure the hierarchy in a way that all child elements of a node are contained in the bounding volume of the parent node. The nodes, employed for storing the bounding volume are often axis-aligned bounding boxes (\gls{AABB}). This allows for early rejection of branches which are not intersected by the ray. By employing a \gls{BVH}, the number of intersection tests ($n$) can be reduced from $O(n)$ to $O(log(n))$.
+The bounding volume hierarchy (\gls{BVH}) is an acceleration structure which is leveraged to reduce the amount of ray intersection tests per ray. This method is widely used in ray tracing and has been studied for a long time \cite{rubinWhittedBvh}. The core idea is to group adjacent objects in a bounding volume and structure the hierarchy in a way that all child elements of a node are contained in the bounding volume of the parent node. The nodes, employed for storing the bounding volume are often axis-aligned bounding boxes (\gls{AABB}). This allows for early rejection of branches which are not intersected by the ray. By employing a \gls{BVH}, the number of intersection tests ($n$) can be reduced from $O(n)$ to $O(log(n))$.
 
-An \gls{AABB} ($b$) can be defined as $b = (min, max)$ where $min$ and $max$ are the minimum and maximum vertices of the bounding box. The boxes are then grouped into a hierarchy where the maximum and minimum vertices of the children define the bounding box of the parent. This is visualized in \autoref{fig:bvhVisualized}. Good performance of the \gls{BVH} depends on the quality of the hierarchy. A badly constructed \gls{BVH} can lead to a higher number of intersection tests as visualized in \autoref{fig:bvhBad} because intersections need to be tested against all elements: three bounding boxes and four triangles. For a well-constructed \gls{BVH}, the algorithm can reduce the number of intersection tests as visualized in \autoref{fig:bvhGood} by doing the minimum amount of intersection tests: $b_1$, which intersects, $b_2$ which can be discarded after checking and then $b_3$ necessitates further intersection tests for the two contained triangles. For such a small number of triangles, the overhead of the \gls{BVH} exceeds the benefits, but for larger scenes, the performance gain is significant as the amount of tests can be halved for well-balanced trees.
+An \gls{AABB} ($b$) can be defined as $b = (min, max)$ where $min$ and $max$ are the minimum and maximum vertices of the bounding box. The boxes are then grouped into a hierarchy where the maximum and minimum vertices of the children define the bounding box of the parent, as visualized in \autoref{fig:bvhVisualized}. Good performance of the \gls{BVH} depends on the quality of the hierarchy. A badly constructed \gls{BVH} can lead to a higher number of intersection tests as shown in \autoref{fig:bvhBad} because intersections need to be tested against all elements: three bounding boxes and four triangles. For a well-constructed \gls{BVH}, the algorithm can reduce the number of intersection tests as visualized in \autoref{fig:bvhGood} by doing the minimum amount of intersection tests: $b_1$, which intersects, $b_2$ which can be discarded after checking and then $b_3$ necessitates further intersection tests for the two contained triangles. For such a small number of triangles, the overhead of the \gls{BVH} outweighs its benefits. However, for larger scenes, the performance gain is substantial. In the case of well-balanced trees, the number of tests can be halved at each level of the hierarchy.
 
 \begin{figure}[H]
   \centering
@@ -827,26 +824,26 @@ An \gls{AABB} ($b$) can be defined as $b = (min, max)$ where $min$ and $max$ are
   \label{fig:bvhVisualized}
 \end{figure}
 
-After the intersection tests on the \gls{AABB}, the actual intersection tests with the triangles contained in the bounding box need to be performed. This can be done using algorithms such as the Möller-Trumbore algorithm \cite{mollerTrumboreFastRayTriangleIntersection}.
+After the intersection tests on the \gls{AABB}, the actual intersection tests with the triangles contained in the bounding box need to be performed by using an algorithm such as the Möller-Trumbore algorithm \cite{mollerTrumboreFastRayTriangleIntersection}.
 
 \subsubsection{Production Ray Tracing}
 
-Early uses in ray tracing were primarily for research purposes or special effects in movies. Adoption expanded as computers became more powerful. One of the first widely used ray tracing software was \fGls{POV-Ray}{\e{Persistence of Vision Ray Tracer}, cross-platform ray tracing renderer officially released in 1991}, which was released in 1991 \cite{POV_Ray_Documentation}. Blue Moon Rendering Tools (\gls{BMRT}) \cite{bmrt}, a renderer compliant with \fGls{RenderMan}{A rendering software for photorealistic 3D rendering developed by Pixar}, was released in the mid 90s and was one of the first ray tracing renderers to be used in the industry. In 2003 \gls{RenderMan} included ray tracing capabilities \cite{RenderMan_11_Release_Notes}. Nowadays, ray tracing is widely used in industries such as film, architecture, and automotive.
+Early uses in ray tracing were primarily for research purposes or special effects in movies. Adoption expanded as computers became more powerful. One of the first widely used ray tracing software was \fGls{POV-Ray}{\e{Persistence of Vision Ray Tracer}, cross-platform ray tracing renderer officially released in 1991}, which was released in 1991 \cite{POV_Ray_Documentation}. Blue Moon Rendering Tools (\gls{BMRT}) \cite{bmrt}, a renderer compliant with \fGls{RenderMan}{A rendering software for photorealistic 3D rendering developed by Pixar}, was released in the mid 1990s and was one of the first ray tracing renderers to be used in the industry. In 2003 \gls{RenderMan} included ray tracing capabilities \cite{RenderMan_11_Release_Notes}. Nowadays, ray tracing is widely used in industries such as film, architecture, and automotive.
 
 \subsubsection{Hybrid Approaches}
 
-Ray Tracing and Rasterization are not mutually exclusive. Hybrid approaches have been developed which leverage a multi-paradigm approach. One such example is PICA, a real-time ray tracing experiment developed by NVIDIA \cite{hybridRenderingBarreBrisebois2019}. The rendering pipeline is split into multiple stages, consisting of global illumination, shadow, reflection, direct lighting. Each stage could be implemented using different techniques where the strategy could be chosen based on the requirements of the scene as well as the available computational resources.
+Ray tracing and rasterization are not mutually exclusive. Hybrid approaches have been developed which leverage a multi-paradigm approach. One such example is PICA PICA, a real-time ray tracing experiment developed by NVIDIA \cite{hybridRenderingBarreBrisebois2019}. The rendering pipeline is split into multiple stages, consisting of global illumination, shadow, reflection, direct lighting. Each stage could be implemented using different techniques where the strategy could be chosen based on the requirements of the scene as well as the available computational resources.
 
 \subsection{Common Techniques}
 
-While rasterization and ray tracing are inherently different techniques, they face similar challenges. Notable frequently encountered challenges and their differences in rasterization and ray tracing are discussed in the following sections.
+While rasterization and ray tracing are inherently different techniques, certain tasks are similar. Notable frequently encountered challenges and their differences in rasterization and ray tracing are discussed in the following sections.
 
 \subsubsection{View Projection}
 \label{sec:viewProjection}
 
-In order to render an image, a virtual camera needs to be defined. Given a vertex as $p = (x, y, z)$, the view projection is responsible for transforming the vertex into normalized device coordinates. The view projection matrix is a $4x4$ matrix which depends on the projection type.
+In order to render an image, a virtual camera needs to be defined. Given a vertex as $p = (x, y, z)$, the view projection is responsible for transforming the vertex into 2D normalized device coordinates. The view projection matrix is a $4x4$ matrix which depends on the projection type and the camera parameters.
 
-Depending on the use case, different types of camera projection can be used. The most common types are perspective and orthographic projection. Perspective projection simulates the way the human eye perceives the world, objects which are further away appear smaller. Whereas orthographic projection does not take the distance into account and objects appear the same size regardless of their distance. Orthographic projection is frequently used in domains such as architecture.
+Depending on the use case, different types of view projection can be used. The most common types are perspective and orthographic projection. Perspective projection simulates the way the human eye perceives the world, objects which are further away appear smaller. Whereas orthographic projection does not take the distance into account and objects appear the same size regardless of their distance. Orthographic projection is frequently used in domains such as architecture.
 
 These two projection types differ in the view projection matrix. For perspective projection, the following parameters need to be defined:
 
@@ -857,7 +854,7 @@ These two projection types differ in the view projection matrix. For perspective
     \item[aspect ratio ($r$)] The ratio of the viewport's width to its height.
 \end{description}
 
-The clipping plane parameters $n$ and $f$ are primarily used in rasterization to determine the camera frustum. Using equations \ref{eqn:perspectiveProjectionHeight} and \ref{eqn:perspectiveProjectionWidth}, the view projection matrix $P$ for perspective projection is defined in equation \ref{eqn:perspectiveProjectionMatrix}.
+The clipping plane parameters $n$ and $f$ are primarily used in rasterization to determine the camera frustum. Objects outside of the frustum are not rendered. Using equations \ref{eqn:perspectiveProjectionHeight} and \ref{eqn:perspectiveProjectionWidth}, the view projection matrix ($P$) for perspective projection is defined in equation \ref{eqn:perspectiveProjectionMatrix}.
 
 \begin{equation}
     \label{eqn:perspectiveProjectionHeight}
@@ -886,7 +883,7 @@ For orthographic projection, no such projection matrix is required in ray tracin
 
 \subsubsection{Random Number Generator}
   
-To simulate light transport, the path tracer needs to pick random directions. Generating a random direction vector, defined as $v = (x, y, z)$, can be achieved by picking three random numbers independent of one another. This pivotal part of path tracing is done using a random number generator (\gls{RNG}). In rasterization, the necessity for \gls{RNG} is less common, but may still be required for certain effects. Unlike other programming languages, \gls{WGSL} does not have a built-in \gls{RNG}. Therefore, a custom \gls{RNG} is required. There are a variety of \glspl{RNG} available which differ in important characteristics. Some of the characteristics to consider when choosing a suitable \gls{RNG} are:
+To simulate light transport, the path tracer needs to pick random directions. Generating a random direction vector, defined as $v = (x, y, z)$, can be achieved by picking three random numbers independent of one another. This is done using a random number generator (\gls{RNG}). In rasterization, the necessity for \gls{RNG} is less common, but may still be required for certain effects. There are a variety of \glspl{RNG} available which differ in important characteristics. Some of the characteristics to consider when choosing a suitable \gls{RNG} are:
 
 \begin{itemize}
     \item{Statistical Quality} – The \gls{RNG} should generate numbers that are statistically random. This means that the numbers should be uniformly distributed and have a low correlation between them.
@@ -895,7 +892,7 @@ To simulate light transport, the path tracer needs to pick random directions. Ge
     \item{Space Usage} – The amount of memory required to store state.
 \end{itemize}
 
-Based on the use case, other factors such as prediction difficulty or others such as highlighted by O’Neill \cite{o2014pcg} may be important. Cryptography for example requires randomness of the \gls{RNG} to prevent an adversary from predicting secret keys. Options to generate the randomness require additional signals \cite{randomnessCryptography} or may require special hardware such as LavaRand \cite{cloudflareLavaRand}. Many generators are pseudorandom generators. These generators are deterministic and require a seed to start the sequence. For cryptographically secure generators, the seed must be random.
+Based on the use case, other factors such as prediction difficulty or others such as highlighted by O’Neill \cite{o2014pcg} may be important. Cryptography for example requires randomness of the \gls{RNG} to prevent an adversary from predicting secret keys. Options to generate the randomness require additional signals \cite{randomnessCryptography} or may require special hardware such as \fGls{Lavarand}{Hardware \gls{RNG} based on pictures taken of lava lamps to generate randomness} \cite{cloudflareLavaRand}. Many generators are pseudorandom generators. These generators are deterministic and require a seed to start the sequence. For cryptographically secure generators, the seed must be random.
 However, for a path tracer, there is no need for cryptographic security. Instead, it is more important to have high performance and having a long period to avoid repetition. Therefore, a pseudorandom number generator with non-cryptographically secure seed is used.
 
 One option for such a pseudorandom generator is using Xorshifts such as described by Marsaglia \cite{marsaglia2003xorshift}. The algorithm can be defined as shown in Figure \ref{code:xorShift}. $x$ is the state of the \gls{RNG} and $a$, $b$ and $c$ are constants which are chosen to achieve good statistical properties. Frequent choices for these constants are $a = 13$, $b = 17$ and $c = 5$.
@@ -910,7 +907,7 @@ x ^= x << c;
 \label{code:xorShift}
 \end{figure}
 
-Alternatives to Xorshift are available, such as the Mersenne Twister \cite{rngMersenneTwister}. The Mersenne Twister is a pseudorandom number generator which has a long period and good statistical properties. However, it is slower than Xorshifts \cite{o2014pcg}. More recently, \fGls{PCG}{Permuted Congruential Generator, a family of random number generators} has been proposed as an alternative to these options. \gls{PCG} is a family of fast generators.
+The Mersenne Twister \cite{rngMersenneTwister} is an alternative \gls{RNG}. It is a pseudorandom number generator which has a long period and good statistical properties. However, it is slower than Xorshifts \cite{o2014pcg}. More recently, \fGls{PCG}{Permuted Congruential Generator, a family of random number generators} has been proposed as an alternative to these options. \gls{PCG} is a family of fast generators well-suited for use in ray tracing.
 
 \subsubsection{Anti-aliasing}
 \label{sec:anti-aliasing}
@@ -936,7 +933,7 @@ Aliasing is a common issue in computer graphics. It occurs when the resolution o
 
 In ray tracing, aliasing can be alleviated by randomizing the direction of the rays for the different samples taken. The result of applying anti-aliasing can be seen in \autoref{fig:aliasingB}.
 
-In rasterization, similar solution strategies can be employed. Supersampling is a common technique which renders the scene at a higher resolution and then downsamples the image by averaging the colors of the pixels. More elaborate techniques such as deep learning super sampling (DLSS) implemented by NVIDIA \cite{nvidiaDlss} can be used to further improve the quality of the image in real-time rendering.
+In rasterization, similar solution strategies can be employed. Supersampling is a common technique which renders the scene at a higher resolution and then downsamples the image by averaging the colors of the pixels. More elaborate techniques such as deep learning super sampling (DLSS) implemented by NVIDIA \cite{nvidiaDlss} can be used to further improve the quality of the image.
 
 \subsubsection{Tone Mapping}
 \label{sec:toneMappingTheory}
@@ -968,13 +965,13 @@ This section provides an overview of the technology used to render 3D scenes. It
 
 \paragraph{Parallel Processing}
 
-Sequential processing is limited in terms of performance. As the amount of data to process grows, the time to process the data grows linearly. Computer graphics exhibits a large number of problems which can be parallelized. The idea of parallelization for data processing is not new. In 1966, Flynn introduced a classification system for computer architectures based on the instruction streams and data streams they can process in parallel \cite{flynnTaxonomy,flynnTaxonomy2}. Already in 1970, Watkins described an algorithm for computer graphics leveraging a specialized processor for parallel processing \cite{surfaceAlgorithmProcessor}. Further research such as Chap, a \fGls{SIMD}{\e{Single Instruction, Multiple Data}, type of parallel processing of data points with a single instruction} graphics processor proposed in 1984 by Levinthal and Porter as part of Lucasfilm introduced a special purpose processor executing a single instruction on multiple data points \cite{chapSIMDgpu}.
+Sequential processing is limited in terms of performance. As the amount of data to process grows, the time to process the data grows linearly. Computer graphics exhibits a large number of problems which can be parallelized. In 1966, Flynn introduced a classification system for computer architectures based on the instruction streams and data streams that can be processed in parallel \cite{flynnTaxonomy,flynnTaxonomy2}. Already in 1970, Watkins described an algorithm for computer graphics leveraging a specialized processor for parallel processing \cite{surfaceAlgorithmProcessor}. Further research such as Chap, a \fGls{SIMD}{\e{Single Instruction, Multiple Data}, type of parallel processing of data points with a single instruction} graphics processor proposed in 1984 by Levinthal and Porter as part of Lucasfilm introduced a special purpose processor executing a single instruction on multiple data points \cite{chapSIMDgpu}.
 
 \paragraph{GPU}
 
-The first so-called consumer graphics processing units (\gls{GPU}), the GeForce 256 produced by NVIDIA \cite{evolutionOfGPU}, were developed in the 1990s and extend upon research conducted in the decades prior such as so-called superworkstations introduced by Silicon Graphics in the 1980s \cite{sigWorkstation}. These workstations were special-purpose computers which were optimized for computer graphics. The \gls{GPU} on the other hand is a specialized processor that is well-suited for workloads which require parallel processing and can be installed on a standard computer. While \gls{CPU} parallelization on consumer hardware is generally limited to a few cores, modern \glspl{GPU} have thousands of compute units which enable \gls{SIMD} processing.
+The first consumer graphics processing units (\gls{GPU}), the GeForce 256 produced by NVIDIA \cite{evolutionOfGPU}, were developed in the 1990s and extend upon research conducted in the decades prior such as the superworkstations introduced by Silicon Graphics in the 1980s \cite{sigWorkstation}. These workstations were special-purpose computers which were optimized for computer graphics. The \gls{GPU} on the other hand is a specialized processor that is well-suited for workloads which require parallel processing and can be installed on a standard computer. While \gls{CPU} parallelization on consumer hardware is generally limited to a few cores, modern \glspl{GPU} have thousands of compute units which enable \gls{SIMD} processing.
 
-Due to computational complexity, ray tracing techniques have been limited to offline rendering for a long time. Early ray tracers such as \gls{BMRT} were developed focusing on leveraging \gls{CPU} for computations. The introduction of \glspl{GPU} has lead to further research on how to optimize speed for techniques related to ray tracing. One such example of research for a well-established technique is \gls{BVH} construction on the \gls{GPU} \cite{lauterbach2009GPUbvh} instead of \gls{CPU}. Leveraging \gls{GPU} has been a focus of research and has enabled real-time ray tracing in recent years. Notable developments include reservoir-based spatio-temporal importance resampling (ReSTIR) \cite{restir} and subsequent improvements \cite{restirAdvancements,restirGeneralized}.
+Due to computational complexity, ray tracing techniques have been limited to offline rendering for a long time. Early ray tracers such as \gls{BMRT} were developed focusing on leveraging \gls{CPU} for computations. The introduction of \glspl{GPU} has lead to further research on how to optimize speed for techniques related to ray tracing. One such example of research for a well-established technique is \gls{BVH} construction on the \gls{GPU} \cite{lauterbach2009GPUbvh}. Leveraging \gls{GPU} has been a focus of research and has enabled real-time ray tracing in recent years. Notable developments include reservoir-based spatio-temporal importance resampling (ReSTIR) \cite{restir} and subsequent improvements \cite{restirAdvancements,restirGeneralized}.
 
 Nowadays GPUs are prevalent in consumer hardware such as smartphones, tablets, laptops and desktops and their use case is not limited to computer graphics. GPUs are used in a wide range of applications, such as machine learning, scientific computing and data processing. Devices, which do not have a discrete GPU, often use an integrated GPU which is part of the CPU.
 
@@ -983,7 +980,7 @@ Modern GPU hardware offers support for hardware-accelerated ray tracing. Example
 \paragraph{Common Strategies}
 \label{sec:commonGpuStrategies}
 
-Certain basic definitions have established as common practices for these \glspl{API}. The term shader is used to describe a program which runs on the \gls{GPU}. It is frequently used to describe in conjunction with different shader types which are used as part of the so-called graphics pipeline in rasterization. The pipeline in its basic form consists of two steps which are executed on the \gls{GPU} in sequence:
+Certain basic definitions have established themselves as common practices for graphics \glspl{API}. The term shader is used to describe a program which runs on the \gls{GPU}. The term shader is frequently used in conjunction with different shader types which are used as part of the graphics pipeline in rasterization. The pipeline in its basic form consists of two steps which are executed on the \gls{GPU} in sequence:
 
 \begin{itemize}
     \item{Vertex Shader} — The vertex shader is responsible for transforming the vertices of the geometry into screen space. The output of the vertex shader is a set of vertices which are then rasterized.
@@ -1005,25 +1002,25 @@ While \gls{OpenGL} and derivatives such as \fgls{OpenGL ES}{\e{OpenGL for Embedd
 \begin{itemize}
     \item{\gls{Vulkan}} — Developed by the \fgls{Khronos Group}{consortium for developing interoperability standards for 3D graphics}, Vulkan is a low-level \gls{API} which is supported on a wide range of platforms.
     \item{\gls{Metal}} — Developed by Apple, Metal is a low-level \gls{API} which is supported on Apple devices.
-    \item{\gls{DirectX 12}} — Developed by Microsoft, DirectX is a collection of \glspl{API} which are supported on Windows platforms.
+    \item{\gls{DirectX 12}} — Developed by Microsoft, DirectX is a collection of \glspl{API} for Microsoft Windows.
 \end{itemize}
 
 None of these \glspl{API} are supported in the browser, which makes them unsuitable for the discussed use case.
 
 \subsection{WebGL}
 
-\gls{WebGL} is a graphics \gls{API} based on \gls{OpenGL ES} 2.0 for the web. It was initially released in 2011 and has since been adopted by all major browsers.
+\gls{WebGL} is a graphics \gls{API} for the web based on \gls{OpenGL ES} 2.0. It was initially released in 2011 and has since been adopted by all major browsers.
 
 \gls{WebGL} is designed to offer a rendering pipeline, but does not offer \gls{GPGPU} capabilities. There have been efforts to extend with compute shaders, but efforts by the \gls{Khronos Group} have been halted in favor of focusing on \gls{WebGPU} instead.
 
 In order to provide \gls{GPGPU} capabilities, workarounds have been developed. The basic idea is to render the output of a fragment shader to a texture and interpreting the output as binary data instead of color information.
-There are libraries such as GPU.js which provide \gls{GPGPU} capabilities using \gls{WebGL}. Tensorflow.js, a library for training and deploying Machine Learning models, use similar techniques in the \gls{WebGL} backend.
+There are libraries such as GPU.js which provide \gls{GPGPU} capabilities using \gls{WebGL}. Tensorflow.js, a library for training and deploying Machine Learning models, uses similar techniques in the \gls{WebGL} backend.
 
-Since its introduction, \gls{WebGL} has been extended with new features. \gls{WebGL} 2.0, which is based on \gls{OpenGL ES} 3.0, was released in 2017. Of the major browsers, Safari was the last to support it out of the box in 2021. Since \gls{WebGL} 2.0 no new major versions have been released but new features have been added. This makes it evident that while \gls{WebGL} is to remain a viable choice for rendering 3D graphics in the browser for the foreseeable future, it is likely to be superseded by \gls{WebGPU} in the long term.
+Since its introduction, \gls{WebGL} has been extended with new features. \gls{WebGL} 2.0, which is based on \gls{OpenGL ES} 3.0, was released in 2017. Of the major browsers, Safari was the last to support it out of the box in 2021. Since \gls{WebGL} 2.0 no new major versions have been released but new features have been added. This makes it evident that while \gls{WebGL} will remain a viable option for the foreseeable future, \gls{WebGPU} is likely to become the preferred choice in the long term.
 
 \subsection{WebGPU}
 
-\gls{WebGPU} is a new web standard, being developed by \fGls{W3C}{\e{World Wide Web Consortium}, a non-profit organization dedicated to developing web standards} which is no longer based on \gls{OpenGL}, unlike its predecessor \gls{WebGL} \cite{webgpuSpecification}. One of the main capabilities is support for \gls{GPGPU} by design. While all major browser vendors have announced intent to support \gls{WebGPU}, to date only Chrome has shipped \gls{WebGPU} for general use on desktop as well as mobile.
+\gls{WebGPU} is a new web standard, being developed by \fGls{W3C}{\e{World Wide Web Consortium}, a non-profit organization dedicated to developing web standards} \cite{webgpuSpecification}. Unlike its predecessor, \gls{WebGL}, it is no longer based on \gls{OpenGL}. One of the main capabilities is support for \gls{GPGPU} by design. While all major browser vendors have announced intent to support \gls{WebGPU}, to date only Chrome has shipped \gls{WebGPU} for general use on desktop as well as mobile.
 The standard is still in development and new features are being added.
 Common 3D engines such as \gls{Babylon.js}, \gls{Three.js}, \gls{PlayCanvas} and \gls{Unity} have announced support for \gls{WebGPU}.
 
