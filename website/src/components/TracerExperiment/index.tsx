@@ -5,8 +5,75 @@ import styles from "./styles.module.css";
 import clsx from "clsx";
 import usePathTracer from "@site/src/hooks/usePathTracer";
 
-export default function TracerExperiment(): JSX.Element {
-  const defaultColor = "#f20089";
+type PartialOpenPBRMaterialConfiguration = Partial<
+  Record<keyof OpenPBRMaterial, unknown>
+>;
+
+type Props = {
+  propertiesForConfiguration: (keyof OpenPBRMaterial)[];
+  defaultMaterialProperties?: PartialOpenPBRMaterialConfiguration;
+};
+
+function convertNormalizedToHex(c: number) {
+  var hex = Math.round(c * 255).toString(16);
+  return hex.padStart(2, "0");
+}
+
+// todo: use exported type from strahl
+function convertRGBToHex(c: ReturnType<typeof convertHexToRGB>) {
+  return (
+    "#" +
+    convertNormalizedToHex(c[0]) +
+    convertNormalizedToHex(c[1]) +
+    convertNormalizedToHex(c[2])
+  );
+}
+
+const defaultColor = "#f20089";
+
+const defaultConfiguration: Partial<
+  Record<
+    keyof OpenPBRMaterial,
+    {
+      configKey: string;
+      value: unknown;
+      convertToPaneValue: (value: unknown) => unknown;
+      convertToMaterialValue: (value: unknown) => unknown;
+    }
+  >
+> = {
+  oBaseColor: {
+    configKey: "baseColor",
+    value: convertHexToRGB(defaultColor),
+    convertToPaneValue: (value) =>
+      convertRGBToHex(value as ReturnType<typeof convertHexToRGB>),
+    convertToMaterialValue: (value) => convertHexToRGB(value as string),
+  },
+};
+
+export default function TracerExperiment({
+  propertiesForConfiguration,
+  defaultMaterialProperties,
+}: Props): JSX.Element {
+  const defaultMaterial = {
+    ...Object.fromEntries(
+      Object.entries(defaultConfiguration).map(([key, { value }]) => [
+        key,
+        value,
+      ]),
+    ),
+    ...defaultMaterialProperties,
+  };
+  const buildMaterial = (overrides: PartialOpenPBRMaterialConfiguration) => {
+    const material = new OpenPBRMaterial();
+    for (const key of propertiesForConfiguration) {
+      // todo: consider nicer way
+      // @ts-ignore
+      material[key] = overrides[key] ?? defaultMaterial[key];
+    }
+    return material;
+  };
+
   const [materialMap, setMaterialMap] = React.useState({
     floor: (() => {
       let m = new OpenPBRMaterial();
@@ -14,15 +81,11 @@ export default function TracerExperiment(): JSX.Element {
       m.oBaseColor = [0.4, 0.4, 0.4];
       return m;
     })(),
-    sphere: (() => {
-      let m = new OpenPBRMaterial();
-      m.oBaseColor = convertHexToRGB(defaultColor);
-      return m;
-    })(),
+    sphere: buildMaterial({}),
   });
 
   const [options] = React.useState<Parameters<typeof usePathTracer>[2]>({
-    targetSamples: 500,
+    targetSamples: 1,
     clearColor: convertHexToRGB("#1B1B1D"),
     viewProjectionConfiguration: {
       matrixWorldContent: [
@@ -53,27 +116,41 @@ export default function TracerExperiment(): JSX.Element {
   const paneContainerId = React.useId();
   const paneRef = React.useRef<Pane | null>(null);
   React.useEffect(() => {
-    const PARAMS = {
-      baseColor: defaultColor,
-    };
+    const PARAMS = Object.fromEntries(
+      Object.entries(defaultConfiguration).map(
+        ([key, { convertToPaneValue, configKey }]) => [
+          configKey,
+          convertToPaneValue(defaultMaterial[key]),
+        ],
+      ),
+    );
 
     const pane = new Pane({
       container: document.getElementById(`pane-${paneContainerId}`),
     });
 
-    pane.addBinding(PARAMS, "baseColor");
+    for (const property of propertiesForConfiguration) {
+      pane.addBinding(PARAMS, defaultConfiguration[property].configKey);
+    }
 
     paneRef.current = pane;
+
+    function convertPaneToOpenPBRMaterial(): PartialOpenPBRMaterialConfiguration {
+      return Object.fromEntries(
+        Object.entries(defaultConfiguration).map(
+          ([key, { convertToMaterialValue, configKey }]) => [
+            key,
+            convertToMaterialValue(PARAMS[configKey]),
+          ],
+        ),
+      );
+    }
 
     pane.on("change", (ev) => {
       setMaterialMap((prev) => {
         const newMaterialMap = { ...prev };
-        const color = convertHexToRGB(PARAMS.baseColor);
 
-        const material = new OpenPBRMaterial();
-        material.oBaseColor = color;
-
-        newMaterialMap.sphere = material;
+        newMaterialMap.sphere = buildMaterial(convertPaneToOpenPBRMaterial());
         return newMaterialMap;
       });
     });
