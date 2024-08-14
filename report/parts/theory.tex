@@ -12,18 +12,18 @@ This section provides an overview of the theoretical background required to deve
 
 \section{Mathematics}
 
-This section highlights some basics about the mathematics involved in computer graphics and establishes a common understanding of concepts and notations referenced in the following sections. The section covers topics such as notation of vectors, matrices, integrals, and the Bachmann-Landau notation.
+This section highlights some basics about the mathematics involved in computer graphics and establishes a common understanding of concepts and notations referenced in the following sections. The section covers topics such as vectors and matrix notation, common terminology, integrals, and the Bachmann-Landau notation.
 
 \subsubsection{Vectors}
 
 Euclidean vectors are fundamental in computer graphics and are generally defined by a magnitude and a direction. In a three-dimensional space, a vector can be defined as $v = (x, y, z)$. This definition can be used to represent points in space (vertex) as well as directions.
 
-% The magnitude or length of the vector can be calculated using the Euclidean norm:
+The magnitude, or length, of the vector can be calculated using the Euclidean norm:
 
-% \begin{equation}
-%   \label{eqn:euclidean-norm}
-%   ||v|| = \sqrt{x^2 + y^2 + z^2}
-% \end{equation}
+\begin{equation}
+  \label{eqn:euclidean-norm}
+  ||v|| = \sqrt{x^2 + y^2 + z^2}
+\end{equation}
 
 % The dot product (scalar $s$) of two vectors $v = (x_1, y_1, z_1)$ and $w = (x_2, y_2, z_2)$ is defined as:
 
@@ -75,11 +75,11 @@ Matrices are used to represent transformations in computer graphics. A matrix ca
 
 \subsubsection{Ray}
 
-A ray can be defined as $r = (Q, d)$ where $Q$ is the origin vertex of the ray and $d$ is the direction.
+A ray can be defined as $r = (Q, d)$, where $Q$ is the origin vertex of the ray and $d$ is the direction.
 
 \subsubsection{Triangle}
 
-A triangle can be defined as $t = (Q, u, v)$ where $Q$ is the position of the triangle and $u$ and $v$ are vectors defining the triangle. See \autoref{fig:q-u-v-parameterization} for a visual representation.
+A triangle can be defined as $t = (Q, u, v)$, where $Q$ is the position of the triangle and $u$ and $v$ are vectors defining the triangle. See \autoref{fig:q-u-v-parameterization} for a visual representation.
 
 \begin{figure}[H]
   \centering
@@ -113,7 +113,7 @@ An alternative way to define a triangle is using three vertices, each in world s
   v = v_3 - v_1
 \end{equation}
 
-A triangle has three normals, one for each vertex. The normal of a triangle can be calculated using the cross product of two edges of the triangle.
+For the use in computer graphics, a triangle has a normal associated with each of its three vertices. Per default, the normal of a vertex is orthogonal to the two adjacent edges of the vertex and can be calculated using the cross product.
 
 \subsubsection{Frustum}
 
@@ -180,18 +180,18 @@ Variance is a measure of dispersion, defining how large the difference between t
 
 where $\mu$ is the mean of the set of numbers.
 
-The standard deviation ($\sigma$) is the square root of the variance ($\sigma^2$). It is a measure of the dispersion of a set of numbers and can be used to determine a confidence interval. This interval is a range of values which has a certain probability of containing the value. High variance leads to a wide confidence interval which indicates that the data is spread out. The confidence interval as a $\pm$ margin of error deviation from the mean is then defined as:
+The standard deviation ($\sigma$) is the square root of the variance ($\sigma^2$). It is a measure of the dispersion of a set of numbers and can be used to determine a confidence interval. This interval is a range of values which has a certain probability of containing the value. High variance leads to a wide confidence interval which indicates that the data is spread out. The confidence interval ($CI$) as a $\pm$ margin of error deviation from the mean is then defined as:
 
 \begin{equation}
   \label{eqn:confidence-interval}
-  z \frac{\sigma}{\sqrt{n}}
+  CI = \mu \pm z \frac{\sigma}{\sqrt{n}}
 \end{equation}
 
 where $z$ is the z-score of the desired confidence level, for example, $1.96$ for a $95\%$ confidence interval. $n$ is the number of samples.
 
 This can be used to assess the quality and reliability of measurements such as required for benchmarking.
 
-Another important concept is the probability density function (\gls{PDF}). It describes the likelihood of a random variable to take on a specific value. It is related to the cumulative distribution function (\gls{CDF}) which describes the probability that the random variable will be less than or equal to a specific value.
+Another important concept is the probability density function (\gls{PDF}). It describes the likelihood of a random variable to take on a specific value. It is related to the cumulative distribution function (\gls{CDF}) which describes the probability that the random variable will be less than or equal to a specific value. The \gls{CDF} can be expressed as the integral of its \gls{PDF}. See \autoref{fig:probability-theory} for a visualization.
 
 \begin{figure}[H]
   \begin{subfigure}[b]{0.4\textwidth}
@@ -250,7 +250,7 @@ Another important concept is the probability density function (\gls{PDF}). It de
 
 \subsubsection{Bachmann-Landau Notation}
 
-The Bachmann-Landau notation, or more specifically, the Big O notation, is used to describe the behavior of a function as the input size grows. The notation is used to describe the upper bound of a function. For example, if a function $f(n)$ is $O(n^2)$, it means that the function grows at most quadratically with the input size $n$. The Big O notation is used to describe the growth of algorithms in terms of run time or space requirements.
+The Bachmann-Landau notation, or more specifically, the Big O notation, is used to describe the behavior of a function as the input size grows. The notation is used to describe the upper bound of a function. For example, if a function $f(n)$ is $O(n^2)$, it means that the function grows at most quadratically with the input size $n$. The Big O notation is used to describe the growth of algorithms in terms of run time or space requirements. See \autoref{fig:big-o-visualization} for a visualization.
 
 \begin{figure}[H]
   \centering
@@ -275,7 +275,7 @@ The Bachmann-Landau notation, or more specifically, the Big O notation, is used 
       \end{axis}
   \end{tikzpicture}
   \caption{Example of Big O notation, the function $f(x)$ is $O(n)$, but $g(x)$ is not.}
-  \label{fig:bigOVisualization}
+  \label{fig:big-o-visualization}
 \end{figure}
 
 \section{Physics}
