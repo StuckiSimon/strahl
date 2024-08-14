@@ -13,6 +13,10 @@ In order to expose in local network, run:
 
 `npm run dev -- --host`
 
+### Testing
+
+`npm run test`
+
 ### Access
 
 - [https://localhost:5173/](https://localhost:5173/) - Demo Scene
