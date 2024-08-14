@@ -22,16 +22,31 @@ export default function TracerExperiment(): JSX.Element {
   });
 
   const [options] = React.useState<Parameters<typeof usePathTracer>[2]>({
-    targetSamples: 200,
+    targetSamples: 500,
+    clearColor: convertHexToRGB("#1B1B1D"),
     viewProjectionConfiguration: {
       matrixWorldContent: [
-        -0.48044932418825687, 2.081668171172168e-17, 0.877022489384991, 0,
-        0.11121397919060463, 0.9919272066348073, 0.06092509803241454, 0,
-        -0.8699424680515592, 0.12680858305993156, -0.47657075607163846, 0,
-        -3.6120942140398014, 0.16869853590213923, -2.0157257065629848, 1,
+        -0.45178184301411944, 4.163336342344336e-17, 0.8921284472108064, 0,
+        0.18290622579667423, 0.9787573022265018, 0.09262535237781978, 0,
+        -0.8731772322315672, 0.20502229961225985, -0.44218477786341664, 0,
+        -3.67881274400709, 0.6362064645963488, -1.879628578827991, 1,
       ],
       fov: 38.6701655,
       cameraTargetDistance: 4,
+    },
+    maxRayDepth: 3,
+    environmentLightConfiguration: {
+      sky: {
+        power: 0.5,
+        color: [0.8, 0.8, 1.0],
+      },
+      sun: {
+        power: 1.0,
+        angularSize: 35,
+        latitude: 40,
+        longitude: 160,
+        color: [1.0, 1.0, 0.9],
+      },
     },
   });
 
