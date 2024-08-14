@@ -178,6 +178,23 @@
   keywords = {Visible surface algorithms, Object descriptions, Hierarchical data structures, Computer graphics}
 }
 
+@inproceedings{mollerTrumboreFastRayTriangleIntersection,
+  author = {M\"{o}ller, Tomas and Trumbore, Ben},
+  title = {Fast, minimum storage ray/triangle intersection},
+  year = {2005},
+  isbn = {9781450378338},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  url = {https://doi.org/10.1145/1198555.1198746},
+  doi = {10.1145/1198555.1198746},
+  abstract = {We present a clean algorithm for determining whether a ray intersects a triangle. The algorithm translates the origin of the ray and then changes the base of that vector which yields a vector (t u v)T, where t is the distance to the plane in which the triangle lies and (u, v) represents the coordinates inside the triangle.One advantage of this method is that the plane equation need not be computed on the fly nor be stored, which can amount to significant memory savings for triangle meshes. As we found our method to be comparable in speed to previous methods, we believe it is the fastest ray/triangle intersection routine for triangles which do not have precomputed plane equations.},
+  booktitle = {ACM SIGGRAPH 2005 Courses},
+  pages = {7–es},
+  keywords = {ray/triangle-intersection, ray tracing, intersection, base transformation},
+  location = {Los Angeles, California},
+  series = {SIGGRAPH '05}
+}
+
 @inproceedings{lauterbach2009GPUbvh,
   title={Fast BVH construction on GPUs},
   author={Lauterbach, Christian and Garland, Michael and Sengupta, Shubhabrata and Luebke, David and Manocha, Dinesh},
