@@ -6,7 +6,7 @@ import clsx from "clsx";
 import usePathTracer from "@site/src/hooks/usePathTracer";
 
 export default function TracerExperiment(): JSX.Element {
-  const defaultColor = "#ff0055";
+  const defaultColor = "#f20089";
   const [materialMap, setMaterialMap] = React.useState({
     floor: (() => {
       let m = new OpenPBRMaterial();
