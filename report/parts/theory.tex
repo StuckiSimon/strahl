@@ -1332,7 +1332,34 @@ These functions define the distribution of light in different directions as desc
 
 \subsection{Microfacet Theory}
 
-While the macroscopic appearance of a material is visible to the human eye, the microscopic structure of the material is crucial in determining how light interacts with the material. Microfacet theory is a model which describes this microscopic structure. The distribution of the normals of the microfacet is described by a distribution function.
+While the macroscopic appearance of a material is visible to the human eye, the microscopic structure of the surface is crucial in determining how light interacts with the surface. However, this structure is not perceivable to the human eye. Microfacet theory is a model which describes this microscopic structure. Microsurfaces are aggregated to form the coarse macroscopic surface. See \autoref{fig:microfacet-model} for a visualization of a rough surface. Theoretically, it would be possible to model the geometry as microsurfaces, but in practice, this leads to a high computational complexity due to increased storage and computation requirements. Instead, the distribution of normals is described as a distribution function. A rough surface has a wide distribution of normals, which leads to scattering, resulting in a diffuse reflection. A smooth surface has a narrow distribution of normals, which leads to a specular reflection. One of the most widely used distribution functions is the \fGls{GGX}{\e{Ground Glass Unknown}, frequently used microfacet distribution function derived by Neyret and independently by Walter et al. \cite{walter2007microfacet,heitz2018sampling}} distribution function. \cite{Pharr_Physically_Based_Rendering_2023}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \draw[-latex] (2.0,0.2) -- (2.25,0.8) node[above]{m};
+    \draw[-latex] (4,0.0) -- (4,0.6) node[above]{n};
+
+    \draw[rgreen, thick] (0,0) to[out=0,in=180] (5,0);
+    
+    \draw[rred, thick] 
+      (0,0) to[out=20,in=180]
+      (0.2,0.3) to[out=-20,in=160]
+      (0.7,-0.1) to[out=-30,in=150]
+      (1.2,0.4) to[out=-30,in=150]
+      (1.6,-0.2) to[out=-30,in=150]
+      (2,0.2) to[out=-30,in=150]
+      (2.5,0.4) to[out=-30,in=150]
+      (3,-0.2) to[out=-30,in=150]
+      (3.5,0.25) to[out=-30,in=150]
+      (4,-0.3) to[out=-30,in=150]
+      (4.5,0.3) to[out=-30,in=180]
+      (5,0);
+
+  \end{tikzpicture}
+  \caption{Microsurface (red) compared to macrosurface (green) and normals $m$ for microsurface sample and $n$ as surface normal of underlying triangle plane. While all $n$ on the plane are identical, the microsurface normal vary significantly. Visualized as per Walter et al. \cite{walter2007microfacet}.}
+  \label{fig:microfacet-model}
+\end{figure}
 
 \subsection{Material Description}
 
