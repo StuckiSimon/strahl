@@ -12,6 +12,10 @@ Documentation for strahl built using [Docusaurus](https://docusaurus.io/).
 
 This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
+To continuously update the `TypeDoc` API types, use:
+
+`TYPEDOC_WATCH=true  npm run dev`
+
 ### Build
 
 `npm run build`
