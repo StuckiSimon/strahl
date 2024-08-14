@@ -30,8 +30,9 @@ import {
   ViewProjectionConfiguration,
 } from "./camera";
 import { buildAbortEventHub } from "./util/abort-event-hub.ts";
+import { Group } from "three";
 
-function prepareGeometry(model: any) {
+function prepareGeometry(model: { scene: Group }) {
   const reducedModel = consolidateMesh([model.scene]);
   const cpuLogGroup = logGroup("cpu");
   const boundsTree = new MeshBVH(reducedModel.geometry, {
@@ -74,6 +75,9 @@ function prepareGeometry(model: any) {
   };
 }
 
+/**
+ * Configuration options for the path tracer.
+ */
 export type PathTracerOptions = {
   targetSamples?: number;
   kTextureWidth?: number;
@@ -82,15 +86,26 @@ export type PathTracerOptions = {
   samplesPerIteration?: number;
   clearColor?: number[];
   maxRayDepth?: number;
-  // todo: add real type
-  finishedSampling?: (result: any) => void;
+  finishedSampling?: (result: {
+    bvhBuildTime: number;
+    fullRenderLoopTime: number;
+    allRenderTime: number;
+    renderTimes: number[];
+  }) => void;
   signal?: AbortSignal;
   enableTimestampQuery?: boolean;
 };
 
+/**
+ * Main routine to generate renderings.
+ * @param target ID of the canvas element to render to
+ * @param model The model to render
+ * @param options Options for the path tracer
+ * @returns A promise that resolves when the path tracer has finished setting up, but not when the path tracer has finished rendering.
+ */
 async function runPathTracer(
   target: string,
-  model: any,
+  model: { scene: Group },
   {
     targetSamples = 300,
     kTextureWidth = 512,
@@ -109,7 +124,7 @@ async function runPathTracer(
     clearColor = [1.0, 1.0, 1.0],
     maxRayDepth = 5,
     enableTimestampQuery = true,
-    finishedSampling = () => {},
+    finishedSampling,
     signal = new AbortController().signal,
   }: PathTracerOptions = {},
 ) {
