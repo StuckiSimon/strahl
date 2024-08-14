@@ -271,30 +271,36 @@ fn randomF32(seed: ptr<function, u32>) -> f32 {
   return f32(*seed - 1u) * range;
 }
 
+const TRIANGLE_EPSILON = 1.0e-6;
+
+// Möller–Trumbore intersection algorithm without culling
 fn triangleHit(triangle: Triangle, ray: Ray, rayT: Interval, hitRecord: ptr<function, HitRecord>) -> bool {
   let edge1 = triangle.u;
   let edge2 = triangle.v;
-  let h = cross(ray.direction, edge2);
-  let a = dot(edge1, h);
-  // No hit if ray is parallel to the triangle
-  if (a > -0.00001 && a < 0.00001) {
+  let pvec = cross(ray.direction, edge2);
+  let det = dot(edge1, pvec);
+  // No hit if ray is parallel to the triangle (ray lies in plane of triangle)
+  if (det > -TRIANGLE_EPSILON && det < TRIANGLE_EPSILON) {
     return false;
   }
-  let f = 1.0 / a;
-  let s = ray.origin - triangle.Q;
-  let u = f * dot(s, h);
-  // No hit if ray is outside the triangle
+  let invDet = 1.0 / det;
+  let tvec = ray.origin - triangle.Q;
+  let u = dot(tvec, pvec) * invDet;
+
   if (u < 0.0 || u > 1.0) {
     return false;
   }
-  let q = cross(s, edge1);
-  let v = f * dot(ray.direction, q);
-  // No hit if ray is outside the triangle
+
+  let qvec = cross(tvec, edge1);
+  let v = dot(ray.direction, qvec) * invDet;
+
   if (v < 0.0 || u + v > 1.0) {
     return false;
   }
-  let t = f * dot(edge2, q);
-  // No hit if triangle is behind the ray
+
+  let t = dot(edge2, qvec) * invDet;
+  
+  // check if the intersection point is within the ray's interval
   if (t < (rayT).min || t > (rayT).max) {
     return false;
   }
