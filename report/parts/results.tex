@@ -47,11 +47,7 @@ In order to address memory alignment, as described in \autoref{ch:memoryAlignmen
 
 The ray generator is responsible for casting rays into the scene according to the view projection. The path tracer employs a backward ray tracing approach, tracing rays from the camera into the scene.
 
-\subsection*{View Projection}
-
-For many applications, especially photorealistic rendering, perspective projection is used. Based on the assessed use cases, the path tracer uses perspective projection only. See \coderef{VIEWPROJECTION} for implementation.
-
-\subsection*{Random Number Generator}
+For many applications, especially photorealistic rendering, perspective projection is prevalent. Based on the assessed use cases, the path tracer uses perspective projection only. See \coderef{VIEWPROJECTION} for implementation.
 
 The path tracer uses PCG-RXS-M-XS variant as described by O’Neill \cite{o2014pcg} in combination with Xorshift as described by Marsaglia \cite{marsaglia2003xorshift}. See \coderef{RNG} for implementation.
 
@@ -110,16 +106,14 @@ When increasing the sample count, the differences in the setup remain visible. A
     \label{fig:rngNoiseArtifactsHighlights}
 \end{figure}
 
-\subsection*{Anti-Aliasing}
 \label{sec:anti-aliasing-implementation}
-
-The implementation of the strategy indicated in \ref{sec:anti-aliasing} is implemented in \coderef{ALIASING}.
+The implementation of the anti-aliasing strategy indicated in \ref{sec:anti-aliasing} is implemented in \coderef{ALIASING} and is highly dependent on the \gls{RNG} setup.
 
 \section{Path Tracer}
 
-Intersection tests based on the \gls{BVH} are implemented in \gls{WGSL}, see \coderef{BVH-TESTS}. For each intersection, sampling is done according to the \gls{MIS} scheme.
+Intersection tests based on the \gls{BVH} are implemented in \gls{WGSL}, see \coderef{BVH-TESTS}. The intersection tests for triangles are implemented in \coderef{TRIANGLE-INTERSECTION}.
 
-The surface shading method is based on \gls{OpenPBR} reference implementation in \gls{MaterialX} as well as the reference viewer by Portsmouth \cite{openPbrViewer}.
+For each intersection, sampling is done according to the \gls{MIS} scheme. The surface shading method is based on \gls{OpenPBR} reference implementation in \gls{MaterialX} as well as the reference viewer by Portsmouth \cite{openPbrViewer}.
 
 The renderer uses \fGls{RGB}{\e{red, green, and blue}, common system for color representation in computer graphics} as the color space.
 

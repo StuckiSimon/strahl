@@ -273,6 +273,7 @@ fn randomF32(seed: ptr<function, u32>) -> f32 {
 
 const TRIANGLE_EPSILON = 1.0e-6;
 
+// CODE#TRIANGLE-INTERSECTION
 // Möller–Trumbore intersection algorithm without culling
 fn triangleHit(triangle: Triangle, ray: Ray, rayT: Interval, hitRecord: ptr<function, HitRecord>) -> bool {
   let edge1 = triangle.u;
