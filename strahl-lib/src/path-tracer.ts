@@ -84,7 +84,7 @@ export type PathTracerOptions = {
   viewProjectionConfiguration?: ViewProjectionConfiguration;
   environmentLightConfiguration?: EnvironmentLightConfig;
   samplesPerIteration?: number;
-  clearColor?: number[];
+  clearColor?: number[] | false;
   maxRayDepth?: number;
   finishedSampling?: (result: {
     bvhBuildTime: number;
@@ -704,8 +704,8 @@ async function runPathTracer(
         sunPower: Math.pow(10, environmentLightConfiguration.sun.power),
         sunAngularSize: environmentLightConfiguration.sun.angularSize,
         sunColor: environmentLightConfiguration.sun.color,
-        clearColor: isNil(clearColor) ? [0, 0, 0] : clearColor,
-        enableClearColor: isNil(clearColor) ? 0 : 1,
+        clearColor: clearColor === false ? [0, 0, 0] : clearColor,
+        enableClearColor: clearColor === false ? 0 : 1,
         maxRayDepth,
         objectDefinitionLength: groups.length,
       });
