@@ -1,5 +1,5 @@
 import React from "react";
-import { Pane } from "tweakpane";
+import { BindingParams, Pane } from "tweakpane";
 import { convertHexToRGB, OpenPBRMaterial } from "strahl";
 import styles from "./styles.module.css";
 import clsx from "clsx";
@@ -37,8 +37,9 @@ const defaultConfiguration: Partial<
     {
       configKey: string;
       value: unknown;
-      convertToPaneValue: (value: unknown) => unknown;
-      convertToMaterialValue: (value: unknown) => unknown;
+      convertToPaneValue?: (value: unknown) => unknown;
+      convertToMaterialValue?: (value: unknown) => unknown;
+      bindingParams?: BindingParams;
     }
   >
 > = {
@@ -48,6 +49,10 @@ const defaultConfiguration: Partial<
     convertToPaneValue: (value) =>
       convertRGBToHex(value as ReturnType<typeof convertHexToRGB>),
     convertToMaterialValue: (value) => convertHexToRGB(value as string),
+  },
+  oSpecularWeight: {
+    configKey: "specularWeight",
+    value: 0.0,
   },
 };
 
@@ -66,7 +71,10 @@ export default function TracerExperiment({
   };
   const buildMaterial = (overrides: PartialOpenPBRMaterialConfiguration) => {
     const material = new OpenPBRMaterial();
-    for (const key of propertiesForConfiguration) {
+    const allConfiguredMaterialKeys = Object.entries(defaultConfiguration).map(
+      ([key]) => key,
+    );
+    for (const key of allConfiguredMaterialKeys) {
       // todo: consider nicer way
       // @ts-ignore
       material[key] = overrides[key] ?? defaultMaterial[key];
@@ -85,7 +93,7 @@ export default function TracerExperiment({
   });
 
   const [options] = React.useState<Parameters<typeof usePathTracer>[2]>({
-    targetSamples: 1,
+    targetSamples: 300,
     clearColor: convertHexToRGB("#1B1B1D"),
     viewProjectionConfiguration: {
       matrixWorldContent: [
@@ -120,7 +128,9 @@ export default function TracerExperiment({
       Object.entries(defaultConfiguration).map(
         ([key, { convertToPaneValue, configKey }]) => [
           configKey,
-          convertToPaneValue(defaultMaterial[key]),
+          convertToPaneValue
+            ? convertToPaneValue(defaultMaterial[key])
+            : defaultMaterial[key],
         ],
       ),
     );
@@ -130,7 +140,11 @@ export default function TracerExperiment({
     });
 
     for (const property of propertiesForConfiguration) {
-      pane.addBinding(PARAMS, defaultConfiguration[property].configKey);
+      pane.addBinding(
+        PARAMS,
+        defaultConfiguration[property].configKey,
+        defaultConfiguration[property].bindingParams,
+      );
     }
 
     paneRef.current = pane;
@@ -140,7 +154,9 @@ export default function TracerExperiment({
         Object.entries(defaultConfiguration).map(
           ([key, { convertToMaterialValue, configKey }]) => [
             key,
-            convertToMaterialValue(PARAMS[configKey]),
+            convertToMaterialValue
+              ? convertToMaterialValue(PARAMS[configKey])
+              : PARAMS[configKey],
           ],
         ),
       );
