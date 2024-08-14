@@ -1,0 +1,19 @@
+---
+sidebar_position: 2
+---
+
+import TracerExperiment from "@site/src/components/TracerExperiment";
+
+# Specular Reflection
+
+<TracerExperiment
+  propertiesForConfiguration={[
+    "oSpecularWeight",
+    "oSpecularColor",
+    "oSpecularRoughness",
+  ]}
+  defaultMaterialProperties={{
+    oBaseColor: [0.1, 0.1, 0.1],
+    oSpecularWeight: 1.0,
+  }}
+/>

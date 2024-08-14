@@ -53,6 +53,19 @@ const defaultConfiguration: Partial<
   oSpecularWeight: {
     configKey: "specularWeight",
     value: 0.0,
+    bindingParams: { min: 0, max: 1 },
+  },
+  oSpecularColor: {
+    configKey: "specularColor",
+    value: [1.0, 1.0, 1.0],
+    convertToPaneValue: (value) =>
+      convertRGBToHex(value as ReturnType<typeof convertHexToRGB>),
+    convertToMaterialValue: (value) => convertHexToRGB(value as string),
+  },
+  oSpecularRoughness: {
+    configKey: "specularRoughness",
+    value: 0.3,
+    bindingParams: { min: 0, max: 1 },
   },
 };
 
