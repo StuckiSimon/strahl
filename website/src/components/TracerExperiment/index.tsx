@@ -11,6 +11,7 @@ export default function TracerExperiment(): JSX.Element {
     floor: (() => {
       let m = new OpenPBRMaterial();
       m.oSpecularWeight = 0.0;
+      m.oBaseColor = [0.4, 0.4, 0.4];
       return m;
     })(),
     sphere: (() => {
@@ -20,7 +21,7 @@ export default function TracerExperiment(): JSX.Element {
     })(),
   });
 
-  const [options] = React.useState({
+  const [options] = React.useState<Parameters<typeof usePathTracer>[2]>({
     targetSamples: 200,
     viewProjectionConfiguration: {
       matrixWorldContent: [
