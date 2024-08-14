@@ -8,11 +8,11 @@ To disable clear color, use:
 
 ```js title="strahlConfiguration.js"
 runPathTracer(target, model, {
-  clearColor: null,
+  clearColor: false,
 });
 ```
 
-This will render a rudimentary skybox.
+This will render a rudimentary skybox which is helpful for checking sun direction and size.
 
 To configure a custom `clearColor`, pass it as:
 
