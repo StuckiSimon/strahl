@@ -12,4 +12,9 @@ Physically-based rendering, or short PBR, is an approach that seeks to render mo
 
 ## Material Definition
 
-These tutorials establish an understanding of the parameters available to adjust the material appearance.
+These tutorials establish an understanding of the parameters available to adjust the material appearance. All of these properties can be set on the `OpenPBRMaterial`, for example, to set the `baseColor`, do:
+
+```js
+const material = new OpenPBRMaterial();
+material.oBaseColor = [0.4, 1.0, 0.0];
+```
