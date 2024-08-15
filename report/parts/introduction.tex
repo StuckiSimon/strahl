@@ -182,7 +182,9 @@ These engines focus on rasterization techniques and are widely used for web-base
 
 Path tracing is a specific ray tracing technique. The first experiments of using \gls{WebGL} for path tracing were implemented as early as 2010. One such example is the Google experiment demonstrating a Cornell Box \cite{goral1984modeling} with basic primitive shapes such as spheres and planes \cite{pathTracerWallace}.
 
-Since then, various open-source implementations for the web have been developed. While closed-source options exist, this work focuses on widely available open-source variants. The inherent advantages of open-source software lie in the possibility to inspect and modify the code, as well as in permissive license agreements, which often allow for free use in perpetuity. Consequently, closed-source alternatives are not considered in this context. A more detailed comparison of these path tracers is provided in \autoref{sec:comparisonToPriorWork}.
+Since then, various open-source implementations for the web have been developed, accompanied by related research efforts \cite{academicWebGLPathTracer, academicWebGLPathTracer2}. While closed-source options exist, this work focuses on open-source variants. The inherent advantages of open-source software lie in the possibility to inspect and modify the code, as well as in permissive license agreements, which often allow for free use in perpetuity. Consequently, closed-source alternatives are not considered in this context.
+
+Notable open-source path tracers for the web include:
 
 \begin{itemize}
   \item{\texttt{three-gpu-pathtracer}} \cite{ThreeJsPathTracerJohnson} — One of the most widely known path tracers for the web developed by Johnson. This path tracer is implemented as a \gls{Three.js} plugin and uses \gls{WebGL} for rendering.  It is bundled as a library and can be used to render scenes in the browser.
@@ -190,7 +192,7 @@ Since then, various open-source implementations for the web have been developed.
   \item{\texttt{dspbr-pt}} \cite{PathTracerDassault} — Path tracer by Dassault Systèmes implemented in \gls{WebGL}. It implements the Dassault Systèmes Enterprise PBR Shading Model (\gls{DSPBR}). However, the implementation has not been updated in recent years.
 \end{itemize}
 
-All of these path tracers are based on \gls{WebGL} and are either plugins for \gls{Three.js} or support \gls{Three.js} scene description.
+All of these path tracers are based on \gls{WebGL} and are either plugins for \gls{Three.js} or support \gls{Three.js} scene description. A more detailed comparison of these path tracers is provided in \autoref{sec:comparisonToPriorWork}.
 
 \subsection*{WebGPU}
 
