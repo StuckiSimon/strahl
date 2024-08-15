@@ -1259,7 +1259,7 @@ In general, there is no \gls{PBR} standard. Instead, a variety of different mode
 
 \subsection{BxDF}
 
-The definition of the bidirectional distribution functions (\gls{BxDF}) is a key concept in PBR. The $x$ stands for the different kinds of distributions to consider. In general, the functions describe how light is reflected or transmitted. The two functions are usually abbreviated as \gls{BRDF}, the r standing for reflectance, and \gls{BTDF}, the t standing for transmittance. The combination of the two is often referred to as \gls{BSDF}, the s standing for scattering \cite{Pharr_Physically_Based_Rendering_2023}.
+The definition of the bidirectional distribution functions (\gls{BxDF}) is a key concept in \gls{PBR}. The $x$ stands for the different kinds of distributions to consider. In general, the functions describe how light is reflected or transmitted. The two functions are usually abbreviated as \gls{BRDF}, the $r$ standing for reflectance, and \gls{BTDF}, the $t$ standing for transmittance. The combination of the two is often referred to as \gls{BSDF}, the $s$ standing for scattering \cite{Pharr_Physically_Based_Rendering_2023}.
 
 These functions define the distribution of light in different directions as described in \autoref{sec:physics-generalization}. Samples of different kinds of \glspl{BRDF} can be seen in \autoref{fig:brdf-special}. Many objects exhibit a combination of different reflectance distributions.
 
@@ -1330,7 +1330,7 @@ These functions define the distribution of light in different directions as desc
 
 \subsection{Microfacet Theory}
 
-While the macroscopic appearance of a material is visible to the human eye, the microscopic structure of the surface is crucial in determining how light interacts with the surface. However, this structure is not perceivable to the human eye. Microfacet theory is a model which describes this microscopic structure. Microsurfaces are aggregated to form the coarse macroscopic surface. See \autoref{fig:microfacet-model} for a visualization of a rough surface. Theoretically, it would be possible to model the geometry as microsurfaces, but in practice, this leads to a high computational complexity due to increased storage and computation requirements. Instead, the distribution of normals is described as a distribution function. A rough surface has a wide distribution of normals, which leads to scattering, resulting in a diffuse reflection. A smooth surface has a narrow distribution of normals, which leads to a specular reflection. One of the most widely used distribution functions is the \fGls{GGX}{\e{Ground Glass Unknown}, frequently used microfacet distribution function derived by Neyret and independently by Walter et al. \cite{walter2007microfacet,heitz2018sampling}} distribution function. \cite{Pharr_Physically_Based_Rendering_2023}
+While the macroscopic appearance of a surface is visible to the human eye, the microscopic structure of the surface is not. However, the microscopic structure is crucial in determining how light interacts with the surface. Microfacet theory is a model which describes this microscopic structure. Microsurfaces are aggregated to form the coarse macroscopic surface. See \autoref{fig:microfacet-model} for a visualization of a rough surface. Theoretically, it would be possible to model the geometry as microsurfaces, but in practice, this leads to a high computational complexity due to increased storage and computation requirements. Instead, the distribution of normals is described as a normal distribution function (\gls{NDF}). A rough surface has a wide distribution of normals, which leads to scattering, resulting in a diffuse reflection. A smooth surface has a narrow distribution of normals, which leads to a specular reflection. One of the most widely used \glspl{NDF} is the \fGls{GGX}{\e{Ground Glass Unknown}, frequently used microfacet distribution function derived by Neyret and independently by Walter et al. \cite{walter2007microfacet,heitz2018sampling}} distribution function. \cite{Pharr_Physically_Based_Rendering_2023}
 
 \begin{figure}[H]
   \centering
@@ -1355,7 +1355,7 @@ While the macroscopic appearance of a material is visible to the human eye, the 
       (5,0);
 
   \end{tikzpicture}
-  \caption{Microsurface (red) compared to macrosurface (green) and normals $m$ for microsurface sample and $n$ as surface normal of underlying triangle plane. While all $n$ on the plane are identical, the microsurface normal vary significantly. Visualized as per Walter et al. \cite{walter2007microfacet}.}
+  \caption{Microsurface (red) compared to macrosurface (green) and normals $m$ for microsurface sample and $n$ as surface normal of underlying triangle plane. While all $n$ on the plane are identical, the microsurface normals vary significantly. Visualized as per Walter et al. \cite{walter2007microfacet}.}
   \label{fig:microfacet-model}
 \end{figure}
 
@@ -1365,9 +1365,9 @@ While the principles of \gls{PBR} are well-established, the material description
 
 \paragraph{Shader Design}
 
-Based on the focus of the material description models, they differ in how they need to be implemented. Flexible node-based systems permit the creation of custom shaders. This gives a lot of flexibility to the user as arbitrary shaders can be created. However, this flexibility comes at a cost. The underlying implementation needs to convert the node graph into shader code which can be executed on the \gls{GPU}. The flexibility increases surface area of the \gls{API} and therefore increases the complexity of implementation and optimization. In addition, managing a large number of custom shaders can be challenging as many shaders have similar features.
+Based on the focus of the material description models, they differ in how they need to be implemented. Flexible node-based systems permit the creation of custom shaders. This gives a lot of flexibility to the user as arbitrary shaders can be created. However, this flexibility comes at a cost. The underlying implementation needs to convert the node graph into shader code which can be executed on the \gls{GPU}. The flexibility increases the surface area of the \gls{API} and therefore increases the complexity of implementation and optimization. In addition, managing a large number of custom shaders can be challenging as many shaders have similar features.
 
-An alternative approach is to use an \gls{uber shader}. The term does not have a strict definition, but generally it is used to describe a shader program which can be adjusted using parameters to achieve different looks. The shader program is fixed and does not allow for customization of the shader graph. This approach often leads to a more complex shader with many parameters which can be difficult to manage, but it is easier to optimize as the shader program is fixed.
+An alternative approach is to use an \gls{uber shader}. The term does not have a strict definition, but generally it is used to describe a shader program which can be adjusted using parameters to achieve different looks. The shader program is fixed and does not allow for customization of the shader graph. This approach often leads to a more complex shader with many parameters that can be difficult to manage, but it is easier to optimize as the shader program is fixed.
 
 Technically, a node-based system also supports an \gls{uber shader} approach, but a \gls{uber shader} does not support a node-based system.
 
@@ -1379,25 +1379,25 @@ Many exchange formats, such as \gls{glTF}, support material description as part 
 Over the years, different parties have developed their own shading models. Some prominent options include:
 
 \begin{itemize}
-    \item{Disney Principled BRDF} \cite{disney2012pbr} – Developed by Disney in 2012, the model is not necessarily physically correct and focuses on being art directable and limiting parameters. While the model is influential, it is not an established standard and lacks reference implementation even though it has been adopted by some applications, including \gls{RenderMan} \cite{renderManDisneyPbrDocs}.
-    \item{Autodesk Standard Surface} \cite{autodeskStandardSurface} – Developed by Autodesk, the goals are similar to Disney in that the parameter set is kept small in order to be easier to use. The model is developed as an open standard with a reference implementation in \fgls{OSL}{\e{Open Shading Language}, shading language for production global illumination renderers maintained by Academy Software Foundation}. However, the standard has not seen much development in recent years.
-    \item{Adobe Standard Material} \cite{adobeStandardMaterial} – Developed by Adobe, the model is also influenced by the Disney Principled BRDF as well as Autodesk Standard Surface. It has a full specification and has been adopted by Adobe in their applications.
-    \item{\gls{DSPBR}} \cite{dspbrModel} – Developed by Dassault Systèmes, it is also influenced by the Disney Principled BRDF. The specification is detailed and the model is designed for industrial use cases.
+    \item{Disney Principled \gls{BRDF}} \cite{disney2012pbr} – Developed by Disney in 2012, the model is not necessarily physically accurate and focuses on being art-directable with limited parameters. Although the model is influential, it is not an established standard and lacks a reference implementation, despite being adopted by some applications, including \gls{RenderMan} \cite{renderManDisneyPbrDocs}.
+    \item{Autodesk Standard Surface} \cite{autodeskStandardSurface} – Developed by Autodesk, the goals are similar to Disney Principled \gls{BRDF} in that the parameter set is kept small in order to be easier to use. The model is developed as an open standard with a reference implementation in \fgls{OSL}{\e{Open Shading Language}, shading language for production global illumination renderers maintained by Academy Software Foundation}. However, the standard has not seen much development in recent years.
+    \item{Adobe Standard Material} \cite{adobeStandardMaterial} – Developed by Adobe, the model is also influenced by the Disney Principled \gls{BRDF} as well as Autodesk Standard Surface. It has a full specification and has been adopted by Adobe in their applications.
+    \item{\gls{DSPBR}} \cite{dspbrModel} – Developed by Dassault Systèmes, it is also influenced by the Disney Principled \gls{BRDF}. The specification is detailed and the model is designed for industrial use cases.
 \end{itemize}
 
-In addition to these standards, many real-time rendering engines such as \gls{Unity} and \fGls{Unreal}{Unreal Engine, cross-platform game engine developed by Epic Games}, modeling software such as \fGls{Blender}{open-source 3D computer graphics software toolset} and \fGls{Rhino3D}{\e{Rhinoceros}, proprietary 3D computer graphics and \gls{CAD} toolset} have their own shading models. Supporting many different shading models in a web-based real-time rendering application can be challenging, making the need for a common material description standard more apparent. This is where new material description standards come into play. These are open standards developed by multiple companies to address the siloed development of prior shading models, intended to be used across different applications.
+In addition to these standards, many real-time rendering engines, such as \gls{Unity} and \fGls{Unreal}{Unreal Engine, cross-platform game engine developed by Epic Games}, and modeling software, such as \fGls{Blender}{open-source 3D computer graphics software toolset} and \fGls{Rhino3D}{\e{Rhinoceros}, proprietary 3D computer graphics and \gls{CAD} toolset}, have their own shading models. Supporting many different shading models in a web-based real-time rendering application can be challenging, making the need for a common material description standard apparent. This is where new material description standards come into play. These are open standards developed by multiple companies to address the siloed development of prior shading models, intended to be used across different applications.
 
-\gls{MaterialX} is an open standard which was originally developed by Lucasfilm in 2012. The standard has since been adopted by the \fgls{ASWF}{\e{Academy Software Foundation}, organization promoting development and adoption of open-source software in the motion picture industry} as an open standard with support from a variety of companies. While not strictly limited to \gls{PBR}, the standard provides a wide range of features to describe physically based materials \cite{Harrysson2019}. \gls{MaterialX} supports extensive shader generation capabilities. This permits to re-use shaders across different applications and frameworks and aids in understanding the used approximations.
+\gls{MaterialX} is an open standard which was originally developed by Lucasfilm in 2012. The standard has since been adopted by the \fgls{ASWF}{\e{Academy Software Foundation}, organization promoting development and adoption of open-source software in the motion picture industry} as an open standard with support from a variety of companies. While not strictly limited to \gls{PBR}, the standard provides a wide range of features to describe physically-based materials \cite{Harrysson2019}. \gls{MaterialX} supports extensive shader generation capabilities. This permits to re-use shaders across different applications and frameworks and aids in understanding the used approximations.
 
 \subsection{OpenPBR}
 
 \gls{OpenPBR} is a surface shading model hosted by the \gls{ASWF} as an open standard \cite{openPBRSpec}. It differs from \gls{MaterialX} in that it is providing an \gls{uber shader} approach instead of a node-based approach. Version 1.0 of the standard was released in June of 2024 \cite{openPBR1Dot0Release}.
 
-It serves as a combination of Autodesk Standard Surface and Adobe Standard Material and is being worked on by both companies. The potential of this standard is to provide a common shading model which can be used across different applications. One notable adopter of the standard is NVIDIA Omniverse, which has shipped support of the standard \cite{omniverseOpenPBR}. \gls{Blender} has reworked their Principled BSDF shader to be based on \gls{OpenPBR} \cite{blenderOpenPBRInspiration}. These promising signs indicate that the standard has the potential to be widely adopted.
+It serves as a combination of Autodesk Standard Surface and Adobe Standard Material and is being worked on by both companies. The potential of this standard is to provide a common shading model which can be used across different applications. Support for the standard has already been announced in applications by Autodesk, Adobe, and NVIDIA \cite{omniverseOpenPBR}, among others. \gls{Blender} has reworked their Principled \gls{BSDF} shader to be based on \gls{OpenPBR} \cite{blenderOpenPBRInspiration}. These promising signs indicate that the standard has the potential to be widely adopted.
 
 The \gls{OpenPBR} specification includes a reference implementation in \gls{MaterialX}. This allows to use the shader generation of \gls{MaterialX} in order to get a reference implementation in \gls{GLSL} or \gls{OSL}.
 
-The \gls{uber shader} approach is defined by having a fix set of inputs which can be adjusted, but it does not allow for custom node graphs as \gls{MaterialX} does. The standard is designed for photorealistic material description. The first release of the standard is focused on surface shading and does not support specialized workflows such as advanced hair or volumetric effects like fog, smoke, and dust.
+The \gls{uber shader} approach is defined by having a fix set of inputs which can be adjusted, but it does not allow for custom node graphs as \gls{MaterialX} does. \gls{OpenPBR} is designed for photorealistic material description. The first release focuses on surface shading and does not support specialized workflows such as advanced hair or volumetric effects like fog, smoke, and dust.
 
 The specification is focused on physical aspects and does not specify implementation details. Implementations have an unambiguous target in terms of how it should look like, but have flexibility in terms of the degree of fidelity. While this makes alignment between different applications harder, it also allows for flexibility in the implementation of the standard, which is especially important for real-time rendering.
 
@@ -1413,7 +1413,7 @@ The structures consists of multiple layers to describe the material as visualize
 
 The layers are set up to be adjacent mediums where the \glspl{BSDF} of the individual interfaces are combined.
 
-The substrate is defined as a mixture of metal, translucent base, subsurface, and the gloss diffuse layer. These slabs are combined using a mix operation. The operation is defined as a weighted sum of the different layers. The weights are defined by the user and can be adjusted to achieve different looks.
+The substrate is defined as a mixture of metal, translucent base, subsurface, and the glossy-diffuse layer. These so-called slabs are combined using a mix operation. The operation is defined as a weighted sum of the different layers. The weights are defined by the user and can be adjusted to achieve different looks.
 
 \begin{figure}[H]
   \centering
@@ -1445,11 +1445,12 @@ The substrate is defined as a mixture of metal, translucent base, subsurface, an
   
   
   \end{tikzpicture}
-  \caption{The different layers of the \gls{OpenPBR} shading model. The workflow supports a variety of features such as metallic, glossy and diffuse reflection renderings which are important for industrial use cases.}
+  \caption{The different layers of the \gls{OpenPBR} surface shading model. The workflow supports a variety of features such as metallic, glossy, and diffuse reflection renderings that are important for industrial use cases.}
   \label{fig:openPBR}
 \end{figure}
 
-Diffuse reflection is based on the Oren-Nayar model reflection model which extended the Lambertian model to include rough surfaces \cite{oren1994generalization}.
+% todo: consider re-integrating, but probably should contain a bit more references such as ggx…
+% Diffuse reflection is based on the Oren-Nayar reflection model which extended the Lambertian model to include rough surfaces \cite{oren1994generalization}.
 
 \subsubsection{Assessment}
 
