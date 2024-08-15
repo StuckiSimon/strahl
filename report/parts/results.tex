@@ -193,5 +193,10 @@ The results for CPU performance were recorded using the Performance API and are 
 
 \section{Use Case Scenarios}
 
-The \gls{CAD} data used by EAO is a good fit for a path tracer. While not certain strengths of the ray tracing approach, such as caustics, are not relevant for the use case, and other strengths, such as reflections are not fully utilized, the path tracer still provides a suitable candidate for the use case. The complexity of the geometry does not pose a significant challenge for the path tracer, even for relatively high triangle counts. Using \gls{PBR} fits the use case and provides sufficient adjustment possibilities for the materials.
+The \gls{CAD} data used by EAO as visualized by the path tracer can be seen in \autoref{fig:rendering-showcase}. While certain strengths of the ray tracing approach, such as caustics, are not relevant for the use case, and other strengths, such as reflections are not fully utilized, the path tracer still provides a suitable candidate for the use case. The complexity of the geometry does not pose a significant challenge for the path tracer, even for relatively high triangle counts. \gls{OpenPBR} parameters can be adjusted to fit the use case and provide a realistic rendering of the pushbuttons.
 
+\begin{figure}[H]
+    \includegraphics[width=1.0\columnwidth]{resources/showcase.png}
+    \caption{Path traced renderings of pushbutton CAD models. From left to right: side view with metallic reflection, rear view exhibiting red color bleeding, rear view with ambient occlusion, and pushbutton mounted on a metallic surface, including the reflection of the Stanford bunny model \cite{turkLevoy1994} positioned in the scene.}
+    \label{fig:rendering-showcase}
+\end{figure}

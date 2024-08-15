@@ -206,6 +206,23 @@
   organization={Wiley Online Library}
 }
 
+@inproceedings{turkLevoy1994,
+  author = {Turk, Greg and Levoy, Marc},
+  title = {Zippered polygon meshes from range images},
+  year = {1994},
+  isbn = {0897916670},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  url = {https://doi.org/10.1145/192161.192241},
+  doi = {10.1145/192161.192241},
+  abstract = {Range imaging offers an inexpensive and accurate means for digitizing the shape of three-dimensional objects. Because most objects self occlude, no single range image suffices to describe the entire object. We present a method for combining a collection of range images into a single polygonal mesh that completely describes an object to the extent that it is visible from the outside.The steps in our method are: 1) align the meshes with each other using a modified iterated closest-point algorithm, 2) zipper together adjacent meshes to form a continuous surface that correctly captures the topology of the object, and 3) compute local weighted averages of surface positions on all meshes to form a consensus surface geometry.Our system differs from previous approaches in that it is incremental; scans are acquired and combined one at a time. This approach allows us to acquire and combine large numbers of scans with minimal storage overhead. Our largest models contain up to 360,000 triangles. All the steps needed to digitize an object that requires up to 10 range scans can be performed using our system with five minutes of user interaction and a few hours of compute time. We show two models created using our method with range data from a commercial rangefinder that employs laser stripe technology.},
+  booktitle = {Proceedings of the 21st Annual Conference on Computer Graphics and Interactive Techniques},
+  pages = {311–318},
+  numpages = {8},
+  keywords = {polygon mesh, range images, structured light range scanner, surface fitting, surface reconstruction},
+  series = {SIGGRAPH '94}
+}
+
 @inproceedings{whittedGlobalIllumination,
   author = {Whitted, Turner},
   title = {An improved illumination model for shaded display},
