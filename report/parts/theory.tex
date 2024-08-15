@@ -1101,7 +1101,7 @@ fn computeMain(@builtin(global_invocation_id) global_id: vec3<u32>) {
 
 Attributes such as \texttt{@compute} are used to provide additional information to the compiler. In this case, it denotes the entry point for the compute pipeline and is mandatory as it enables usage of specific attributes such as \texttt{@builtin} which may only be used on entry points.
 
-Similar to other shading languages, it does not support recursion because cycles are not permitted in any kinds of declarations. It also does not have features such as an \gls{API} for \gls{RNG}. The shading language is designed for common use cases in computer graphics and general-purpose computing. One example is support for swizzling. Swizzling is a class of operations which facilitate managing vector elements. For example, given a vector \verb|let v = vec3f(x, y, z)|, the operation \verb|v.xy| returns a vector \verb|(x, y)|.
+Similar to other shading languages, it does not support recursion because cycles are not permitted in any kinds of declarations. It also does not have features such as an \gls{API} for \gls{RNG}. The shading language is designed for common use cases in computer graphics and general-purpose computing. One example is support for swizzling. Swizzling is a class of operations which facilitate managing vector elements. For example, given a vector \texttt{let v = vec3f(x, y, z)}, the operation \texttt{v.xy} returns a vector \texttt{(x, y)}.
 
 \subsubsection{Buffers}
 
@@ -1117,9 +1117,9 @@ Data needs to be transferred between the CPU and the GPU within bind groups. Buf
 \subsubsection{Memory Alignment}
 \label{ch:memoryAlignmentTheory}
 
-\gls{WGSL} supports \verb|struct| for defining data structures. However, when passing data between the CPU and the GPU, memory alignment needs to be considered. Alignment is a constraint, restricting the memory address at which a data structure can be stored. Having strict memory alignment enables use of more efficient hardware instruction sets, or address hardware requirements.
+\gls{WGSL} supports \texttt{struct} for defining data structures. However, when passing data between the CPU and the GPU, memory alignment needs to be considered. Alignment is a constraint, restricting the memory address at which a data structure can be stored. Having strict memory alignment enables use of more efficient hardware instruction sets, or address hardware requirements.
 
-Each type in \gls{WGSL} has specific alignment requirements which are independent of the size. For example, a \verb|vec3f| has a size of 12 bytes, but requires an alignment of 16 bytes. So for a struct definition such as can be seen in \autoref{code:memoryAlignment}, the struct requires 32 bytes of memory to store 20 bytes of data as illustrated in \autoref{fig:memory-alignment}. The excess 12 bytes are used for padding.
+Each type in \gls{WGSL} has specific alignment requirements which are independent of the size. For example, a \texttt{vec3f} has a size of 12 bytes, but requires an alignment of 16 bytes. So for a struct definition such as can be seen in \autoref{code:memoryAlignment}, the struct requires 32 bytes of memory to store 20 bytes of data as illustrated in \autoref{fig:memory-alignment}. The excess 12 bytes are used for padding.
 
 \begin{figure}[H]
   \begin{lstlisting}[style=wgsl]
