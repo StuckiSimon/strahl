@@ -44,14 +44,28 @@ struct UniformData {
   objectDefinitionLength: i32,
 }
 
-@group(0) @binding(0) var<storage, read_write> positions: array<f32>;
+// Use due to 16 bytes alignment of vec3
+struct IndicesPackage {
+  x: i32,
+  y: i32,
+  z: i32,
+}
+
+// Use due to 16 bytes alignment of vec3
+struct VertexPackage {
+  x: f32,
+  y: f32,
+  z: f32,
+}
+
+@group(0) @binding(0) var<storage, read_write> positions: array<VertexPackage>;
 // todo: Check when i16 is supported
-@group(0) @binding(1) var<storage, read_write> indices: array<i32>;
+@group(0) @binding(1) var<storage, read_write> indices: array<IndicesPackage>;
 
 @group(0) @binding(2) var<storage, read_write> bounds: array<array<vec4f, 2>>;
 @group(0) @binding(3) var<storage, read_write> contents: array<BinaryBvhNodeInfo>;
 
-@group(0) @binding(4) var<storage, read_write> normals: array<f32>;
+@group(0) @binding(4) var<storage, read_write> normals: array<VertexPackage>;
 
 @group(0) @binding(5) var<storage, read_write> indirectIndices: array<u32>;
 
@@ -345,26 +359,31 @@ fn intersectsBVHNodeBounds(ray: Ray, currNodeIndex: u32, dist: ptr<function, f32
   return intersectsBounds(ray, boundsMin.xyz, boundsMax.xyz, dist);
 }
 
+fn vertexPackageToVec3f(vp: VertexPackage) -> vec3f {
+  return vec3f(vp.x, vp.y, vp.z);
+}
+
 fn intersectTriangles(offset: u32, count: u32, ray: Ray, rayT: Interval, hitRecord: ptr<function, HitRecord>) -> bool {
   var found = false;
   var localDist = hitRecord.t;
   let l = offset + count;
   
   for (var i = offset; i < l; i += 1) {
-    let vIndexOffset = indirectIndices[i] * 3u;
-
-    let v1Index = indices[vIndexOffset];
-    let v2Index = indices[vIndexOffset+1];
-    let v3Index = indices[vIndexOffset+2];
+    let indAccess = indirectIndices[i];
+    let indicesPackage = indices[indAccess];
+    let v1Index = indicesPackage.x;
+    let v2Index = indicesPackage.y;
+    let v3Index = indicesPackage.z;
     
-    let x = vec3f(positions[v1Index*3], positions[v1Index*3+1], positions[v1Index*3+2]);
-    let y = vec3f(positions[v2Index*3], positions[v2Index*3+1], positions[v2Index*3+2]);
-    let z = vec3f(positions[v3Index*3], positions[v3Index*3+1], positions[v3Index*3+2]);
+    let x = vertexPackageToVec3f(positions[v1Index]);
+    let y = vertexPackageToVec3f(positions[v2Index]);
+    let z = vertexPackageToVec3f(positions[v3Index]);
     
     let Q = x;
     let u = y - x;
     let v = z - x;
     
+    let vIndexOffset = indAccess * 3;
     var matchingObjectDefinition: ObjectDefinition = objectDefinitions[0];
     for (var j = 0; j < uniformData.objectDefinitionLength ; j++) {
       let objectDefinition = objectDefinitions[j];
@@ -375,11 +394,11 @@ fn intersectTriangles(offset: u32, count: u32, ray: Ray, rayT: Interval, hitReco
     }
     let materialDefinition = matchingObjectDefinition.material;
 
-    let normalX = vec3f(normals[v1Index*3], normals[v1Index*3+1], normals[v1Index*3+2]);
-    let normalY = vec3f(normals[v2Index*3], normals[v2Index*3+1], normals[v2Index*3+2]);
-    let normalZ = vec3f(normals[v3Index*3], normals[v3Index*3+1], normals[v3Index*3+2]);
+    let normalX = vertexPackageToVec3f(normals[v1Index]);
+    let normalY = vertexPackageToVec3f(normals[v2Index]);
+    let normalZ = vertexPackageToVec3f(normals[v3Index]);
     
-    let triangle = Triangle(Q, u, v, materialDefinition, normalX,normalY,normalZ);
+    let triangle = Triangle(Q, u, v, materialDefinition, normalX, normalY, normalZ);
 
     var tmpRecord: HitRecord;
     if (triangleHit(triangle, ray, Interval(rayT.min, localDist), &tmpRecord)) {
