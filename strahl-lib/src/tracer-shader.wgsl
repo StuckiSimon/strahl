@@ -48,7 +48,7 @@ struct UniformData {
 // todo: Check when i16 is supported
 @group(0) @binding(1) var<storage, read_write> indices: array<i32>;
 
-@group(0) @binding(2) var<storage, read_write> bounds: array<f32>;
+@group(0) @binding(2) var<storage, read_write> bounds: array<array<vec4f, 2>>;
 @group(0) @binding(3) var<storage, read_write> contents: array<BinaryBvhNodeInfo>;
 
 @group(0) @binding(4) var<storage, read_write> normals: array<f32>;
@@ -338,12 +338,11 @@ fn intersectsBounds(ray: Ray, boundsMin: vec3f, boundsMax: vec3f, dist: ptr<func
 }
 
 fn intersectsBVHNodeBounds(ray: Ray, currNodeIndex: u32, dist: ptr<function, f32>) -> bool {
-  // 2 because min+max, 4 because x,y,z + unused alpha
-  let cni2 = currNodeIndex * 2u * 4;
-  let boundsMin = vec3<f32>(bounds[cni2], bounds[cni2 + 1], bounds[cni2 + 2]);
-  // Start at 4 because of unused alpha
-  let boundsMax = vec3<f32>(bounds[cni2 + 4], bounds[cni2 + 5], bounds[cni2 + 6]);
-  return intersectsBounds(ray, boundsMin, boundsMax, dist);
+  //  2 x x,y,z + unused alpha
+  let boundaries = bounds[currNodeIndex];
+  let boundsMin = boundaries[0];
+  let boundsMax = boundaries[1];
+  return intersectsBounds(ray, boundsMin.xyz, boundsMax.xyz, dist);
 }
 
 fn intersectTriangles(offset: u32, count: u32, ray: Ray, rayT: Interval, hitRecord: ptr<function, HitRecord>) -> bool {
