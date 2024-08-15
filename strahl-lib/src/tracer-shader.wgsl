@@ -1,4 +1,4 @@
-alias Color = vec3<f32>;
+alias Color = vec3f;
 
 struct Material {
   baseWeight: f32,
