@@ -49,7 +49,7 @@ The ray generator is responsible for casting rays into the scene according to th
 
 For many applications, especially photorealistic rendering, perspective projection is prevalent. Based on the assessed use cases, the path tracer uses perspective projection only. See \coderef{VIEWPROJECTION} for implementation.
 
-The path tracer uses PCG-RXS-M-XS variant as described by O’Neill \cite{o2014pcg} in combination with Xorshift as described by Marsaglia \cite{marsaglia2003xorshift}. See \coderef{RNG} for implementation.
+For \gls{RNG}, the path tracer uses \gls{PCG} in combination with Xorshift, specifically the PCG-RXS-M-XS variant as described by O’Neill \cite{o2014pcg} and Xorshift as described by Marsaglia \cite{marsaglia2003xorshift}. See \coderef{RNG} for implementation.
 
 In order to set up the Monte Carlo method, the \gls{RNG} needs to be employed in a suitable manner. As it is a pseudorandom generator, it necessitates a seed to start the generation. If the seed is identical for all pixels, the results of a single sample will frequently share similar patterns in adjacent surfaces as shown in \autoref{fig:rngBadSeed}. The result for independent seeds differs in a stark manner as shown in \autoref{fig:rngGoodSeed}.
 
