@@ -7,7 +7,13 @@ import TracerExperiment from "@site/src/components/TracerExperiment";
 # Metal
 
 <TracerExperiment
-  propertiesForConfiguration={["oBaseMetalness", "oBaseColor"]}
+  propertiesForConfiguration={[
+    "oBaseMetalness",
+    "oBaseColor",
+    "oSpecularRoughness",
+    "oSpecularWeight",
+    "oSpecularColor",
+  ]}
   defaultMaterialProperties={{
     oBaseColor: [0.7, 0.7, 0.7],
     oBaseMetalness: 1.0,
