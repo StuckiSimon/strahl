@@ -973,9 +973,9 @@ The first consumer graphics processing units (\gls{GPU}), the GeForce 256 produc
 
 Due to computational complexity, ray tracing techniques have been limited to offline rendering for a long time. Early ray tracers such as \gls{BMRT} were developed focusing on leveraging \gls{CPU} for computations. The introduction of \glspl{GPU} has lead to further research on how to optimize speed for techniques related to ray tracing. One such example of research for a well-established technique is \gls{BVH} construction on the \gls{GPU} \cite{lauterbach2009GPUbvh}. Leveraging \gls{GPU} has been a focus of research and has enabled real-time ray tracing in recent years. Notable developments include reservoir-based spatio-temporal importance resampling (ReSTIR) \cite{restir} and subsequent improvements \cite{restirAdvancements,restirGeneralized}.
 
-Nowadays GPUs are prevalent in consumer hardware such as smartphones, tablets, laptops and desktops and their use case is not limited to computer graphics. GPUs are used in a wide range of applications, such as machine learning, scientific computing and data processing. Devices, which do not have a discrete GPU, often use an integrated GPU which is part of the CPU.
+Nowadays \glspl{GPU} are prevalent in consumer hardware such as smartphones, tablets, laptops and desktops and their use case is not limited to computer graphics. \glspl{GPU} are used in a wide range of applications, such as machine learning, scientific computing and data processing. Devices, which do not have a discrete \gls{GPU}, often use an integrated \gls{GPU} which is part of the \gls{CPU}.
 
-Modern GPU hardware offers support for hardware-accelerated ray tracing. Examples include NVIDIA RTX \cite{nvidiaRtxRayTracing}, Apple Metal on M3 \cite{appleM3GpuAdvancements} and others. These examples demonstrate an increasing trend towards hardware-accelerated ray tracing in recent years, however many devices and \glspl{API}, including \gls{WebGPU}, do not yet support hardware-accelerated ray tracing.
+Modern \gls{GPU} hardware offers support for hardware-accelerated ray tracing. Examples include NVIDIA RTX \cite{nvidiaRtxRayTracing}, Apple Metal on M3 \cite{appleM3GpuAdvancements} and others. These examples demonstrate an increasing trend towards hardware-accelerated ray tracing in recent years, however many devices and \glspl{API}, including \gls{WebGPU}, do not yet support hardware-accelerated ray tracing.
 
 \paragraph{Common Strategies}
 \label{sec:commonGpuStrategies}
@@ -1105,11 +1105,11 @@ Similar to other shading languages, it does not support recursion because cycles
 
 \subsubsection{Buffers}
 
-Data needs to be transferred between the CPU and the GPU within bind groups. Buffers are the primary method to store data. Depending on the type of data to be transferred, different types of buffers can be used:
+Data needs to be transferred between the \gls{CPU} and the \gls{GPU} within bind groups. Buffers are the primary method to store data. Depending on the type of data to be transferred, different types of buffers can be used:
 
 \begin{itemize}
-  \item{Uniforms} — Uniform Buffers are optimized for data which is read-only on the GPU and is the same for all vertices or fragments. Such information could be the projection matrix.
-  \item{Storage} — Storage Buffers are intended for read-write access on the GPU. The limits of the buffer are higher than for uniform buffers.
+  \item{Uniforms} — Uniform Buffers are optimized for data which is read-only on the \gls{GPU} and is the same for all vertices or fragments. Such information could be the projection matrix.
+  \item{Storage} — Storage Buffers are intended for read-write access on the \gls{GPU}. The limits of the buffer are higher than for uniform buffers.
   \item{Vertex} — Alternative to storage buffers, intended for vertex data.
   \item{Index} - Buffers which contain indices for the vertices.
 \end{itemize}
@@ -1117,7 +1117,7 @@ Data needs to be transferred between the CPU and the GPU within bind groups. Buf
 \subsubsection{Memory Alignment}
 \label{ch:memoryAlignmentTheory}
 
-\gls{WGSL} supports \texttt{struct} for defining data structures. However, when passing data between the CPU and the GPU, memory alignment needs to be considered. Alignment is a constraint, restricting the memory address at which a data structure can be stored. Having strict memory alignment enables use of more efficient hardware instruction sets, or address hardware requirements.
+\gls{WGSL} supports \texttt{struct} for defining data structures. However, when passing data between the \gls{CPU} and the \gls{GPU}, memory alignment needs to be considered. Alignment is a constraint, restricting the memory address at which a data structure can be stored. Having strict memory alignment enables use of more efficient hardware instruction sets, or address hardware requirements.
 
 Each type in \gls{WGSL} has specific alignment requirements which are independent of the size. For example, a \texttt{vec3f} has a size of 12 bytes, but requires an alignment of 16 bytes. So for a struct definition such as can be seen in \autoref{code:memoryAlignment}, the struct requires 32 bytes of memory to store 20 bytes of data as illustrated in \autoref{fig:memory-alignment}. The excess 12 bytes are used for padding.
 
@@ -1140,7 +1140,7 @@ Each type in \gls{WGSL} has specific alignment requirements which are independen
   \label{fig:memory-alignment}
 \end{figure}
 
-Memory alignment is opaque while writing \gls{WGSL} code, it is relevant when providing data to the GPU. For creating buffers, the alignment requirements need to be considered. When using JavaScript to create buffers, the standard Web \glspl{API} such as \texttt{Float32Array} or \texttt{Uint32Array} can be used to provide data. In order to write data to the \texttt{struct} in \autoref{code:memoryAlignment}, the views can be created as shown in \autoref{code:memoryAlignmentJs}.
+Memory alignment is opaque while writing \gls{WGSL} code, it is relevant when providing data to the \gls{GPU}. For creating buffers, the alignment requirements need to be considered. When using JavaScript to create buffers, the standard Web \glspl{API} such as \texttt{Float32Array} or \texttt{Uint32Array} can be used to provide data. In order to write data to the \texttt{struct} in \autoref{code:memoryAlignment}, the views can be created as shown in \autoref{code:memoryAlignmentJs}.
 
 \begin{figure}[H]
   \begin{lstlisting}[style=JavaScript]

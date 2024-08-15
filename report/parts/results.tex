@@ -21,11 +21,11 @@ The goal of the implementation is to be compatible with a large variety of devic
 
 The path tracer is designed to be integrated into existing web projects. The package is installable via \gls{npm}, but could also be downloaded and included manually. The full documentation is available on the website.
 
-Figure~\ref{fig:path-tracer} illustrates the procedure of the path tracer. Scene preparation is performed on the CPU. This setup needs to be done once per visualization. Subsequent sampling of the scene is carried out repeatedly on the GPU, which constitutes the most computationally intensive part of the process.
+Figure~\ref{fig:path-tracer} illustrates the procedure of the path tracer. Scene preparation is performed on the \gls{CPU}. This setup needs to be done once per visualization. Subsequent sampling of the scene is carried out repeatedly on the \gls{GPU}, which constitutes the most computationally intensive part of the process.
 
 \begin{figure}[H]
     \includegraphics[width=1.0\columnwidth]{resources/path-tracer-pipeline.png}
-    \caption{Path Tracer Pipeline, distinguishing GPU and CPU tasks. The stages of the compute pipeline and render pipeline are executed sequentially.}
+    \caption{Path Tracer Pipeline, distinguishing \gls{GPU} and \gls{CPU} tasks. The stages of the compute pipeline and render pipeline are executed sequentially.}
     \label{fig:path-tracer}
 \end{figure}
 
@@ -157,7 +157,7 @@ As described in \autoref{ch:russianRoulette}, Russian roulette is a technique us
 
 \subsection{Overall Performance}
 
-The results for CPU performance were recorded using the Performance API and are presented in Table~\ref{tab:cpuPerformance}. The results for GPU performance were recorded using \gls{WebGPU} timestamp queries and are presented in Table~\ref{tab:gpuPerformance}.
+The results for \gls{CPU} performance were recorded using the Performance API and are presented in Table~\ref{tab:cpuPerformance}. The results for \gls{GPU} performance were recorded using \gls{WebGPU} timestamp queries and are presented in Table~\ref{tab:gpuPerformance}.
 
 
 \begin{table}[H]
