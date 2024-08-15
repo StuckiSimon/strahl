@@ -1181,15 +1181,15 @@ Another such format is \fGls{STL}{\e{Stereolithography}, 3D exchange format deve
 
 \subsection*{Interoperability Formats}
 
-The aforementioned formats have shortcomings in terms of interoperability and feature set for complex 3D scenes. Special formats have been developed to address issues encountered in complex 3D scenes such as encountered in the film industry.
+The aforementioned formats have shortcomings in terms of interoperability and feature set for complex 3D scenes. Special formats have been developed to address issues encountered in complex 3D scenes such as those found in the film industry.
 
-Other formats such as \fGls{COLLADA}{\e{Collaborative Design Activity}, 3D exchange format managed by \gls{Khronos Group}} have been developed to improve transporting 3D scenes between different applications. It is XML-based and has been established in 2004 and has since been managed by the \gls{Khronos Group}. The latest release of the format was in 2008.
+Other formats such as \fGls{COLLADA}{\e{Collaborative Design Activity}, 3D exchange format managed by \gls{Khronos Group}} have been developed to improve transporting 3D scenes between different applications. Based on \fGls{XML}{\e{Extensible Markup Language}}, the format was established established in 2004 and has been managed by the \gls{Khronos Group} since then. Its release was in 2008.
 
 One notable format is \fGls{USD}{\e{Universal Scene Description}, 3D exchange format}, which has been open-sourced by Pixar in 2016. Similar to \gls{COLLADA}, the format is designed with interoperability in mind, and is widely supported by 3D engines and applications. The main focus of \gls{USD} is support for complex scenes and complex collaboration workflows, which are common in the film industry but are less relevant for the use case in this thesis.
 
 \subsection*{Runtime Formats}
 
-For usage in end-user applications, such as for the use cases in this thesis, the \gls{glTF} format is well-suited \cite{gltfSpecification}. It has been established in 2015 and is designed to be efficient for transmission and loading of 3D scenes. The standard is developed by the \gls{Khronos Group} and is widely supported by 3D engines and applications. The format supports 3D geometry, materials, animations, scene graph and other features.
+For usage in end-user applications, such as for the use cases in this thesis, the \gls{glTF} format is well-suited \cite{gltfSpecification}. It has been established in 2015 and is designed to be efficient for transmission and loading of 3D scenes. The standard is developed by the \gls{Khronos Group} and is widely supported by 3D engines and applications. The format supports geometry, materials, animations, scene graph, and other features.
 
 Technically, the format offers two different encoding formats which differ in file ending:
 
@@ -1198,7 +1198,7 @@ Technically, the format offers two different encoding formats which differ in fi
     \item{\texttt{.gltf}} – Text-based format which is human-readable.
 \end{itemize}
 
-\gls{glTF} is designed to be extensible and a variety of extensions have been developed to support features such as mesh compression using Draco. The hierarchy structure of a \gls{glTF} file is shown in \autoref{fig:gltf-hierarchy}. Many of the official extensions extend the material nodes to support more advanced features. Its focus on transmission and loading efficiency makes it well-suite for the web.
+\gls{glTF} is designed to be extensible and a variety of extensions have been developed to support features such as mesh compression using Draco. The hierarchy structure of a \gls{glTF} file is shown in \autoref{fig:gltf-hierarchy}. Many of the official extensions extend the material nodes to support more advanced features. Its focus on transmission and loading efficiency makes it well-suited for the web.
 
 \begin{figure}[H]
   \centering
@@ -1249,9 +1249,9 @@ Technically, the format offers two different encoding formats which differ in fi
 
 \section{Physically Based Rendering}
 
-Defining the geometry is one part of the equation. Another major part is defining materials. Materials define how a surface interacts with light. The core idea of physically based rendering (\gls{PBR}) is to simulate the interaction of light using physical models. Instead of fine-tuning parameters for a specific look and feel and having to adjust based on desired lighting situations, \gls{PBR} aims to define a material which behaves consistently in different lighting situations. It is therefore an approach based on physical principles such as those described in \autoref{ch:physics}.
+Defining the geometry is one part of the equation. Another major part is defining materials. Materials determine how a surface interacts with light. The core idea of physically based rendering (\gls{PBR}) is to simulate the interaction of light using physical models. Instead of fine-tuning parameters for a specific look and feel and having to adjust based on the desired lighting conditions, \gls{PBR} aims to define a material which behaves consistently in different lighting situations. It is therefore an approach based on physical principles such as those described in \autoref{ch:physics}.
 
-Research into \gls{PBR} has been conducted for a similar amount of time as ray tracing. And just like ray tracing, the computational complexity of the algorithms has limited the adoption of \gls{PBR} in real-time rendering for a long time. \gls{PBR} has generally coincided with the rise of ray tracing as it is a natural fit for the physics based approach on light transport. One prominent example of a PBR system is \gls{pbrt}, an open-source renderer with an associated literate programming book which has won an Academy Award for formalizing and providing reference implementation for \gls{PBR} \cite{Pharr_Physically_Based_Rendering_2023}.
+Research into \gls{PBR} has been conducted for a similar amount of time as ray tracing. And just like ray tracing, the computational complexity of the algorithms has limited the adoption of \gls{PBR} in real-time rendering for a long time. \gls{PBR} has generally coincided with the rise of ray tracing as it is a natural fit for the physics based approach on light transport. One prominent example of a \gls{PBR} system is \gls{pbrt}, an open-source renderer with an associated literate programming book which has won an Academy Award for formalizing and providing reference implementation for \gls{PBR} \cite{Pharr_Physically_Based_Rendering_2023}.
 
 \gls{PBR} and ray tracing are not mutually dependent as \gls{PBR} can be used in rasterization as well. In contrast to how ray tracing is inherently addressing shortcomings of rasterization by leveraging an entirely different approach, \gls{PBR} is a more incremental improvement extending existing shading techniques with more sophisticated models. Many ray tracers use simple non-standardized \gls{PBR} models which are suitable to demonstrate basic effects of global illumination, but are not suitable for high-fidelity rendering of complex scenes. Not having a clear standard makes alignment between different tools hard to manage and can lead to inconsistencies in the final rendering.
 
