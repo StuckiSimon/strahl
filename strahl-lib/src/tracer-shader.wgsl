@@ -440,6 +440,7 @@ fn hittableListHit(ray: Ray, rayT: Interval, hitRecord: ptr<function, HitRecord>
     let boundsInfoX = boundsInfo.x;
     let boundsInfoY = boundsInfo.y;
 
+    // CODE#BVH-NODE-ACCESS
     let isLeaf = (boundsInfoX & 0xffff0000u) == 0xffff0000u;
 
     if (isLeaf) {
