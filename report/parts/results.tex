@@ -141,6 +141,10 @@ When increasing the sample count, the differences in the setup remain visible. A
 The implementation of the anti-aliasing strategy indicated in \ref{sec:anti-aliasing} is implemented in \coderef{ALIASING} and is highly dependent on the \gls{RNG} setup.
 
 \subsection*{Path Tracer}
+
+The path tracer is the core of the library and is responsible to test for intersections, sample the scene, and calculate the final radiance. The renderer uses \fGls{RGB}{\e{red, green, and blue}, common system for color representation in computer graphics} as the color space.
+
+\subsubsection{Intersection Tests}
 \label{sec:bvh-implementation}
 
 Intersection tests based on the \gls{BVH} are implemented in \gls{WGSL}, see \coderef{BVH-TESTS}. The intersection tests for triangles are implemented in \coderef{TRIANGLE-INTERSECTION}. The boundary data is stored as \gls{AABB} which requires two vectors for the minimum and maximum bounds. The \gls{BVH} node content depends on whether it is a leaf or an inner node. Each node uses 64 bytes of memory as visualized in \autoref{fig:bvh-info}. The split axis determines which child node is traversed first. The left index is the index of the sibling node, therefore only the right index is stored. For leaf nodes, the triangle offset determines the index in the indirect indices buffer. The triangle count is the number of triangles in the leaf node.
@@ -162,9 +166,9 @@ Intersection tests based on the \gls{BVH} are implemented in \gls{WGSL}, see \co
     \label{fig:bvh-info}
 \end{figure}
 
-For each intersection, sampling is done according to the \gls{MIS} scheme. The surface shading method is based on \gls{OpenPBR} reference implementation in \gls{MaterialX} as well as the reference viewer by Portsmouth \cite{openPbrViewer}.
+\subsubsection{Surface Shading}
 
-The renderer uses \fGls{RGB}{\e{red, green, and blue}, common system for color representation in computer graphics} as the color space.
+For each intersection, sampling is done according to the \gls{MIS} scheme as described in \autoref{sec:monte-carlo-integration-sampling}. The surface shading method is based on \gls{OpenPBR} reference implementation in \gls{MaterialX} as well as the reference viewer by Portsmouth \cite{openPbrViewer}. The output is written to a texture. For writing and reading, a ping-pong technique is used. This means that the output of the previous frame is used as the input for the current frame, and vice versa.
 
 \subsection*{Render Pipeline}
 
