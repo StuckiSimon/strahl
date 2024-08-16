@@ -19,8 +19,6 @@ For references to the implementation of the path tracer, a consistent notation i
 
 The goal of the implementation is to be compatible with a large variety of devices and make the setup for consumers simple. Therefore, it is implemented and tested mainly in Chrome, which uses \gls{Dawn} as the underlying implementation of \gls{WebGPU}. Most notably, this means that dedicated features from other implementations such as \gls{wgpu} cannot be used. Neither can experimental extensions be leveraged.
 
-The path tracer is designed to be integrated into existing web projects. The package is installable via \gls{npm}, but could also be downloaded and included manually. The full documentation is available on the website.
-
 Figure~\ref{fig:path-tracer} illustrates the procedure of the path tracer. Scene preparation is performed on the \gls{CPU}. This setup needs to be done once per visualization. Subsequent sampling of the scene is carried out repeatedly on the \gls{GPU}, which constitutes the most computationally intensive part of the process.
 
 \begin{figure}[H]
@@ -153,6 +151,36 @@ The renderer uses \fGls{RGB}{\e{red, green, and blue}, common system for color r
 \subsection*{Render Pipeline}
 
 The output of the path tracing compute shader is a texture, which is then passed to a rasterizer. The rasterizer renders the texture to the canvas using a fullscreen quad consisting of two triangles. Tone mapping is done using the Khronos PBR Neutral Tone Mapper described in \autoref{sec:toneMappingTheory}. See \coderef{TONE-MAPPER} for implementation. Progressive rendering is a technique to render an image in multiple passes. Each render pass improves the quality of the image. This enables the user to see the rough image quickly and refine it over time. 
+
+\section{Documentation}
+
+The path tracer is designed to be integrated into existing web projects. The package is installable via \gls{npm}, but could also be downloaded and included manually. The full documentation is available on the website. The website is designed to serve as a demonstration of the path tracer, provide a quick start guide, and offer detailed information on how to set up \texttt{strahl}. The website is shown in \autoref{fig:strahl-homepage}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\columnwidth]{resources/website-home.png}
+    \caption{Homepage of \texttt{strahl} website.}
+    \label{fig:strahl-homepage}
+\end{figure}
+
+The documentation includes showcases for the \gls{OpenPBR} surface shading model. The parameters can be adjusted in real-time to see the effect on the rendering.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{resources/docu-demo-mirror-metal.png}
+        \caption{Mirror-like metal surface}
+        \label{fig:docu-demo-mirror}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{resources/docu-demo-rough-metal.png}
+        \caption{Rougher metal surface}
+        \label{fig:docu-demo-rough}
+    \end{subfigure}
+    \caption{Configurable showcase for \gls{OpenPBR} parameters.}
+    \label{fig:docu-demo}
+\end{figure}
 
 \section{Benchmark}
 \label{sec:benchmark}
