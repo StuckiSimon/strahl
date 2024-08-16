@@ -29,21 +29,19 @@ Figure~\ref{fig:path-tracer} illustrates the procedure of the path tracer. Scene
     \label{fig:path-tracer}
 \end{figure}
 
-\section{Scene Description}
+\subsection*{Scene Description}
 
 In order to be easy to integrate for developers familiar with existing web-based rendering engines, the renderer utilizes many of the scene description constructs provided by \gls{Three.js}. This includes the representation of geometry using \texttt{BufferGeometry}, camera using \texttt{PerspectiveCamera}, and arbitrary camera controls such as \texttt{OrbitControls}.
 
 This also enables the use of a variety of loaders for different file formats such as \gls{OBJ} or \gls{glTF}. However, due to its advantages for transmission, it's advised to use \gls{glTF} which can be imported using the loader provided by \gls{Three.js}.
 
-\subsection*{Scene Preparation}
+\subsubsection{Scene Preparation}
 
 The main process involved with setting up the scene is the preparation of the \gls{BVH}. For \gls{BVH} construction, well-established solutions for the web are available. The path tracer uses \texttt{three-mesh-bvh} \cite{threeMeshBvh}. This method builds the \gls{BVH} on the \gls{CPU}, the code for transferring the \gls{BVH} to the \gls{GPU} is in \coderef{BVH-TRANSFER}.
 
 In order to address memory alignment, as described in \autoref{ch:memoryAlignmentTheory}, the path tracer uses \texttt{webgpu-utils} \cite{webgpuUtilsLib}. The library enables a straightforward way to map data to buffers and align them correctly. See \coderef{MEMORY-VIEW} for creation of definition and \coderef{BUFFER-MAPPING} for mapping of data to buffers.
 
-%\todo{Memory Management (GPU+CPU)}
-
-\section{Ray Generator}
+\subsection*{Ray Generator}
 
 The ray generator is responsible for casting rays into the scene according to the view projection. The path tracer employs a backward ray tracing approach, tracing rays from the camera into the scene.
 
@@ -109,7 +107,7 @@ When increasing the sample count, the differences in the setup remain visible. A
 \label{sec:anti-aliasing-implementation}
 The implementation of the anti-aliasing strategy indicated in \ref{sec:anti-aliasing} is implemented in \coderef{ALIASING} and is highly dependent on the \gls{RNG} setup.
 
-\section{Path Tracer}
+\subsection*{Path Tracer}
 
 Intersection tests based on the \gls{BVH} are implemented in \gls{WGSL}, see \coderef{BVH-TESTS}. The intersection tests for triangles are implemented in \coderef{TRIANGLE-INTERSECTION}.
 
@@ -117,7 +115,7 @@ For each intersection, sampling is done according to the \gls{MIS} scheme. The s
 
 The renderer uses \fGls{RGB}{\e{red, green, and blue}, common system for color representation in computer graphics} as the color space.
 
-\section{Render Pipeline}
+\subsection*{Render Pipeline}
 
 The output of the path tracing compute shader is a texture, which is then passed to a rasterizer. The rasterizer renders the texture to the canvas using a fullscreen quad consisting of two triangles. Tone mapping is done using the Khronos PBR Neutral Tone Mapper described in \autoref{sec:toneMappingTheory}. See \coderef{TONE-MAPPER} for implementation. Progressive rendering is a technique to render an image in multiple passes. Each render pass improves the quality of the image. This enables the user to see the rough image quickly and refine it over time. 
 
@@ -136,7 +134,7 @@ Unless otherwise specified, the benchmarks are conducted on a MacBook Pro with A
     \label{fig:benchmark-models}
 \end{figure}
 
-\subsection{Russian Roulette}
+\subsection*{Russian Roulette}
 
 As described in \autoref{ch:russianRoulette}, Russian roulette is a technique used to do probabilistic path termination. The code is implemented in \coderef{RUSSIAN-ROULETTE}. The benchmark results are shown in \autoref{tab:russian-roulette-measurements}.
 
@@ -155,7 +153,7 @@ As described in \autoref{ch:russianRoulette}, Russian roulette is a technique us
     \label{tab:russian-roulette-measurements}
 \end{table}
 
-\subsection{Overall Performance}
+\subsection*{Overall Performance}
 
 The results for \gls{CPU} performance were recorded using the Performance API and are presented in Table~\ref{tab:cpuPerformance}. The results for \gls{GPU} performance were recorded using \gls{WebGPU} timestamp queries and are presented in Table~\ref{tab:gpuPerformance}.
 
