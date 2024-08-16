@@ -1,6 +1,6 @@
 import React from "react";
 import { BindingParams, Pane } from "tweakpane";
-import { convertHexToRGB, OpenPBRMaterial } from "strahl";
+import { convertHexToRGB, OpenPBRMaterial, PathTracerOptions } from "strahl";
 import styles from "./styles.module.css";
 import clsx from "clsx";
 import usePathTracer from "@site/src/hooks/usePathTracer";
@@ -127,8 +127,9 @@ export default function TracerExperiment({
     sphere: buildMaterial({}),
   });
 
-  const [options] = React.useState<Parameters<typeof usePathTracer>[2]>({
+  const defaultOptions: PathTracerOptions = {
     targetSamples: 300,
+    kTextureWidth: 512,
     clearColor: convertHexToRGB("#1B1B1D"),
     viewProjectionConfiguration: {
       matrixWorldContent: [
@@ -154,12 +155,15 @@ export default function TracerExperiment({
         color: [1.0, 1.0, 0.9],
       },
     },
-  });
+  };
+
+  const [options, setOptions] =
+    React.useState<Parameters<typeof usePathTracer>[2]>(defaultOptions);
 
   const paneContainerId = React.useId();
   const paneRef = React.useRef<Pane | null>(null);
   React.useEffect(() => {
-    const PARAMS = Object.fromEntries(
+    let materialParams = Object.fromEntries(
       Object.entries(defaultConfiguration).map(
         ([key, { convertToPaneValue, configKey }]) => [
           configKey,
@@ -169,6 +173,10 @@ export default function TracerExperiment({
         ],
       ),
     );
+    const PARAMS = {
+      ...materialParams,
+      ...defaultOptions,
+    };
 
     const pane = new Pane({
       container: document.getElementById(`pane-${paneContainerId}`),
@@ -181,6 +189,25 @@ export default function TracerExperiment({
         defaultConfiguration[property].bindingParams,
       );
     }
+
+    const rendererSettings = pane.addFolder({
+      title: "Renderer",
+    });
+    rendererSettings.addBinding(PARAMS, "targetSamples", {
+      min: 100,
+      max: 10_000,
+      step: 1,
+    });
+    rendererSettings.addBinding(PARAMS, "maxRayDepth", {
+      min: 1,
+      max: 10,
+      step: 1,
+    });
+    rendererSettings.addBinding(PARAMS, "kTextureWidth", {
+      min: 64,
+      max: 2048,
+      step: 64,
+    });
 
     paneRef.current = pane;
 
@@ -203,6 +230,15 @@ export default function TracerExperiment({
 
         newMaterialMap.sphere = buildMaterial(convertPaneToOpenPBRMaterial());
         return newMaterialMap;
+      });
+
+      setOptions((current) => {
+        return {
+          ...current,
+          targetSamples: PARAMS.targetSamples,
+          maxRayDepth: PARAMS.maxRayDepth,
+          kTextureWidth: PARAMS.kTextureWidth,
+        };
       });
     });
 
