@@ -989,13 +989,13 @@ Certain basic definitions have established themselves as common practices for gr
 
 In addition to this standard graphics pipeline, many \glspl{API} also support custom code which does not need to be used exclusively for rendering. This code can be used for general-purpose computing and is generally referred to as \gls{GPGPU}. The corresponding compute pipeline consists of a single stage where input and output can be configured. Shaders which are used for \gls{GPGPU} are often called compute shaders.
 
-\subsection{OpenGL}
+\subsection*{OpenGL}
 
 \gls{OpenGL} is an \gls{API} for rendering 3D graphics. After its introduction in 1992, it was widely adopted. Subsequently, the standard has been ported to other platforms and has been extended with new features. The \gls{API} has its own shading language called OpenGL Shading Language (\gls{GLSL}).
 
 To date, \gls{OpenGL} is still widely used in the industry, but it has been replaced by more modern \glspl{API} in recent years.
 
-\subsection{Modern Graphics APIs}
+\subsection*{Modern Graphics APIs}
 
 While \gls{OpenGL} and derivatives such as \fgls{OpenGL ES}{\e{OpenGL for Embedded Systems}, subset of OpenGL designed for embedded systems like smartphones} have been widely adopted, the introduction of a number of new \glspl{API} has changed the landscape. The standards share an understanding of giving developers more control over the hardware and can be more efficient than \gls{OpenGL}. Modern hardware-accelerated features such as ray tracing are more easily accessible using these new \glspl{API}. Some of the most notable \glspl{API} are:
 
@@ -1007,7 +1007,7 @@ While \gls{OpenGL} and derivatives such as \fgls{OpenGL ES}{\e{OpenGL for Embedd
 
 None of these \glspl{API} are supported in the browser, which makes them unsuitable for the discussed use case.
 
-\subsection{WebGL}
+\subsection*{WebGL}
 
 \gls{WebGL} is a graphics \gls{API} for the web based on \gls{OpenGL ES} 2.0. It was initially released in 2011 and has since been adopted by all major browsers.
 
@@ -1018,7 +1018,7 @@ There are libraries such as GPU.js which provide \gls{GPGPU} capabilities using 
 
 Since its introduction, \gls{WebGL} has been extended with new features. \gls{WebGL} 2.0, which is based on \gls{OpenGL ES} 3.0, was released in 2017. Of the major browsers, Safari was the last to support it out of the box in 2021. Since \gls{WebGL} 2.0 no new major versions have been released but new features have been added. This makes it evident that while \gls{WebGL} will remain a viable option for the foreseeable future, \gls{WebGPU} is likely to become the preferred choice in the long term.
 
-\subsection{WebGPU}
+\subsection*{WebGPU}
 
 \gls{WebGPU} is a new web standard, being developed by \fGls{W3C}{\e{World Wide Web Consortium}, a non-profit organization dedicated to developing web standards} \cite{webgpuSpecification}. Unlike its predecessor, \gls{WebGL}, it is no longer based on \gls{OpenGL}. One of the main capabilities is support for \gls{GPGPU} by design. While all major browser vendors have announced intent to support \gls{WebGPU}, to date only Chrome has shipped \gls{WebGPU} for general use on desktop as well as mobile.
 The standard is still in development and new features are being added.
@@ -1247,7 +1247,7 @@ Technically, the format offers two different encoding formats which differ in fi
   \label{fig:gltf-hierarchy}
 \end{figure}
 
-\section{Physically Based Rendering}
+\section{Physically-based Rendering}
 
 Defining the geometry is one part of the equation. Another major part is defining materials. Materials determine how a surface interacts with light. The core idea of physically based rendering (\gls{PBR}) is to simulate the interaction of light using physical models. Instead of fine-tuning parameters for a specific look and feel and having to adjust based on the desired lighting conditions, \gls{PBR} aims to define a material which behaves consistently in different lighting situations. It is therefore an approach based on physical principles such as those described in \autoref{ch:physics}.
 
@@ -1257,7 +1257,7 @@ Research into \gls{PBR} has been conducted for a similar amount of time as ray t
 
 In general, there is no \gls{PBR} standard. Instead, a variety of different models have been developed over time. In recent years however, a convergence towards a common set of principles has been observed and certain aspects of \gls{PBR} are found in most models. This section explains these common principles and standards which can be used to obtain consistent renderings.
 
-\subsection{BxDF}
+\subsection*{BxDF}
 
 The definition of the bidirectional distribution functions (\gls{BxDF}) is a key concept in \gls{PBR}. The $x$ stands for the different kinds of distributions to consider. In general, the functions describe how light is reflected or transmitted. The two functions are usually abbreviated as \gls{BRDF}, the $r$ standing for reflectance, and \gls{BTDF}, the $t$ standing for transmittance. The combination of the two is often referred to as \gls{BSDF}, the $s$ standing for scattering \cite{Pharr_Physically_Based_Rendering_2023}.
 
@@ -1328,7 +1328,7 @@ These functions define the distribution of light in different directions as desc
   \label{fig:brdf-special}
   \end{figure}
 
-\subsection{Microfacet Theory}
+\subsection*{Microfacet Theory}
 
 While the macroscopic appearance of a surface is visible to the human eye, the microscopic structure of the surface is not. However, the microscopic structure is crucial in determining how light interacts with the surface. Microfacet theory is a model which describes this microscopic structure. Microsurfaces are aggregated to form the coarse macroscopic surface. See \autoref{fig:microfacet-model} for a visualization of a rough surface. Theoretically, it would be possible to model the geometry as microsurfaces, but in practice, this leads to a high computational complexity due to increased storage and computation requirements. Instead, the distribution of normals is described as a normal distribution function (\gls{NDF}). A rough surface has a wide distribution of normals, which leads to scattering, resulting in a diffuse reflection. A smooth surface has a narrow distribution of normals, which leads to a specular reflection. One of the most widely used \glspl{NDF} is the \fGls{GGX}{\e{Ground Glass Unknown}, frequently used microfacet distribution function derived by Neyret and independently by Walter et al. \cite{walter2007microfacet,heitz2018sampling}} distribution function. \cite{Pharr_Physically_Based_Rendering_2023}
 
@@ -1359,7 +1359,7 @@ While the macroscopic appearance of a surface is visible to the human eye, the m
   \label{fig:microfacet-model}
 \end{figure}
 
-\subsection{Material Description}
+\subsection*{Material Description}
 
 While the principles of \gls{PBR} are well-established, the material description in 3D formats is not uniform. A variety of different approaches have been developed. In addition to many exchange formats such as \gls{glTF} having their own material definition, different shading models exist independent of these formats. Similar to exchange formats, a variety of different use cases are addressed by material description models. While some shading models are optimized for real-time rendering, others are optimized for film production.
 
@@ -1389,7 +1389,7 @@ In addition to these standards, many real-time rendering engines, such as \gls{U
 
 \gls{MaterialX} is an open standard which was originally developed by Lucasfilm in 2012. The standard has since been adopted by the \fgls{ASWF}{\e{Academy Software Foundation}, organization promoting development and adoption of open-source software in the motion picture industry} as an open standard with support from a variety of companies. While not strictly limited to \gls{PBR}, the standard provides a wide range of features to describe physically-based materials \cite{Harrysson2019}. \gls{MaterialX} supports extensive shader generation capabilities. This permits to re-use shaders across different applications and frameworks and aids in understanding the used approximations.
 
-\subsection{OpenPBR}
+\subsection*{OpenPBR}
 
 \gls{OpenPBR} is a surface shading model hosted by the \gls{ASWF} as an open standard \cite{openPBRSpec}. It differs from \gls{MaterialX} in that it is providing an \gls{uber shader} approach instead of a node-based approach. Version 1.0 of the standard was released in June of 2024 \cite{openPBR1Dot0Release}.
 
