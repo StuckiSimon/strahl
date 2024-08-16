@@ -39,7 +39,7 @@ The main process involved with setting up the scene is the preparation of the \g
 
 In order to address memory alignment, as described in \autoref{ch:memoryAlignmentTheory}, the path tracer uses \texttt{webgpu-utils} \cite{webgpuUtilsLib}. The library enables a straightforward way to map data to buffers and align them correctly. See \coderef{MEMORY-VIEW} for creation of definition and \coderef{BUFFER-MAPPING} for mapping of data to buffers.
 
-A high-level view of the data structures is shown in \autoref{fig:memory-structure}. Using the \gls{BVH} it is possible to obtain the indices via indirect indices. Indirect indices are used because the \gls{BVH} re-orders the indices of the triangles, but the original indices are needed to get the correct object information which stores the material information of the surface. See \coderef{BUFFER-BINDINGS} for definition.
+A high-level view of the data structures is shown in \autoref{fig:memory-structure}. Using the \gls{BVH} it is possible to obtain the indices via indirect indices. Indirect indices are used because the \gls{BVH} re-orders the indices of the triangles, but the original indices are needed to get the correct object information which stores the material information of the surface. See \coderef{BUFFER-BINDINGS} for definition. The details of the individual buffers will be discussed in the following sections.
 
 \begin{figure}[H]
     \centering
@@ -141,8 +141,26 @@ When increasing the sample count, the differences in the setup remain visible. A
 The implementation of the anti-aliasing strategy indicated in \ref{sec:anti-aliasing} is implemented in \coderef{ALIASING} and is highly dependent on the \gls{RNG} setup.
 
 \subsection*{Path Tracer}
+\label{sec:bvh-implementation}
 
-Intersection tests based on the \gls{BVH} are implemented in \gls{WGSL}, see \coderef{BVH-TESTS}. The intersection tests for triangles are implemented in \coderef{TRIANGLE-INTERSECTION}.
+Intersection tests based on the \gls{BVH} are implemented in \gls{WGSL}, see \coderef{BVH-TESTS}. The intersection tests for triangles are implemented in \coderef{TRIANGLE-INTERSECTION}. The boundary data is stored as \gls{AABB} which requires two vectors for the minimum and maximum bounds. The \gls{BVH} node content depends on whether it is a leaf or an inner node. Each node uses 64 bytes of memory as visualized in \autoref{fig:bvh-info}. The split axis determines which child node is traversed first. The left index is the index of the sibling node, therefore only the right index is stored. For leaf nodes, the triangle offset determines the index in the indirect indices buffer. The triangle count is the number of triangles in the leaf node.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{resources/bvh-node-info.png}
+        \caption{\gls{BVH} inner node information}
+        \label{fig:bvh-info-inner-node}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{resources/bvh-leaf-info.png}
+        \caption{\gls{BVH} leaf node information}
+        \label{fig:bvh-info-leaf-node}
+    \end{subfigure}
+    \caption{Content information stored in \gls{BVH} nodes.}
+    \label{fig:bvh-info}
+\end{figure}
 
 For each intersection, sampling is done according to the \gls{MIS} scheme. The surface shading method is based on \gls{OpenPBR} reference implementation in \gls{MaterialX} as well as the reference viewer by Portsmouth \cite{openPbrViewer}.
 
