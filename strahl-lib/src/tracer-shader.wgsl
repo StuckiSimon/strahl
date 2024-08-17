@@ -58,6 +58,7 @@ struct VertexPackage {
   z: f32,
 }
 
+// CODE#BUFFER-BINDINGS
 @group(0) @binding(0) var<storage, read_write> positions: array<VertexPackage>;
 // todo: Check when i16 is supported
 @group(0) @binding(1) var<storage, read_write> indices: array<IndicesPackage>;
