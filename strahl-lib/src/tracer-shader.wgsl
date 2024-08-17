@@ -59,20 +59,20 @@ struct VertexPackage {
 }
 
 // CODE#BUFFER-BINDINGS
-@group(0) @binding(0) var<storage, read_write> positions: array<VertexPackage>;
+@group(0) @binding(0) var<storage, read> positions: array<VertexPackage>;
 // todo: Check when i16 is supported
-@group(0) @binding(1) var<storage, read_write> indices: array<IndicesPackage>;
+@group(0) @binding(1) var<storage, read> indices: array<IndicesPackage>;
 
-@group(0) @binding(2) var<storage, read_write> bounds: array<array<vec4f, 2>>;
-@group(0) @binding(3) var<storage, read_write> contents: array<BinaryBvhNodeInfo>;
+@group(0) @binding(2) var<storage, read> bounds: array<array<vec4f, 2>>;
+@group(0) @binding(3) var<storage, read> contents: array<BinaryBvhNodeInfo>;
 
-@group(0) @binding(4) var<storage, read_write> normals: array<VertexPackage>;
+@group(0) @binding(4) var<storage, read> normals: array<VertexPackage>;
 
-@group(0) @binding(5) var<storage, read_write> indirectIndices: array<u32>;
+@group(0) @binding(5) var<storage, read> indirectIndices: array<u32>;
 
-@group(0) @binding(6) var<storage, read_write> objectDefinitions: array<ObjectDefinition>;
+@group(0) @binding(6) var<storage, read> objectDefinitions: array<ObjectDefinition>;
 
-@group(0) @binding(7) var<storage, read_write> materials: array<Material>;
+@group(0) @binding(7) var<storage, read> materials: array<Material>;
 
 @group(1) @binding(0) var texture: texture_storage_2d<rgba8unorm, write>;
 
