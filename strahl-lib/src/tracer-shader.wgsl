@@ -1350,16 +1350,6 @@ fn writeColor(pixelColor: vec4f, x: i32, y: i32, samples: i32) {
   textureStore(texture, vec2<i32>(x, y), adjustedColor);
 }
 
-@must_use
-fn identityMatrix() -> mat4x4<f32> {
-  return mat4x4<f32>(
-      1.0, 0.0, 0.0, 0.0,
-      0.0, 1.0, 0.0, 0.0,
-      0.0, 0.0, 1.0, 0.0,
-      0.0, 0.0, 0.0, 1.0
-  );
-}
-
 fn sampleTriangleFilter(xi: f32) -> f32 {
   return select(1.0 - sqrt(2.0 - 2.0 * xi), sqrt(2.0 * xi) - 1.0, xi < 0.5);
 }
