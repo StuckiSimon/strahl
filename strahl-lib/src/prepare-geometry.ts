@@ -1,9 +1,27 @@
 import { getBVHExtremes, MeshBVH } from "three-mesh-bvh";
 import { logGroup } from "./benchmark/cpu-performance-logger";
 import { consolidateMesh } from "./consolidate-mesh";
-import { Group } from "three";
+import { GeometryGroup, Group } from "three";
 import { assertMeshBVHInternalStructure, bvhToTextures } from "./bvh-util";
-import { InternalError } from "./core/exceptions";
+import { InternalError, InvalidMaterialGroupError } from "./core/exceptions";
+
+export type MaterializedGeometryGroup = {
+  start: number;
+  count: number;
+  materialIndex: number;
+};
+
+function assertMaterializedGeometryGroup(
+  geometryGroup: GeometryGroup,
+): asserts geometryGroup is MaterializedGeometryGroup {
+  if (
+    typeof geometryGroup.start !== "number" ||
+    typeof geometryGroup.count !== "number" ||
+    typeof geometryGroup.materialIndex !== "number"
+  ) {
+    throw new InvalidMaterialGroupError(geometryGroup);
+  }
+}
 
 export function prepareGeometry(model: { scene: Group }) {
   const reducedModel = consolidateMesh([model.scene]);
@@ -34,6 +52,11 @@ export function prepareGeometry(model: { scene: Group }) {
 
   const normals = boundsTree.geometry.attributes.normal.array;
 
+  const modelGroups = reducedModel.geometry.groups.map((geometryGroup) => {
+    assertMaterializedGeometryGroup(geometryGroup);
+    return geometryGroup;
+  });
+
   return {
     indirectBuffer: boundsTree._indirectBuffer,
     boundsArray,
@@ -41,7 +64,7 @@ export function prepareGeometry(model: { scene: Group }) {
     positions,
     normals,
     meshIndices,
-    modelGroups: reducedModel.geometry.groups,
+    modelGroups,
     modelMaterials: reducedModel.materials,
     maxBvhDepth,
     bvhBuildTime,

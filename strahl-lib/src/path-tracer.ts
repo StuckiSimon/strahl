@@ -381,11 +381,10 @@ async function runPathTracer(
 
   // Prepare Object Definitions
   const OBJECT_DEFINITION_SIZE_PER_ENTRY = Uint32Array.BYTES_PER_ELEMENT * 3;
-  const groups = modelGroups;
 
   const objectDefinitionsBuffer = device.createBuffer({
     label: "Object definitions buffer",
-    size: OBJECT_DEFINITION_SIZE_PER_ENTRY * groups.length,
+    size: OBJECT_DEFINITION_SIZE_PER_ENTRY * modelGroups.length,
     usage: GPUBufferUsage.STORAGE,
     mappedAtCreation: true,
   });
@@ -394,8 +393,7 @@ async function runPathTracer(
   const objectDefinitionsData = new Uint32Array(objectDefinitionsMapped);
 
   objectDefinitionsData.set(
-    // todo: reconsider type assertion
-    groups.map((g) => [g.start, g.count, g.materialIndex!]).flat(1),
+    modelGroups.map((g) => [g.start, g.count, g.materialIndex]).flat(1),
   );
   objectDefinitionsBuffer.unmap();
 
@@ -659,7 +657,7 @@ async function runPathTracer(
         clearColor: clearColor === false ? [0, 0, 0] : clearColor,
         enableClearColor: clearColor === false ? 0 : 1,
         maxRayDepth,
-        objectDefinitionLength: groups.length,
+        objectDefinitionLength: modelGroups.length,
       });
       // todo: consider buffer writing
       device.queue.writeBuffer(uniformBuffer, 0, uniformData.arrayBuffer);
