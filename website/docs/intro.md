@@ -4,10 +4,6 @@ sidebar_position: 1
 
 # `strahl` Documentation
 
-:::danger[Disclaimer]
-The tutorial is not yet finished and will be following in the upcoming weeks.
-:::
-
 If you want to get started as quick as possible, take a look at the [Getting Started](/docs/tutorial-basic) tutorial. If you're interested in some more information about what `strahl` is, check out [information](/docs/information) first.
 
 ## Quick Links
@@ -15,6 +11,13 @@ If you want to get started as quick as possible, take a look at the [Getting Sta
 - [arXiv short paper](https://arxiv.org/abs/2407.19977) — summary of the work
 - [report](https://github.com/StuckiSimon/strahl/blob/report/report.pdf) — master thesis report with full details
 - [npm package](https://www.npmjs.com/package/strahl) — installable `strahl` package
+
+## Documentation Structure
+
+- [Material](./category/material/) — includes information about how to configure OpenPBR parameters
+- [Advanced](./category/advanced/) — practical guides on how to setup the renderer
+- [Techniques](./category/techniques/) — common techniques which can be used in combination with `strahl`
+- [Library Types](./api/) — TypeScript type documentation
 
 ## Browser Support
 
