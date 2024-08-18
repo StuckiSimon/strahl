@@ -287,8 +287,6 @@ async function runPathTracer(
 
   const sceneMatrixWorld = model.scene.matrixWorld;
 
-  // Prepare Position Data
-
   const isCustomCameraConfiguration = isCustomCameraSetup(
     viewProjectionConfiguration,
   );
@@ -299,6 +297,8 @@ async function runPathTracer(
   } else {
     cameraSetup = makeRawCameraSetup(viewProjectionConfiguration, canvas);
   }
+
+  // Prepare Position Data
 
   const positionBuffer = device.createBuffer({
     label: "Position buffer",
