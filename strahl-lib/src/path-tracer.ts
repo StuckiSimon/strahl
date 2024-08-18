@@ -391,7 +391,7 @@ async function runPathTracer(
   const boundsBuffer = device.createBuffer({
     label: "BVH bounds buffer",
     size: Float32Array.BYTES_PER_ELEMENT * boundsArray.length,
-    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+    usage: GPUBufferUsage.STORAGE,
     mappedAtCreation: true,
   });
 
@@ -404,7 +404,7 @@ async function runPathTracer(
   const contentsBuffer = device.createBuffer({
     label: "BVH contents buffer",
     size: Uint32Array.BYTES_PER_ELEMENT * contentsArray.length,
-    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+    usage: GPUBufferUsage.STORAGE,
     mappedAtCreation: true,
   });
 
@@ -418,7 +418,7 @@ async function runPathTracer(
   const indirectBuffer = device.createBuffer({
     label: "BVH indirect buffer",
     size: Uint32Array.BYTES_PER_ELEMENT * indirectBufferData.length,
-    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+    usage: GPUBufferUsage.STORAGE,
     mappedAtCreation: true,
   });
 
