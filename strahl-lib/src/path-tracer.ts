@@ -416,8 +416,8 @@ async function runPathTracer(
   const materialBuffer = device.createBuffer({
     label: "Material buffer",
     size: bytesPerMaterial * materials.length,
-    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
-    //mappedAtCreation: true,
+    usage: GPUBufferUsage.STORAGE,
+    mappedAtCreation: true,
   });
 
   // CODE#BUFFER-MAPPING
@@ -451,7 +451,10 @@ async function runPathTracer(
     }),
   );
 
-  device.queue.writeBuffer(materialBuffer, 0, materialDataView.arrayBuffer);
+  const materialMapped = materialBuffer.getMappedRange();
+  const materialMappedData = new Uint8Array(materialMapped);
+  materialMappedData.set(new Uint8Array(materialDataView.arrayBuffer));
+  materialBuffer.unmap();
 
   const computeBindGroupLayout = device.createBindGroupLayout({
     label: "Static compute bind group layout",
