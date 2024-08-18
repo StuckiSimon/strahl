@@ -22,6 +22,14 @@ export class SignalAlreadyAbortedError extends Error {
   }
 }
 
+export class InvalidMaterialGroupError extends Error {
+  constructor(public readonly invalidMaterialGroup: unknown) {
+    super(
+      "[InvalidMaterialGroupError] Material group is invalid. Make sure that all objects have an associated material index.",
+    );
+  }
+}
+
 export class InvalidMaterialError extends Error {
   constructor(public readonly invalidMaterial: unknown) {
     super(
