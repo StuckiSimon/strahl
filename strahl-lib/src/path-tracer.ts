@@ -363,8 +363,7 @@ async function runPathTracer(
   const indicesBuffer = device.createBuffer({
     label: "Index buffer",
     size: Uint32Array.BYTES_PER_ELEMENT * indices.length,
-    // todo: consider using GPUBufferUsage.INDEX
-    usage: GPUBufferUsage.STORAGE, // GPUBufferUsage.INDEX,
+    usage: GPUBufferUsage.STORAGE,
     mappedAtCreation: true,
   });
 
@@ -413,7 +412,6 @@ async function runPathTracer(
   contentsData.set(contentsArray);
   contentsBuffer.unmap();
 
-  // todo: reconsider type cast
   // Prepare BVH indirect buffer
   const indirectBuffer = device.createBuffer({
     label: "BVH indirect buffer",
