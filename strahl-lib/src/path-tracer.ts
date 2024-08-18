@@ -34,7 +34,12 @@ import { prepareGeometry } from "./prepare-geometry.ts";
  */
 export type PathTracerOptions = {
   targetSamples?: number;
-  kTextureWidth?: number;
+  size?:
+    | number
+    | {
+        width: number;
+        height: number;
+      };
   viewProjectionConfiguration?: ViewProjectionConfiguration;
   environmentLightConfiguration?: EnvironmentLightConfig;
   samplesPerIteration?: number;
@@ -62,7 +67,7 @@ async function runPathTracer(
   model: { scene: Group },
   {
     targetSamples = 300,
-    kTextureWidth = 512,
+    size = 512,
     viewProjectionConfiguration = {
       matrixWorldContent: [
         0.9348898557149565, 0, -0.354937963144642, 0, 0.04359232917084678,
@@ -180,24 +185,22 @@ async function runPathTracer(
     format,
   });
 
-  const kTextureHeight = kTextureWidth;
-
-  const imageWidth = kTextureWidth;
-  const imageHeight = imageWidth;
+  const width = typeof size === "number" ? size : size.width;
+  const height = typeof size === "number" ? size : size.height;
 
   const maxWorkgroupDimension = 16;
 
   const tracerShaderCode = buildTracerShader({
-    imageWidth,
-    imageHeight,
+    imageWidth: width,
+    imageHeight: height,
     maxWorkgroupDimension,
     maxBvhStackDepth: maxBvhDepth,
   });
 
-  const textureData = new Uint8Array(kTextureWidth * kTextureHeight * 4);
+  const textureData = new Uint8Array(width * height * 4);
 
   const texture = device.createTexture({
-    size: [kTextureWidth, kTextureHeight],
+    size: [width, height],
     format: "rgba8unorm",
     usage:
       GPUTextureUsage.TEXTURE_BINDING |
@@ -208,12 +211,12 @@ async function runPathTracer(
   device.queue.writeTexture(
     { texture },
     textureData,
-    { bytesPerRow: kTextureWidth * 4 },
-    { width: kTextureWidth, height: kTextureHeight },
+    { bytesPerRow: width * 4 },
+    { width: width, height: height },
   );
 
   const textureB = device.createTexture({
-    size: [kTextureWidth, kTextureHeight],
+    size: [width, height],
     format: "rgba8unorm",
     usage:
       GPUTextureUsage.TEXTURE_BINDING |
@@ -227,11 +230,11 @@ async function runPathTracer(
     },
     textureData,
     {
-      bytesPerRow: kTextureWidth * 4,
+      bytesPerRow: width * 4,
     },
     {
-      width: kTextureWidth,
-      height: kTextureHeight,
+      width: width,
+      height: height,
     },
   );
 
@@ -540,10 +543,6 @@ async function runPathTracer(
     bindGroupLayouts: [computeBindGroupLayout, dynamicComputeBindGroupLayout],
   });
 
-  const computePasses = Math.ceil(
-    (imageWidth * imageWidth) / (maxWorkgroupDimension * maxWorkgroupDimension),
-  );
-
   const computeShaderModule = device.createShaderModule({
     label: "Ray Tracing Compute Shader",
     code: tracerShaderCode,
@@ -709,10 +708,10 @@ async function runPathTracer(
       computePass.setBindGroup(1, dynamicComputeBindGroup);
 
       computePass.setPipeline(computePipeline);
-      computePass.dispatchWorkgroups(
-        Math.sqrt(computePasses),
-        Math.sqrt(computePasses),
-      );
+
+      const dispatchX = Math.ceil(width / maxWorkgroupDimension);
+      const dispatchY = Math.ceil(height / maxWorkgroupDimension);
+      computePass.dispatchWorkgroups(dispatchX, dispatchY);
 
       computePass.end();
 

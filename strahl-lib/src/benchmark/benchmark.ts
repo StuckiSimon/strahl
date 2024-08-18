@@ -133,7 +133,7 @@ async function run(target: number, yielder: any) {
 
   runPathTracer("render-target", model, {
     targetSamples: 99,
-    kTextureWidth: 512,
+    size: 512,
     viewProjectionConfiguration: {
       matrixWorldContent: [
         -0.32948748533091665, -2.7755575615628914e-17, 0.9441599424940185, 0,
