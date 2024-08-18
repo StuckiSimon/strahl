@@ -100,32 +100,32 @@ The integration of the \gls{OpenPBR} surface shading model enables realistic mat
 
 In order to accommodate for other use cases, the renderer could be extended in various ways. The following section outlines possible future work which includes extending \gls{PBR} capabilities, improving performance, extending to other rendering architecture paradigms, general improvements for the \gls{WebGPU} community, and aligning the renderer with other standards.
 
-\subsection*{Rendering Effects}
+\subsection*{Rendering Improvements}
 
 The focus on the defined use case means that certain rendering effects are not implemented. These include:
 
 \begin{itemize}
     \item{Refraction}
     \item{Caustics}
-    \item {Depth of Field} - Depth of field is the effect of objects at different distances from the camera being in focus or out of focus.
-    \item {Motion Blur} - Motion blur is the effect of objects moving quickly appearing blurred.
+    \item{Depth of Field} - Depth of field is the effect of objects at different distances from the camera being in focus or out of focus.
+    \item{Motion Blur} - Motion blur is the effect of objects moving quickly appearing blurred.
     \item{Volumetric Effects}
     \item{Hair and Fur}
 \end{itemize}
 
-While refraction, caustics, depth of field, and motion blur are a question of light transport, volumetric effects, hair and fur are features that are not part of the \gls{OpenPBR} specification.
+While refraction, caustics, depth of field, and motion blur are a question of light transport, volumetric effects, hair and fur are features that are not part of the \gls{OpenPBR} specification. Other features in terms of rendering could be implemented, this section outlines some of the possibilities.
 
-\subsection*{Spectral Rendering}
+\subsubsection*{Spectral Rendering}
 
 Instead of the \gls{RGB} color space, spectral rendering uses the full spectrum of visible light by modeling the light as a function of wavelength. This can improve the realism of the rendered images. Spectral rendering is well-suited for \gls{PBR} and is therefore a natural extension of the current implementation. It is also possible to support both \gls{RGB} and spectral rendering.
 
-\subsection*{Texture Support}
+\subsubsection*{Texture Support}
 
 While not critical for the given use case, texture support is a common feature in rendering engines. The current implementation does not use textures. The renderer could be extended to support sampling \gls{OpenPBR} parameters from textures. This would enable more complex material variations and possibly improve the realism of the rendered images.
 
 This should not be confused with texture mapping frequently used in rasterization-based rendering engines. Texture mapping is a technique to apply images to surfaces to simulate surface details. In path tracing, textures are used to sample material properties such as base color, roughness, or metallicness.
 
-\subsection*{Full OpenPBR support}
+\subsubsection*{Full OpenPBR support}
 
 The current implementation only supports the features of the \gls{OpenPBR} surface shading model that are required for the given use case. The full \gls{OpenPBR} specification includes additional features that could be implemented to improve the realism of the rendered images. These include:
 
@@ -135,56 +135,64 @@ The current implementation only supports the features of the \gls{OpenPBR} surfa
 
 %\todo{list all features}
 
-\subsection*{Alignment of OpenPBR and glTF PBR}
+\subsubsection*{Alignment of OpenPBR and glTF PBR}
 
-Further improvements can be achieved by aligning \gls{glTF} PBR with \gls{OpenPBR}, focusing on real-time rendering. This alignment could reduce the computational resources required for surface shading.
+Further improvements can be achieved by aligning \gls{glTF} \gls{PBR} with \gls{OpenPBR}, focusing on real-time rendering. This alignment could reduce the computational resources required for surface shading.
 
-\subsection*{Web Worker Support}
+\subsection*{Technical Improvements}
+
+The renderer uses \gls{GPU} parallelization to accelerate the rendering process. However, the current implementation is not optimized for performance. This includes possible improvements on the \gls{CPU} side, the \gls{GPU} side, and the data transfer between the two. The following sections outline possible improvements and extensions of the current setup.
+
+\subsubsection*{Web Worker Support}
 
 Web Workers are a web technology that allows running scripts off the main thread. This can be used to offload \gls{CPU}-heavy tasks to a separate thread to prevent blocking the main thread which is responsible for rendering the user interface.
 
-\subsection*{BVH Construction}
+\subsubsection*{BVH Construction}
 \label{sec:bvhConstructionDiscussion}
 
 The current implementation builds the \gls{BVH} on the \gls{CPU} and transfers it to the \gls{GPU}. Corresponding research \cite{lauterbach2009GPUbvh} suggests that moving parts of the construction to the \gls{GPU} directly could improve performance. This would reduce the amount of data that needs to be transferred between the \gls{CPU} and the \gls{GPU}. The new \gls{GPGPU} capabilities of \gls{WebGPU} further enable this approach.
 
-\subsection*{TypeScript Support for Memory Management}
+\subsubsection*{TypeScript Support for Memory Management}
 
 While \texttt{webgpu-utils} \cite{webgpuUtilsLib} is useful for memory management, it does not provide TypeScript support for the generated definitions based on the underlying \gls{WGSL} code. Type safety could reduce the likelihood of errors in the code. As an alternative, runtime checks could be implemented to ensure that the data is correctly mapped to all fields of the underlying structure.
 
-\subsection*{Independence of Three.js}
+\subsubsection*{Independence of Three.js}
 
 For ease-of-use for developers, the renderer is using \gls{Three.js} helpers. This aids developers familiar with \gls{Three.js} to get started with the renderer as configuration for scene loading and camera configuration is similar. However, the renderer does not depend on \gls{Three.js} and could be used independently. The main drawback of the dependence is the increased bundle size. Possibly, \texttt{three-mesh-bvh} \cite{threeMeshBvh} could also be exchanged for an alternative library or self-implemented as described in \autoref{sec:bvhConstructionDiscussion}. By removing the dependency, the bundle size could be reduced. To support developers, a binding to \gls{Three.js} could be provided on top of the independent renderer.
 
-\subsection*{Offline and Remote Rendering}
+\subsubsection*{Offline and Remote Rendering}
 
 As highlighted in \autoref{ch:paradigmAssessment}, it is possible to extend a real-time client-side renderer to be used in offline and remote rendering scenarios. In order to implement offline rendering, one could opt to use a headless browser such as Puppeteer, a \fgls{Node.js}{JavaScript runtime, frequently used for executing JavaScript outside of the browser} library which provides a high-level \gls{API} to control browsers. An alternative is to use \gls{wgpu}, but this would necessitate a rewrite of the renderer. Possibly, the rewritten renderer could also be used in the web context by using \fgls{WebAssembly}{Portable Binary-code format for executable programs available in modern browser engines}.
 
 For remote rendering, the renderer could be extended to render images on demand and encode them as video streams.
 
-\subsection*{WebGPU Compatibility Mode}
+\subsubsection*{WebGPU Compatibility Mode}
 
 There is a proposal under active development which aims to extend the reach of \gls{WebGPU} by providing a slightly restricted subset of WebGPU \cite{WebGPUCompatibilityModeProposal}. Considering the suggested limits of the compatibility mode, it could be possible to deploy the renderer onto a wider range of devices. However, it is important to consider that path tracing is a computationally expensive task and might not be suitable for all devices. Therefore, increasing the reach might not be beneficial in all cases.
 
-\subsection*{Automatic Shader Conversion}
+\subsubsection*{Automatic Shader Conversion}
 
 During the specification phase of \gls{WebGPU}, the relation to \fgls{SPIR-V}{\e{Standard Portable Intermediate Representation}, intermediate language for parallel computing and graphics developed by Khronos Group} was discussed \cite{webGPUSpirVRelation}. In general, many of the modern shading languages can be compiled to one another. Projects such as Tint, which is part of \gls{Dawn} \cite{dawnImplementation} or Naga \cite{nagaImplementation} could be used to compile shaders from different frontends to different backends. Similarly, other engines such as \gls{Three.js} with \fGls{TSL}{\e{Three.js Shading Language}, shading language used in \gls{Three.js} which supports \gls{GLSL} as well as \gls{WGSL}} have their own shading languages which support a variety of backends \cite{ThreeJSShadingLanguage}. Parts of \gls{MaterialX} shader generation could be used to generate shaders for \gls{WebGPU} and update them automatically as \gls{OpenPBR} is updated.
 
-\subsection*{Low-Level Performance Optimizations}
+\subsubsection*{Low-Level Performance Optimizations}
 
 This target is likely at odds with the goal of providing automatic shader generation. The current implementation is not optimized for performance. Therefore, it is likely that optimizations of the \gls{WGSL} code could improve the performance of the renderer. Due to the nature of the design of \gls{OpenPBR}, it would be possible to do optimizations and get better real-time rendering performance.
 
 Automatic shader generation is helpful, but likely not as optimized as a carefully tuned implementation. However, both endeavors are of interest for potential benefits.
 
-\subsection*{Sampling Performance Optimizations}
+\subsection*{Quality Improvements}
+
+This section highlights changes to improve the quality of the rendered images, reduce the amount of samples required, and enable better comparison of the renderer to baseline renderers.
+
+\subsubsection*{Sampling Performance Optimizations}
 
 Path tracing is computationally expensive and requires multiple samples per pixel to achieve accurate results. Consequently, the sampling process is noticeable during interactions with the scene. One technique to improve perceived interaction quality is to overlay the rendering with a rasterization preview during interactions. To reduce the number of samples required for higher quality renderings, techniques like neural radiance caching (NRC) \cite{muller2021real} or reservoir-based spatio-temporal importance resampling (ReSTIR) \cite{restir} could be employed in future work.
 
-\subsection*{Denoisers}
+\subsubsection*{Denoisers}
 
 Optimizations in the render pipeline could also be achieved by using denoising algorithms applied as post-processing steps could enhance the quality of the results. Options include blockwise multi-order feature regression (BMFR) \cite{blockwise-multi-order-regresssion-for-rt-pt} and Open Image Denoise (OIDN) \cite{openImageDenoise}.
 
-\subsection*{Qualitative Assessment}
+\subsubsection*{Qualitative Assessment}
 
 The provided results highlight the quantitative performance of the renderer. However, due to the nature of a renderer, qualitative assessment based on visual inspection is also used to determine the quality of the rendered images. This could be extended to include more advanced metrics such as peak signal to noise ratio (PSNR), structural similarity (SSIM) \cite{ssim}, or learned perceptual image patch similarity (LPIPS) \cite{lpips}.
 
