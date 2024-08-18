@@ -51,22 +51,13 @@ struct IndicesPackage {
   z: i32,
 }
 
-// Use due to 16 bytes alignment of vec3
-struct VertexPackage {
-  x: f32,
-  y: f32,
-  z: f32,
-}
-
 // CODE#BUFFER-BINDINGS
-@group(0) @binding(0) var<storage, read> positions: array<VertexPackage>;
+@group(0) @binding(0) var<storage, read> positions: array<array<vec3f, 2>>;
 // todo: Check when i16 is supported
 @group(0) @binding(1) var<storage, read> indices: array<IndicesPackage>;
 
 @group(0) @binding(2) var<storage, read> bounds: array<array<vec4f, 2>>;
 @group(0) @binding(3) var<storage, read> contents: array<BinaryBvhNodeInfo>;
-
-@group(0) @binding(4) var<storage, read> normals: array<VertexPackage>;
 
 @group(0) @binding(5) var<storage, read> indirectIndices: array<u32>;
 
@@ -375,10 +366,17 @@ fn intersectTriangles(offset: u32, count: u32, ray: Ray, rayT: Interval, hitReco
     let v1Index = indicesPackage.x;
     let v2Index = indicesPackage.y;
     let v3Index = indicesPackage.z;
-    
-    let x = vertexPackageToVec3f(positions[v1Index]);
-    let y = vertexPackageToVec3f(positions[v2Index]);
-    let z = vertexPackageToVec3f(positions[v3Index]);
+
+    let v1 = positions[v1Index];
+    let v2 = positions[v2Index];
+    let v3 = positions[v3Index];
+    let x = v1[0];
+    let y = v2[0];
+    let z = v3[0];
+
+    let normalX = v1[1];
+    let normalY = v2[1];
+    let normalZ = v3[1];
     
     let Q = x;
     let u = y - x;
@@ -394,10 +392,6 @@ fn intersectTriangles(offset: u32, count: u32, ray: Ray, rayT: Interval, hitReco
       }
     }
     let materialDefinition = matchingObjectDefinition.material;
-
-    let normalX = vertexPackageToVec3f(normals[v1Index]);
-    let normalY = vertexPackageToVec3f(normals[v2Index]);
-    let normalZ = vertexPackageToVec3f(normals[v3Index]);
     
     let triangle = Triangle(Q, u, v, materialDefinition, normalX, normalY, normalZ);
 
