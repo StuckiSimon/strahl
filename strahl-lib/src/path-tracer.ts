@@ -401,6 +401,16 @@ async function runPathTracer(
   objectDefinitionsBuffer.unmap();
 
   const materials = modelMaterials;
+  const openPBRMaterials = materials.map((m) => {
+    if (!(m instanceof OpenPBRMaterial)) {
+      throw new InvalidMaterialError(m);
+    }
+    return m;
+  });
+
+  const hasAnyMetalness = openPBRMaterials.some((m) => m.oBaseMetalness > 0);
+  const hasAnyDiffuse = openPBRMaterials.some((m) => m.oBaseWeight > 0);
+  const hasAnySpecular = openPBRMaterials.some((m) => m.oSpecularWeight > 0);
 
   // CODE#MEMORY-VIEW
   const definitions = makeShaderDataDefinitions(tracerShaderCode);
@@ -422,33 +432,28 @@ async function runPathTracer(
 
   // CODE#BUFFER-MAPPING
   materialDataView.set(
-    materials.map((m) => {
-      if (!(m instanceof OpenPBRMaterial)) {
-        throw new InvalidMaterialError(m);
-      }
-      return {
-        baseWeight: m.oBaseWeight,
-        baseColor: m.oBaseColor,
-        baseDiffuseRoughness: m.oBaseDiffuseRoughness,
-        baseMetalness: m.oBaseMetalness,
-        specularWeight: m.oSpecularWeight,
-        specularColor: m.oSpecularColor,
-        specularRoughness: m.oSpecularRoughness,
-        specularAnisotropy: m.oSpecularRoughnessAnisotropy,
-        specularIor: m.oSpecularIOR,
-        coatWeight: m.oCoatWeight,
-        coatColor: m.oCoatColor,
-        coatRoughness: m.oCoatRoughness,
-        coatRoughnessAnisotropy: m.oCoatRoughnessAnisotropy,
-        // todo: Align casing for IOR parameter
-        coatIor: m.oCoatIor,
-        coatDarkening: m.oCoatDarkening,
-        emissionLuminance: m.oEmissionLuminance,
-        emissionColor: m.oEmissionColor,
-        thinFilmThickness: m.oThinFilmThickness,
-        thinFilmIOR: m.oThinFilmIOR,
-      };
-    }),
+    openPBRMaterials.map((m) => ({
+      baseWeight: m.oBaseWeight,
+      baseColor: m.oBaseColor,
+      baseDiffuseRoughness: m.oBaseDiffuseRoughness,
+      baseMetalness: m.oBaseMetalness,
+      specularWeight: m.oSpecularWeight,
+      specularColor: m.oSpecularColor,
+      specularRoughness: m.oSpecularRoughness,
+      specularAnisotropy: m.oSpecularRoughnessAnisotropy,
+      specularIor: m.oSpecularIOR,
+      coatWeight: m.oCoatWeight,
+      coatColor: m.oCoatColor,
+      coatRoughness: m.oCoatRoughness,
+      coatRoughnessAnisotropy: m.oCoatRoughnessAnisotropy,
+      // todo: Align casing for IOR parameter
+      coatIor: m.oCoatIor,
+      coatDarkening: m.oCoatDarkening,
+      emissionLuminance: m.oEmissionLuminance,
+      emissionColor: m.oEmissionColor,
+      thinFilmThickness: m.oThinFilmThickness,
+      thinFilmIOR: m.oThinFilmIOR,
+    })),
   );
 
   const materialMapped = materialBuffer.getMappedRange();
@@ -660,6 +665,9 @@ async function runPathTracer(
         enableClearColor: clearColor === false ? 0 : 1,
         maxRayDepth,
         objectDefinitionLength: modelGroups.length,
+        enableMetalWorkflow: hasAnyMetalness ? 1 : 0,
+        enableDiffuseWorkflow: hasAnyDiffuse ? 1 : 0,
+        enableSpecularWorkflow: hasAnySpecular ? 1 : 0,
       });
       // todo: consider buffer writing
       device.queue.writeBuffer(uniformBuffer, 0, uniformData.arrayBuffer);

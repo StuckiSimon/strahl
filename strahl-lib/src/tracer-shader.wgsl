@@ -42,6 +42,9 @@ struct UniformData {
   enableClearColor: i32,
   maxRayDepth: i32,
   objectDefinitionLength: i32,
+  enableMetalWorkflow: i32,
+  enableDiffuseWorkflow: i32,
+  enableSpecularWorkflow: i32,
 }
 
 // Use due to 16 bytes alignment of vec3
@@ -598,6 +601,9 @@ fn specularNDFRoughness(material: Material) -> vec2f {
 }
 
 fn metalBrdfEvaluate(pW: vec3f, basis: Basis, winputL: vec3f, woutputL: vec3f, material: Material, pdfWoutputL: ptr<function, f32>) -> vec3f {
+  if (uniformData.enableMetalWorkflow == 0) {
+    return vec3f(0.0);
+  }
   if (winputL.z < DENOM_TOLERANCE || woutputL.z < DENOM_TOLERANCE) {
     (*pdfWoutputL) = PDF_EPSILON;
     return vec3f(0.0);
@@ -629,6 +635,9 @@ fn metalBrdfEvaluate(pW: vec3f, basis: Basis, winputL: vec3f, woutputL: vec3f, m
 }
 
 fn metalBrdfSample(pW: vec3f, basis: Basis, winputL: vec3f, material: Material, seed: ptr<function, u32>, woutputL: ptr<function, vec3f>, pdfWoutputL: ptr<function, f32>) -> vec3f {
+  if (uniformData.enableMetalWorkflow == 0) {
+    return vec3f(0.0);
+  }
   if (winputL.z < DENOM_TOLERANCE) {
     (*pdfWoutputL) = PDF_EPSILON;
     return vec3f(0.0);
@@ -663,6 +672,9 @@ fn metalBrdfSample(pW: vec3f, basis: Basis, winputL: vec3f, material: Material, 
 }
 
 fn metalBrdfAlbedo(material: Material, pW: vec3f, basis: Basis, winputL: vec3f, seed: ptr<function, u32>) -> Color {
+  if (uniformData.enableMetalWorkflow == 0) {
+    return vec3f(0.0);
+  }
   if (winputL.z < DENOM_TOLERANCE) {
     return vec3f(0.0);
   }
@@ -703,6 +715,9 @@ fn fujiiMaterialX(albedo: vec3f, roughness: f32, V: vec3f, L: vec3f) -> vec3f {
 }
 
 fn diffuseBrdfEvalImplementation(woutputL: vec3f, winputL: vec3f, material: Material) -> vec3f {
+  if (uniformData.enableDiffuseWorkflow == 0) {
+    return vec3f(0.0);
+  }
   let albedo = material.baseWeight * material.baseColor;
   let V = winputL;
   let L = woutputL;
@@ -712,6 +727,9 @@ fn diffuseBrdfEvalImplementation(woutputL: vec3f, winputL: vec3f, material: Mate
 }
 
 fn diffuseBrdfEvaluate(material: Material, pW: vec3f, basis: Basis, winputL: vec3f, woutputL: vec3f, pdfWoutputL: ptr<function, f32>) -> vec3f {
+  if (uniformData.enableDiffuseWorkflow == 0) {
+    return vec3f(0.0);
+  }
   if (winputL.z < DENOM_TOLERANCE || woutputL.z < DENOM_TOLERANCE) {
     return vec3f(0.0);
   }
@@ -720,6 +738,9 @@ fn diffuseBrdfEvaluate(material: Material, pW: vec3f, basis: Basis, winputL: vec
 }
 
 fn diffuseBrdfSample(material: Material, pW: vec3f, basis: Basis, winputL: vec3f, woutputL: ptr<function, vec3f>, pdfWoutputL: ptr<function, f32>, seed: ptr<function, u32>) -> vec3f {
+  if (uniformData.enableDiffuseWorkflow == 0) {
+    return vec3f(0.0);
+  }
   if (winputL.z < DENOM_TOLERANCE) {
     return vec3f(0.0);
   }
@@ -745,6 +766,9 @@ fn fresnelDielectricReflectance(mui: f32, etaTi: f32) -> f32 {
 }
 
 fn specularBrdfSample(material: Material, pW: vec3f, basis: Basis, winputL: vec3f, seed: ptr<function, u32>, woutputL: ptr<function, vec3f>, pdfWoutputL: ptr<function, f32>) -> vec3f {
+  if (uniformData.enableSpecularWorkflow == 0) {
+    return vec3f(0.0);
+  }
   let beamOutgoingL = winputL;
   let externalReflection = beamOutgoingL.z > 0.0;
 
@@ -797,6 +821,9 @@ fn specularBrdfSample(material: Material, pW: vec3f, basis: Basis, winputL: vec3
 }
 
 fn specularBrdfEvaluate(material: Material, pW: vec3f, basis: Basis, winputL: vec3f, woutputL: vec3f, pdfWoutputL: ptr<function, f32>) -> vec3f {
+  if (uniformData.enableSpecularWorkflow == 0) {
+    return vec3f(0.0);
+  }
   let transmitted = woutputL.z * winputL.z < 0.0;
   if (transmitted) {
     // (*pdfWoutputL) = PDF_EPSILON; todo: reset?
@@ -864,6 +891,9 @@ fn specularIorRatio(material: Material) -> f32 {
 }
 
 fn specularBrdfAlbedo(material: Material, pW: vec3f, basis: Basis, winputL: vec3f, seed: ptr<function, u32>) -> vec3f {
+  if (uniformData.enableSpecularWorkflow == 0) {
+    return vec3f(0.0);
+  }
   let etaIe = specularIorRatio(material);
   if (abs(etaIe - 1.0) < IOR_EPSILON) {
     return vec3f(0.0);
