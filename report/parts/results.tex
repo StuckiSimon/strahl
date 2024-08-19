@@ -51,7 +51,7 @@ A high-level view of the data structures is shown in \autoref{fig:memory-structu
     ]
   
       \node[bvh] (bounds) {bounds};
-      \node[bvh, below=0.6cm of bounds] (contents) {contents};
+      \node[bvh, above=0.6cm of bounds] (contents) {contents};
   
       \node[bvh, right=0.6cm of contents] (indirect) {indirect indices};
       \node[geo, right=0.6cm of indirect] (indices) {indices};
