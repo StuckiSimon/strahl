@@ -44,7 +44,7 @@
     "vitest": "^2.0.5"
   },
   "dependencies": {
-    "oidn-web": "^0.3.0",
+    "oidn-web": "^0.3.1",
     "three": "^0.165.0",
     "three-mesh-bvh": "^0.7.5",
     "webgpu-utils": "^1.8.2"
