@@ -1351,10 +1351,8 @@ fn ndcToCameraRay(coord: vec2f, cameraWorld: mat4x4<f32>, invProjectionMatrix: m
   let near = abs(nearVector.z / nearVector.w);
 
   var origin = cameraWorld * vec4f(0.0, 0.0, 0.0, 1.0);
-  
-  let randomOffset = randomF32(seed) * vec2f(0.5, 0.5);
 
-  var direction = invProjectionMatrix * vec4f(coord.x, coord.y, 0.5, 1.0);
+  var direction = invProjectionMatrix * vec4f(coord.x, -coord.y, 0.5, 1.0);
   direction /= direction.w;
   direction = cameraWorld * direction - origin;
 

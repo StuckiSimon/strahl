@@ -29,7 +29,7 @@ fn vertexMain(input: VertexInput) -> VertexOutput {
   output.pos = vec4f(xy, 0, 1);
 
   let baseCoord = convertToZeroOne(vec2f(xy.x, -xy.y));
-  output.texcoord = vec2f(baseCoord.x, 1.0 - baseCoord.y);
+  output.texcoord = vec2f(baseCoord.x, baseCoord.y);
   return output;
 }
 
