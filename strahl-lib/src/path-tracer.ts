@@ -72,11 +72,17 @@ async function denoise(
 
   var imgData = new ImageData(size.width, size.height);
   const clampedData = new Uint8ClampedArray(data);
-  for (var i = 0; i < clampedData.length; i += 4) {
-    imgData.data[i] = clampedData[i];
-    imgData.data[i + 1] = clampedData[i + 1];
-    imgData.data[i + 2] = clampedData[i + 2];
-    imgData.data[i + 3] = clampedData[i + 3];
+  for (let y = 0; y < size.height; y++) {
+    for (let x = 0; x < size.width; x++) {
+      // Consider flipping the image
+      const sourceIndex = ((size.height - 1 - y) * size.width + x) * 4;
+      const targetIndex = (y * size.width + x) * 4;
+
+      imgData.data[targetIndex] = clampedData[sourceIndex];
+      imgData.data[targetIndex + 1] = clampedData[sourceIndex + 1];
+      imgData.data[targetIndex + 2] = clampedData[sourceIndex + 2];
+      imgData.data[targetIndex + 3] = clampedData[sourceIndex + 3];
+    }
   }
 
   return new Promise((resolve, reject) => {
