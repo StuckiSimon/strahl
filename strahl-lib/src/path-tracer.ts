@@ -28,6 +28,7 @@ import {
 import { buildAbortEventHub } from "./util/abort-event-hub.ts";
 import { Group } from "three";
 import { prepareGeometry } from "./prepare-geometry.ts";
+import { initUNetFromURL, UNet } from "oidn-web";
 
 /**
  * Configuration options for the path tracer.
@@ -53,7 +54,46 @@ export type PathTracerOptions = {
   }) => void;
   signal?: AbortSignal;
   enableTimestampQuery?: boolean;
+  enableDenoise?: boolean;
 };
+
+async function denoise(
+  unet: UNet,
+  data: ArrayBuffer,
+  size: { width: number; height: number },
+) {
+  const outputCanvas = document.createElement("canvas");
+  outputCanvas.width = size.width;
+  outputCanvas.height = size.height;
+  const outputCtx = outputCanvas.getContext("2d");
+  document.body.appendChild(outputCanvas);
+  outputCanvas.style.cssText =
+    "position:absolute; right: 0; bottom: 0; z-index: 1; pointer-events: none;";
+
+  var imgData = new ImageData(size.width, size.height);
+  const clampedData = new Uint8ClampedArray(data);
+  for (var i = 0; i < clampedData.length; i += 4) {
+    imgData.data[i] = clampedData[i];
+    imgData.data[i + 1] = clampedData[i + 1];
+    imgData.data[i + 2] = clampedData[i + 2];
+    imgData.data[i + 3] = clampedData[i + 3];
+  }
+
+  return new Promise((resolve, reject) => {
+    unet.tileExecute({
+      color: imgData,
+      done() {},
+      progress: (_, tileData, tile) => {
+        if (!tileData) {
+          reject("No tile data");
+          return;
+        }
+        outputCtx?.putImageData(tileData, tile.x, tile.y);
+        resolve(tileData);
+      },
+    });
+  });
+}
 
 /**
  * Main routine to generate renderings.
@@ -85,6 +125,7 @@ async function runPathTracer(
     enableTimestampQuery = true,
     finishedSampling,
     signal = new AbortController().signal,
+    enableDenoise = false,
   }: PathTracerOptions = {},
 ) {
   /**
@@ -205,6 +246,7 @@ async function runPathTracer(
     usage:
       GPUTextureUsage.TEXTURE_BINDING |
       GPUTextureUsage.COPY_DST |
+      GPUTextureUsage.COPY_SRC |
       GPUTextureUsage.STORAGE_BINDING, // Permit writting to texture in compute shader
   });
 
@@ -221,6 +263,7 @@ async function runPathTracer(
     usage:
       GPUTextureUsage.TEXTURE_BINDING |
       GPUTextureUsage.COPY_DST |
+      GPUTextureUsage.COPY_SRC |
       GPUTextureUsage.STORAGE_BINDING, // Permit writting to texture in compute shader
   });
 
@@ -811,6 +854,33 @@ async function runPathTracer(
         const fullRenderLoopTime = renderLoopStart.end();
 
         state = "halted";
+
+        if (enableDenoise) {
+          const readbackBuffer = device.createBuffer({
+            usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
+            size: 4 * width * height,
+          });
+
+          const encoder = device.createCommandEncoder();
+          encoder.copyTextureToBuffer(
+            { texture: readTexture },
+            { buffer: readbackBuffer, bytesPerRow: width * 4 },
+            [width, height],
+          );
+          device.queue.submit([encoder.finish()]);
+
+          await readbackBuffer.mapAsync(GPUMapMode.READ, 0, 4 * width * height);
+          const data = readbackBuffer.getMappedRange(0, 4 * width * height);
+          const uint8Array = new Uint8Array(data);
+
+          const TZA_URL = "./oidn-weights/rt_ldr.tza";
+          const unet = await initUNetFromURL(TZA_URL);
+          const denoisedImageData = await denoise(unet, uint8Array, {
+            width,
+            height,
+          });
+          readbackBuffer.unmap();
+        }
 
         finishedSampling?.({
           bvhBuildTime,
