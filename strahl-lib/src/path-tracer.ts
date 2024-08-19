@@ -341,21 +341,6 @@ async function runPathTracer(
     cameraSetup = makeRawCameraSetup(viewProjectionConfiguration, canvas);
   }
 
-  // Prepare Position Data
-
-  const positionBuffer = device.createBuffer({
-    label: "Position buffer",
-    size: Float32Array.BYTES_PER_ELEMENT * positions.length,
-    usage: GPUBufferUsage.STORAGE,
-    mappedAtCreation: true,
-  });
-
-  const positionMapped = positionBuffer.getMappedRange();
-  const positionData = new Float32Array(positionMapped);
-
-  positionData.set(positions);
-  positionBuffer.unmap();
-
   // Prepare Indices
 
   const indices = new Uint32Array(meshIndices);
@@ -372,19 +357,31 @@ async function runPathTracer(
   indicesData.set(indices);
   indicesBuffer.unmap();
 
-  // Prepare Normal Data
+  // Prepare Geometry Data
+  const sizePosition =
+    Float32Array.BYTES_PER_ELEMENT * (positions.length / 3) * 4;
+  const sizeNormal = Float32Array.BYTES_PER_ELEMENT * (normals.length / 3) * 4;
 
-  const normalBuffer = device.createBuffer({
-    label: "Normal buffer",
-    size: Float32Array.BYTES_PER_ELEMENT * normals.length,
+  const geometryBuffer = device.createBuffer({
+    label: "Geometry buffer",
+    size: sizePosition + sizeNormal,
     usage: GPUBufferUsage.STORAGE,
     mappedAtCreation: true,
   });
 
-  const normalMapped = normalBuffer.getMappedRange();
-  const normalData = new Float32Array(normalMapped);
-  normalData.set(normals);
-  normalBuffer.unmap();
+  const geometryMapped = geometryBuffer.getMappedRange();
+  const geometryData = new Float32Array(geometryMapped);
+
+  const itemsPerVertex = 3;
+
+  for (let i = 0; i < positions.length; i += itemsPerVertex) {
+    const offset = (i / itemsPerVertex) * 4 * 2;
+    const offsetNormal = offset + 4;
+    geometryData.set(positions.slice(i, i + itemsPerVertex), offset);
+    geometryData.set(normals.slice(i, i + itemsPerVertex), offsetNormal);
+  }
+
+  geometryBuffer.unmap();
 
   // Prepare BVH Bounds
   const boundsBuffer = device.createBuffer({
@@ -531,13 +528,6 @@ async function runPathTracer(
         },
       },
       {
-        binding: 4,
-        visibility: GPUShaderStage.COMPUTE,
-        buffer: {
-          type: "read-only-storage",
-        },
-      },
-      {
         binding: 5,
         visibility: GPUShaderStage.COMPUTE,
         buffer: {
@@ -601,7 +591,7 @@ async function runPathTracer(
       {
         binding: 0,
         resource: {
-          buffer: positionBuffer,
+          buffer: geometryBuffer,
         },
       },
       {
@@ -620,12 +610,6 @@ async function runPathTracer(
         binding: 3,
         resource: {
           buffer: contentsBuffer,
-        },
-      },
-      {
-        binding: 4,
-        resource: {
-          buffer: normalBuffer,
         },
       },
       {
