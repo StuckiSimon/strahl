@@ -875,7 +875,7 @@ async function runPathTracer(
 
           const TZA_URL = "./oidn-weights/rt_ldr.tza";
           const unet = await initUNetFromURL(TZA_URL);
-          const denoisedImageData = await denoise(unet, uint8Array, {
+          await denoise(unet, uint8Array, {
             width,
             height,
           });
