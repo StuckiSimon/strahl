@@ -54,6 +54,7 @@ export type PathTracerOptions = {
   }) => void;
   signal?: AbortSignal;
   enableTimestampQuery?: boolean;
+  enableFloatTextureFiltering?: boolean;
   enableDenoise?: boolean;
 };
 
@@ -129,6 +130,7 @@ async function runPathTracer(
     clearColor = [1.0, 1.0, 1.0],
     maxRayDepth = 5,
     enableTimestampQuery = true,
+    enableFloatTextureFiltering = true,
     finishedSampling,
     signal = new AbortController().signal,
     enableDenoise = false,
@@ -181,11 +183,23 @@ async function runPathTracer(
   }
 
   const supportsTimestampQuery = adapter.features.has("timestamp-query");
+  const supportsFilterableFloatTexture =
+    adapter.features.has("float32-filterable");
 
-  let useTimestampQuery = enableTimestampQuery && supportsTimestampQuery;
+  const useTimestampQuery = enableTimestampQuery && supportsTimestampQuery;
+  const useFloatTextureFiltering =
+    enableFloatTextureFiltering && supportsFilterableFloatTexture;
+
+  let featureList: GPUFeatureName[] = [];
+  if (useTimestampQuery) {
+    featureList.push("timestamp-query");
+  }
+  if (useFloatTextureFiltering) {
+    featureList.push("float32-filterable");
+  }
 
   const device = await adapter.requestDevice({
-    requiredFeatures: useTimestampQuery ? ["timestamp-query"] : [],
+    requiredFeatures: featureList,
   });
 
   abortEventHub.setDestructionNotifier("device", () => {
@@ -244,11 +258,11 @@ async function runPathTracer(
     maxBvhStackDepth: maxBvhDepth,
   });
 
-  const textureData = new Uint8Array(width * height * 4);
+  const textureData = new Float32Array(width * height * 4);
 
   const texture = device.createTexture({
     size: [width, height],
-    format: "rgba8unorm",
+    format: "rgba32float",
     usage:
       GPUTextureUsage.TEXTURE_BINDING |
       GPUTextureUsage.COPY_DST |
@@ -259,13 +273,13 @@ async function runPathTracer(
   device.queue.writeTexture(
     { texture },
     textureData,
-    { bytesPerRow: width * 4 },
+    { bytesPerRow: width * 4 * Float32Array.BYTES_PER_ELEMENT },
     { width: width, height: height },
   );
 
   const textureB = device.createTexture({
     size: [width, height],
-    format: "rgba8unorm",
+    format: "rgba32float",
     usage:
       GPUTextureUsage.TEXTURE_BINDING |
       GPUTextureUsage.COPY_DST |
@@ -279,7 +293,7 @@ async function runPathTracer(
     },
     textureData,
     {
-      bytesPerRow: width * 4,
+      bytesPerRow: width * 4 * Float32Array.BYTES_PER_ELEMENT,
     },
     {
       width: width,
@@ -287,7 +301,9 @@ async function runPathTracer(
     },
   );
 
-  const sampler = device.createSampler();
+  const sampler = device.createSampler({
+    magFilter: useFloatTextureFiltering ? "linear" : "nearest",
+  });
 
   const renderShaderModule = device.createShaderModule({
     label: "Render Shader",
@@ -300,12 +316,16 @@ async function runPathTracer(
       {
         binding: 0,
         visibility: GPUShaderStage.FRAGMENT,
-        sampler: { type: "filtering" },
+        sampler: {
+          type: useFloatTextureFiltering ? "filtering" : "non-filtering",
+        },
       },
       {
         binding: 1,
         visibility: GPUShaderStage.FRAGMENT,
-        texture: { sampleType: "float" },
+        texture: {
+          sampleType: useFloatTextureFiltering ? "float" : "unfilterable-float",
+        },
       },
     ],
   });
@@ -563,12 +583,12 @@ async function runPathTracer(
       {
         binding: 0,
         visibility: GPUShaderStage.COMPUTE,
-        storageTexture: { format: "rgba8unorm" /*, access: "write-only"*/ },
+        storageTexture: { format: "rgba32float" },
       },
       {
         binding: 1,
         visibility: GPUShaderStage.COMPUTE,
-        storageTexture: { format: "rgba8unorm", access: "read-only" },
+        storageTexture: { format: "rgba32float", access: "read-only" },
       },
       {
         binding: 2,

@@ -65,9 +65,9 @@ struct IndicesPackage {
 
 @group(0) @binding(7) var<storage, read> materials: array<Material>;
 
-@group(1) @binding(0) var texture: texture_storage_2d<rgba8unorm, write>;
+@group(1) @binding(0) var texture: texture_storage_2d<rgba32float, write>;
 
-@group(1) @binding(1) var readTexture: texture_storage_2d<rgba8unorm, read>;
+@group(1) @binding(1) var readTexture: texture_storage_2d<rgba32float, read>;
 
 @group(1) @binding(2) var<uniform> uniformData: UniformData;
 
