@@ -130,10 +130,12 @@ This should not be confused with texture mapping frequently used in rasterizatio
 The current implementation only supports the features of the \gls{OpenPBR} surface shading model that are required for the given use case. The full \gls{OpenPBR} specification includes additional features that could be implemented to improve the realism of the rendered images. These include:
 
 \begin{itemize}
-    \item{Subsurface Scattering} - Subsurface scattering is the effect of light entering a surface and being scattered beneath the surface before exiting at a different point. This effect is common in materials such as skin, wax, or marble.
+  \item{Coat} - Secondary layer of specular highlight, often used for car paint.
+  \item{Fuzz} – Layer for fuzzy or dusty surfaces.
+  \item{Thin-film iridescence} - Effect of thin-films of material on the surface of an object. This can be seen in objects covered in grease, oil, or alcohol.
+  \item{Subsurface Scattering and Translucency}
+  \item{Opacity and Transparency}
 \end{itemize}
-
-%\todo{list all features}
 
 \subsubsection*{Alignment of OpenPBR and glTF PBR}
 
