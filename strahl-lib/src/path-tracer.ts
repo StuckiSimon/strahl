@@ -32,6 +32,18 @@ import { Group } from "three";
 import { prepareGeometry } from "./prepare-geometry.ts";
 import { initUNetFromURL } from "oidn-web";
 
+type GaussianConfig = {
+  type: "gaussian";
+  sigma?: number;
+  kSigma?: number;
+  threshold?: number;
+};
+
+type OIDNConfig = {
+  type: "oidn";
+  url?: string;
+};
+
 /**
  * Configuration options for the path tracer.
  */
@@ -57,11 +69,7 @@ export type PathTracerOptions = {
   signal?: AbortSignal;
   enableTimestampQuery?: boolean;
   enableFloatTextureFiltering?: boolean;
-  enableDenoise?:
-    | boolean
-    | {
-        url: string;
-      };
+  enableDenoise?: boolean | OIDNConfig | GaussianConfig;
 };
 
 async function denoise(
@@ -270,6 +278,41 @@ async function runPathTracer(
   const width = typeof size === "number" ? size : size.width;
   const height = typeof size === "number" ? size : size.height;
 
+  // denoise configuration
+  const isOIDNConfig = (
+    config: PathTracerOptions["enableDenoise"],
+  ): config is OIDNConfig =>
+    typeof config === "object" && config.type === "oidn";
+  const isGaussianConfig = (
+    config: PathTracerOptions["enableDenoise"],
+  ): config is GaussianConfig =>
+    typeof config === "object" && config.type === "gaussian";
+  const denoiseMethod =
+    (typeof enableDenoise === "object" && enableDenoise.type) ||
+    (enableDenoise ? "gaussian" : "none");
+
+  let gaussianConfig: Required<GaussianConfig> = {
+    type: "gaussian",
+    sigma: 4.0,
+    kSigma: 1.0,
+    threshold: 0.1,
+  };
+  let oidnConfig: Required<OIDNConfig> = {
+    type: "oidn",
+    url: "./oidn-weights/rt_hdr_alb_nrm.tza",
+  };
+  if (isGaussianConfig(enableDenoise)) {
+    gaussianConfig = {
+      ...gaussianConfig,
+      ...enableDenoise,
+    };
+  } else if (isOIDNConfig(enableDenoise)) {
+    oidnConfig = {
+      ...oidnConfig,
+      ...enableDenoise,
+    };
+  }
+
   const maxWorkgroupDimension = 16;
 
   const tracerShaderCode = buildTracerShader({
@@ -351,9 +394,9 @@ async function runPathTracer(
     renderUniformData.set({
       textureWidth: width,
       textureHeight: height,
-      denoiseSigma: 4.0,
-      denoiseKSigma: 1.0,
-      denoiseThreshold: 0.1,
+      denoiseSigma: gaussianConfig.sigma,
+      denoiseKSigma: gaussianConfig.kSigma,
+      denoiseThreshold: gaussianConfig.threshold,
       enableDenoise: enableDenoise ? 1 : 0,
     });
     device.queue.writeBuffer(
@@ -738,7 +781,9 @@ async function runPathTracer(
     const render = async () => {
       const isLastSample = currentSample === TARGET_SAMPLES;
       if (isLastSample) {
-        setRenderUniformData(true);
+        if (denoiseMethod === "gaussian") {
+          setRenderUniformData(true);
+        }
       }
 
       const matrixWorld = cameraSetup.camera.matrixWorld;
@@ -942,20 +987,12 @@ async function runPathTracer(
         currentAnimationFrameRequest = null;
         const fullRenderLoopTime = renderLoopStart.end();
 
-        const activateDenoisePass =
-          (typeof enableDenoise === "object" && enableDenoise.url) ||
-          enableDenoise;
+        const activateDenoisePass = denoiseMethod === "oidn";
 
         state = "halted";
 
         if (activateDenoisePass) {
           state = "denoise";
-          let denoiseConfig =
-            enableDenoise === true
-              ? {
-                  url: "./oidn-weights/rt_hdr_alb_nrm.tza",
-                }
-              : enableDenoise;
 
           const dynamicComputeBindGroupLayout = device.createBindGroupLayout({
             label: "Dynamic denoise pass compute bind group layout",
@@ -1234,7 +1271,7 @@ async function runPathTracer(
             return;
           }
           const outputBuffer = await denoise(
-            { device, adapterInfo: adapter.info, url: denoiseConfig.url },
+            { device, adapterInfo: adapter.info, url: oidnConfig.url },
             {
               colorBuffer: textureBuffer,
               albedoBuffer: albedoImageBuffer,
