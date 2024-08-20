@@ -1,5 +1,7 @@
 import buildTracerShader from "./tracer-shader";
 import buildRenderShader from "./render-shader";
+import buildDenoisePassShader from "./denoise-pass-shader.ts";
+import buildTextureConverterPassShader from "./texture-converter-pass-shader.ts";
 import { logGroup } from "./benchmark/cpu-performance-logger.ts";
 import { OpenPBRMaterial } from "./openpbr-material";
 import {
@@ -55,48 +57,67 @@ export type PathTracerOptions = {
   signal?: AbortSignal;
   enableTimestampQuery?: boolean;
   enableFloatTextureFiltering?: boolean;
-  enableDenoise?: boolean;
+  enableDenoise?:
+    | boolean
+    | {
+        url: string;
+      };
 };
 
 async function denoise(
-  unet: UNet,
-  data: ArrayBuffer,
+  {
+    device,
+    adapterInfo,
+    url,
+  }: { device: GPUDevice; adapterInfo: GPUAdapterInfo; url: string },
+  {
+    colorBuffer,
+    albedoBuffer,
+    normalBuffer,
+  }: {
+    colorBuffer: GPUBuffer;
+    albedoBuffer: GPUBuffer;
+    normalBuffer: GPUBuffer;
+  },
   size: { width: number; height: number },
 ) {
-  const outputCanvas = document.createElement("canvas");
-  outputCanvas.width = size.width;
-  outputCanvas.height = size.height;
-  const outputCtx = outputCanvas.getContext("2d");
-  document.body.appendChild(outputCanvas);
-  outputCanvas.style.cssText =
-    "position:absolute; right: 0; bottom: 0; z-index: 1; pointer-events: none;";
+  const unet = await initUNetFromURL(
+    url,
+    {
+      device,
+      adapterInfo,
+    },
+    {
+      aux: true,
+      hdr: true,
+    },
+  );
 
-  var imgData = new ImageData(size.width, size.height);
-  const clampedData = new Uint8ClampedArray(data);
-  for (let y = 0; y < size.height; y++) {
-    for (let x = 0; x < size.width; x++) {
-      // Consider flipping the image
-      const sourceIndex = ((size.height - 1 - y) * size.width + x) * 4;
-      const targetIndex = (y * size.width + x) * 4;
+  type GPUImageData = {
+    data: GPUBuffer;
+    width: number;
+    height: number;
+  };
 
-      imgData.data[targetIndex] = clampedData[sourceIndex];
-      imgData.data[targetIndex + 1] = clampedData[sourceIndex + 1];
-      imgData.data[targetIndex + 2] = clampedData[sourceIndex + 2];
-      imgData.data[targetIndex + 3] = clampedData[sourceIndex + 3];
-    }
-  }
-
-  return new Promise((resolve, reject) => {
+  return new Promise<GPUImageData>((resolve) => {
     unet.tileExecute({
-      color: imgData,
-      done() {},
-      progress: (_, tileData, tile) => {
-        if (!tileData) {
-          reject("No tile data");
-          return;
-        }
-        outputCtx?.putImageData(tileData, tile.x, tile.y);
-        resolve(tileData);
+      color: {
+        data: colorBuffer,
+        width: size.width,
+        height: size.height,
+      },
+      albedo: {
+        data: albedoBuffer,
+        width: size.width,
+        height: size.height,
+      },
+      normal: {
+        data: normalBuffer,
+        width: size.width,
+        height: size.height,
+      },
+      done(finalBuffer) {
+        resolve(finalBuffer);
       },
     });
   });
@@ -791,43 +812,50 @@ async function runPathTracer(
         }
       }
 
-      const pass = encoder.beginRenderPass({
-        colorAttachments: [
-          {
-            view: context.getCurrentTexture().createView(),
-            loadOp: "clear",
-            clearValue: { r: 0, g: 0, b: 0.2, a: 1 },
-            storeOp: "store",
-          },
-        ],
-      });
+      const executeRenderPass = (
+        texture: GPUTexture,
+        encoder: GPUCommandEncoder,
+      ) => {
+        const pass = encoder.beginRenderPass({
+          colorAttachments: [
+            {
+              view: context.getCurrentTexture().createView(),
+              loadOp: "clear",
+              clearValue: { r: 0, g: 0, b: 0.2, a: 1 },
+              storeOp: "store",
+            },
+          ],
+        });
 
-      pass.setPipeline(renderPipeline);
+        pass.setPipeline(renderPipeline);
 
-      const renderBindGroup = device.createBindGroup({
-        label: "Texture sampler bind group",
-        layout: renderBindGroupLayout,
-        entries: [
-          {
-            binding: 0,
-            resource: sampler,
-          },
-          {
-            binding: 1,
-            resource: texture.createView(),
-          },
-        ],
-      });
+        const renderBindGroup = device.createBindGroup({
+          label: "Texture sampler bind group",
+          layout: renderBindGroupLayout,
+          entries: [
+            {
+              binding: 0,
+              resource: sampler,
+            },
+            {
+              binding: 1,
+              resource: texture.createView(),
+            },
+          ],
+        });
 
-      pass.setBindGroup(0, renderBindGroup);
-      const RENDER_TEXTURE_VERTEX_COUNT = 6;
-      pass.draw(RENDER_TEXTURE_VERTEX_COUNT);
+        pass.setBindGroup(0, renderBindGroup);
+        const RENDER_TEXTURE_VERTEX_COUNT = 6;
+        pass.draw(RENDER_TEXTURE_VERTEX_COUNT);
 
-      pass.end();
+        pass.end();
 
-      const commandBuffer = encoder.finish();
+        const commandBuffer = encoder.finish();
 
-      device.queue.submit([commandBuffer]);
+        device.queue.submit([commandBuffer]);
+      };
+
+      executeRenderPass(texture, encoder);
 
       if (
         !isNil(timestampQueryData) &&
@@ -865,31 +893,328 @@ async function runPathTracer(
 
         state = "halted";
 
-        if (enableDenoise) {
-          const readbackBuffer = device.createBuffer({
-            usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
-            size: 4 * width * height,
+        const activateDenoisePass =
+          (typeof enableDenoise === "object" && enableDenoise.url) ||
+          enableDenoise;
+        if (activateDenoisePass) {
+          let denoiseConfig =
+            enableDenoise === true
+              ? {
+                  url: "./oidn-weights/rt_hdr_alb_nrm.tza",
+                }
+              : enableDenoise;
+
+          const dynamicComputeBindGroupLayout = device.createBindGroupLayout({
+            label: "Dynamic denoise pass compute bind group layout",
+            entries: [
+              {
+                binding: 0,
+                visibility: GPUShaderStage.COMPUTE,
+                storageTexture: {
+                  format: "rgba32float",
+                },
+              },
+              {
+                binding: 1,
+                visibility: GPUShaderStage.COMPUTE,
+                storageTexture: { format: "rgba32float", access: "read-only" },
+              },
+              {
+                binding: 2,
+                visibility: GPUShaderStage.COMPUTE,
+                buffer: {
+                  type: "uniform",
+                },
+              },
+              {
+                binding: 3,
+                visibility: GPUShaderStage.COMPUTE,
+                buffer: {
+                  type: "storage",
+                },
+              },
+            ],
           });
 
-          const encoder = device.createCommandEncoder();
-          encoder.copyTextureToBuffer(
-            { texture: readTexture },
-            { buffer: readbackBuffer, bytesPerRow: width * 4 },
-            [width, height],
+          const denoisePassShaderCode = buildDenoisePassShader({
+            imageWidth: width,
+            imageHeight: height,
+            maxWorkgroupDimension,
+            maxBvhStackDepth: maxBvhDepth,
+          });
+
+          const denoisePassDefinitions = makeShaderDataDefinitions(
+            denoisePassShaderCode,
           );
-          device.queue.submit([encoder.finish()]);
+          const { size: bytesForUniform } =
+            denoisePassDefinitions.uniforms.uniformData;
+          const uniformData = makeStructuredView(
+            denoisePassDefinitions.uniforms.uniformData,
+            new ArrayBuffer(bytesForUniform),
+          );
 
-          await readbackBuffer.mapAsync(GPUMapMode.READ, 0, 4 * width * height);
-          const data = readbackBuffer.getMappedRange(0, 4 * width * height);
-          const uint8Array = new Uint8Array(data);
+          const buildDenoisePassUniformBuffer = (mode: 0 | 1) => {
+            const uniformBuffer = device.createBuffer({
+              label: "Denoise pass uniform data buffer",
+              size: bytesForUniform,
+              usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+              // mappedAtCreation: true,
+            });
 
-          const TZA_URL = "./oidn-weights/rt_ldr.tza";
-          const unet = await initUNetFromURL(TZA_URL);
-          await denoise(unet, uint8Array, {
-            width,
-            height,
+            uniformData.set({
+              invProjectionMatrix: invProjectionMatrix.elements,
+              cameraWorldMatrix: matrixWorld.elements,
+              invModelMatrix: sceneMatrixWorld.clone().invert().elements,
+              seedOffset: Math.random() * Number.MAX_SAFE_INTEGER,
+              priorSamples: currentSample,
+              samplesPerPixel: samplesPerIteration,
+              sunDirection,
+              skyPower: environmentLightConfiguration.sky.power,
+              skyColor: environmentLightConfiguration.sky.color,
+              sunPower: Math.pow(10, environmentLightConfiguration.sun.power),
+              sunAngularSize: environmentLightConfiguration.sun.angularSize,
+              sunColor: environmentLightConfiguration.sun.color,
+              clearColor: clearColor === false ? [0, 0, 0] : clearColor,
+              enableClearColor: clearColor === false ? 0 : 1,
+              maxRayDepth,
+              objectDefinitionLength: modelGroups.length,
+              mode,
+            });
+            // todo: consider buffer writing
+            device.queue.writeBuffer(uniformBuffer, 0, uniformData.arrayBuffer);
+
+            return uniformBuffer;
+          };
+
+          const normalUniformBuffer = buildDenoisePassUniformBuffer(0);
+          const albedoUniformBuffer = buildDenoisePassUniformBuffer(1);
+
+          const computePipelineLayout = device.createPipelineLayout({
+            label: "Dynamic denoise pass compute pipeline layout",
+            bindGroupLayouts: [
+              computeBindGroupLayout,
+              dynamicComputeBindGroupLayout,
+            ],
           });
-          readbackBuffer.unmap();
+
+          const float32ArrayImageSize = width * height * 4;
+
+          const normalImageBuffer = device.createBuffer({
+            label: "Normal image buffer",
+            size: Float32Array.BYTES_PER_ELEMENT * float32ArrayImageSize,
+            usage:
+              GPUBufferUsage.STORAGE |
+              // todo: check flags
+              GPUBufferUsage.COPY_SRC |
+              GPUBufferUsage.COPY_DST,
+            // mappedAtCreation: true,
+          });
+
+          const albedoImageBuffer = device.createBuffer({
+            label: "Albedo image buffer",
+            size: Float32Array.BYTES_PER_ELEMENT * float32ArrayImageSize,
+            usage:
+              GPUBufferUsage.STORAGE |
+              // todo: check flags
+              GPUBufferUsage.COPY_SRC |
+              GPUBufferUsage.COPY_DST,
+            // mappedAtCreation: true,
+          });
+
+          const computeShaderModule = device.createShaderModule({
+            label: "Denoise Pass Compute Shader",
+            code: denoisePassShaderCode,
+          });
+
+          const computePipeline = device.createComputePipeline({
+            label: "Denoise Pass Compute pipeline",
+            layout: computePipelineLayout,
+            compute: {
+              module: computeShaderModule,
+              entryPoint: "computeMain",
+            },
+          });
+
+          const executeDenoisePass = (
+            imageBuffer: GPUBuffer,
+            uniformBuffer: GPUBuffer,
+          ) => {
+            const dynamicComputeBindGroup = device.createBindGroup({
+              label: "Dynamic denoise pass compute bind group",
+              layout: dynamicComputeBindGroupLayout,
+              entries: [
+                {
+                  binding: 0,
+                  resource: writeTexture.createView(),
+                },
+                {
+                  binding: 1,
+                  resource: readTexture.createView(),
+                },
+                {
+                  binding: 2,
+                  resource: {
+                    buffer: uniformBuffer,
+                  },
+                },
+                {
+                  binding: 3,
+                  resource: {
+                    buffer: imageBuffer,
+                  },
+                },
+              ],
+            });
+            const encoder = device.createCommandEncoder();
+
+            const computePass = encoder.beginComputePass();
+            computePass.setBindGroup(0, computeBindGroup);
+            computePass.setBindGroup(1, dynamicComputeBindGroup);
+
+            computePass.setPipeline(computePipeline);
+
+            const dispatchX = Math.ceil(width / maxWorkgroupDimension);
+            const dispatchY = Math.ceil(height / maxWorkgroupDimension);
+            computePass.dispatchWorkgroups(dispatchX, dispatchY);
+
+            computePass.end();
+
+            device.queue.submit([encoder.finish()]);
+          };
+
+          executeDenoisePass(normalImageBuffer, normalUniformBuffer);
+          executeDenoisePass(albedoImageBuffer, albedoUniformBuffer);
+
+          const textureBuffer = device.createBuffer({
+            label: "Texture buffer",
+            usage:
+              GPUBufferUsage.COPY_DST |
+              GPUBufferUsage.COPY_SRC |
+              GPUBufferUsage.STORAGE,
+            size: Float32Array.BYTES_PER_ELEMENT * 4 * width * height,
+          });
+
+          // fixme: use manual texture-converter-pass-shader
+          {
+            const textureConverterPassShaderCode =
+              buildTextureConverterPassShader({
+                imageWidth: width,
+                imageHeight: height,
+                maxWorkgroupDimension,
+              });
+
+            const computeShaderModule = device.createShaderModule({
+              label: "Texture Converter Pass Compute Shader",
+              code: textureConverterPassShaderCode,
+            });
+
+            const dynamicComputeBindGroupLayout = device.createBindGroupLayout({
+              label: "Texture Converter pass compute bind group layout",
+              entries: [
+                {
+                  binding: 0,
+                  visibility: GPUShaderStage.COMPUTE,
+                  storageTexture: {
+                    format: "rgba32float",
+                    access: "read-only",
+                  },
+                },
+                {
+                  binding: 1,
+                  visibility: GPUShaderStage.COMPUTE,
+                  buffer: {
+                    type: "storage",
+                  },
+                },
+              ],
+            });
+
+            const computePipelineLayout = device.createPipelineLayout({
+              label: "Dynamic texture converter pass compute pipeline layout",
+              bindGroupLayouts: [dynamicComputeBindGroupLayout],
+            });
+
+            const computePipeline = device.createComputePipeline({
+              label: "Texture Converter Pass Compute pipeline",
+              layout: computePipelineLayout,
+              compute: {
+                module: computeShaderModule,
+                entryPoint: "computeMain",
+              },
+            });
+
+            // todo: reconsider this pass as now the texture is already in the correct format
+            const dynamicComputeBindGroup = device.createBindGroup({
+              label: "Texture converter pass compute bind group",
+              layout: dynamicComputeBindGroupLayout,
+              entries: [
+                {
+                  binding: 0,
+                  resource: writeTexture.createView(),
+                },
+                {
+                  binding: 1,
+                  resource: {
+                    buffer: textureBuffer,
+                  },
+                },
+              ],
+            });
+
+            const encoder = device.createCommandEncoder();
+
+            const computePass = encoder.beginComputePass();
+            computePass.setBindGroup(0, dynamicComputeBindGroup);
+
+            computePass.setPipeline(computePipeline);
+
+            const dispatchX = Math.ceil(width / maxWorkgroupDimension);
+            const dispatchY = Math.ceil(height / maxWorkgroupDimension);
+            computePass.dispatchWorkgroups(dispatchX, dispatchY);
+
+            computePass.end();
+
+            device.queue.submit([encoder.finish()]);
+          }
+
+          const outputBuffer = await denoise(
+            { device, adapterInfo: adapter.info, url: denoiseConfig.url },
+            {
+              colorBuffer: textureBuffer,
+              albedoBuffer: albedoImageBuffer,
+              normalBuffer: normalImageBuffer,
+            },
+            {
+              width,
+              height,
+            },
+          );
+
+          {
+            const textureFinal = device.createTexture({
+              size: [width, height],
+              format: "rgba32float",
+              usage:
+                GPUTextureUsage.TEXTURE_BINDING |
+                GPUTextureUsage.COPY_DST |
+                GPUTextureUsage.COPY_SRC,
+            });
+            const encoder = device.createCommandEncoder();
+            encoder.copyBufferToTexture(
+              // todo: this is used to debug the different buffers
+              { buffer: outputBuffer.data, bytesPerRow: width * 4 * 4 },
+              //{ buffer: normalImageBuffer, bytesPerRow: width * 4 * 4 },
+              //{ buffer: textureBuffer, bytesPerRow: width * 4 * 4 },
+              { texture: textureFinal },
+              [width, height],
+            );
+            device.queue.submit([encoder.finish()]);
+
+            const encoder2 = device.createCommandEncoder();
+            executeRenderPass(textureFinal, encoder2);
+          }
+
+          textureBuffer.unmap();
         }
 
         finishedSampling?.({
