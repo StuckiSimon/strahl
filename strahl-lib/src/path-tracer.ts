@@ -326,10 +326,43 @@ async function runPathTracer(
     magFilter: useFloatTextureFiltering ? "linear" : "nearest",
   });
 
+  const renderShaderCode = buildRenderShader();
+
   const renderShaderModule = device.createShaderModule({
     label: "Render Shader",
-    code: buildRenderShader(),
+    code: renderShaderCode,
   });
+
+  const renderShaderDefinitions = makeShaderDataDefinitions(renderShaderCode);
+  const { size: bytesForRenderUniform } =
+    renderShaderDefinitions.uniforms.uniformData;
+  const renderUniformData = makeStructuredView(
+    renderShaderDefinitions.uniforms.uniformData,
+    new ArrayBuffer(bytesForRenderUniform),
+  );
+
+  const renderUniformBuffer = device.createBuffer({
+    label: "Render uniform data buffer",
+    size: bytesForRenderUniform,
+    usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+  });
+
+  const setRenderUniformData = (enableDenoise: boolean) => {
+    renderUniformData.set({
+      textureWidth: width,
+      textureHeight: height,
+      denoiseSigma: 4.0,
+      denoiseKSigma: 1.0,
+      denoiseThreshold: 0.1,
+      enableDenoise: enableDenoise ? 1 : 0,
+    });
+    device.queue.writeBuffer(
+      renderUniformBuffer,
+      0,
+      renderUniformData.arrayBuffer,
+    );
+  };
+  setRenderUniformData(false);
 
   const renderBindGroupLayout = device.createBindGroupLayout({
     label: "Texture sampler bind group layout",
@@ -346,6 +379,13 @@ async function runPathTracer(
         visibility: GPUShaderStage.FRAGMENT,
         texture: {
           sampleType: useFloatTextureFiltering ? "float" : "unfilterable-float",
+        },
+      },
+      {
+        binding: 2,
+        visibility: GPUShaderStage.FRAGMENT,
+        buffer: {
+          type: "uniform",
         },
       },
     ],
@@ -696,6 +736,11 @@ async function runPathTracer(
     let renderTimes = [];
 
     const render = async () => {
+      const isLastSample = currentSample === TARGET_SAMPLES;
+      if (isLastSample) {
+        setRenderUniformData(true);
+      }
+
       const matrixWorld = cameraSetup.camera.matrixWorld;
       const invProjectionMatrix = cameraSetup.camera.projectionMatrixInverse;
 
@@ -840,6 +885,12 @@ async function runPathTracer(
             {
               binding: 1,
               resource: texture.createView(),
+            },
+            {
+              binding: 2,
+              resource: {
+                buffer: renderUniformBuffer,
+              },
             },
           ],
         });
