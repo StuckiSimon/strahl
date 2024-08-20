@@ -686,7 +686,7 @@ async function runPathTracer(
 
   const renderLoopStart = logGroup("render loop full");
   const buildRenderLoop = () => {
-    let state: "running" | "halted" = "running";
+    let state: "running" | "halted" | "denoise" = "running";
 
     const isHalted = () => state === "halted";
 
@@ -891,12 +891,14 @@ async function runPathTracer(
         currentAnimationFrameRequest = null;
         const fullRenderLoopTime = renderLoopStart.end();
 
-        state = "halted";
-
         const activateDenoisePass =
           (typeof enableDenoise === "object" && enableDenoise.url) ||
           enableDenoise;
+
+        state = "halted";
+
         if (activateDenoisePass) {
+          state = "denoise";
           let denoiseConfig =
             enableDenoise === true
               ? {
@@ -1177,6 +1179,9 @@ async function runPathTracer(
             device.queue.submit([encoder.finish()]);
           }
 
+          if (isHalted()) {
+            return;
+          }
           const outputBuffer = await denoise(
             { device, adapterInfo: adapter.info, url: denoiseConfig.url },
             {
@@ -1189,6 +1194,10 @@ async function runPathTracer(
               height,
             },
           );
+
+          if (isHalted()) {
+            return;
+          }
 
           {
             const textureFinal = device.createTexture({
