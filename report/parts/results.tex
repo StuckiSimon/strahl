@@ -174,7 +174,48 @@ The output of the path tracing compute shader is a texture, which is then passed
 
 \subsection*{Denoise Pipeline}
 
-As rendering progresses, the image becomes increasingly less noisy. However, as the number of samples increases, the noise reduction achieved by each additional sample diminishes. At this stage, denoising can significantly enhance image quality by further reducing noise. The renderer allows for an optional denoising step to be performed after sampling is complete. The denoising algorithm employed is Open Image Denoise (\gls{OIDN}) \cite{openImageDenoise}. \gls{OIDN}, developed by Intel, has been ported to the web by Shen \cite{oidnWeb} and is also based on \gls{WebGPU}, making it well-suited for integration into the path tracer.
+As rendering progresses, the image becomes increasingly less noisy. However, as the number of samples increases, the noise reduction achieved by each additional sample diminishes. At this stage, denoising can significantly enhance image quality by further reducing noise. The renderer allows for an optional denoising step to be performed after sampling is complete. The renderer supports two mutually exclusive denoising modes:
+
+\begin{itemize}
+  \item{Denoise filtering} — A filter to reduce noise based on a circular Gaussian kernel \cite{conventionalGaussianDenoise}. The denoise filter is integrated into the render pipeline. See \coderef{DENOISE-FILTERING} for implementation.
+  \item{\gls{OIDN}} — Open Image Denoise \cite{openImageDenoise}, developed by Intel, is a state-of-the-art denoising library that uses \gls{ML} and is built for noise reduction in ray tracing. The concrete library is developed by Shen \cite{oidnWeb} and is also based on \gls{WebGPU}, making it well-suited for integration into the path tracer as a subsequent step. After denoising, the image is rendered using the render pipeline.
+\end{itemize}
+
+Results of simple renderings with and without denoising can be seen in \autoref{fig:denoise-samples}. Note that \gls{OIDN} can effectively denoise images even with a low number of samples, as shown in \autoref{fig:denoise-oidn-10-samples}. The difference in denoising on 100 samples as shown in \autoref{fig:denoise-oidn-100-samples} for \gls{OIDN} and \autoref{fig:denoise-gaussian-100-samples} for the denoise filter is less pronounced in local areas. However, \gls{OIDN} is more effective in reducing noise in global regions.
+
+\begin{figure}[H]
+    \centering
+    \hspace*{2cm}
+    \begin{subfigure}[t]{0.4\textwidth}
+        \includegraphics[width=\textwidth]{resources/denoise-off-100-samples.png}
+        \caption{No denoising applied, 100 samples.}
+        \label{fig:denoise-off}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.4\textwidth}
+        \includegraphics[width=\textwidth]{resources/denoise-gaussian-100-samples.png}
+        \caption{Denoise filtering applied, 100 samples.}
+        \label{fig:denoise-gaussian-100-samples}
+    \end{subfigure}
+    \hspace*{2cm}
+    \vfill
+    \vspace*{0.5cm}
+    \hspace*{2cm}
+    \begin{subfigure}[t]{0.4\textwidth}
+        \includegraphics[width=\textwidth]{resources/denoise-oidn-100-samples.png}
+        \caption{\gls{OIDN} applied, 100 samples.}
+        \label{fig:denoise-oidn-100-samples}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.4\textwidth}
+        \includegraphics[width=\textwidth]{resources/denoise-oidn-10-samples.png}
+        \caption{\gls{OIDN} applied, 10 samples.}
+        \label{fig:denoise-oidn-10-samples}
+    \end{subfigure}
+    \hspace*{2cm}
+    \caption{Renderings with limited number of samples demonstrating effect of denoising.}
+    \label{fig:denoise-samples}
+\end{figure}
 
 \section{Documentation}
 
