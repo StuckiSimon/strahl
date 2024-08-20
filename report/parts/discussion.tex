@@ -190,7 +190,7 @@ Path tracing is computationally expensive and requires multiple samples per pixe
 
 \subsubsection*{Denoisers}
 
-Optimizations in the render pipeline could also be achieved by using denoising algorithms applied as post-processing steps could enhance the quality of the results. Options include blockwise multi-order feature regression (BMFR) \cite{blockwise-multi-order-regresssion-for-rt-pt} and Open Image Denoise (OIDN) \cite{openImageDenoise}.
+The renderer currently employs \gls{OIDN} for optional denoising \cite{openImageDenoise}. However, the quality of the results varies depending on the scene. In certain setups, the changes introduced by \gls{OIDN} are rather pronounced, which may necessitate disabling the denoiser. By employing alternative denoising algorithms, applied as post-processing steps, the quality of the results could be enhanced without introducing new artifacts into the renderings. One option is blockwise multi-order feature regression (BMFR) \cite{blockwise-multi-order-regresssion-for-rt-pt}.
 
 \subsubsection*{Qualitative Assessment}
 
