@@ -797,6 +797,29 @@ year = {2018}
   doi = {10.1145/3528223.3530099}
 }
 
+@online{mitsubaWavefrontVsMegakernel,
+  title = {GPU Rendering not that much faster},
+  author = {Wenzel Jakob},
+  year = {2024},
+  month = {April},
+  url = {https://github.com/mitsuba-renderer/mitsuba2/issues/72#issuecomment-610631631},
+  lastaccessed = "August 20, 2024",
+}
+
+@article{wavefrontComparisonInTableA5,
+  title = {Path guiding for wavefront path tracing: A memory efficient approach for GPU path tracers},
+  journal = {Computers \& Graphics},
+  volume = {121},
+  pages = {103945},
+  year = {2024},
+  issn = {0097-8493},
+  doi = {https://doi.org/10.1016/j.cag.2024.103945},
+  url = {https://www.sciencedirect.com/science/article/pii/S0097849324000803},
+  author = {Bora Yalçıner and Ahmet Oğuz Akyüz},
+  keywords = {Graphics processors, Monte Carlo rendering, Path tracing, Path guiding},
+  abstract = {We propose a path-guiding algorithm to be incorporated into the wavefront style of path tracers (WFPTs). As WFPTs are primarily implemented on graphics processing units (GPUs), the proposed method aims to leverage the capabilities of the GPUs and reduce the hierarchical data structure and memory usage typically required for such techniques. To achieve this, our algorithm only stores the radiant exitance on a single global sparse voxel octree (SVO) data structure. Probability density functions required to guide the rays are generated on-the-fly using this data structure. The proposed approach reduces the scene-related persistent memory requirements compared to other path-guiding techniques while producing similar or better results depending on scene characteristics. To our knowledge, our algorithm is the first one that incorporates path guiding into a WFPT.}
+}
+
 @misc{dabrovic2002sponza,
   title={Sponza atrium},
   author={Dabrovic, Marko},

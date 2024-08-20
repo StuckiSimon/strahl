@@ -176,7 +176,7 @@ During the specification phase of \gls{WebGPU}, the relation to \fgls{SPIR-V}{\e
 
 \subsubsection*{Low-Level Performance Optimizations}
 
-This target is likely at odds with the goal of providing automatic shader generation. The current implementation is not optimized for performance. Therefore, it is likely that optimizations of the \gls{WGSL} code could improve the performance of the renderer. Due to the nature of the design of \gls{OpenPBR}, it would be possible to do optimizations and get better real-time rendering performance.
+This target is likely at odds with the goal of providing automatic shader generation. The current implementation is not optimized for performance. Therefore, it is likely that optimizations of the \gls{WGSL} code could improve the performance of the renderer. Due to the nature of the design of \gls{OpenPBR}, it would be possible to do optimizations and get better real-time rendering performance. One approach to do so is to establish so-called wavefront path tracing \cite{laine2013megakernels}. Instead of a single megakernel, the renderer could be split into multiple smaller kernels. One kernel would be responsible for ray generation, another for intersection testing, and multiple kernels for shading - one per workflow. This would reduce divergence of the shader programs and could improve performance. Further investigation on the potential performance improvements is required \cite{wavefrontComparisonInTableA5,mitsubaWavefrontVsMegakernel}.
 
 Automatic shader generation is helpful, but likely not as optimized as a carefully tuned implementation. However, both endeavors are of interest for potential benefits.
 
