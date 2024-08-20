@@ -172,6 +172,10 @@ For each intersection, sampling is done according to the \gls{MIS} scheme as des
 
 The output of the path tracing compute shader is a texture, which is then passed to a rasterizer. The rasterizer renders the texture to the canvas using a fullscreen quad consisting of two triangles. Tone mapping is done using the Khronos \gls{PBR} Neutral Tone Mapper described in \autoref{sec:toneMappingTheory}. See \coderef{TONE-MAPPER} for implementation. Progressive rendering is a technique to render an image in multiple passes. Each render pass improves the quality of the image. This enables the user to see the rough image quickly and refine it over time. 
 
+\subsection*{Denoise Pipeline}
+
+As rendering progresses, the image becomes increasingly less noisy. However, as the number of samples increases, the noise reduction achieved by each additional sample diminishes. At this stage, denoising can significantly enhance image quality by further reducing noise. The renderer allows for an optional denoising step to be performed after sampling is complete. The denoising algorithm employed is Open Image Denoise (\gls{OIDN}) \cite{openImageDenoise}. \gls{OIDN}, developed by Intel, has been ported to the web by Shen \cite{oidnWeb} and is also based on \gls{WebGPU}, making it well-suited for integration into the path tracer.
+
 \section{Documentation}
 
 The path tracer is designed to be integrated into existing web projects. The package is installable via \gls{npm}, but could also be downloaded and included manually. The full documentation is available on the website. The website is designed to serve as a demonstration of the path tracer, provide a quick start guide, and offer detailed information on how to set up \texttt{strahl}. The website is shown in \autoref{fig:strahl-homepage}.
