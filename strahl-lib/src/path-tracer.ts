@@ -30,7 +30,7 @@ import {
 import { buildAbortEventHub } from "./util/abort-event-hub.ts";
 import { Group } from "three";
 import { prepareGeometry } from "./prepare-geometry.ts";
-import { initUNetFromURL, UNet } from "oidn-web";
+import { initUNetFromURL } from "oidn-web";
 
 /**
  * Configuration options for the path tracer.
