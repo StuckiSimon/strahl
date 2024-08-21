@@ -338,7 +338,7 @@ The results for \gls{CPU} performance were recorded using the Performance API an
 \newpage
 \section{Use Case Scenarios}
 
-The \gls{CAD} data used by EAO as visualized by the path tracer can be seen in \autoref{fig:rendering-showcase}. While certain strengths of the ray tracing approach, such as caustics, are not relevant for the use case, and other strengths, such as reflections are not fully utilized, the path tracer still provides a suitable candidate for the use case. The complexity of the geometry does not pose a significant challenge for the path tracer, even for relatively high triangle counts. \gls{OpenPBR} parameters can be adjusted to fit the use case and provide a realistic rendering of the pushbuttons.
+Different assemblies of production \gls{CAD} data used by EAO as rendered by the path tracer can be seen in \autoref{fig:rendering-showcase}. Note that artistic liberties were taken to highlight certain effects. The path tracer is capable of rendering full assemblies without being impeded by the complexity of the geometry. The renderer offers flexibility by providing configuration of \gls{OpenPBR} parameters, environment lighting, denoising setup, and more. This enables the user to obtain high-fidelity renderings of \gls{CAD} data without the need for pregenerated artifacts, making the renderer suitable for product visualization.
 
 \begin{figure}[H]
     \centering
@@ -370,6 +370,6 @@ The \gls{CAD} data used by EAO as visualized by the path tracer can be seen in \
         \label{fig:demo-ambient-occlusion}
     \end{subfigure}
     \hspace*{1cm}
-    \caption{Path traced renderings of pushbutton CAD models.}
+    \caption{Path traced renderings of pushbutton \gls{CAD} models.}
     \label{fig:rendering-showcase}
 \end{figure}
