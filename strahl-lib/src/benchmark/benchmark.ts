@@ -1,7 +1,7 @@
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { logGroup } from "./cpu-performance-logger.ts";
 import { OpenPBRMaterial } from "../openpbr-material.ts";
-import runPathTracer from "../path-tracer.ts";
+import runPathTracer, { PathTracerOptions } from "../path-tracer.ts";
 import getStatsForReportStructure from "./benchmark-analyser.ts";
 import { isNil } from "../util/is-nil.ts";
 import {
@@ -112,7 +112,16 @@ const MATERIAL_MAP = {
   material_name_kunststoff_weissDCDCDC_transparent_trueb_18_mtl: whitePlastic,
 };
 
-async function run(target: number, yielder: any) {
+type FinishedSamplingOptions = Parameters<
+  Exclude<PathTracerOptions["finishedSampling"], undefined>
+>[0] & {
+  fullRunTime: number;
+};
+
+async function run(
+  target: number,
+  yielder: (params: FinishedSamplingOptions) => void | Promise<void>,
+) {
   const runStartGroup = logGroup("full-model");
 
   const MODEL_URL =
@@ -363,7 +372,7 @@ async function main() {
         ? 1
         : 2;
 
-  run(target, (report: any) => {
+  run(target, (report) => {
     console.log(report);
     const deviation = getStandardDeviation(report.renderTimes);
     const mean = getSampleMean(report.renderTimes);
