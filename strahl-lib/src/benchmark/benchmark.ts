@@ -4,6 +4,11 @@ import { OpenPBRMaterial } from "../openpbr-material.ts";
 import runPathTracer from "../path-tracer.ts";
 import getStatsForReportStructure from "./benchmark-analyser.ts";
 import { isNil } from "../util/is-nil.ts";
+import {
+  getConfidenceInterval,
+  getSampleMean,
+  getStandardDeviation,
+} from "./maths.ts";
 
 const MODEL_URL_FULL = "models/series-61-rotated/61-serie-edit.gltf"; // 1'068'735
 const MODEL_URL_BARE_BONES = "models/series-61-simplified-2/61-serie-edit.gltf"; // 10'687
@@ -153,33 +158,6 @@ async function run(target: number, yielder: any) {
       });
     },
   });
-}
-
-function getStandardDeviation(list: number[]) {
-  if (list.length === 0) {
-    return 0;
-  }
-  const n = list.length;
-  const mean = list.reduce((a, b) => a + b) / n;
-  return Math.sqrt(
-    list.map((x) => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n,
-  );
-}
-
-function getSampleMean(list: number[]) {
-  if (list.length === 0) {
-    return 0;
-  }
-  return list.reduce((a, b) => a + b) / list.length;
-}
-
-function confidenceInterval(xBar: number, s: number, n: number, z: number) {
-  const marginOfError = z * (s / Math.sqrt(n));
-
-  const lowerBound = xBar - marginOfError;
-  const upperBound = xBar + marginOfError;
-
-  return { lowerBound, upperBound, marginOfError };
 }
 
 const userAgent = window.navigator.userAgent;
@@ -391,7 +369,7 @@ async function main() {
     const mean = getSampleMean(report.renderTimes);
     console.log("Standard deviation", deviation);
     console.log("Mean", mean);
-    const { lowerBound, upperBound, marginOfError } = confidenceInterval(
+    const { lowerBound, upperBound, marginOfError } = getConfidenceInterval(
       mean,
       deviation,
       report.renderTimes.length,
