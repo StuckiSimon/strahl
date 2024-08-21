@@ -128,7 +128,7 @@ export default function TracerExperiment({
   });
 
   const defaultOptions: PathTracerOptions = {
-    targetSamples: 300,
+    targetSamples: 250,
     size: 512,
     clearColor: convertHexToRGB("#1B1B1D"),
     enableDenoise: {
