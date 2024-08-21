@@ -183,8 +183,7 @@ function confidenceInterval(xBar: number, s: number, n: number, z: number) {
 
 const userAgent = window.navigator.userAgent;
 
-// @ts-ignore
-function getLimits(context) {
+function getLimits(context: GPUSupportedLimits) {
   return {
     maxBindGroups: context.maxBindGroups,
     maxBindGroupsPlusVertexBuffers: context.maxBindGroupsPlusVertexBuffers,
