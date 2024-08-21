@@ -198,12 +198,12 @@ The renderer currently provides two optional strategies for denoising: \gls{OIDN
 
 The provided results highlight the quantitative performance of the renderer. However, due to the nature of a renderer, qualitative assessment based on visual inspection is also used to determine the quality of the rendered images. This could be extended to include more advanced metrics such as peak signal to noise ratio (PSNR), structural similarity (SSIM) \cite{ssim}, or learned perceptual image patch similarity (LPIPS) \cite{lpips}.
 
-Such a comparison could be based on reference scenes such as the Cornell Box \cite{goral1984modeling} or the Sponza Atrium \cite{dabrovic2002sponza}. To assess the differences, a number of tests could be conducted:
+Such a comparison could be based on reference scenes such as the Cornell Box \cite{goral1984modeling} or the Sponza Atrium \cite{dabrovic2002sponza}. To assess the differences, different comparisons could be conducted:
 
 \begin{itemize}
-    \item{Offline Renderer Comparison} - Comparison to other offline renderers such as Cycles \cite{cycles}, Mitsuba \cite{Jakob2020DrJit} or \gls{pbrt} \cite{Pharr_Physically_Based_Rendering_2023}.
-    \item{Rasterization Renderer Comparison} - Comparison to rasterization-based web renderers such as \gls{Three.js} or \gls{Babylon.js}.
-    \item{Web-based Path Tracer Comparison} - Comparison to other web-based path tracers such as \texttt{three-gpu-pathtracer} \cite{ThreeJsPathTracerJohnson}, \texttt{Three.js PathTracer} \cite{ThreeJsPathTracerLoftis}, or \texttt{dspbr-pt} \cite{PathTracerDassault}.
+    \item{Offline Renderer} - Comparison to other offline renderers such as Cycles \cite{cycles}, Mitsuba \cite{Jakob2020DrJit} or \gls{pbrt} \cite{Pharr_Physically_Based_Rendering_2023}.
+    \item{Rasterization Renderer} - Comparison to rasterization-based web renderers such as \gls{Three.js} or \gls{Babylon.js}.
+    \item{Web-based Path Tracer} - Comparison to other web-based path tracers such as \texttt{three-gpu-pathtracer} \cite{ThreeJsPathTracerJohnson}, \texttt{Three.js PathTracer} \cite{ThreeJsPathTracerLoftis}, or \texttt{dspbr-pt} \cite{PathTracerDassault}.
 \end{itemize}
 
 \section{Conclusion}
