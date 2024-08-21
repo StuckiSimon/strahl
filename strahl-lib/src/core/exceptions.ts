@@ -45,3 +45,11 @@ export class InternalError extends Error {
     );
   }
 }
+
+export class ScreenshotCaptureError extends Error {
+  constructor(techReason: string) {
+    super(
+      `[ScreenshotCaptureError] Screenshot capture failed. (Reason: ${techReason})`,
+    );
+  }
+}

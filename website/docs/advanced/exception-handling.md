@@ -29,3 +29,7 @@ Make sure that all materials of your object are instances of strahl's `OpenPBRMa
 ## `InternalError`
 
 An error within `strahl` has occurred, please reach out with a detailed error report with a reproduction of the issue. These are generally non-recoverable.
+
+## `ScreenshotCaptureError`
+
+An error occurred while capturing a canvas screenshot. Check the tech reason for detailed information.

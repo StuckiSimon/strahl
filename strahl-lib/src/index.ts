@@ -9,6 +9,7 @@ export { runPathTracer };
  * Util Exports
  */
 export { convertHexToRGB } from "./util/hex-to-rgb";
+export { captureCanvasScreenshot } from "./util/capture-canvas-screenshot";
 
 /**
  * Type Exports
