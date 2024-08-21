@@ -224,6 +224,8 @@ function getLimits(context) {
   };
 }
 
+const STORAGE_KEY = "strahl-path-tracer-state";
+
 async function initWebGPUReport() {
   if (!navigator.gpu) {
     return {
@@ -277,13 +279,13 @@ function saveTextAsFile(text: string, filename: string) {
 
 async function main() {
   document.getElementById("reset-button")?.addEventListener("click", () => {
-    localStorage.removeItem("strahl-path-tracer-state");
+    localStorage.removeItem(STORAGE_KEY);
     window.location.reload();
   });
 
   document.getElementById("start-button")?.addEventListener("click", () => {
     localStorage.setItem(
-      "strahl-path-tracer-state",
+      STORAGE_KEY,
       JSON.stringify({
         max: [],
         mid: [],
@@ -297,7 +299,7 @@ async function main() {
     .getElementById("start-button-high-only")
     ?.addEventListener("click", () => {
       localStorage.setItem(
-        "strahl-path-tracer-state",
+        STORAGE_KEY,
         JSON.stringify({
           max: [],
         }),
@@ -306,7 +308,7 @@ async function main() {
     });
 
   // @ts-ignore
-  let state = JSON.parse(localStorage.getItem("strahl-path-tracer-state"));
+  let state = JSON.parse(localStorage.getItem(STORAGE_KEY));
   console.log(state);
 
   if (state === null) {
@@ -405,7 +407,7 @@ async function main() {
         marginOfError,
       },
     });
-    localStorage.setItem("strahl-path-tracer-state", JSON.stringify(state));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 
     window.location.reload();
   });
