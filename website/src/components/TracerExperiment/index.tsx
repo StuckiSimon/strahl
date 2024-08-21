@@ -131,6 +131,10 @@ export default function TracerExperiment({
     targetSamples: 300,
     size: 512,
     clearColor: convertHexToRGB("#1B1B1D"),
+    enableDenoise: {
+      type: "gaussian",
+      threshold: 0.07,
+    },
     viewProjectionConfiguration: {
       matrixWorldContent: [
         -0.45178184301411944, 4.163336342344336e-17, 0.8921284472108064, 0,
