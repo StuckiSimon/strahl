@@ -67,7 +67,7 @@ function usePathTracer(
     if (canvasSize) {
       init(`render-target-${id}`, modelUrl, materialMap, {
         signal,
-        kTextureWidth: canvasSize,
+        size: canvasSize,
         ...options,
       });
     }

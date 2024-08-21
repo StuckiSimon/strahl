@@ -203,7 +203,7 @@ export default function TracerExperiment({
       max: 10,
       step: 1,
     });
-    rendererSettings.addBinding(PARAMS, "kTextureWidth", {
+    rendererSettings.addBinding(PARAMS, "size", {
       min: 64,
       max: 2048,
       step: 64,
@@ -237,7 +237,7 @@ export default function TracerExperiment({
           ...current,
           targetSamples: PARAMS.targetSamples,
           maxRayDepth: PARAMS.maxRayDepth,
-          kTextureWidth: PARAMS.kTextureWidth,
+          size: PARAMS.size,
         };
       });
     });
