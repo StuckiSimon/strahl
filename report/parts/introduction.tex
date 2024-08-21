@@ -17,7 +17,7 @@ E-commerce is a key use case for product renderings. Commonly, these application
 
 As the number of components grows and the product evolves, the marketing models used for end user visualization need to be kept coordinated with changes to the product. To circumvent this issue, leveraging existing production \gls{CAD} models, prevalent in mechanical engineering and product design, offers a significant advantage. These models contain geometric and material information, which eliminates the need for redundant 3D models for marketing purposes. Geometric information defines the shape of the product, while material information refers to the surface description. One real-world example of a company with production \gls{CAD} data is EAO. They manufacture highly customizable industrial pushbuttons and operator panels. Due to the nature of the product, the number of possible assemblies grows almost exponentially with the number of components.
 
-To illustrate the use case more universally, consider a product which is assembled of $n$ component types. Each component type ($i$) has $o_i$ different options. This gives the total number of possible configurations ($t$) as shown in \autoref{eq:assemblyConfigurations}.
+To illustrate the use case in a simplified and universal form, consider a product that is assembled of $n$ component types. Each component type ($i$) has $o_i$ different options. This gives the total number of possible configurations ($t$) as shown in \autoref{eq:assemblyConfigurations}.
 
 \begin{equation}
   t = \prod_{i=1}^n o_i
@@ -121,11 +121,15 @@ The level of interactivity the user can expect. Generally, higher gives more fle
 
 \subsubsection{Network Dependency}
 
-The reliance on a stable network connection. Generally, lower is better. Offline rendering needs to load the images, which is efficient. Client-side rendering requires an initial connection to download the models but is independent afterwards. Remote rendering consistently requires a stable connection to stream the rendered images.
+The reliance on a stable network connection. Generally, lower is better. Offline rendering requires the loading of images, which is highly optimized in terms of data transmission and rendering performance. Client-side rendering requires an initial connection to download the models but is independent afterwards. Remote rendering consistently requires a stable connection to stream the rendered images.
 
 \subsubsection{Maximum Scene Complexity Dependency}
 
-The main bottleneck in terms of the complexity of the scene that can be rendered. Generally, using a server gives more flexibility as the provider has full control over the hardware capabilities. Offline rendering can handle complex scenes given dedicated hardware. Client-side rendering is dependent on the device, the weakest supported device defines the possible scene complexity. Nowadays, rendering models with millions of triangles is possible on mid-range devices. Remote rendering can handle complex scenes, but is limited to hardware constraints of real-time rendering, which does not cover huge scenes.
+This determines the main bottleneck in terms of the complexity of the scene that can be rendered. Generally, using a server gives more flexibility as the provider has full control over the hardware capabilities. Offline rendering can handle complex scenes given dedicated hardware. Client-side rendering is dependent on the device, the weakest supported device defines the possible scene complexity. Nowadays, rendering models with millions of triangles is possible on mid-range devices. Remote rendering can handle complex scenes, but is limited to hardware constraints of real-time rendering, which does not cover huge scenes.
+
+\subsubsection{Change Management Complexity}
+
+This determines the ability to update the application based on new data. Generally, lower is better. Whenever a component changes, the application needs to be updated. Offline rendering necessitates re-rendering all images that contain the changed component. This can be a time-consuming process. Client-side rendering and remote rendering only require to update the model data and possibly meta information. This requires minimal changes in the application.
 
 \subsection*{Assessment}
 \label{ch:paradigmAssessment}
@@ -146,6 +150,7 @@ Each of the paradigms has its own advantages, \autoref{tab:paradigmComparison} h
   Interactivity & Low & High & High \\
   Network Dependency & Low & Low & High \\
   Max Complexity Dependency & server & device & server \\
+  Change Management \newline Complexity & High & Low & Low \\
   \bottomrule
   \end{tabular}
   \caption{High-level comparison between different rendering architecture paradigms.}
