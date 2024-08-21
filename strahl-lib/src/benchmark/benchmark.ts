@@ -3,6 +3,7 @@ import { logGroup } from "./cpu-performance-logger.ts";
 import { OpenPBRMaterial } from "../openpbr-material.ts";
 import runPathTracer from "../path-tracer.ts";
 import getStatsForReportStructure from "./benchmark-analyser.ts";
+import { isNil } from "../util/is-nil.ts";
 
 const MODEL_URL_FULL = "models/series-61-rotated/61-serie-edit.gltf"; // 1'068'735
 const MODEL_URL_BARE_BONES = "models/series-61-simplified-2/61-serie-edit.gltf"; // 10'687
@@ -306,8 +307,14 @@ async function main() {
       window.location.reload();
     });
 
-  // @ts-ignore
-  let state = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  const stateSerialized = localStorage.getItem(STORAGE_KEY);
+
+  if (isNil(stateSerialized)) {
+    console.log("not yet started");
+    return;
+  }
+
+  let state = JSON.parse(stateSerialized);
   console.log(state);
 
   if (state === null) {
