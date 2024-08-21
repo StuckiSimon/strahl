@@ -1,6 +1,6 @@
 import React from "react";
 import Heading from "@theme/Heading";
-import { OpenPBRMaterial } from "strahl";
+import { OpenPBRMaterial, runPathTracer } from "strahl";
 import styles from "./styles.module.css";
 import clsx from "clsx";
 import usePathTracer from "@site/src/hooks/usePathTracer";
@@ -97,7 +97,9 @@ const MATERIAL_MAP = {
 };
 
 export default function TracerDemo(): JSX.Element {
-  const [options] = React.useState({});
+  const [options] = React.useState<Parameters<typeof runPathTracer>[2]>({
+    enableDenoise: true,
+  });
   const canvas = usePathTracer(
     "https://stuckisimon.github.io/strahl-sample-models/45-series/45-series-cleaned.gltf",
     MATERIAL_MAP,
