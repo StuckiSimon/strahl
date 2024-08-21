@@ -50,6 +50,11 @@ const defaultConfiguration: Partial<
       convertRGBToHex(value as ReturnType<typeof convertHexToRGB>),
     convertToMaterialValue: (value) => convertHexToRGB(value as string),
   },
+  oBaseWeight: {
+    configKey: "baseWeight",
+    value: 1.0,
+    bindingParams: { min: 0, max: 1 },
+  },
   oBaseDiffuseRoughness: {
     configKey: "baseDiffuseRoughness",
     value: 0.0,

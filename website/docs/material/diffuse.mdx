@@ -6,8 +6,14 @@ import TracerExperiment from "@site/src/components/TracerExperiment";
 
 # Diffuse Roughness
 
+For materials such as matte paint, the `diffuse roughness` controls how much the light is scattered when it hits the surface. The higher the value, the more the light is scattered which leads to less pronounced highlights.
+
 <TracerExperiment
-  propertiesForConfiguration={["oBaseDiffuseRoughness"]}
+  propertiesForConfiguration={[
+    "oBaseDiffuseRoughness",
+    "oBaseColor",
+    "oBaseWeight",
+  ]}
   defaultMaterialProperties={{
     oBaseColor: [0.1, 0.1, 0.1],
     oSpecularWeight: 0.0,
