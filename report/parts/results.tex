@@ -255,7 +255,7 @@ The path tracer is designed to be integrated into existing web projects. The pac
     \label{fig:strahl-homepage}
 \end{figure}
 
-Documentation on how to configure the renderer is provided. The library uses custom exceptions which can be caught and handled by the user. It provides different exceptions to enable the user to react appropriately to different error conditions. This includes basic exceptions, where action is limited, such as missing browser support for \gls{WebGPU}, as well as transparent information on what the user mis-configured. The use of \fGls{TypeScript}{Typed superset of JavaScript developed by Microsoft} enables code completion and type checking. The documentation includes showcases for the \gls{OpenPBR} surface shading model. The parameters can be adjusted in real-time to see the effect on the rendering.
+Documentation on how to configure the renderer is provided. The library uses custom exceptions which can be caught and handled by the user. It provides different exceptions to enable the user to react appropriately to different error conditions. This includes basic exceptions, where action is limited, such as missing browser support for \gls{WebGPU}, as well as transparent information on what the user mis-configured. In addition, control over sampling, denoising, environment lighting, and more is described. The use of \fGls{TypeScript}{Typed superset of JavaScript developed by Microsoft} enables code completion and type checking. The documentation includes showcases for the \gls{OpenPBR} surface shading model. The parameters can be adjusted in real-time to see the effect on the rendering.
 
 \begin{figure}[H]
     \centering
@@ -277,11 +277,11 @@ Documentation on how to configure the renderer is provided. The library uses cus
 \section{Benchmark}
 \label{sec:benchmark}
 
-In order to assess the effectiveness of certain measures, a benchmark is defined to measure the performance of the path tracer. This benchmark is used for quantitative evaluation of the path tracer. Prior sections, such as anti-aliasing as described in \autoref{sec:anti-aliasing-implementation} focused on qualitative aspects of the path tracer. Depending on the use case, the benchmark can be adjusted to focus on different aspects. However, the core design of the benchmark remains the same. Generally, measurements are taken for the entirety of a stage instead of focusing on individual routines within a stage. This gives a more holistic view of the performance of the path tracer. However, the different measurements should not be compared directly, as they are influenced by different factors and may have been taken on different stages of the path tracer. They are only intended to be used for comparison within the same measurement category.
+In order to assess the effectiveness of certain measures, a benchmark is defined to measure the performance of the path tracer. This benchmark is used for quantitative evaluation of the path tracer. Prior sections, such as anti-aliasing as described in \autoref{sec:anti-aliasing-implementation} focused on qualitative aspects of the renderer. Depending on the use case, the benchmark can be adjusted to focus on different aspects. However, the core design of the benchmark remains the same. Generally, measurements are taken for the entirety of a stage instead of focusing on individual routines within a stage. This gives a more holistic view of the performance of the path tracer. The results for \gls{CPU} performance were recorded using the Performance API and are presented in Table~\ref{tab:cpuPerformance}. The results for \gls{GPU} performance were recorded using \gls{WebGPU} timestamp queries and are presented in Table~\ref{tab:gpuPerformance}.
 
 A total of 100 samples per pixel with a ray depth of five was used. The image was rendered in Chrome 126 at a resolution of 512$\times$512 pixels. Experiments were conducted with different model complexities. The simplified versions are decimated meshes of the original, which consists of roughly one million triangles. The \gls{LOD} artifacts are shown in Figure~\ref{fig:benchmark-models}. The first two levels are intended to be visually similar, while the third level is a simplified version intended to demonstrate the effect of non-manifold geometry for ray tracing.
 
-Unless otherwise specified, the benchmarks are conducted on a MacBook Pro with Apple Silicon M1 Max. The measurements were calculated using the mean time of 30 runs with a confidence interval of 95\% given as $\pm$ standard deviation from the mean time in milliseconds (ms) as discussed in \autoref{sec:probabilityTheory}.
+Unless otherwise specified, the benchmarks are conducted on a MacBook Pro with Apple Silicon M1 Max. The measurements were calculated using the mean time of 30 runs with a confidence interval of 95\% given as $\pm$ standard deviation from the mean time in milliseconds (ms) as described in \autoref{sec:probabilityTheory}. The different measurement sections should not be compared directly, as they are influenced by different factors and may have been taken on different development stages of the renderer. They are only intended to be used for comparison within the same measurement category.
 
 \begin{figure}[H]
     \includegraphics[width=0.9\columnwidth]{resources/benchmark-models.png}
@@ -329,18 +329,17 @@ For the intersection tests using the \gls{BVH}, the split axis is used as a heur
 
 \subsection*{Overall Performance}
 
-The results for \gls{CPU} performance were recorded using the Performance API and are presented in Table~\ref{tab:cpuPerformance}. The results for \gls{GPU} performance were recorded using \gls{WebGPU} timestamp queries and are presented in Table~\ref{tab:gpuPerformance}.
-
+A final performance test was conducted on two machines. The AMD/NVIDIA machine is a desktop computer with an AMD Ryzen 5 5600X \gls{CPU} and NVIDIA GeForce RTX 3080 (10 GB) \gls{GPU}.
 
 \begin{table}[H]
   \centering
   \ra{1.3}
   \begin{tabular}{rrr}
     \toprule
-    Triangles   & Apple M1 Max    & AMD/NVIDIA \\
-    1,068,735     & 327.57 ms $\pm$ 0.56 ms     & 383.10 ms $\pm$ 4.06 ms \\
-    106,873     & 45.49 ms $\pm$ 0.31 ms    & 41.77 ms $\pm$ 0.43 ms \\
-    10,687     & 10.53 ms $\pm$ 0.24 ms    & 8.43 ms $\pm$ 0.22 ms \\
+    & Apple M1 Max    & AMD/NVIDIA \\
+    High     & 327.57 ms $\pm$ 0.56 ms     & 383.10 ms $\pm$ 4.06 ms \\
+    Mid     & 45.49 ms $\pm$ 0.31 ms    & 41.77 ms $\pm$ 0.43 ms \\
+    Low     & 10.53 ms $\pm$ 0.24 ms    & 8.43 ms $\pm$ 0.22 ms \\
     \bottomrule
   \end{tabular}
   \caption{BVH setup time based on model complexity}
@@ -352,10 +351,10 @@ The results for \gls{CPU} performance were recorded using the Performance API an
   \ra{1.3}
   \begin{tabular}{rrr}
     \toprule
-    Triangles   & Apple M1 Max    & AMD/NVIDIA \\
-    1,068,735     & 2,319.45 ms $\pm$ 11.14 ms    & 1,058.73 ms $\pm$ 59.47 ms \\
-    106,873     & 1,992.11 ms $\pm$ 8.49 ms    & 790.20 ms $\pm$ 3.79 ms\\
-    10,687     & 2,031.38 ms $\pm$ 9.87 ms    & 790.83 ms $\pm$ 4.18 ms \\
+    & Apple M1 Max    & AMD/NVIDIA \\
+    High     & 2,319.45 ms $\pm$ 11.14 ms    & 1,058.73 ms $\pm$ 59.47 ms \\
+    Mid     & 1,992.11 ms $\pm$ 8.49 ms    & 790.20 ms $\pm$ 3.79 ms\\
+    Low     & 2,031.38 ms $\pm$ 9.87 ms    & 790.83 ms $\pm$ 4.18 ms \\
     \bottomrule
   \end{tabular}
   \caption{GPU path tracer time based on model complexity}
