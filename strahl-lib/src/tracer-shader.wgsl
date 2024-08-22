@@ -951,6 +951,7 @@ fn openPbrLobeProbabilities(weights: LobeWeights, albedos: LobeAlbedos) -> LobeP
 }
 
 fn openPbrPrepare(pW: vec3f, basis: Basis, winputL: vec3f, material: Material, seed: ptr<function, u32>) -> LobeData {
+  // CODE#REFLECTION-LOBE-WEIGHTS
   let weightsAndAlbedo = openPbrLobeWeights(pW, basis, winputL, material, seed);
   let probs = openPbrLobeProbabilities(weightsAndAlbedo.weights, weightsAndAlbedo.albedos);
 
@@ -1087,6 +1088,7 @@ const ID_DIFF_BRDF = 5;
 const ID_SSSC_BTDF = 6;
 const NUM_LOBES    = 7;
 
+// CODE#BSDF-SAMPLE
 fn sampleBsdf(pW: vec3f, basis: Basis, winputL: vec3f, lobeData: LobeData, material: Material, woutputL: ptr<function, vec3f>, pdfWoutputL: ptr<function, f32>, seed: ptr<function, u32>) -> vec3f {
   let X = randomF32(seed);
   var CDF = 0.0;
