@@ -39,7 +39,7 @@ The main process involved with setting up the scene is the preparation of the \g
 
 In order to address memory alignment, as described in \autoref{ch:memoryAlignmentTheory}, the path tracer uses \texttt{webgpu-utils} \cite{webgpuUtilsLib}. The library enables a straightforward way to map data to buffers and align them correctly. See \coderef{MEMORY-VIEW} for creation of definition and \coderef{BUFFER-MAPPING} for mapping of data to buffers.
 
-A high-level view of the data structures is shown in \autoref{fig:memory-structure}. Using the \gls{BVH} it is possible to obtain the indices via indirect indices. Indirect indices are used because the \gls{BVH} re-orders the indices of the triangles, but the original indices are needed to get the correct object information which stores the material information of the surface. See \coderef{BUFFER-BINDINGS} for definition. Buffers for geometry data, which contain position and normal information per vertex, are interleaved in order to reduce the amount of storage buffers. Interleaving is the practice of putting multiple data types into the same buffer. \gls{WebGPU} enforces limits on the maximum amount of storage buffers that can be employed per compute pipeline. More details of specific buffers will be discussed in the following sections.
+A high-level view of the data structures is shown in \autoref{fig:memory-structure}. Using the \gls{BVH} it is possible to obtain the indices via indirect indices. Indirect indices are used because the \gls{BVH} re-orders the indices of the triangles, but the original indices are needed to get the correct object information which stores the material information of the surface. See \coderef{BUFFER-BINDINGS} for definition. \gls{WebGPU} enforces limits on the maximum number of storage buffers that can be employed per compute pipeline. Therefore, buffers for geometry data, which contain position and normal information per vertex, are interleaved in order to reduce the amount of storage buffers. Interleaving is the practice of putting multiple data types into the same buffer. More details on the specific buffer contents will be discussed in the following sections.
 
 \begin{figure}[H]
     \centering
@@ -76,11 +76,11 @@ A high-level view of the data structures is shown in \autoref{fig:memory-structu
 
 The ray generator is responsible for casting rays into the scene according to the view projection. The path tracer employs a backward ray tracing approach, tracing rays from the camera into the scene.
 
-For many applications, especially photorealistic rendering, perspective projection is prevalent. Based on the assessed use cases, the path tracer uses perspective projection only. See \coderef{VIEWPROJECTION} for implementation.
+For many applications, especially photorealistic rendering, perspective projection is prevalent. Therefore, based on the assessed use case, the path tracer uses perspective projection only. See \coderef{VIEWPROJECTION} for implementation.
 
 For \gls{RNG}, the path tracer uses \gls{PCG}, specifically the \texttt{PCG-RXS-M-XS} variant as described by O’Neill \cite{o2014pcg}. See \coderef{RNG} for implementation.
 
-In order to set up the Monte Carlo method, the \gls{RNG} needs to be employed in a suitable manner. As it is a pseudorandom generator, it necessitates a seed to start the generation. If the seed is identical for all pixels, the results of a single sample will frequently share similar patterns in adjacent surfaces as shown in \autoref{fig:rngBadSeed}. The result for independent seeds differs in a stark manner as shown in \autoref{fig:rngGoodSeed}.
+In order to set up the Monte Carlo method, the \gls{RNG} needs to be employed in a suitable manner. As it is a pseudorandom generator, it necessitates a seed to start the generation. If the seed is identical for all pixels, the results of a single sample will frequently share similar patterns in adjacent surfaces as shown in \autoref{fig:rngBadSeed}. The result for independent seeds differs in a pronounced manner as shown in \autoref{fig:rngGoodSeed}.
 
 \begin{figure}[H]
     \centering
