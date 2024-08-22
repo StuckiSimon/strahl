@@ -197,7 +197,7 @@ The output is written to a texture. For writing and reading, a ping-pong techniq
 
 \subsection*{Render Pipeline}
 
-The output of the path tracing compute shader is a texture, which is then passed to a rasterizer. The rasterizer renders the texture to the canvas using a fullscreen quad consisting of two triangles. Tone mapping is done using the Khronos \gls{PBR} Neutral Tone Mapper described in \autoref{sec:toneMappingTheory}. See \coderef{TONE-MAPPER} for implementation. Progressive rendering is a technique to render an image in multiple passes. Each render pass improves the quality of the image. This enables the user to see the rough image quickly and refine it over time. 
+The output of the path tracing compute shader is a texture, which is then passed to a rasterizer. The rasterizer renders the texture to the canvas using a fullscreen quad consisting of two triangles. Tone mapping is done using the Khronos \gls{PBR} Neutral Tone Mapper described in \autoref{sec:toneMappingTheory}. See \coderef{TONE-MAPPER} for implementation. Progressive rendering is a technique to render an image in multiple passes. Each render pass improves the quality of the image. This enables the user to see the rough image quickly while it gets refined over time.
 
 \subsection*{Denoise Pipeline}
 
