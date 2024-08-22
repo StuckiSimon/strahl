@@ -152,19 +152,18 @@ The path tracer is the core of the library and is responsible to test for inters
   
       \node[pre] (ray) {Ray Generator};
       \node[core, right=1.5cm of ray] (intersection) {Intersection Test};
-      \node[core, below left=2cm and 1cm of intersection] (shader) {Surface Shading};
+      \node[core, below left=1.2cm and 0cm of intersection] (shader) {Surface Shading};
       \node[core, right= 3cm of shader] (russian) {Russian Roulette};
       \node[pre, right= 1cm of intersection] (terminate) {Termination};
-      
   
       \draw[-latex, thick] (ray) -- node[midway, above] {ray} (intersection);
-      \draw[-latex, thick] (intersection) -- node[midway, right] {surface} (shader);
+      \draw[-latex, thick] (intersection) -- node[midway, left=0.2cm] {surface} (shader);
       \draw[-latex, thick] (shader) -- node[midway, above] {throughput} node[midway, below] {ray} (russian);
       \draw[-latex, thick] (intersection) -- (terminate);
       \draw[-latex, thick] (russian) -- (terminate);
       \draw[-latex, thick] (russian) -- node[midway, right] {ray} (intersection);
     \end{tikzpicture}
-    \caption{High-Level workflow of path tracing core routine.}
+    \caption{High-level workflow of path tracing core routine. Blue are the main parts of the recursive path tracing algorithm, gray are the pre- and post-processing steps. The arrow indicate the flow of data, describing the primary information passed between the steps.}
     \label{fig:path-tracer-workflow}
   \end{figure}
 
