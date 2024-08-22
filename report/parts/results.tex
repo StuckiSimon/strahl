@@ -191,7 +191,9 @@ Intersection tests based on the \gls{BVH} are implemented in \gls{WGSL}, see \co
 
 \subsubsection{Surface Shading}
 
-For each intersection, sampling is done according to the \gls{MIS} scheme as described in \autoref{sec:monte-carlo-integration-sampling}. The surface shading method is based on \gls{OpenPBR} reference implementation in \gls{MaterialX} as well as the reference viewer by Portsmouth \cite{openPbrViewer}. The output is written to a texture. For writing and reading, a ping-pong technique is used. This means that the output of the previous frame is used as the input for the current frame, and vice versa.
+For each intersection, sampling is done according to the \gls{MIS} scheme as described in \autoref{sec:monte-carlo-integration-sampling}. The surface shading method is based on \gls{OpenPBR} reference implementation in \gls{MaterialX} as well as the reference viewer by Portsmouth \cite{openPbrViewer}. Shading starts by sampling the reflection functions based on definitions of \gls{OpenPBR}, which reference the Monte Carlo sampling scheme described in the \gls{pbrt} book \cite{Pharr_Physically_Based_Rendering_2023} for sampling \glspl{BSDF}. See \coderef{REFLECTION-LOBE-WEIGHTS} and subsequent methods for implementation. Using these probabilities, one specific reflection lobe is sampled and an outgoing direction is determined as implemented in \coderef{BSDF-SAMPLE}. These different lobes correspond to different workflows, such as diffuse, specular, or metal. The implementation does not constitute a complete conformance to the \gls{OpenPBR} specification, but rather a subset of the features.
+
+The output is written to a texture. For writing and reading, a ping-pong technique is used. This means that the output of the previous frame is used as the input for the current frame, and vice versa.
 
 \subsection*{Render Pipeline}
 
