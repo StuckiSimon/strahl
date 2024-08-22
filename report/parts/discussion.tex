@@ -11,33 +11,37 @@ This section discusses the results, and experience gained by implementing a proj
 
 The path tracer focuses on the given use case and is therefore not a general-purpose rendering engine. For example, it does not offer a physics engine, support for animations, or other features that are common in general-purpose rendering engines such as \gls{Three.js}, \gls{Babylon.js} or alternatives. Generally, the ray tracing technique is slower than rasterization-based approaches and is therefore not a silver bullet for all use cases. The results indicate that the developed path tracer is a viable option in the discussed use case of e-commerce.
 
-\section{Comparison to Prior Work}
+\section{Comparison}
+
+In order to contextualize the results, the presented work is compared to existing solutions. This includes a comparison to other open-source path tracers for the web, as well as a comparison to two alternative rendering strategies: web-based real-time rasterization and offline ray tracing.
+
+\subsection*{Comparison to Prior Work}
 \label{sec:comparisonToPriorWork}
 
 The three open-source path tracers introduced in \autoref{sec:web-path-tracers} are alternatives to the renderer developed in this work. While comparing them based on quantitative measures such as \fGls{FPS}{\e{Frames per second}, measure of rate at which consecutive images are rendered and displayed} is not meaningful as the number of samples, which are required for high-fidelity renderings, differs across the renderers, it is still possible to define a set of criteria to compare them.
 
 
-\subsection*{WebGPU Support}
+\subsubsection*{WebGPU Support}
 
 \gls{WebGPU} is a new technology and support for it is likely to become more important in the future. The three alternatives currently do not support \gls{WebGPU} and still rely on \gls{WebGL}.
 
-\subsection*{PBR Standard}
+\subsubsection*{PBR Standard}
 
 As discussed in \autoref{ch:materialDescriptionStandards}, a variety of standards exist for \gls{PBR}. While \gls{OpenPBR} is a new standard, it has already seen adoption by the industry and offers interoperability. \texttt{three-gpu-pathtracer} and \texttt{Three.js PathTracer} currently use custom \gls{PBR} standards or partially support \gls{glTF} PBR extensions. \texttt{dspbr-pt} uses the \gls{DSPBR} standard.
 
-\subsection*{Documentation}
+\subsubsection*{Documentation}
 
 In order to be usable by developers, the renderer should be well-documented. \texttt{strahl} and \texttt{three-gpu-pathtracer} provide documentation. \texttt{Three.js PathTracer} and \texttt{dspbr-pt} provide minimal documentation.
 
-\subsection*{npm Package}
+\subsubsection*{npm Package}
 
 The availability of an \gls{npm} package can simplify the integration of the renderer into existing projects. \texttt{strahl}, \texttt{three-gpu-pathtracer}, and \texttt{dspbr-pt} provide an \gls{npm} package. \texttt{Three.js PathTracer} does not provide a package.
 
-\subsection*{Last Update}
+\subsubsection*{Last Update}
 
 The last update of the renderer is an indicator of the activity of the project. \texttt{strahl}, \texttt{three-gpu-pathtracer}, and \texttt{Three.js PathTracer} have been updated in 2024. \texttt{dspbr-pt} has not been updated since 2022.
 
-\subsection*{Assessment}
+\subsubsection*{Assessment}
 \autoref{tab:rendererComparison} contains a high-level comparison between the four renderers. The renderer developed in this work is the only one that supports \gls{WebGPU} and uses the \gls{OpenPBR} standard. The renderer provides an alternative to the existing renderers.
 
 \begin{table}[H]
@@ -56,6 +60,35 @@ The last update of the renderer is an indicator of the activity of the project. 
     \caption{High-level comparison between four open-source path tracers for the web.}
     \label{tab:rendererComparison}
   \end{table}
+
+\subsection*{Comparison to Alternative Strategies}
+
+The chosen architecture paradigm serves as an alternative to offline rendering solutions. The decision to implement ray tracing techniques stands in contrast to rasterization-based rendering engines. This section shows the comparison between these different options. For rasterization rendering, \gls{Three.js} is used as a representative example using a minimal setup without pregenerated artifacts or advanced rendering techniques. For offline rendering, \fGls{RealityServer}{Platform for 3D rendering, which integrates the NVIDIA Iray global illumination rendering technology} renderings used by EAO are shown as a representative example. The three different renderings are visualized in \autoref{fig:final-rendering-comparison}.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.3\textwidth}
+      \includegraphics[width=\textwidth]{resources/comparison-three-js.png}
+      \caption{Scene rendered with \gls{Three.js}.}
+      \label{fig:rasterization-rendering}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\textwidth]{resources/comparison-offline-rendering.png}
+    \caption{Offline rendering with RealityServer, used by EAO \cite{eaoProductReference}.}
+    \label{fig:offline-rendering}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.3\textwidth}
+      \includegraphics[width=\textwidth]{resources/comparison-strahl-rendering.png}
+      \caption{Scene rendered with the developed path tracer.}
+      \label{fig:strahl-rendering}
+  \end{subfigure}
+  \caption{Comparison of different rendering techniques.}
+  \label{fig:final-rendering-comparison}
+\end{figure}
+
+Visually, the differences in global illumination effects between the two ray tracing renderings and the rasterization rendering are apparent. The ambient occlusion on the terminal block is more pronounced in the ray traced images. The reflection on the metal part is more noticeable as well and respects the surrounding environment. Additionally, the shadows are more realistic and consider all light sources. The differences between the two ray traced images are less apparent due to the similar rendering techniques used. Certain differences, such as the color of the metal part and the reflection on the red part, are mainly due to changes in the material properties.
 
 \section{Findings}
 
