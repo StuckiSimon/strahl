@@ -140,9 +140,35 @@ The implementation of the anti-aliasing strategy indicated in \ref{sec:anti-alia
 
 \subsection*{Path Tracer}
 
-The path tracer is the core of the library and is responsible to test for intersections, sample the scene, and calculate the final radiance. The renderer uses \fGls{RGB}{\e{red, green, and blue}, common system for color representation in computer graphics} as the color space.
+The path tracer is the core of the library and is responsible to test for intersections, sample the scene, and calculate the final radiance. The basic procedure can be seen in \autoref{fig:path-tracer-workflow}. The ray, casted by the ray generator, is tested for intersections. If it misses, the path will be terminated. If a surface hit is detected, the shading will be generated using \gls{OpenPBR}. The shading generates a new bounce ray and determines the throughput of the ray. Russian roulette uses the throughput to perform probabilistic path termination. If it should be continued, the ray is casted again. The max depth of the ray determines the end of the path. During termination, the radiance contribution is collected in \fGls{RGB}{\e{red, green, and blue}, common system for color representation in computer graphics} color space.
 
-\subsubsection{Intersection Tests}
+\begin{figure}[H]
+    \centering
+    \tikzsetnextfilename{path-tracer-workflow}
+    \begin{tikzpicture}[
+      pre/.style={rectangle, draw=lightgray, ultra thick, inner sep=0.2cm, text width=3.0cm, align=center},
+      core/.style={rectangle, draw=rblue, ultra thick, fill=rbblue, inner sep=0.2cm, text width=3.0cm, align=center},
+    ]
+  
+      \node[pre] (ray) {Ray Generator};
+      \node[core, right=1.5cm of ray] (intersection) {Intersection Test};
+      \node[core, below left=2cm and 1cm of intersection] (shader) {Surface Shading};
+      \node[core, right= 3cm of shader] (russian) {Russian Roulette};
+      \node[pre, right= 1cm of intersection] (terminate) {Termination};
+      
+  
+      \draw[-latex, thick] (ray) -- node[midway, above] {ray} (intersection);
+      \draw[-latex, thick] (intersection) -- node[midway, right] {surface} (shader);
+      \draw[-latex, thick] (shader) -- node[midway, above] {throughput} node[midway, below] {ray} (russian);
+      \draw[-latex, thick] (intersection) -- (terminate);
+      \draw[-latex, thick] (russian) -- (terminate);
+      \draw[-latex, thick] (russian) -- node[midway, right] {ray} (intersection);
+    \end{tikzpicture}
+    \caption{High-Level workflow of path tracing core routine.}
+    \label{fig:path-tracer-workflow}
+  \end{figure}
+
+\subsubsection{Intersection Test}
 \label{sec:bvh-implementation}
 
 Intersection tests based on the \gls{BVH} are implemented in \gls{WGSL}, see \coderef{BVH-TESTS}. The intersection tests for triangles are implemented in \coderef{TRIANGLE-INTERSECTION}. The boundary data is stored as \gls{AABB} which requires two vectors for the minimum and maximum bounds. The \gls{BVH} node content depends on whether it is a leaf or an inner node. Each node uses 64 bytes of memory as visualized in \autoref{fig:bvh-info}. The split axis determines which child node is traversed first. The left index is the index of the sibling node, therefore only the right index is stored. For leaf nodes, the triangle offset determines the index in the indirect indices buffer. The triangle count is the number of triangles in the leaf node.
