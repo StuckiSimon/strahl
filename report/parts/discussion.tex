@@ -9,12 +9,12 @@
 
 This section discusses the results, and experience gained by implementing a project using \gls{WebGPU} in detail. In addition, a discussion of the results is provided and possible future work is outlined.
 
-The path tracer focuses on the given use case and is therefore not a general-purpose rendering engine. For example, it does not offer a physics engine, support for animations, or other features that are common in general-purpose rendering engines such as \gls{Three.js}, \gls{Babylon.js} or alternatives. Generally, the ray tracing technique is slower than rasterization-based approaches and is therefore not a silver bullet for all use cases. The results indicate that the developed path tracer is a viable option in the discussed use case of e-commerce. Additionally, the proposed rendering architecture paradigm can reduce operating costs by eliminating the need to host a rendering pipeline or remote rendering service.
+The path tracer focuses on the given use case and is therefore not a general-purpose rendering engine. For example, it does not offer a physics engine, support for animations, or other features that are common in general-purpose rendering engines such as \gls{Three.js}, \gls{Babylon.js} or alternatives. Generally, the ray tracing technique is slower than rasterization-based approaches and is therefore not a silver bullet for all use cases. The results indicate that the developed path tracer is a viable option in the discussed use case of e-commerce.
 
 \section{Comparison to Prior Work}
 \label{sec:comparisonToPriorWork}
 
-The three existing open-source path tracers for the web are alternatives to the renderer developed in this work. While comparing them based on quantitative measures such as \fGls{FPS}{\e{Frames per second}, measure of rate at which consecutive images are rendered and displayed} is not meaningful as the number of samples differs across the renderers, it is still possible to define a set of criteria to compare them.
+The three open-source path tracers introduced in \autoref{sec:web-path-tracers} are alternatives to the renderer developed in this work. While comparing them based on quantitative measures such as \fGls{FPS}{\e{Frames per second}, measure of rate at which consecutive images are rendered and displayed} is not meaningful as the number of samples, which are required for high-fidelity renderings, differs across the renderers, it is still possible to define a set of criteria to compare them.
 
 
 \subsection*{WebGPU Support}
@@ -23,7 +23,7 @@ The three existing open-source path tracers for the web are alternatives to the 
 
 \subsection*{PBR Standard}
 
-As discussed in \autoref{ch:materialDescriptionStandards}, a variety of standards exist for \gls{PBR}. While \gls{OpenPBR} is a new standard, it has already seen adoption by the industry. \texttt{three-gpu-pathtracer} and \texttt{Three.js PathTracer} currently use custom \gls{PBR} standards or partially support \gls{glTF} PBR extensions. \texttt{dspbr-pt} uses the \gls{DSPBR} standard.
+As discussed in \autoref{ch:materialDescriptionStandards}, a variety of standards exist for \gls{PBR}. While \gls{OpenPBR} is a new standard, it has already seen adoption by the industry and offers interoperability. \texttt{three-gpu-pathtracer} and \texttt{Three.js PathTracer} currently use custom \gls{PBR} standards or partially support \gls{glTF} PBR extensions. \texttt{dspbr-pt} uses the \gls{DSPBR} standard.
 
 \subsection*{Documentation}
 
@@ -38,7 +38,7 @@ The availability of an \gls{npm} package can simplify the integration of the ren
 The last update of the renderer is an indicator of the activity of the project. \texttt{strahl}, \texttt{three-gpu-pathtracer}, and \texttt{Three.js PathTracer} have been updated in 2024. \texttt{dspbr-pt} has not been updated since 2022.
 
 \subsection*{Assessment}
-\autoref{tab:rendererComparison} contains a high-level comparison between the four renderers. The renderer developed in this work is the only one that supports \gls{WebGPU} and uses the \gls{OpenPBR} standard. The renderer is provides an alternative to the existing renderers.
+\autoref{tab:rendererComparison} contains a high-level comparison between the four renderers. The renderer developed in this work is the only one that supports \gls{WebGPU} and uses the \gls{OpenPBR} standard. The renderer provides an alternative to the existing renderers.
 
 \begin{table}[H]
     \centering
@@ -53,7 +53,7 @@ The last update of the renderer is an indicator of the activity of the project. 
     Last Update & 2024 & 2024 & 2024 & 2022 \\
     \bottomrule
     \end{tabular}
-    \caption{High-level comparison between the four open-source path tracers for the web.}
+    \caption{High-level comparison between four open-source path tracers for the web.}
     \label{tab:rendererComparison}
   \end{table}
 
@@ -94,7 +94,9 @@ To date, there are reports of stability issues with \gls{WebGPU}. This includes 
 
 \subsection*{OpenPBR}
 
-The integration of the \gls{OpenPBR} surface shading model enables realistic material representation. As it is a new standard and no stable version has been released when first implementing the path tracer, aligning it with the standard was challenging. To date only few open-source projects have implemented the standard. Since the standard has reached a stable version during the work on this thesis, aligning effort between the implementation and the standard has reduced. The use of \gls{PBR} and the latest industry standards is beneficial and provides good quality results. The adoption track of \gls{OpenPBR} is promising and the standard is likely to be extended in the future.
+The integration of the \gls{OpenPBR} surface shading model enables realistic material representation. As it is a new standard and no stable version has been released when first implementing the path tracer, aligning it with the standard was challenging. To date, only few open-source projects have implemented the standard. Since the standard has reached a stable version during the work on this thesis, aligning effort between the implementation and the standard has reduced. The use of \gls{PBR} and the latest industry standards is beneficial and provides good quality results. The adoption track of \gls{OpenPBR} is promising and the standard is likely to be extended in the future.
+
+% write about what future could hold: open pbr hair, volume?
 
 \section{Future Work}
 
@@ -105,25 +107,25 @@ In order to accommodate for other use cases, the renderer could be extended in v
 The focus on the defined use case means that certain rendering effects are not implemented. These include:
 
 \begin{itemize}
+    \item{Volumetric Effects}
+    \item{Hair and Fur}
     \item{Refraction}
     \item{Caustics}
     \item{Depth of Field} - Depth of field is the effect of objects at different distances from the camera being in focus or out of focus.
     \item{Motion Blur} - Motion blur is the effect of objects moving quickly appearing blurred.
-    \item{Volumetric Effects}
-    \item{Hair and Fur}
 \end{itemize}
 
 While refraction, caustics, depth of field, and motion blur are a question of light transport, volumetric effects, hair and fur are features that are not part of the \gls{OpenPBR} specification. Other features in terms of rendering could be implemented, this section outlines some of the possibilities.
 
 \subsubsection*{Spectral Rendering}
 
-Instead of the \gls{RGB} color space, spectral rendering uses the full spectrum of visible light by modeling the light as a function of wavelength. This can improve the realism of the rendered images. Spectral rendering is well-suited for \gls{PBR} and is therefore a natural extension of the current implementation. It is also possible to support both \gls{RGB} and spectral rendering.
+Instead of the \gls{RGB} color space, spectral rendering could be used to leverage the full spectrum of visible light by modeling the light as a function of wavelength. This can improve the realism of the rendered images. Spectral rendering is well-suited for \gls{PBR} and is therefore a natural extension of the current implementation. It is also possible to support both \gls{RGB} and spectral rendering.
 
 \subsubsection*{Texture Support}
 
 While not critical for the given use case, texture support is a common feature in rendering engines. The current implementation does not use textures. The renderer could be extended to support sampling \gls{OpenPBR} parameters from textures. This would enable more complex material variations and possibly improve the realism of the rendered images.
 
-This should not be confused with texture mapping frequently used in rasterization-based rendering engines. Texture mapping is a technique to apply images to surfaces to simulate surface details. In path tracing, textures are used to sample material properties such as base color, roughness, or metallicness.
+This should not be confused with texture mapping frequently used in rasterization-based rendering engines. Texture mapping is a technique to apply images to surfaces to simulate surface details. In \gls{PBR}, textures are used to sample material properties such as base color, roughness, or metallicness.
 
 \subsubsection*{Full OpenPBR support}
 
@@ -170,11 +172,11 @@ For remote rendering, the renderer could be extended to render images on demand 
 
 \subsubsection*{WebGPU Compatibility Mode}
 
-There is a proposal under active development which aims to extend the reach of \gls{WebGPU} by providing a slightly restricted subset of WebGPU \cite{WebGPUCompatibilityModeProposal}. Considering the suggested limits of the compatibility mode, it could be possible to deploy the renderer onto a wider range of devices. However, it is important to consider that path tracing is a computationally expensive task and might not be suitable for all devices. Therefore, increasing the reach might not be beneficial in all cases.
+There is a proposal under active development which aims to extend the reach of \gls{WebGPU} by providing a slightly restricted subset of \gls{WebGPU} \cite{WebGPUCompatibilityModeProposal}. Considering the suggested limits of the compatibility mode, it could be possible to deploy the renderer onto a wider range of devices. However, it is important to consider that path tracing is a computationally expensive task and might not be suitable for all devices. Therefore, increasing the reach might not be beneficial in all cases.
 
 \subsubsection*{Automatic Shader Conversion}
 
-During the specification phase of \gls{WebGPU}, the relation to \fgls{SPIR-V}{\e{Standard Portable Intermediate Representation}, intermediate language for parallel computing and graphics developed by Khronos Group} was discussed \cite{webGPUSpirVRelation}. In general, many of the modern shading languages can be compiled to one another. Projects such as Tint, which is part of \gls{Dawn} \cite{dawnImplementation} or Naga \cite{nagaImplementation} could be used to compile shaders from different frontends to different backends. Similarly, other engines such as \gls{Three.js} with \fGls{TSL}{\e{Three.js Shading Language}, shading language used in \gls{Three.js} which supports \gls{GLSL} as well as \gls{WGSL}} have their own shading languages which support a variety of backends \cite{ThreeJSShadingLanguage}. Parts of \gls{MaterialX} shader generation could be used to generate shaders for \gls{WebGPU} and update them automatically as \gls{OpenPBR} is updated.
+During the specification phase of \gls{WebGPU}, the relation to \fgls{SPIR-V}{\e{Standard Portable Intermediate Representation}, intermediate language for parallel computing and graphics developed by Khronos Group} was discussed \cite{webGPUSpirVRelation}. In general, many of the modern shading languages can be compiled to one another. Projects such as \texttt{Tint}, which is part of \gls{Dawn} \cite{dawnImplementation} or \texttt{Naga} \cite{nagaImplementation} could be used to compile shaders from different frontends to different backends. Similarly, other engines such as \gls{Three.js} with \fGls{TSL}{\e{Three.js Shading Language}, shading language used in \gls{Three.js} which supports \gls{GLSL} as well as \gls{WGSL}} have their own shading languages which support a variety of backends \cite{ThreeJSShadingLanguage}. Parts of \gls{MaterialX} shader generation could be used to generate shaders for \gls{WebGPU} and update them automatically as \gls{OpenPBR} is updated.
 
 \subsubsection*{Low-Level Performance Optimizations}
 
