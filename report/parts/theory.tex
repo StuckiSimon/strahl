@@ -1116,9 +1116,9 @@ Attributes such as \texttt{@compute} are used to provide additional information 
 
 In terms of limitations, it is similar similar to other shading languages. For example, it does not support recursion because cycles are not permitted in any kinds of declarations. It also does not have features such as an \gls{API} for \gls{RNG}. The shading language is designed for common use cases in computer graphics and general-purpose computing. One example is support for swizzling. Swizzling is a class of operations which facilitate managing vector elements. For example, given a vector \texttt{let v = vec3f(x, y, z)}, the operation \texttt{v.xy} returns a vector \texttt{(x, y)}.
 
-\subsubsection{Buffers}
+\subsubsection{Data}
 
-Data needs to be transferred between the \gls{CPU} and the \gls{GPU} within bind groups. Buffers are the primary method to store data. Depending on the type of data to be transferred, different buffers can be used:
+Data needs to be transferred between the \gls{CPU} and the \gls{GPU} within bind groups. The core methods to store data are textures and buffers. Textures are optimized for n-dimensional data such as images and offer additional features such as interpolation. Buffers are the primary method to store arbitrary data. Depending on the type of data to be transferred, different buffers can be used:
 
 \begin{itemize}
   \item{Uniforms} — Uniform Buffers are optimized for data which is read-only on the \gls{GPU} and is the same for all vertices or fragments. Such information could be the projection matrix.
