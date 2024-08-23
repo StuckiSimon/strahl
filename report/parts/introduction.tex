@@ -15,7 +15,7 @@ The web is a versatile platform which can be used for a variety of applications.
 
 E-commerce is a key use case for product renderings. Commonly, these applications rely on taking pictures of the product. Like traditional physical catalogues, this approach struggles with highly configurable products due to the amount of images required to cover all possible configurations. Computer graphics addresses this challenge through product configurators for virtual assembly and visualization. They alleviate the need for physical processes, such as photography, and are scalable to a large number of configurations. This can be implemented by creating 3D models of the components and assembling them in a virtual environment.
 
-As the number of components grows and the product evolves, the marketing models used for end user visualization need to be kept coordinated with changes to the product. To circumvent this issue, leveraging existing production \gls{CAD} models, prevalent in mechanical engineering and product design, offers a significant advantage. These models contain geometric and material information, which eliminates the need for redundant 3D models for marketing purposes. Geometric information defines the shape of the product, while material information refers to the surface description. One real-world example of a company with production \gls{CAD} data is EAO. They manufacture highly customizable industrial pushbuttons and operator panels. Due to the nature of the product, the number of possible assemblies grows almost exponentially with the number of components.
+As the number of components grows and the product evolves, the marketing models used for end user visualization need to be kept coordinated with changes to the product. To circumvent this issue, leveraging existing production \gls{CAD} models, prevalent in mechanical engineering and product design, offers a significant advantage. These models contain geometric and material information, which eliminates the need for redundant 3D models for marketing purposes. Geometric information defines the shape of the product, while material information refers to the surface description. One real-world example of a company with production \gls{CAD} data is EAO. They manufacture highly customizable industrial pushbuttons and operator panels. Due to the nature of the product, the number of possible assemblies grows exponentially with the number of component types.
 
 To illustrate the use case in a simplified and universal form, consider a product that is assembled of $n$ component types. Each component type ($i$) has $o_i$ different options. This gives the total number of possible configurations ($t$) as shown in \autoref{eq:assemblyConfigurations}.
 
@@ -28,11 +28,11 @@ For a product consisting of $n$ component types where each component type has th
 
 One example at EAO is a specific product family within the so-called series 45. It has 14 component types ($n$) and each component type has approximately 10 different options ($o$). This results in $10^{14}$ possible configurations ($t$) based on 140 different components. In addition, EAO has many more product series as well as product families with varying numbers of components and options. This constitutes the main use case considered for this thesis. The presented work uses EAO production models to demonstrate the feasibility and challenges of real-time rendering of highly configurable products, but similar use cases can be found in other industries.
 
-A web-based configurator using computer graphics for virtual assembly is well suited to address such use cases where almost exponential growth in possible configurations is present.
+A web-based configurator using computer graphics for virtual assembly is well suited to address such use cases where exponential growth in possible configurations is present.
 
 \section{CAD Data Preprocessing}
 
-To leverage production \gls{CAD} models, the models need to be preprocessed as visualized in Figure~\ref{fig:cad-preprocessing}.
+To leverage production \gls{CAD} models, the models need to be preprocessed before they can be used for 3D rendering. The steps of such a pipeline, as used by EAO to show one possible variant, are visualized in \autoref{fig:cad-preprocessing}.
 
 \begin{figure}[H]
   \centering
@@ -41,15 +41,13 @@ To leverage production \gls{CAD} models, the models need to be preprocessed as v
   \label{fig:cad-preprocessing}
 \end{figure}
 
-The preprocessing step must define a rule set for the assembly. This rule set provides data on what kind of components can be added to the assembly and where they can be attached to. This interface definition can be provided using meta information files. Alternatively, this can also be represented geometrically within the model by using identifiable shapes to attach components to. \fGls{STEP}{\e{Standard for the Exchange of Product model data}, a standard formalized in ISO 10303 for product manufacturing information.} files are a common format for exchanging \gls{CAD} data and can be used for this purpose, but as will be discussed in \autoref{ch:specializedFormats}, other formats are more suitable for rendering and address inherent limitations of \gls{STEP} files.
-
-Another important consideration are intellectual property rights when using \gls{CAD} models from production processes. The models may contain proprietary information which should not be disclosed to the end user. As described by Stjepandić et al. \cite{ipr}, steps to circumvent this issue may include data filtering. Filtering can be implemented by removing meta information such as constraints or by removing occluded parts of the model, essentially limiting the model to the hull of the assembly. As a positive side-effect, this can also reduce the complexity of the model, which can be beneficial for rendering performance.
+\fGls{STEP}{\e{Standard for the Exchange of Product model data}, a standard formalized in ISO 10303 for product manufacturing information.} files are a common format for exchanging \gls{CAD} data and can be used for this purpose, but as will be discussed in \autoref{ch:specializedFormats}, other formats are more suitable for rendering and address inherent limitations of \gls{STEP} files. An important consideration are intellectual property rights when using \gls{CAD} models from production processes. The models may contain proprietary information which should not be disclosed to the end user. As described by Stjepandić et al. \cite{ipr}, steps to circumvent this issue may include data filtering. Filtering can be implemented by removing meta information such as constraints or by removing occluded parts of the model, essentially limiting the model to the hull of the assembly. As a positive side-effect, this potentially reduces the complexity of the model, which can be beneficial for rendering performance.
 
 Preprocessing includes triangulation of the meshes, which is a common requirement for rendering engines. Frequently, the triangulated meshes are fine-grained and consist of a large number of triangles. This can lead to performance issues when rendering the scene. One way to handle this is to simplify the meshes by decimating triangles. Procedures for this purpose are well-established and include algorithms for generating level of detail (\gls{LOD}) artifacts \cite{luebke2003level}.
 
-While numerous \gls{CAD} formats include material information, it is often unsuitable for rendering because it does not describe optical properties. To address this, a material mapping can be defined, translating \gls{CAD} materials to a suitable representation for the rendering pipeline.
+While numerous \gls{CAD} formats include material information, they are often unsuitable for rendering because they do not describe optical properties. To address this, a material mapping can be defined, translating \gls{CAD} materials to a suitable representation for the rendering pipeline. The concrete formats used for the preprocessing step are dependent on the \gls{CAD} software. However, conversion tools exist for most common \gls{CAD} formats and the general approach remains similar. After the preparation process, a rendering architecture paradigm can be employed to enable users to virtually assemble the product.
 
-The concrete formats used for the preprocessing step are dependent on the \gls{CAD} software. However, conversion tools exist for most common \gls{CAD} formats and the general approach remains similar. After the preparation process, a rendering architecture paradigm can be employed to enable users to virtually assemble the product.
+In addition, a rule set for the assembly must be defined. This rule set provides data on what component types can be added to the assembly and where they can be attached to. This interface definition can be provided using meta information files. Alternatively, this can also be represented geometrically within the model by using identifiable shapes to attach components to.
 
 \section{Rendering Architecture Paradigms}
 
@@ -59,7 +57,7 @@ In order to render the assemblies based on the preprocessed information, three m
 
 Offline rendering requires pre-rendering all product configurations. This is theoretically possible for a finite number of configurations, but computationally expensive. 
 
-An offline rendering pipeline generates static images of the assembly, which are then displayed in the browser. This means that all possible assemblies need to be rendered and stored upfront. As the number of components increases, the number of possible combinations grows exponentially, which can lead to large amounts of storage and processing power being required, as shown in Figure~\ref{fig:cad-offline}.
+An offline rendering pipeline generates static images of the assembly, which are then displayed in the browser. This means that all possible assemblies need to be rendered and stored upfront. As the number of component types increases, the number of possible combinations grows exponentially, which can lead to large amounts of storage and processing power being required, as shown in \autoref{fig:cad-offline}.
 
 \begin{figure}[H]
   \includegraphics[width=\columnwidth]{resources/cad-pipeline-offline.png}
@@ -73,7 +71,7 @@ In order to address latency, pre-loading images can be used. This may entail loa
 
 \subsection*{Client-Side Real-time Rendering}
 
-An alternative to offline rendering is real-time rendering. For real-time rendering, client-side rendering is a frequently  used option. These approaches render the assemblies only as requested by the end user. This is the main benefit of using a real-time rendering pipeline, as illustrated in Figure~\ref{fig:cad-online}. The rendering is done in the browser, limiting the server to serve the role of a file host and provide the geometry and material information in a 3D exchange format such as \fgls{glTF}{\e{Graphics Library Transmission Format, common 3D exchange format optimized for transmission and real-time rendering.}}. This approach is more flexible and can be used for a large number of configurations. The amount of data to be stored and processed offline grows linearly with the number of components, independent of the number of possible configurations.
+An alternative to offline rendering is real-time rendering. For real-time rendering, client-side rendering is a frequently  used option. These approaches render the assemblies only as requested by the end user. This is the main benefit of using a real-time rendering pipeline, as illustrated in \autoref{fig:cad-online}. The rendering is done in the browser, limiting the server to serve the role of a file host and provide the geometry and material information in a 3D exchange format such as \fgls{glTF}{\e{Graphics Library Transmission Format, common 3D exchange format optimized for transmission and real-time rendering.}}. This approach is more flexible and can be used for a large number of configurations. The amount of data to be stored and processed offline grows linearly with the number of components, independent of the number of possible configurations.
 
 \begin{figure}[H]
   \includegraphics[width=\columnwidth]{resources/cad-pipeline-online.png}
@@ -105,7 +103,7 @@ Measure how much computation effort is required to prepare the data for renderin
 
 \subsubsection{Hosting Cost}
 
-The infrastructure cost involved in hosting the application during operations. Generally, lower is better. Offline rendering does not require application servers and mainly relies on storage for the generated images. Similarly, client-side rendering needs storage for the models. These two paradigms may employ \fglspl{CDN}{\e{Content Delivery Network}, distributed group of servers for caching content near end users.}. Remote rendering requires a rendering server, which can be costly and may induce additional complexity. In addition, bandwidth costs need to be considered.
+The infrastructure cost involved in hosting the application during operations. Generally, lower is better. Offline rendering does not require application servers and mainly relies on storage for the generated images. Similarly, client-side rendering needs storage for the models. These two paradigms may employ \fglspl{CDN}{\e{Content Delivery Network}, distributed group of servers for caching content near end users.}. Remote rendering requires a rendering server. For scenarios, where load is unpredictable, additional techniques such as auto-scaling and load balancing may be required. This can be costly and may induce additional complexity. In addition, bandwidth costs need to be considered.
 
 \subsubsection{Storage}
 
