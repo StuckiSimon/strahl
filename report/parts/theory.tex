@@ -1078,7 +1078,28 @@ For a compute pipeline, one needs to define a pipeline layout which consists of 
   \label{fig:webgpu-arch}
 \end{figure}
 
-Having set up the compute pipeline, one needs to define the bind groups which contain the data. Using a command encoder, the compute pipeline can be dispatched to the \gls{GPU} for execution.
+Having set up the compute pipeline, one needs to define the bind groups which contain the data. Using a command encoder, the compute pipeline can be dispatched to the \gls{GPU} for execution. The shader describes the expected size of the workgroup, which is a group of threads executed in parallel. The dispatch coordinates how many workgroups are executed. The total number of threads is therefore given by the product of the workgroup size and the dispatch size. For a visual representation of a workgroup of size $3x3$ and dispatch size $4x4$, refer to
+\autoref{fig:gpu-workgroup-layout}.
+
+\begin{figure}[H]
+  \centering
+  \tikzsetnextfilename{gpu-workgroup-layout}
+  \begin{tikzpicture}
+    \foreach \x in {0,0.8,1.6,2.4} {
+      \foreach \y in {0,0.8,1.6,2.4} {
+        \draw[thick, rblue] (\x,\y) rectangle (\x+0.8,\y+0.8);
+        % threads within workgroup
+        \foreach \i in {0,1,2} {
+          \foreach \j in {0,1,2} {
+            \draw[thick, rgreen, fill=rbgreen] (\x+\i*0.25+0.1,\y+\j*0.25+0.1) rectangle (\x+\i*0.25+0.2,\y+\j*0.25+0.2);
+          }
+        }
+      }
+    }
+  \end{tikzpicture}
+  \caption{\gls{GPU} workgroup layout. Each green square represents a thread within a workgroup. Each blue square represents a workgroup.}
+  \label{fig:gpu-workgroup-layout}
+\end{figure}
 
 \subsubsection{Shading Language}
 
