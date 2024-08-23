@@ -31,30 +31,31 @@ As discussed in \autoref{ch:materialDescriptionStandards}, a variety of standard
 
 \subsubsection*{Documentation}
 
-In order to be usable by developers, the renderer should be well-documented. \texttt{strahl} and \texttt{three-gpu-pathtracer} provide documentation. \texttt{Three.js PathTracer} and \texttt{dspbr-pt} provide minimal documentation.
+In order to be usable by developers, the renderer should be well-documented. \texttt{strahl} and \texttt{three-gpu-pathtracer} provide documentation. \texttt{Three.js PathTracer} and \texttt{dspbr-pt} provide minimal documentation. None of the three alternatives provide a material editor.
 
-\subsubsection*{npm Package}
+\subsubsection*{Benchmark Setup}
 
-The availability of an \gls{npm} package can simplify the integration of the renderer into existing projects. \texttt{strahl}, \texttt{three-gpu-pathtracer}, and \texttt{dspbr-pt} provide an \gls{npm} package. \texttt{Three.js PathTracer} does not provide a package.
+A benchmark setup is useful to assess the performance of the renderer. \texttt{strahl} provides a reproducible benchmark setup. None of the alternatives provide a comparable setup or measurements. This further complicates the comparison of the renderers.
 
-\subsubsection*{Last Update}
+\subsubsection*{Maintenance}
 
-The last update of the renderer is an indicator of the activity of the project. \texttt{strahl}, \texttt{three-gpu-pathtracer}, and \texttt{Three.js PathTracer} have been updated in 2024. \texttt{dspbr-pt} has not been updated since 2022.
+The availability of an \gls{npm} package can simplify the integration of the renderer into existing projects. Additionally, it enables updating libraries using a standardized process. \texttt{strahl}, \texttt{three-gpu-pathtracer}, and \texttt{dspbr-pt} provide an \gls{npm} package, while \texttt{Three.js PathTracer} does not. \texttt{strahl}, \texttt{three-gpu-pathtracer}, and \texttt{Three.js PathTracer} have been updated in 2024, while \texttt{dspbr-pt} has not been updated since 2022. Therefore, maintenance for \texttt{strahl} and \texttt{three-gpu-pathtracer} is provided, while \texttt{Three.js PathTracer} and \texttt{dspbr-pt} are lacking in this regard.
 
 \subsubsection*{Assessment}
-\autoref{tab:rendererComparison} contains a high-level comparison between the four renderers. The renderer developed in this work is the only one that supports \gls{WebGPU} and uses the \gls{OpenPBR} standard. The renderer provides an alternative to the existing renderers.
+
+\autoref{tab:rendererComparison} contains a high-level comparison between the four renderers. The renderer developed in this work is the only one that supports \gls{WebGPU} and uses the \gls{OpenPBR} standard. The extensive documentation and benchmark setup further distinguish the developed solution. Therefore, \texttt{strahl} provides an alternative to the existing renderers.
 
 \begin{table}[H]
     \centering
     \ra{1.3}
-    \begin{tabular}{@{}p{3cm}p{2.5cm}p{2.5cm}p{2.5cm}p{2.5cm}@{}}
+    \begin{tabular}{@{}p{3cm}p{1.9cm}p{2.8cm}p{3.2cm}p{2.4cm}@{}}
     \toprule
      & \texttt{strahl} & \texttt{three-gpu-} \texttt{pathtracer} \cite{ThreeJsPathTracerJohnson} & \texttt{Three.js PathTracer} \cite{ThreeJsPathTracerLoftis} & \texttt{dspbr-pt} \cite{PathTracerDassault} \\
     \gls{WebGPU} \newline Support & Yes & No & No & No \\
     \gls{PBR} Standard & \gls{OpenPBR} & Custom & Custom & \gls{DSPBR} \\
     Documentation & yes & yes & minimal & minimal \\
-    \gls{npm} Package & yes & yes & no & yes \\
-    Last Update & 2024 & 2024 & 2024 & 2022 \\
+    Benchmark Setup & yes & no & no & no \\
+    Maintenance & provided & provided & lacking & lacking \\
     \bottomrule
     \end{tabular}
     \caption{High-level comparison between four open-source path tracers for the web.}
