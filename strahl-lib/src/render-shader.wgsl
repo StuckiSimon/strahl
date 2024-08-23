@@ -29,7 +29,7 @@ fn sample(uv: vec2<f32>) -> vec4<f32> {
 const INV_SQRT_OF_2PI = 0.39894228040143267793994605993439;
 const INV_PI = 0.31830988618379067153776752674503;
 
-
+// CODE#DENOISE-FILTERING
 // Based on https://github.com/BrutPitt/glslSmartDeNoise
 fn denoise(uv: vec2f) -> vec4f {
   let sigma = uniformData.denoiseSigma;
