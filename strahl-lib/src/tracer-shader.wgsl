@@ -1216,6 +1216,7 @@ fn isOccluded(ray: Ray, maxDistance: f32) -> bool {
 const TRIANGLE_MIN_DISTANCE_THRESHOLD = 0.0005;
 const TRIANGLE_MAX_DISTANCE_THRESHOLD = 10e37f;
 
+// CODE#RAY-COLOR
 fn rayColor(cameraRay: Ray, seed: ptr<function, u32>, sunBasis: Basis) -> vec4f {
   var hitRecord: HitRecord;
   var ray = cameraRay;
