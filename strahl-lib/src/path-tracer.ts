@@ -28,7 +28,7 @@ import {
   ViewProjectionConfiguration,
 } from "./camera";
 import { buildAbortEventHub } from "./util/abort-event-hub.ts";
-import { Group } from "three";
+import { Group, Matrix4 } from "three";
 import { prepareGeometry } from "./prepare-geometry.ts";
 import { initUNetFromURL } from "oidn-web";
 
@@ -765,6 +765,45 @@ async function runPathTracer(
 
   const sunDirection = getSunDirection(environmentLightConfiguration.sun);
 
+  const { size: bytesForUniform } = definitions.uniforms.uniformData;
+
+  const uniformData = makeStructuredView(
+    definitions.uniforms.uniformData,
+    new ArrayBuffer(bytesForUniform),
+  );
+
+  const uniformBuffer = device.createBuffer({
+    label: "Uniform data buffer",
+    size: bytesForUniform,
+    usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+  });
+
+  const setUniformData = (
+    invProjectionMatrix: Matrix4,
+    matrixWorld: Matrix4,
+    currentSample: number,
+  ) => {
+    uniformData.set({
+      invProjectionMatrix: invProjectionMatrix.elements,
+      cameraWorldMatrix: matrixWorld.elements,
+      invModelMatrix: sceneMatrixWorld.clone().invert().elements,
+      seedOffset: Math.random() * Number.MAX_SAFE_INTEGER,
+      priorSamples: currentSample,
+      samplesPerPixel: samplesPerIteration,
+      sunDirection,
+      skyPower: environmentLightConfiguration.sky.power,
+      skyColor: environmentLightConfiguration.sky.color,
+      sunPower: Math.pow(10, environmentLightConfiguration.sun.power),
+      sunAngularSize: environmentLightConfiguration.sun.angularSize,
+      sunColor: environmentLightConfiguration.sun.color,
+      clearColor: clearColor === false ? [0, 0, 0] : clearColor,
+      enableClearColor: clearColor === false ? 0 : 1,
+      maxRayDepth,
+      objectDefinitionLength: modelGroups.length,
+    });
+    device.queue.writeBuffer(uniformBuffer, 0, uniformData.arrayBuffer);
+  };
+
   initLog.end();
 
   const renderLoopStart = logGroup("render loop full");
@@ -793,40 +832,7 @@ async function runPathTracer(
       const writeTexture = currentSample % 2 === 0 ? texture : textureB;
       const readTexture = currentSample % 2 === 0 ? textureB : texture;
 
-      const { size: bytesForUniform } = definitions.uniforms.uniformData;
-
-      const uniformData = makeStructuredView(
-        definitions.uniforms.uniformData,
-        new ArrayBuffer(bytesForUniform),
-      );
-
-      const uniformBuffer = device.createBuffer({
-        label: "Uniform data buffer",
-        size: bytesForUniform,
-        usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
-        // mappedAtCreation: true,
-      });
-
-      uniformData.set({
-        invProjectionMatrix: invProjectionMatrix.elements,
-        cameraWorldMatrix: matrixWorld.elements,
-        invModelMatrix: sceneMatrixWorld.clone().invert().elements,
-        seedOffset: Math.random() * Number.MAX_SAFE_INTEGER,
-        priorSamples: currentSample,
-        samplesPerPixel: samplesPerIteration,
-        sunDirection,
-        skyPower: environmentLightConfiguration.sky.power,
-        skyColor: environmentLightConfiguration.sky.color,
-        sunPower: Math.pow(10, environmentLightConfiguration.sun.power),
-        sunAngularSize: environmentLightConfiguration.sun.angularSize,
-        sunColor: environmentLightConfiguration.sun.color,
-        clearColor: clearColor === false ? [0, 0, 0] : clearColor,
-        enableClearColor: clearColor === false ? 0 : 1,
-        maxRayDepth,
-        objectDefinitionLength: modelGroups.length,
-      });
-      // todo: consider buffer writing
-      device.queue.writeBuffer(uniformBuffer, 0, uniformData.arrayBuffer);
+      setUniformData(invProjectionMatrix, matrixWorld, currentSample);
 
       const dynamicComputeBindGroup = device.createBindGroup({
         label: "Dynamic compute bind group",
