@@ -121,8 +121,6 @@ export default function TracerExperiment({
       ([key]) => key,
     );
     for (const key of allConfiguredMaterialKeys) {
-      // todo: consider nicer way
-      // @ts-ignore
       material[key] = overrides[key] ?? defaultMaterial[key];
     }
     return material;
