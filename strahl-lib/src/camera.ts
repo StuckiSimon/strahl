@@ -13,9 +13,10 @@ export type CustomCameraSetup = {
   controls?: EventDispatcher;
 };
 
+type Matrix = number[] & { length: 16 };
+
 type RawCameraSetup = {
-  // todo: add more precise type
-  matrixWorldContent: number[];
+  matrixWorldContent: Matrix;
   fov: number;
   cameraTargetDistance: number;
 };
