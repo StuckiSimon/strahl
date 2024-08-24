@@ -2,6 +2,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { OpenPBRMaterial } from "./openpbr-material";
 import runPathTracer from "./path-tracer";
 import { EnvironmentLightConfig } from "./environment-light";
+import { RawCameraSetup } from "./camera";
 
 const gltfLoader = new GLTFLoader();
 
