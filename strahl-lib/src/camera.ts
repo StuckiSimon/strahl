@@ -15,7 +15,7 @@ export type CustomCameraSetup = {
 
 type Matrix = number[] & { length: 16 };
 
-type RawCameraSetup = {
+export type RawCameraSetup = {
   matrixWorldContent: Matrix;
   fov: number;
   cameraTargetDistance: number;

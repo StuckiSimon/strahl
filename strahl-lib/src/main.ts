@@ -120,7 +120,7 @@ const MATERIAL_MAP = {
 
 type ModelConfiguration = {
   url: string;
-  view: number[];
+  view: RawCameraSetup["matrixWorldContent"];
   fov?: number;
   materials: Record<string, OpenPBRMaterial>;
   cameraTargetDistance: number;
