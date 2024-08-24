@@ -12,6 +12,7 @@ type PartialOpenPBRMaterialConfiguration = Partial<
 type Props = {
   propertiesForConfiguration: (keyof OpenPBRMaterial)[];
   defaultMaterialProperties?: PartialOpenPBRMaterialConfiguration;
+  optionOverrides?: Omit<Partial<PathTracerOptions>, "enableDenoise">;
 };
 
 function convertNormalizedToHex(c: number) {
@@ -99,6 +100,7 @@ const defaultConfiguration: Partial<
 export default function TracerExperiment({
   propertiesForConfiguration,
   defaultMaterialProperties,
+  optionOverrides,
 }: Props): JSX.Element {
   const defaultMaterial = {
     ...Object.fromEntries(
@@ -132,13 +134,15 @@ export default function TracerExperiment({
     sphere: buildMaterial({}),
   });
 
-  const defaultOptions: PathTracerOptions = {
+  const defaultOptions = {
     targetSamples: 250,
     size: 512,
     clearColor: convertHexToRGB("#1B1B1D"),
     enableDenoise: {
       type: "gaussian",
-      threshold: 0.07,
+      threshold: 4.0,
+      kSigma: 1.0,
+      sigma: 0.07,
     },
     viewProjectionConfiguration: {
       matrixWorldContent: [
@@ -164,7 +168,8 @@ export default function TracerExperiment({
         color: [1.0, 1.0, 0.9],
       },
     },
-  };
+    ...optionOverrides,
+  } satisfies PathTracerOptions;
 
   const [options, setOptions] =
     React.useState<Parameters<typeof usePathTracer>[2]>(defaultOptions);
@@ -185,6 +190,11 @@ export default function TracerExperiment({
     const PARAMS = {
       ...materialParams,
       ...defaultOptions,
+      ...{
+        denoiseKSigma: defaultOptions.enableDenoise.kSigma,
+        denoiseSigma: defaultOptions.enableDenoise.sigma,
+        denoiseThreshold: defaultOptions.enableDenoise.threshold,
+      },
     };
 
     const pane = new Pane({
@@ -203,7 +213,7 @@ export default function TracerExperiment({
       title: "Renderer",
     });
     rendererSettings.addBinding(PARAMS, "targetSamples", {
-      min: 100,
+      min: 0,
       max: 10_000,
       step: 1,
     });
@@ -216,6 +226,21 @@ export default function TracerExperiment({
       min: 64,
       max: 2048,
       step: 64,
+    });
+    rendererSettings.addBinding(PARAMS, "denoiseThreshold", {
+      min: 0.0,
+      max: 10.0,
+      step: 0.01,
+    });
+    rendererSettings.addBinding(PARAMS, "denoiseSigma", {
+      min: 0.0,
+      max: 10.0,
+      step: 0.01,
+    });
+    rendererSettings.addBinding(PARAMS, "denoiseKSigma", {
+      min: 0.0,
+      max: 10.0,
+      step: 0.01,
     });
 
     paneRef.current = pane;
@@ -247,6 +272,12 @@ export default function TracerExperiment({
           targetSamples: PARAMS.targetSamples,
           maxRayDepth: PARAMS.maxRayDepth,
           size: PARAMS.size,
+          enableDenoise: {
+            type: "gaussian",
+            threshold: PARAMS.denoiseThreshold,
+            kSigma: PARAMS.denoiseKSigma,
+            sigma: PARAMS.denoiseSigma,
+          },
         };
       });
     });
