@@ -153,6 +153,7 @@ export default function TracerExperiment({
       ],
       fov: 38.6701655,
       cameraTargetDistance: 4,
+      aspect: 1,
     },
     maxRayDepth: 3,
     environmentLightConfiguration: {
