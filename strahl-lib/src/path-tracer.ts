@@ -1,5 +1,5 @@
 import { buildPathTracerShader } from "./shaders/tracer-shader.ts";
-import buildRenderShader from "./render-shader";
+import { buildRenderShader } from "./shaders/render-shader";
 import buildDenoisePassShader from "./denoise-pass-shader.ts";
 import buildTextureConverterPassShader from "./texture-converter-pass-shader.ts";
 import { logGroup } from "./benchmark/cpu-performance-logger.ts";

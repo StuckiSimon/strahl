@@ -1,3 +1,5 @@
+export function buildRenderShader() {
+  return /* wgsl */ `
 const pos = array(
   // 1
   vec2f(-1.0, -1.0),
@@ -140,4 +142,6 @@ fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
 
   let tonemappedColor = khronosPBRNeutralToneMapping(color.rgb);
   return vec4f(tonemappedColor, 1.0);
+}    
+  `;
 }
