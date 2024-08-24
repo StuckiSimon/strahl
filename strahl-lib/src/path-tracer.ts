@@ -1,7 +1,6 @@
 import { buildPathTracerShader } from "./shaders/tracer-shader.ts";
 import { buildRenderShader } from "./shaders/render-shader";
 import buildDenoisePassShader from "./denoise-pass-shader.ts";
-import buildTextureConverterPassShader from "./texture-converter-pass-shader.ts";
 import { logGroup } from "./benchmark/cpu-performance-logger.ts";
 import { OpenPBRMaterial } from "./openpbr-material";
 import {
@@ -1194,85 +1193,14 @@ async function runPathTracer(
             size: Float32Array.BYTES_PER_ELEMENT * 4 * width * height,
           });
 
-          // fixme: use manual texture-converter-pass-shader
           {
-            const textureConverterPassShaderCode =
-              buildTextureConverterPassShader({
-                imageWidth: width,
-                imageHeight: height,
-                maxWorkgroupDimension,
-              });
-
-            const computeShaderModule = device.createShaderModule({
-              label: "Texture Converter Pass Compute Shader",
-              code: textureConverterPassShaderCode,
-            });
-
-            const dynamicComputeBindGroupLayout = device.createBindGroupLayout({
-              label: "Texture Converter pass compute bind group layout",
-              entries: [
-                {
-                  binding: 0,
-                  visibility: GPUShaderStage.COMPUTE,
-                  storageTexture: {
-                    format: "rgba32float",
-                    access: "read-only",
-                  },
-                },
-                {
-                  binding: 1,
-                  visibility: GPUShaderStage.COMPUTE,
-                  buffer: {
-                    type: "storage",
-                  },
-                },
-              ],
-            });
-
-            const computePipelineLayout = device.createPipelineLayout({
-              label: "Dynamic texture converter pass compute pipeline layout",
-              bindGroupLayouts: [dynamicComputeBindGroupLayout],
-            });
-
-            const computePipeline = device.createComputePipeline({
-              label: "Texture Converter Pass Compute pipeline",
-              layout: computePipelineLayout,
-              compute: {
-                module: computeShaderModule,
-                entryPoint: "computeMain",
-              },
-            });
-
-            // todo: reconsider this pass as now the texture is already in the correct format
-            const dynamicComputeBindGroup = device.createBindGroup({
-              label: "Texture converter pass compute bind group",
-              layout: dynamicComputeBindGroupLayout,
-              entries: [
-                {
-                  binding: 0,
-                  resource: writeTexture.createView(),
-                },
-                {
-                  binding: 1,
-                  resource: {
-                    buffer: textureBuffer,
-                  },
-                },
-              ],
-            });
-
             const encoder = device.createCommandEncoder();
 
-            const computePass = encoder.beginComputePass();
-            computePass.setBindGroup(0, dynamicComputeBindGroup);
-
-            computePass.setPipeline(computePipeline);
-
-            const dispatchX = Math.ceil(width / maxWorkgroupDimension);
-            const dispatchY = Math.ceil(height / maxWorkgroupDimension);
-            computePass.dispatchWorkgroups(dispatchX, dispatchY);
-
-            computePass.end();
+            encoder.copyTextureToBuffer(
+              { texture: writeTexture },
+              { buffer: textureBuffer, bytesPerRow: width * 4 * 4 },
+              [width, height],
+            );
 
             device.queue.submit([encoder.finish()]);
           }
