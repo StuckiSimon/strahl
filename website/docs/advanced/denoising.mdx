@@ -1,3 +1,5 @@
+import TracerExperiment from "@site/src/components/TracerExperiment";
+
 # Denoising
 
 Denoising can be used as a final step to reduce undesired artifacts in the rendering.
@@ -28,6 +30,25 @@ runPathTracer(target, model, {
   },
 });
 ```
+
+- `sigma` is the standard deviation of the Gaussian kernel.
+- `kSigma` is the kernel size multiplier.
+- `threshold` is the edge sharpening threshold for the denoising.
+
+<TracerExperiment
+  propertiesForConfiguration={[]}
+  defaultMaterialProperties={{
+    oBaseColor: [0.7, 0.7, 0.7],
+    oBaseMetalness: 1.0,
+  }}
+  optionOverrides={{
+    targetSamples: 0,
+  }}
+/>
+
+:::note
+The example does few samples to emphasize the denoising effect.
+:::
 
 ### OIDN
 
