@@ -51,6 +51,8 @@ struct IndicesPackage {
   z: i32,
 }
 
+override wgSize: u32 = 16;
+
 // CODE#BUFFER-BINDINGS
 @group(0) @binding(0) var<storage, read> positions: array<array<vec3f, 2>>;
 // todo: Check when i16 is supported
@@ -1374,7 +1376,7 @@ fn getPixelJitter(seed: ptr<function, u32>) -> vec2f {
 }
 
 @compute
-@workgroup_size(${maxWorkgroupDimension}, ${maxWorkgroupDimension}, 1)
+@workgroup_size(wgSize, wgSize, 1)
 fn computeMain(@builtin(global_invocation_id) globalId: vec3<u32>) {
   var seed = globalId.x + globalId.y * ${imageWidth};
   seed ^= uniformData.seedOffset;
