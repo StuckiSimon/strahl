@@ -1,6 +1,11 @@
 import React from "react";
 import { BindingParams, Pane } from "tweakpane";
-import { convertHexToRGB, OpenPBRMaterial, PathTracerOptions } from "strahl";
+import {
+  Color,
+  convertHexToRGB,
+  OpenPBRMaterial,
+  PathTracerOptions,
+} from "strahl";
 import styles from "./styles.module.css";
 import clsx from "clsx";
 import usePathTracer from "@site/src/hooks/usePathTracer";
@@ -20,8 +25,7 @@ function convertNormalizedToHex(c: number) {
   return hex.padStart(2, "0");
 }
 
-// todo: use exported type from strahl
-function convertRGBToHex(c: ReturnType<typeof convertHexToRGB>) {
+function convertRGBToHex(c: Color) {
   return (
     "#" +
     convertNormalizedToHex(c[0]) +
