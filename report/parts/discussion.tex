@@ -128,9 +128,11 @@ To date, there are reports of stability issues with \gls{WebGPU}. This includes 
 
 \subsection*{OpenPBR}
 
-The integration of the \gls{OpenPBR} surface shading model enables realistic material representation. As it is a new standard and no stable version has been released when first implementing the path tracer, aligning it with the standard was challenging. To date, only few open-source projects have implemented the standard. Since the standard has reached a stable version during the work on this thesis, aligning effort between the implementation and the standard has reduced. The use of \gls{PBR} and the latest industry standards is beneficial and provides good quality results. The adoption track of \gls{OpenPBR} is promising and the standard is likely to be extended in the future.
+The integration of the \gls{OpenPBR} surface shading model enables realistic material representation. As it is a new standard and no stable version has been released when implementation started, aligning the path tracer with the standard was challenging. After the standard has reached a stable version, alignment effort between the implementation and the standard has reduced.
 
-% write about what future could hold: open pbr hair, volume?
+To date, only few open-source projects have implemented the standard. Neither \gls{Three.js} nor \gls{Babylon.js} have direct \gls{OpenPBR} support. However, there is a \gls{MaterialX} loader for \gls{Three.js} which could be used. For use in real-time rendering, alignment between \gls{OpenPBR} and \gls{glTF} \gls{PBR} extensions could be beneficial. This alignment could reduce the computational resources required for surface shading and improve interoperability by establishing \gls{glTF} extensions for \gls{OpenPBR}.
+
+The use of \gls{PBR} and the latest industry standards is beneficial and provides good quality results. The adoption track of \gls{OpenPBR} is promising and initiatives such as NVIDIA's \gls{OpenPBR} material library \cite{omniverseOpenPBR} can be helpful for the specific use case by facilitating material creation. The standard is likely to be extended in the future. Such extensions could be specifications to support hair or volumetric effects.
 
 \section{Future Work}
 
@@ -176,10 +178,6 @@ The current implementation only supports the features of the \gls{OpenPBR} surfa
   \item{Subsurface Scattering and Translucency}
   \item{Opacity and Transparency}
 \end{itemize}
-
-\subsubsection*{Alignment of OpenPBR and glTF PBR}
-
-Further improvements can be achieved by aligning \gls{glTF} \gls{PBR} with \gls{OpenPBR}, focusing on real-time rendering. This alignment could reduce the computational resources required for surface shading.
 
 \subsection*{Technical Improvements}
 
