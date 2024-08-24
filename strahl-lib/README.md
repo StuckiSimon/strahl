@@ -29,3 +29,7 @@ In order to expose in local network, run:
 1. `npm version prerelease --preid=alpha`
 1. `npm publish --dry-run`
 1. `npm publish`
+
+### Tooling Setup
+
+For working with `wgsl`, it is recommended to use Visual Studio Code with [WGSL Literal](https://marketplace.visualstudio.com/items?itemName=ggsimm.wgsl-literal) extension.
