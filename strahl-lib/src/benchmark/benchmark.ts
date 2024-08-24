@@ -294,6 +294,21 @@ async function main() {
       window.location.reload();
     });
 
+  document
+    .getElementById("file-input")
+    ?.addEventListener("change", async (event) => {
+      const file = (event.target as HTMLInputElement).files?.[0];
+      if (!file) {
+        return;
+      }
+      const text = await file.text();
+      const report = JSON.parse(text);
+      console.log(report);
+
+      localStorage.setItem(STORAGE_KEY, text);
+      window.location.reload();
+    });
+
   const stateSerialized = localStorage.getItem(STORAGE_KEY);
 
   if (isNil(stateSerialized)) {
@@ -329,7 +344,7 @@ async function main() {
     text = `All runs done, benchmark finished ✅`;
   }
   reportDiv.textContent = text;
-  document.body.appendChild(reportDiv);
+  document.getElementById("result-container")?.appendChild(reportDiv);
 
   if (!hasStillSomeRunsToDo) {
     const gpuInfo = await initWebGPUReport();
@@ -358,6 +373,12 @@ async function main() {
 
     return;
   }
+
+  const canvas = document.createElement("canvas");
+  canvas.id = "render-target";
+  canvas.width = 512;
+  canvas.height = 512;
+  document.getElementById("canvas-container")?.appendChild(canvas);
 
   const itemWithFewestRuns = Math.min(
     state.max?.length ?? Infinity,
