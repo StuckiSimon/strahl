@@ -1,14 +1,10 @@
 import tracerShader from "./tracer-shader.wgsl?raw";
 
 type Params = {
-  imageWidth: number;
-  imageHeight: number;
   maxBvhStackDepth: number;
 };
 
 const PARAM_PLACEHOLDER_MAP: Record<keyof Params, string> = {
-  imageWidth: "imageWidth",
-  imageHeight: "imageHeight",
   maxBvhStackDepth: "maxBvhStackDepth",
 };
 

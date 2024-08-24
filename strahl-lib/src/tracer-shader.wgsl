@@ -52,6 +52,8 @@ struct IndicesPackage {
 }
 
 override wgSize: u32 = 16;
+override imageWidth: u32 = 512;
+override imageHeight: u32 = 512;
 
 // CODE#BUFFER-BINDINGS
 @group(0) @binding(0) var<storage, read> positions: array<array<vec3f, 2>>;
@@ -1378,7 +1380,7 @@ fn getPixelJitter(seed: ptr<function, u32>) -> vec2f {
 @compute
 @workgroup_size(wgSize, wgSize, 1)
 fn computeMain(@builtin(global_invocation_id) globalId: vec3<u32>) {
-  var seed = globalId.x + globalId.y * ${imageWidth};
+  var seed = globalId.x + globalId.y * imageWidth;
   seed ^= uniformData.seedOffset;
 
   let pixelOrigin = vec2f(f32(globalId.x), f32(globalId.y));
@@ -1393,7 +1395,7 @@ fn computeMain(@builtin(global_invocation_id) globalId: vec3<u32>) {
     // CODE#ALIASING
     // anti-aliasing
     let pixel = pixelOrigin + getPixelJitter(&seed);
-    let ndc = -1.0 + 2.0*pixel / vec2<f32>(${imageWidth}, ${imageHeight});
+    let ndc = -1.0 + 2.0 * pixel / vec2f(f32(imageWidth), f32(imageHeight));
     
     var ray = ndcToCameraRay(ndc, uniformData.invModelMatrix * uniformData.cameraWorldMatrix, uniformData.invProjectionMatrix, &seed);
     ray.direction = normalize(ray.direction);

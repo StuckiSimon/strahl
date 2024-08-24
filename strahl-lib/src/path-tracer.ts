@@ -316,8 +316,6 @@ async function runPathTracer(
   const maxWorkgroupDimension = 16;
 
   const tracerShaderCode = buildTracerShader({
-    imageWidth: width,
-    imageHeight: height,
     maxBvhStackDepth: maxBvhDepth,
   });
 
@@ -862,6 +860,8 @@ async function runPathTracer(
           entryPoint: "computeMain",
           constants: {
             wgSize: maxWorkgroupDimension,
+            imageWidth: width,
+            imageHeight: height,
           },
         },
       });
