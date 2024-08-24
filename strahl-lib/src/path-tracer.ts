@@ -1,4 +1,4 @@
-import buildTracerShader from "./tracer-shader";
+import { buildPathTracerShader } from "./shaders/tracer-shader.ts";
 import buildRenderShader from "./render-shader";
 import buildDenoisePassShader from "./denoise-pass-shader.ts";
 import buildTextureConverterPassShader from "./texture-converter-pass-shader.ts";
@@ -315,8 +315,10 @@ async function runPathTracer(
 
   const maxWorkgroupDimension = 16;
 
-  const tracerShaderCode = buildTracerShader({
-    maxBvhStackDepth: maxBvhDepth,
+  const tracerShaderCode = buildPathTracerShader({
+    bvhParams: {
+      maxBvhStackDepth: maxBvhDepth,
+    },
   });
 
   const textureData = new Float32Array(width * height * 4);
