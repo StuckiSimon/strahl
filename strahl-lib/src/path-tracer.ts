@@ -1,6 +1,6 @@
 import { buildPathTracerShader } from "./shaders/tracer-shader.ts";
 import { buildRenderShader } from "./shaders/render-shader";
-import buildDenoisePassShader from "./denoise-pass-shader.ts";
+import { buildDenoisePassShader } from "./shaders/denoise-pass-shader.ts";
 import { logGroup } from "./benchmark/cpu-performance-logger.ts";
 import { OpenPBRMaterial } from "./openpbr-material";
 import {
@@ -1036,10 +1036,9 @@ async function runPathTracer(
           });
 
           const denoisePassShaderCode = buildDenoisePassShader({
-            imageWidth: width,
-            imageHeight: height,
-            maxWorkgroupDimension,
-            maxBvhStackDepth: maxBvhDepth,
+            bvhParams: {
+              maxBvhStackDepth: maxBvhDepth,
+            },
           });
 
           const denoisePassDefinitions = makeShaderDataDefinitions(
@@ -1131,6 +1130,11 @@ async function runPathTracer(
             compute: {
               module: computeShaderModule,
               entryPoint: "computeMain",
+              constants: {
+                wgSize: maxWorkgroupDimension,
+                imageWidth: width,
+                imageHeight: height,
+              },
             },
           });
 
