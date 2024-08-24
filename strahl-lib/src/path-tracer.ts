@@ -1078,7 +1078,6 @@ async function runPathTracer(
               objectDefinitionLength: modelGroups.length,
               mode,
             });
-            // todo: consider buffer writing
             device.queue.writeBuffer(uniformBuffer, 0, uniformData.arrayBuffer);
 
             return uniformBuffer;
