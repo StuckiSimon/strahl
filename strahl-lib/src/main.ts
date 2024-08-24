@@ -431,6 +431,7 @@ async function run() {
         matrixWorldContent: modelConfig.view,
         cameraTargetDistance: modelConfig.cameraTargetDistance,
         fov: modelConfig.fov ?? 38.6701655,
+        aspect: 1,
       },
       environmentLightConfiguration:
         modelConfig?.environmentLightConfiguration ?? {

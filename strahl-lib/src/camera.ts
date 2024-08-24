@@ -18,6 +18,7 @@ type Matrix = number[] & { length: 16 };
 export type RawCameraSetup = {
   matrixWorldContent: Matrix;
   fov: number;
+  aspect: number;
   cameraTargetDistance: number;
 };
 
@@ -37,8 +38,12 @@ export function makeRawCameraSetup(
 
   matrixWorld.fromArray(rawCameraSetup.matrixWorldContent);
 
-  // todo: externalize aspect ratio
-  const camera = new PerspectiveCamera(rawCameraSetup.fov, 1, 0.01, 1000);
+  const camera = new PerspectiveCamera(
+    rawCameraSetup.fov,
+    rawCameraSetup.aspect,
+    0.01,
+    1000,
+  );
   const internalControls = new OrbitControls(camera, canvas);
   camera.applyMatrix4(matrixWorld);
 

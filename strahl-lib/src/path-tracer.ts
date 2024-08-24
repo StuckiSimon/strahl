@@ -151,6 +151,7 @@ async function runPathTracer(
         -44.22427925573443, 209.99999999999994, 1,
       ],
       fov: 38.6701655,
+      aspect: 1,
       cameraTargetDistance: 200,
     },
     environmentLightConfiguration = defaultEnvironmentLightConfig(),

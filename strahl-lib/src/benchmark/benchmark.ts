@@ -158,6 +158,7 @@ async function run(
       ],
       cameraTargetDistance: 200,
       fov: 23.6701655,
+      aspect: 1,
     },
     finishedSampling: (params) => {
       const fullRunTime = runStartGroup.end();
