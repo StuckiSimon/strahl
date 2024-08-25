@@ -43,6 +43,7 @@ import {
   generateMaterialBuffer,
   isValidMaterialStructure,
 } from "./buffers/material-buffer";
+import { prepareTargetTexture } from "./buffers/target-texture.ts";
 
 type GaussianConfig = {
   type: "gaussian";
@@ -292,23 +293,8 @@ async function runPathTracer(
     },
   });
 
-  const texture = device.createTexture({
-    size: [width, height],
-    format: "rgba32float",
-    usage:
-      GPUTextureUsage.TEXTURE_BINDING |
-      GPUTextureUsage.COPY_SRC |
-      GPUTextureUsage.STORAGE_BINDING, // Permit writing to texture in compute shader
-  });
-
-  const textureB = device.createTexture({
-    size: [width, height],
-    format: "rgba32float",
-    usage:
-      GPUTextureUsage.TEXTURE_BINDING |
-      GPUTextureUsage.COPY_SRC |
-      GPUTextureUsage.STORAGE_BINDING, // Permit writing to texture in compute shader
-  });
+  const texture = prepareTargetTexture(device, sizeConfiguration);
+  const textureB = prepareTargetTexture(device, sizeConfiguration);
 
   const sampler = device.createSampler({
     magFilter: useFloatTextureFiltering ? "linear" : "nearest",
