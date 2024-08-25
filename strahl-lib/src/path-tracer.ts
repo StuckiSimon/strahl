@@ -47,7 +47,7 @@ type GaussianConfig = {
   threshold?: number;
 };
 
-export type OIDNConfig = {
+type OIDNConfig = {
   type: "oidn";
   url?: string;
 };
@@ -841,7 +841,7 @@ async function runPathTracer(
           await denoisePass(
             device,
             adapter.info,
-            oidnConfig,
+            oidnConfig.url,
             maxBvhDepth,
             maxWorkgroupDimension,
             width,

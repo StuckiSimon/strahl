@@ -1,7 +1,6 @@
 import { initUNetFromURL } from "oidn-web";
 import { buildDenoisePassShader } from "./shaders/denoise-pass-shader.ts";
 import { makeShaderDataDefinitions, makeStructuredView } from "webgpu-utils";
-import { OIDNConfig } from "./path-tracer.ts";
 
 export async function oidnDenoise(
   {
@@ -65,7 +64,7 @@ export async function oidnDenoise(
 export async function denoisePass(
   device: GPUDevice,
   adapterInfo: GPUAdapterInfo,
-  oidnConfig: OIDNConfig,
+  oidnUrl: string,
   maxBvhDepth: number,
   maxWorkgroupDimension: number,
   width: number,
@@ -257,7 +256,7 @@ export async function denoisePass(
     return;
   }
   const outputBuffer = await oidnDenoise(
-    { device, adapterInfo: adapterInfo, url: oidnConfig.url },
+    { device, adapterInfo: adapterInfo, url: oidnUrl },
     {
       colorBuffer: textureBuffer,
       albedoBuffer: albedoImageBuffer,
