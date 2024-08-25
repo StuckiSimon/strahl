@@ -257,7 +257,16 @@ The path tracer is designed to be integrated into existing web projects. The pac
     \label{fig:strahl-homepage}
 \end{figure}
 
-Documentation on how to configure the renderer is provided. The library uses custom exceptions which can be caught and handled by the user. It provides different exceptions to enable the user to react appropriately to different error conditions. This includes basic exceptions, where action is limited, such as missing browser support for \gls{WebGPU}, as well as transparent information on what the user mis-configured. In addition, control over sampling, denoising, environment lighting, and more is described. The use of \fGls{TypeScript}{Typed superset of JavaScript developed by Microsoft} enables code completion and type checking. The documentation includes showcases for the \gls{OpenPBR} surface shading model. The parameters can be adjusted in real-time to see the effect on the rendering.
+Documentation on how to configure the renderer is provided. The library uses custom exceptions which can be caught and handled by the user. It provides different exceptions to enable the user to react appropriately to different error conditions. This includes basic exceptions, where action is limited, such as missing browser support for \gls{WebGPU}, as well as transparent information on what the user misconfigured. The use of \fGls{TypeScript}{Typed superset of JavaScript developed by Microsoft} enables code completion and type checking. The documentation describes how to control sampling, denoising, environment lighting, and more. See \autoref{fig:strahl-documentation} for an example.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\columnwidth]{resources/website-documentation.png}
+    \caption{Part of documentation on how to setup denoising, with interactive example.}
+    \label{fig:strahl-documentation}
+\end{figure}
+
+The documentation includes showcases for the \gls{OpenPBR} surface shading model. The goal is to enable users to understand the parameter set and how to configure them to get the desired result. The parameters can be adjusted in real-time to see the effect on the rendering as shown in \autoref{fig:docu-demo}.
 
 \begin{figure}[H]
     \centering
