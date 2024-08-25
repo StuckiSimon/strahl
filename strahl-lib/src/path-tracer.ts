@@ -29,8 +29,8 @@ import {
 import { buildAbortEventHub } from "./util/abort-event-hub.ts";
 import { Group, Matrix4 } from "three";
 import { prepareGeometry } from "./prepare-geometry.ts";
-import { initUNetFromURL } from "oidn-web";
 import { Color } from "./core/types.ts";
+import { oidnDenoise } from "./oidn-denoise.ts";
 
 type GaussianConfig = {
   type: "gaussian";
@@ -71,65 +71,6 @@ export type PathTracerOptions = {
   enableFloatTextureFiltering?: boolean;
   enableDenoise?: boolean | OIDNConfig | GaussianConfig;
 };
-
-async function denoise(
-  {
-    device,
-    adapterInfo,
-    url,
-  }: { device: GPUDevice; adapterInfo: GPUAdapterInfo; url: string },
-  {
-    colorBuffer,
-    albedoBuffer,
-    normalBuffer,
-  }: {
-    colorBuffer: GPUBuffer;
-    albedoBuffer: GPUBuffer;
-    normalBuffer: GPUBuffer;
-  },
-  size: { width: number; height: number },
-) {
-  const unet = await initUNetFromURL(
-    url,
-    {
-      device,
-      adapterInfo,
-    },
-    {
-      aux: true,
-      hdr: true,
-    },
-  );
-
-  type GPUImageData = {
-    data: GPUBuffer;
-    width: number;
-    height: number;
-  };
-
-  return new Promise<GPUImageData>((resolve) => {
-    unet.tileExecute({
-      color: {
-        data: colorBuffer,
-        width: size.width,
-        height: size.height,
-      },
-      albedo: {
-        data: albedoBuffer,
-        width: size.width,
-        height: size.height,
-      },
-      normal: {
-        data: normalBuffer,
-        width: size.width,
-        height: size.height,
-      },
-      done(finalBuffer) {
-        resolve(finalBuffer);
-      },
-    });
-  });
-}
 
 /**
  * Main routine to generate renderings.
@@ -1213,7 +1154,7 @@ async function runPathTracer(
           if (isHalted()) {
             return;
           }
-          const outputBuffer = await denoise(
+          const outputBuffer = await oidnDenoise(
             { device, adapterInfo: adapter.info, url: oidnConfig.url },
             {
               colorBuffer: textureBuffer,
