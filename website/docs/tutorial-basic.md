@@ -174,6 +174,8 @@ await runPathTracer("render-target", model, {
     // diff-add
     fov: 38,
     // diff-add
+    aspect: 1,
+    // diff-add
     cameraTargetDistance: 4,
     // diff-add
   },
