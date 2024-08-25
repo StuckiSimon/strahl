@@ -999,7 +999,6 @@ async function runPathTracer(
               label: "Denoise pass uniform data buffer",
               size: bytesForUniform,
               usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
-              // mappedAtCreation: true,
             });
 
             uniformData.set({
