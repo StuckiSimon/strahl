@@ -1,10 +1,10 @@
-import { InvalidMaterialError } from "../core/exceptions.ts";
+import { InvalidMaterialError } from "../core/exceptions";
 import {
   getSizeAndAlignmentOfUnsizedArrayElement,
   makeStructuredView,
   VariableDefinition,
 } from "webgpu-utils";
-import { OpenPBRMaterial } from "../openpbr-material.ts";
+import { OpenPBRMaterial } from "../openpbr-material";
 import { Material } from "three";
 
 export function isValidMaterialStructure(

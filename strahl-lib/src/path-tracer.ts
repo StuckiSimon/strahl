@@ -1,48 +1,48 @@
-import { buildPathTracerShader } from "./shaders/tracer-shader.ts";
+import { buildPathTracerShader } from "./shaders/tracer-shader";
 import { buildRenderShader } from "./shaders/render-shader";
-import { logGroup } from "./benchmark/cpu-performance-logger.ts";
+import { logGroup } from "./benchmark/cpu-performance-logger";
 import { makeShaderDataDefinitions, makeStructuredView } from "webgpu-utils";
 import {
   CanvasReferenceError,
   InternalError,
   SignalAlreadyAbortedError,
   WebGPUNotSupportedError,
-} from "./core/exceptions.ts";
+} from "./core/exceptions";
 import {
   defaultEnvironmentLightConfig,
   EnvironmentLightConfig,
   getSunDirection,
 } from "./environment-light";
-import { isNil } from "./util/is-nil.ts";
+import { isNil } from "./util/is-nil";
 import {
   CustomCameraSetup,
   isCustomCameraSetup,
   makeRawCameraSetup,
   ViewProjectionConfiguration,
 } from "./camera";
-import { buildAbortEventHub } from "./util/abort-event-hub.ts";
+import { buildAbortEventHub } from "./util/abort-event-hub";
 import { Group, Matrix4 } from "three";
-import { prepareGeometry } from "./prepare-geometry.ts";
-import { Color } from "./core/types.ts";
+import { prepareGeometry } from "./prepare-geometry";
+import { Color } from "./core/types";
 import {
   oidnDenoise,
   prepareDenoiseData,
   writeDenoisedOutput,
-} from "./oidn-denoise.ts";
-import { generateGeometryBuffer } from "./buffers/geometry-buffer.ts";
-import { generateIndicesBuffer } from "./buffers/indices-buffer.ts";
-import { generateBvhBuffers } from "./buffers/bvh-buffers.ts";
+} from "./oidn-denoise";
+import { generateGeometryBuffer } from "./buffers/geometry-buffer";
+import { generateIndicesBuffer } from "./buffers/indices-buffer";
+import { generateBvhBuffers } from "./buffers/bvh-buffers";
 import {
   encodeTimestampQuery,
   generateTimestampQuery,
   retrieveTimestampQueryTime,
   TimestampQueryContext,
-} from "./timestamp-query.ts";
-import { generateObjectDefinitionBuffer } from "./buffers/object-definition-buffer.ts";
+} from "./timestamp-query";
+import { generateObjectDefinitionBuffer } from "./buffers/object-definition-buffer";
 import {
   generateMaterialBuffer,
   isValidMaterialStructure,
-} from "./buffers/material-buffer.ts";
+} from "./buffers/material-buffer";
 
 type GaussianConfig = {
   type: "gaussian";

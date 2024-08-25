@@ -1,5 +1,5 @@
 import type { Material } from "three";
-import { Color } from "./core/types.ts";
+import { Color } from "./core/types";
 
 export class OpenPBRMaterial {
   oBaseWeight: number = 1.0;

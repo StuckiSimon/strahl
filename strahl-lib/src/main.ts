@@ -2,7 +2,7 @@ import { asThreeJsMaterial, OpenPBRMaterial } from "./openpbr-material";
 import runPathTracer from "./path-tracer";
 import { EnvironmentLightConfig } from "./environment-light";
 import { RawCameraSetup } from "./camera";
-import { loadGltf } from "./load-gltf.ts";
+import { loadGltf } from "./load-gltf";
 import { Mesh } from "three";
 
 const defaultBlueMaterial = new OpenPBRMaterial();

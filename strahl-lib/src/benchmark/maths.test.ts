@@ -3,7 +3,7 @@ import {
   getConfidenceInterval,
   getSampleMean,
   getStandardDeviation,
-} from "./maths.ts";
+} from "./maths";
 
 describe("maths", () => {
   describe("getStandardDeviation", () => {

@@ -1,14 +1,14 @@
-import { logGroup } from "./cpu-performance-logger.ts";
-import { asThreeJsMaterial, OpenPBRMaterial } from "../openpbr-material.ts";
-import runPathTracer, { PathTracerOptions } from "../path-tracer.ts";
-import getStatsForReportStructure from "./benchmark-analyser.ts";
-import { isNil } from "../util/is-nil.ts";
+import { logGroup } from "./cpu-performance-logger";
+import { asThreeJsMaterial, OpenPBRMaterial } from "../openpbr-material";
+import runPathTracer, { PathTracerOptions } from "../path-tracer";
+import getStatsForReportStructure from "./benchmark-analyser";
+import { isNil } from "../util/is-nil";
 import {
   getConfidenceInterval,
   getSampleMean,
   getStandardDeviation,
-} from "./maths.ts";
-import { loadGltf } from "../load-gltf.ts";
+} from "./maths";
+import { loadGltf } from "../load-gltf";
 import { Mesh } from "three";
 
 const MODEL_URL_FULL = "models/series-61-rotated/61-serie-edit.gltf"; // 1'068'735

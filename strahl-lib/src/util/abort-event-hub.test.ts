@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { buildAbortEventHub } from "./abort-event-hub.ts";
+import { buildAbortEventHub } from "./abort-event-hub";
 
 describe("abort-event-hub", () => {
   describe("buildAbortEventHub", () => {

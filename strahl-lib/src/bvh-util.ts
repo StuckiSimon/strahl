@@ -1,5 +1,5 @@
 import { MeshBVH } from "three-mesh-bvh";
-import { InternalError } from "./core/exceptions.ts";
+import { InternalError } from "./core/exceptions";
 
 // Build constants
 const BYTES_PER_NODE = 6 * 4 + 4 + 4;

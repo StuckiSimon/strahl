@@ -1,7 +1,7 @@
 import { initUNetFromURL } from "oidn-web";
-import { buildDenoisePassShader } from "./shaders/denoise-pass-shader.ts";
+import { buildDenoisePassShader } from "./shaders/denoise-pass-shader";
 import { makeShaderDataDefinitions, makeStructuredView } from "webgpu-utils";
-import { OutputSizeConfiguration } from "./path-tracer.ts";
+import { OutputSizeConfiguration } from "./path-tracer";
 
 export async function oidnDenoise(
   {
