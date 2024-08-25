@@ -1042,23 +1042,13 @@ async function runPathTracer(
           const normalImageBuffer = device.createBuffer({
             label: "Normal image buffer",
             size: Float32Array.BYTES_PER_ELEMENT * float32ArrayImageSize,
-            usage:
-              GPUBufferUsage.STORAGE |
-              // todo: check flags
-              GPUBufferUsage.COPY_SRC |
-              GPUBufferUsage.COPY_DST,
-            // mappedAtCreation: true,
+            usage: GPUBufferUsage.STORAGE,
           });
 
           const albedoImageBuffer = device.createBuffer({
             label: "Albedo image buffer",
             size: Float32Array.BYTES_PER_ELEMENT * float32ArrayImageSize,
-            usage:
-              GPUBufferUsage.STORAGE |
-              // todo: check flags
-              GPUBufferUsage.COPY_SRC |
-              GPUBufferUsage.COPY_DST,
-            // mappedAtCreation: true,
+            usage: GPUBufferUsage.STORAGE,
           });
 
           const computeShaderModule = device.createShaderModule({
