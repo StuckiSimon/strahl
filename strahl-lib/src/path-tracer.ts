@@ -30,6 +30,7 @@ import { buildAbortEventHub } from "./util/abort-event-hub.ts";
 import { Group, Matrix4 } from "three";
 import { prepareGeometry } from "./prepare-geometry.ts";
 import { initUNetFromURL } from "oidn-web";
+import { Color } from "./core/types.ts";
 
 type GaussianConfig = {
   type: "gaussian";
@@ -57,7 +58,7 @@ export type PathTracerOptions = {
   viewProjectionConfiguration?: ViewProjectionConfiguration;
   environmentLightConfiguration?: EnvironmentLightConfig;
   samplesPerIteration?: number;
-  clearColor?: number[] | false;
+  clearColor?: Color | false;
   maxRayDepth?: number;
   finishedSampling?: (result: {
     bvhBuildTime: number;
