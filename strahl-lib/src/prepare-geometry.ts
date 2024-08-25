@@ -1,5 +1,5 @@
 import { MeshBVH, getBVHExtremes } from "three-mesh-bvh";
-import { logGroup } from "./benchmark/cpu-performance-logger";
+import { startMeasurementGroup } from "./benchmark/performance-measurement-group.ts";
 import { consolidateMesh } from "./consolidate-mesh";
 import { GeometryGroup, Group } from "three";
 import { assertMeshBVHInternalStructure, bvhToTextures } from "./bvh-util";
@@ -25,7 +25,7 @@ function assertMaterializedGeometryGroup(
 
 export function prepareGeometry(model: { scene: Group }) {
   const reducedModel = consolidateMesh([model.scene]);
-  const cpuLogGroup = logGroup();
+  const cpuLogGroup = startMeasurementGroup();
   const boundsTree = new MeshBVH(reducedModel.geometry, {
     // @ts-expect-error This property is not officially supported by three-mesh-bvh just yet
     indirect: true,
