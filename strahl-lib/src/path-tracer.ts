@@ -318,7 +318,7 @@ async function runPathTracer(
       GPUTextureUsage.TEXTURE_BINDING |
       GPUTextureUsage.COPY_DST |
       GPUTextureUsage.COPY_SRC |
-      GPUTextureUsage.STORAGE_BINDING, // Permit writting to texture in compute shader
+      GPUTextureUsage.STORAGE_BINDING, // Permit writing to texture in compute shader
   });
 
   device.queue.writeTexture(
