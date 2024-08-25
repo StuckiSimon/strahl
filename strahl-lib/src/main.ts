@@ -1,9 +1,9 @@
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { OpenPBRMaterial } from "./openpbr-material";
+import { asThreeJsMaterial, OpenPBRMaterial } from "./openpbr-material";
 import runPathTracer from "./path-tracer";
 import { EnvironmentLightConfig } from "./environment-light";
 import { RawCameraSetup } from "./camera";
 import { loadGltf } from "./load-gltf.ts";
+import { Mesh } from "three";
 
 const defaultBlueMaterial = new OpenPBRMaterial();
 defaultBlueMaterial.oBaseColor = [0.0, 0.9, 1.0];
@@ -376,6 +376,10 @@ const CONFIGURATION_LIST: ModelConfiguration[] = [
   MODEL_CONFIGURATION7,
 ];
 
+function isMesh(arg: any): arg is Mesh {
+  return (arg as Mesh).isMesh;
+}
+
 async function run() {
   const modelConfig = CONFIGURATION_LIST[7];
   const materialMap = modelConfig.materials;
@@ -384,27 +388,33 @@ async function run() {
 
   // NOTE: This is a hack because on one model, the material name is off
   let alreadyLoadedTheRedOne = false;
-  model.scene.traverseVisible((object: any) => {
-    if (object.material === undefined) {
+  model.scene.traverseVisible((object) => {
+    if (
+      !isMesh(object) ||
+      object.material === undefined ||
+      Array.isArray(object.material)
+    ) {
       return;
     }
     const materialName = object.material.name;
     if (materialName in materialMap) {
-      object.material = materialMap[materialName as keyof typeof materialMap];
+      object.material = asThreeJsMaterial(
+        materialMap[materialName as keyof typeof materialMap],
+      );
       if (
         materialName === "material_name_kunststoff_verkehrsrotB81D12_rau_5_mtl"
       ) {
         if (!alreadyLoadedTheRedOne) {
-          object.material = copperMetalMaterial;
+          object.material = asThreeJsMaterial(copperMetalMaterial);
         }
         alreadyLoadedTheRedOne = true;
       }
     } else {
       console.log(materialName);
-      object.material = defaultBlueMaterial;
+      object.material = asThreeJsMaterial(defaultBlueMaterial);
     }
     // NOTE: use this to assign same material to all
-    // object.material = plainMaterial;
+    // object.material = asThreeJsMaterial(plainMaterial);
   });
 
   const destroyController = new AbortController();

@@ -1,3 +1,4 @@
+import type { Material } from "three";
 import { Color } from "./core/types.ts";
 
 export class OpenPBRMaterial {
@@ -21,4 +22,13 @@ export class OpenPBRMaterial {
   // todo: add oThinFilmWeight
   oThinFilmThickness: number = 0.5;
   oThinFilmIOR: number = 1.5;
+}
+
+/**
+ * Util for use in TypeScript only, once the material is assigned, Three.js will no longer be able to recognize it as a Material
+ * @param material
+ * @returns
+ */
+export function asThreeJsMaterial(material: OpenPBRMaterial): Material {
+  return material as unknown as Material;
 }

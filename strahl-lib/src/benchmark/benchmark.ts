@@ -1,5 +1,5 @@
 import { logGroup } from "./cpu-performance-logger.ts";
-import { OpenPBRMaterial } from "../openpbr-material.ts";
+import { asThreeJsMaterial, OpenPBRMaterial } from "../openpbr-material.ts";
 import runPathTracer, { PathTracerOptions } from "../path-tracer.ts";
 import getStatsForReportStructure from "./benchmark-analyser.ts";
 import { isNil } from "../util/is-nil.ts";
@@ -9,6 +9,7 @@ import {
   getStandardDeviation,
 } from "./maths.ts";
 import { loadGltf } from "../load-gltf.ts";
+import { Mesh } from "three";
 
 const MODEL_URL_FULL = "models/series-61-rotated/61-serie-edit.gltf"; // 1'068'735
 const MODEL_URL_BARE_BONES = "models/series-61-simplified-2/61-serie-edit.gltf"; // 10'687
@@ -110,6 +111,10 @@ type FinishedSamplingOptions = Parameters<
   fullRunTime: number;
 };
 
+function isMesh(arg: any): arg is Mesh {
+  return (arg as Mesh).isMesh;
+}
+
 async function run(
   target: number,
   yielder: (params: FinishedSamplingOptions) => void | Promise<void>,
@@ -125,16 +130,22 @@ async function run(
 
   const model = await loadGltf(MODEL_URL);
 
-  model.scene.traverseVisible((object: any) => {
-    if (object.material === undefined) {
+  model.scene.traverseVisible((object) => {
+    if (
+      !isMesh(object) ||
+      object.material === undefined ||
+      Array.isArray(object.material)
+    ) {
       return;
     }
     const materialName = object.material.name;
     if (materialName in MATERIAL_MAP) {
-      object.material = MATERIAL_MAP[materialName as keyof typeof MATERIAL_MAP];
+      object.material = asThreeJsMaterial(
+        MATERIAL_MAP[materialName as keyof typeof MATERIAL_MAP],
+      );
     } else {
       console.log(materialName);
-      object.material = defaultBlueMaterial;
+      object.material = asThreeJsMaterial(defaultBlueMaterial);
     }
   });
 
