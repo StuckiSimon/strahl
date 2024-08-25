@@ -43,6 +43,7 @@ import {
   retrieveTimestampQueryTime,
   TimestampQueryContext,
 } from "./timestamp-query.ts";
+import { generateObjectDefinitionsBuffer } from "./buffers/object-definitions.ts";
 
 type GaussianConfig = {
   type: "gaussian";
@@ -415,23 +416,10 @@ async function runPathTracer(
     indirectBufferData,
   );
 
-  // Prepare Object Definitions
-  const OBJECT_DEFINITION_SIZE_PER_ENTRY = Uint32Array.BYTES_PER_ELEMENT * 3;
-
-  const objectDefinitionsBuffer = device.createBuffer({
-    label: "Object definitions buffer",
-    size: OBJECT_DEFINITION_SIZE_PER_ENTRY * modelGroups.length,
-    usage: GPUBufferUsage.STORAGE,
-    mappedAtCreation: true,
-  });
-
-  const objectDefinitionsMapped = objectDefinitionsBuffer.getMappedRange();
-  const objectDefinitionsData = new Uint32Array(objectDefinitionsMapped);
-
-  objectDefinitionsData.set(
-    modelGroups.map((g) => [g.start, g.count, g.materialIndex]).flat(1),
+  const objectDefinitionsBuffer = generateObjectDefinitionsBuffer(
+    device,
+    modelGroups,
   );
-  objectDefinitionsBuffer.unmap();
 
   const materials = modelMaterials;
 
