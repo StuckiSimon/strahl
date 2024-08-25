@@ -320,7 +320,7 @@ async function main() {
     return;
   }
 
-  let state = JSON.parse(stateSerialized);
+  const state = JSON.parse(stateSerialized);
   console.log(state);
 
   if (state === null) {
