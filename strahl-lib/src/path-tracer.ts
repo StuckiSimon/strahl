@@ -32,6 +32,7 @@ import { prepareGeometry } from "./prepare-geometry.ts";
 import { Color } from "./core/types.ts";
 import { oidnDenoise } from "./oidn-denoise.ts";
 import { generateGeometryBuffer } from "./buffers/geometry-buffer.ts";
+import { generateIndicesBuffer } from "./buffers/indices-buffer.ts";
 
 type GaussianConfig = {
   type: "gaussian";
@@ -413,22 +414,7 @@ async function runPathTracer(
     cameraSetup = makeRawCameraSetup(viewProjectionConfiguration, canvas);
   }
 
-  // Prepare Indices
-
-  const indices = new Uint32Array(meshIndices);
-
-  const indicesBuffer = device.createBuffer({
-    label: "Index buffer",
-    size: Uint32Array.BYTES_PER_ELEMENT * indices.length,
-    usage: GPUBufferUsage.STORAGE,
-    mappedAtCreation: true,
-  });
-
-  const indicesMapped = indicesBuffer.getMappedRange();
-  const indicesData = new Uint32Array(indicesMapped);
-  indicesData.set(indices);
-  indicesBuffer.unmap();
-
+  const indicesBuffer = generateIndicesBuffer(device, meshIndices);
   const geometryBuffer = generateGeometryBuffer(device, positions, normals);
 
   // Prepare BVH Bounds
