@@ -62,7 +62,7 @@ export async function oidnDenoise(
   });
 }
 
-export async function denoisePass(
+export function prepareDenoiseData(
   device: GPUDevice,
   maxBvhDepth: number,
   maxWorkgroupDimension: number,
@@ -255,7 +255,7 @@ export async function denoisePass(
   };
 }
 
-export function writeOutput(
+export function writeDenoisedOutput(
   device: GPUDevice,
   executeRenderPass: (texture: GPUTexture, encoder: GPUCommandEncoder) => void,
   outputBuffer: GPUBuffer,

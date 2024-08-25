@@ -29,7 +29,11 @@ import { buildAbortEventHub } from "./util/abort-event-hub.ts";
 import { Group, Matrix4 } from "three";
 import { prepareGeometry } from "./prepare-geometry.ts";
 import { Color } from "./core/types.ts";
-import { denoisePass, oidnDenoise, writeOutput } from "./oidn-denoise.ts";
+import {
+  prepareDenoiseData,
+  oidnDenoise,
+  writeDenoisedOutput,
+} from "./oidn-denoise.ts";
 import { generateGeometryBuffer } from "./buffers/geometry-buffer.ts";
 import { generateIndicesBuffer } from "./buffers/indices-buffer.ts";
 import { generateBvhBuffers } from "./buffers/bvh-buffers.ts";
@@ -843,7 +847,7 @@ async function runPathTracer(
           state = "denoise";
 
           const { textureBuffer, albedoBuffer, normalBuffer } =
-            await denoisePass(
+            prepareDenoiseData(
               device,
               maxBvhDepth,
               maxWorkgroupDimension,
@@ -893,14 +897,12 @@ async function runPathTracer(
             return;
           }
 
-          writeOutput(
+          writeDenoisedOutput(
             device,
             executeRenderPass,
             outputBuffer.data,
             sizeConfiguration,
           );
-
-          textureBuffer.unmap();
         }
 
         finishedSampling?.({
