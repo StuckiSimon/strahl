@@ -376,7 +376,7 @@ const CONFIGURATION_LIST: ModelConfiguration[] = [
   MODEL_CONFIGURATION7,
 ];
 
-function isMesh(arg: any): arg is Mesh {
+function isMesh(arg: unknown): arg is Mesh {
   return (arg as Mesh).isMesh;
 }
 

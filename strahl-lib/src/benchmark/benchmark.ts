@@ -111,7 +111,7 @@ type FinishedSamplingOptions = Parameters<
   fullRunTime: number;
 };
 
-function isMesh(arg: any): arg is Mesh {
+function isMesh(arg: unknown): arg is Mesh {
   return (arg as Mesh).isMesh;
 }
 
