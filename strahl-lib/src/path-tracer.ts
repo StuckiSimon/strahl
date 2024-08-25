@@ -65,22 +65,58 @@ export type OutputSizeConfiguration = {
  * Configuration options for the path tracer.
  */
 export type PathTracerOptions = {
+  /**
+   * Number of samples per pixel.
+   */
   targetSamples?: number;
+  /**
+   * Ouput size of the render. The canvas may use a different size.
+   */
   size?: number | OutputSizeConfiguration;
+  /**
+   * Configuration for the view and controls.
+   */
   viewProjectionConfiguration?: ViewProjectionConfiguration;
+  /**
+   * Configuration for the environment light for sun and sky.
+   */
   environmentLightConfiguration?: EnvironmentLightConfig;
+  /**
+   * Number of samples per iteration.
+   */
   samplesPerIteration?: number;
+  /**
+   * Color to clear the canvas with. Set to false to disable clearing.
+   */
   clearColor?: Color | false;
+  /**
+   * Maximum number of ray bounces
+   */
   maxRayDepth?: number;
+  /**
+   * Callback for when the path tracer has finished sampling.
+   */
   finishedSampling?: (result: {
     bvhBuildTime: number;
     fullRenderLoopTime: number;
     allRenderTime: number;
     renderTimes: number[];
   }) => void;
+  /**
+   * Signal to abort the path tracer. May be used at any time.
+   */
   signal?: AbortSignal;
+  /**
+   * Enable timestamp query for performance measurements
+   */
   enableTimestampQuery?: boolean;
+  /**
+   * Enable float texture filtering, mainly used for development.
+   */
   enableFloatTextureFiltering?: boolean;
+  /**
+   * Enable denoising pass. Set to true to enable Gaussian denoising, or provide an object with configuration for more detailed configuration or OIDN denoising.
+   */
   enableDenoise?: boolean | OIDNConfig | GaussianConfig;
 };
 
