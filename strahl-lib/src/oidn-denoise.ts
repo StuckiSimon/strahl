@@ -63,8 +63,6 @@ export async function oidnDenoise(
 
 export async function denoisePass(
   device: GPUDevice,
-  adapterInfo: GPUAdapterInfo,
-  oidnUrl: string,
   maxBvhDepth: number,
   maxWorkgroupDimension: number,
   width: number,
@@ -72,8 +70,6 @@ export async function denoisePass(
   uniformDataContent: Record<string, number | string | number[]>,
   computeBindGroupLayout: GPUBindGroupLayout,
   computeBindGroup: GPUBindGroup,
-  executeRenderPass: (texture: GPUTexture, encoder: GPUCommandEncoder) => void,
-  isHalted: () => boolean,
   writeTexture: GPUTexture,
   readTexture: GPUTexture,
 ) {
@@ -252,46 +248,34 @@ export async function denoisePass(
     device.queue.submit([encoder.finish()]);
   }
 
-  if (isHalted()) {
-    return;
-  }
-  const outputBuffer = await oidnDenoise(
-    { device, adapterInfo: adapterInfo, url: oidnUrl },
-    {
-      colorBuffer: textureBuffer,
-      albedoBuffer: albedoImageBuffer,
-      normalBuffer: normalImageBuffer,
-    },
-    {
-      width,
-      height,
-    },
+  return {
+    textureBuffer,
+    albedoBuffer: albedoImageBuffer,
+    normalBuffer: normalImageBuffer,
+  };
+}
+
+export function writeOutput(
+  device: GPUDevice,
+  executeRenderPass: (texture: GPUTexture, encoder: GPUCommandEncoder) => void,
+  outputBuffer: GPUBuffer,
+  width: number,
+  height: number,
+) {
+  const textureFinal = device.createTexture({
+    size: [width, height],
+    format: "rgba32float",
+    usage:
+      GPUTextureUsage.TEXTURE_BINDING |
+      GPUTextureUsage.COPY_DST |
+      GPUTextureUsage.COPY_SRC,
+  });
+  const encoder = device.createCommandEncoder();
+  encoder.copyBufferToTexture(
+    { buffer: outputBuffer, bytesPerRow: width * 4 * 4 },
+    { texture: textureFinal },
+    [width, height],
   );
 
-  if (isHalted()) {
-    return;
-  }
-
-  {
-    const textureFinal = device.createTexture({
-      size: [width, height],
-      format: "rgba32float",
-      usage:
-        GPUTextureUsage.TEXTURE_BINDING |
-        GPUTextureUsage.COPY_DST |
-        GPUTextureUsage.COPY_SRC,
-    });
-    const encoder = device.createCommandEncoder();
-    encoder.copyBufferToTexture(
-      { buffer: outputBuffer.data, bytesPerRow: width * 4 * 4 },
-      { texture: textureFinal },
-      [width, height],
-    );
-    device.queue.submit([encoder.finish()]);
-
-    const encoder2 = device.createCommandEncoder();
-    executeRenderPass(textureFinal, encoder2);
-  }
-
-  textureBuffer.unmap();
+  executeRenderPass(textureFinal, encoder);
 }

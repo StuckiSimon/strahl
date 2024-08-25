@@ -29,7 +29,7 @@ import { buildAbortEventHub } from "./util/abort-event-hub.ts";
 import { Group, Matrix4 } from "three";
 import { prepareGeometry } from "./prepare-geometry.ts";
 import { Color } from "./core/types.ts";
-import { denoisePass } from "./oidn-denoise.ts";
+import { denoisePass, oidnDenoise, writeOutput } from "./oidn-denoise.ts";
 import { generateGeometryBuffer } from "./buffers/geometry-buffer.ts";
 import { generateIndicesBuffer } from "./buffers/indices-buffer.ts";
 import { generateBvhBuffers } from "./buffers/bvh-buffers.ts";
@@ -838,39 +838,67 @@ async function runPathTracer(
         if (activateDenoisePass) {
           state = "denoise";
 
-          await denoisePass(
+          const { textureBuffer, albedoBuffer, normalBuffer } =
+            await denoisePass(
+              device,
+              maxBvhDepth,
+              maxWorkgroupDimension,
+              width,
+              height,
+              {
+                invProjectionMatrix: invProjectionMatrix.elements,
+                cameraWorldMatrix: matrixWorld.elements,
+                invModelMatrix: sceneMatrixWorld.clone().invert().elements,
+                seedOffset: Math.random() * Number.MAX_SAFE_INTEGER,
+                priorSamples: currentSample,
+                samplesPerPixel: samplesPerIteration,
+                sunDirection,
+                skyPower: environmentLightConfiguration.sky.power,
+                skyColor: environmentLightConfiguration.sky.color,
+                sunPower: Math.pow(10, environmentLightConfiguration.sun.power),
+                sunAngularSize: environmentLightConfiguration.sun.angularSize,
+                sunColor: environmentLightConfiguration.sun.color,
+                clearColor: clearColor === false ? [0, 0, 0] : clearColor,
+                enableClearColor: clearColor === false ? 0 : 1,
+                maxRayDepth,
+                objectDefinitionLength: modelGroups.length,
+              },
+              computeBindGroupLayout,
+              computeBindGroup,
+              writeTexture,
+              readTexture,
+            );
+
+          if (isHalted()) {
+            return;
+          }
+
+          const outputBuffer = await oidnDenoise(
+            { device, adapterInfo: adapter.info, url: oidnConfig.url },
+            {
+              colorBuffer: textureBuffer,
+              albedoBuffer: albedoBuffer,
+              normalBuffer: normalBuffer,
+            },
+            {
+              width,
+              height,
+            },
+          );
+
+          if (isHalted()) {
+            return;
+          }
+
+          writeOutput(
             device,
-            adapter.info,
-            oidnConfig.url,
-            maxBvhDepth,
-            maxWorkgroupDimension,
+            executeRenderPass,
+            outputBuffer.data,
             width,
             height,
-            {
-              invProjectionMatrix: invProjectionMatrix.elements,
-              cameraWorldMatrix: matrixWorld.elements,
-              invModelMatrix: sceneMatrixWorld.clone().invert().elements,
-              seedOffset: Math.random() * Number.MAX_SAFE_INTEGER,
-              priorSamples: currentSample,
-              samplesPerPixel: samplesPerIteration,
-              sunDirection,
-              skyPower: environmentLightConfiguration.sky.power,
-              skyColor: environmentLightConfiguration.sky.color,
-              sunPower: Math.pow(10, environmentLightConfiguration.sun.power),
-              sunAngularSize: environmentLightConfiguration.sun.angularSize,
-              sunColor: environmentLightConfiguration.sun.color,
-              clearColor: clearColor === false ? [0, 0, 0] : clearColor,
-              enableClearColor: clearColor === false ? 0 : 1,
-              maxRayDepth,
-              objectDefinitionLength: modelGroups.length,
-            },
-            computeBindGroupLayout,
-            computeBindGroup,
-            executeRenderPass,
-            isHalted,
-            writeTexture,
-            readTexture,
           );
+
+          textureBuffer.unmap();
         }
 
         finishedSampling?.({
