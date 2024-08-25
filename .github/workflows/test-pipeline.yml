@@ -23,10 +23,11 @@ jobs:
           node-version-file: ".nvmrc"
 
       - name: Install dependencies 📦
-        run: |
-          cd strahl-lib
-          npm ci
+        working-directory: strahl-lib
+        run: npm ci
       - name: Test 🧪
+        working-directory: strahl-lib
         run: npm run test
       - name: Lint 🧹
+        working-directory: strahl-lib
         run: npm run lint
