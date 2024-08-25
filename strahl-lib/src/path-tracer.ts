@@ -52,17 +52,17 @@ type OIDNConfig = {
   url?: string;
 };
 
+export type OutputSizeConfiguration = {
+  width: number;
+  height: number;
+};
+
 /**
  * Configuration options for the path tracer.
  */
 export type PathTracerOptions = {
   targetSamples?: number;
-  size?:
-    | number
-    | {
-        width: number;
-        height: number;
-      };
+  size?: number | OutputSizeConfiguration;
   viewProjectionConfiguration?: ViewProjectionConfiguration;
   environmentLightConfiguration?: EnvironmentLightConfig;
   samplesPerIteration?: number;
@@ -204,6 +204,10 @@ async function runPathTracer(
 
   const width = typeof size === "number" ? size : size.width;
   const height = typeof size === "number" ? size : size.height;
+  const sizeConfiguration: OutputSizeConfiguration = {
+    width,
+    height,
+  };
 
   // denoise configuration
   const isOIDNConfig = (
@@ -843,8 +847,7 @@ async function runPathTracer(
               device,
               maxBvhDepth,
               maxWorkgroupDimension,
-              width,
-              height,
+              sizeConfiguration,
               {
                 invProjectionMatrix: invProjectionMatrix.elements,
                 cameraWorldMatrix: matrixWorld.elements,
@@ -894,8 +897,7 @@ async function runPathTracer(
             device,
             executeRenderPass,
             outputBuffer.data,
-            width,
-            height,
+            sizeConfiguration,
           );
 
           textureBuffer.unmap();

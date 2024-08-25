@@ -1,6 +1,7 @@
 import { initUNetFromURL } from "oidn-web";
 import { buildDenoisePassShader } from "./shaders/denoise-pass-shader.ts";
 import { makeShaderDataDefinitions, makeStructuredView } from "webgpu-utils";
+import { OutputSizeConfiguration } from "./path-tracer.ts";
 
 export async function oidnDenoise(
   {
@@ -17,7 +18,7 @@ export async function oidnDenoise(
     albedoBuffer: GPUBuffer;
     normalBuffer: GPUBuffer;
   },
-  size: { width: number; height: number },
+  { width, height }: OutputSizeConfiguration,
 ) {
   const unet = await initUNetFromURL(
     url,
@@ -41,18 +42,18 @@ export async function oidnDenoise(
     unet.tileExecute({
       color: {
         data: colorBuffer,
-        width: size.width,
-        height: size.height,
+        width: width,
+        height: height,
       },
       albedo: {
         data: albedoBuffer,
-        width: size.width,
-        height: size.height,
+        width: width,
+        height: height,
       },
       normal: {
         data: normalBuffer,
-        width: size.width,
-        height: size.height,
+        width: width,
+        height: height,
       },
       done(finalBuffer) {
         resolve(finalBuffer);
@@ -65,8 +66,7 @@ export async function denoisePass(
   device: GPUDevice,
   maxBvhDepth: number,
   maxWorkgroupDimension: number,
-  width: number,
-  height: number,
+  { width, height }: OutputSizeConfiguration,
   uniformDataContent: Record<string, number | string | number[]>,
   computeBindGroupLayout: GPUBindGroupLayout,
   computeBindGroup: GPUBindGroup,
@@ -259,8 +259,7 @@ export function writeOutput(
   device: GPUDevice,
   executeRenderPass: (texture: GPUTexture, encoder: GPUCommandEncoder) => void,
   outputBuffer: GPUBuffer,
-  width: number,
-  height: number,
+  { width, height }: OutputSizeConfiguration,
 ) {
   const textureFinal = device.createTexture({
     size: [width, height],
