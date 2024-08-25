@@ -1064,10 +1064,7 @@ async function runPathTracer(
             });
             const encoder = device.createCommandEncoder();
             encoder.copyBufferToTexture(
-              // todo: this is used to debug the different buffers
               { buffer: outputBuffer.data, bytesPerRow: width * 4 * 4 },
-              //{ buffer: normalImageBuffer, bytesPerRow: width * 4 * 4 },
-              //{ buffer: textureBuffer, bytesPerRow: width * 4 * 4 },
               { texture: textureFinal },
               [width, height],
             );
