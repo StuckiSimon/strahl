@@ -22,8 +22,11 @@ jobs:
         with:
           node-version-file: ".nvmrc"
 
-      - name: Install and Test Benchmark 🔧
+      - name: Install dependencies 📦
         run: |
           cd strahl-lib
           npm ci
-          npm run test
+      - name: Test 🧪
+        run: npm run test
+      - name: Lint 🧹
+        run: npm run lint
