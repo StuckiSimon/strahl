@@ -342,8 +342,8 @@ Common terminology used to describe the optical properties of materials is helpf
   \item{Specular Reflection} — light is reflected in a specific direction. This leads to highlights on the surface.
   \item{Roughness} — defines how smooth the surface of the material is. A rough surface scatters light in many directions, while a smooth surface reflects light in a specific direction.
   \item{Subsurface Scattering} — light penetrates the material and is scattered. An example of such a material is skin or marble.
-  \item{Metallic} — the material reflects light in a specific direction.
-  \item{Dielectric} — materials which do not conduct electricity. These materials are not using metallic reflection.
+  \item{Metallic} — the material conducts electricity and typically reflects light in a specific direction, which results in a shiny appearance.
+  \item{Dielectric} — materials which do not conduct electricity. These materials are not using metallic reflection and often exhibit a combination of diffuse and specular reflection.
   \item{Absorption} — defines how much of the light is absorbed by a material. In general, darker colors absorb more light than lighter colors. One prominent example is Vantablack, a highly absorbent material.
   \item{Emission} — the material emits light. An example of such a material is a light bulb or the sun.
   \item{Isotropy} — property of materials which have the same properties in all directions. An example of such a material is glass or water. Anisotropy on the other hand is a property of materials which have different properties in different directions. An example of such a material is wood or brushed metal. In everyday life, polarized sunglasses are an example of the practical application of anisotropy.
@@ -353,8 +353,7 @@ Common terminology used to describe the optical properties of materials is helpf
 \subsubsection{Generalization}
 \label{sec:physics-generalization}
 
-Many surfaces have a combination of these effects and need to consider the incidence as well as outgoing light, necessitating a bidirectional reflection model. This model defines where the largest contribution to overall radiance comes from, commonly referred to as the reflection lobe. Simplified, the main contribution can be visualized using an arc indicating the direction of the most significant contribution.
- For example, a diffuse surface scatters light in all directions (\autoref{fig:reflection-lobe-intro-diffuse}), while a mirror-like surface reflects light in a specific direction (\autoref{fig:reflection-lobe-intro-specular}).
+Many surfaces have a combination of these effects and need to consider the incident as well as outgoing directions of the light, necessitating a bidirectional reflection model. This model defines where the largest contribution to overall radiance comes from, commonly referred to as the reflection lobe. Simplified, the main contribution can be visualized per incoming direction using an arc indicating the direction of the most significant contribution. For example, a diffuse surface scatters light in all directions (\autoref{fig:reflection-lobe-intro-diffuse}), while a mirror-like surface reflects light in a specific direction (\autoref{fig:reflection-lobe-intro-specular}). To combine different effects, multiple reflection lobes can be used.
 
 \begin{figure}[H]
   \centering
@@ -430,7 +429,7 @@ A 3D scene can be defined as a collection of objects in a three-dimensional spac
 
 \subsection{Global Illumination}
 
-Research to render advanced lighting effects using computer graphics was conducated as early as the 1960s. One of the earliest papers describing approaches to render shadow casting was written in 1968 by Appel \cite{appel1968shading}. In order to describe the phenomena, a more advanced shading model was required.
+Research to render advanced lighting effects using computer graphics was conducted as early as the 1960s. One of the earliest papers describing approaches to render shadow casting was written in 1968 by Appel \cite{appel1968shading}. In order to describe the phenomena, a more advanced shading model was required.
 
 To describe these phenomena, the term global illumination was coined by Whitted in 1979 \cite{whittedGlobalIllumination}. It describes a complete shading model that simulates real lighting and reflection as accurately as possible \cite{whitted2020OriginsOfGlobalIllumination}. 
 
@@ -445,7 +444,7 @@ While global illumination commonly refers to a subset of effects, the term is us
   \item{Caustics} - Effect produced by either reflection or refraction of light.
 \end{itemize}
 
-The importance of achieving these effects is based on the use case. For the use case of this thesis, shadows and reflections are pivotal for the realism and perceived quality of the images. Refraction and caustics were not encountered in the use cases of this thesis and are therefore not covered in detail.
+The importance of achieving these effects depends on the use case. For the use case of this thesis, shadows and reflections are pivotal for the realism and perceived quality of the images. Refraction and caustics were not encountered in the use case of this thesis and are therefore not covered in detail.
 
 \autoref{fig:global-illumination-demo} shows a visualization of the most notable effects. The image shows a floor with a white diffuse material, two walls with a red diffuse material and a sphere with specular reflection. The sphere casts a shadow onto the floor, the walls are reflected onto the sphere, the prominent red color bleeds onto the white floor.
 
@@ -1134,8 +1133,7 @@ fn computeMain(@builtin(global_invocation_id) global_id: vec3<u32>) {
 \end{figure}
 
 Attributes such as \texttt{@compute} are used to provide additional information to the compiler. In this case, it denotes the entry point for the compute pipeline and is mandatory as it enables usage of specific attributes such as \texttt{@builtin} which may only be used on entry points.
-
-In terms of limitations, it is similar similar to other shading languages. For example, it does not support recursion because cycles are not permitted in any kinds of declarations. It also does not have features such as an \gls{API} for \gls{RNG}. The shading language is designed for common use cases in computer graphics and general-purpose computing. One example is support for swizzling. Swizzling is a class of operations which facilitate managing vector elements. For example, given a vector \texttt{let v = vec3f(x, y, z)}, the operation \texttt{v.xy} returns a vector \texttt{(x, y)}.
+In terms of limitations, it is similar to other shading languages. For example, it does not support recursion because cycles are not permitted in any kinds of declarations. It also does not have features such as an \gls{API} for \gls{RNG}. The shading language is designed for common use cases in computer graphics and general-purpose computing. One example is support for swizzling. Swizzling is a class of operations which facilitate managing vector elements. For example, given a vector \texttt{let v = vec3f(x, y, z)}, the operation \texttt{v.xy} returns a vector \texttt{(x, y)}.
 
 \subsubsection{Data}
 
@@ -1217,7 +1215,7 @@ Another such format is \fGls{STL}{\e{Stereolithography}, 3D exchange format deve
 
 The aforementioned formats have shortcomings in terms of interoperability and feature set for complex 3D scenes. Special formats have been developed to address issues encountered in complex 3D scenes such as those found in the film industry.
 
-Other formats such as \fGls{COLLADA}{\e{Collaborative Design Activity}, 3D exchange format managed by \gls{Khronos Group}} have been developed to improve transporting 3D scenes between different applications. Based on \fGls{XML}{\e{Extensible Markup Language}}, the format was established established in 2004 and has been managed by the \gls{Khronos Group} since then. Its release was in 2008.
+Other formats such as \fGls{COLLADA}{\e{Collaborative Design Activity}, 3D exchange format managed by \gls{Khronos Group}} have been developed to improve transporting 3D scenes between different applications. Based on \fGls{XML}{\e{Extensible Markup Language}}, the format was established in 2004 and has been managed by the \gls{Khronos Group} since then. Its release was in 2008.
 
 One notable format is \fGls{USD}{\e{Universal Scene Description}, 3D exchange format}, which has been open-sourced by Pixar in 2016. Similar to \gls{COLLADA}, the format is designed with interoperability in mind, and is widely supported by 3D engines and applications. The main focus of \gls{USD} is support for complex scenes and complex collaboration workflows, which are common in the film industry but are less relevant for the use case in this thesis.
 
@@ -1403,7 +1401,7 @@ Based on the focus of the material description models, they differ in how they n
 
 An alternative approach is to use an \gls{uber shader}. The term does not have a strict definition, but generally it is used to describe a shader program which can be adjusted using parameters to achieve different looks. The shader program is fixed and does not allow for customization of the shader graph. This approach often leads to a more complex shader with many parameters that can be difficult to manage, but it is easier to optimize as the shader program is fixed.
 
-Technically, a node-based system also supports an \gls{uber shader} approach, but a \gls{uber shader} does not support a node-based system.
+Technically, a node-based system also supports an \gls{uber shader} approach, but an \gls{uber shader} does not support a node-based system.
 
 \paragraph{Material Description Standards}
 \label{ch:materialDescriptionStandards}
