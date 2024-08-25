@@ -15,9 +15,10 @@ type PartialOpenPBRMaterialConfiguration = Partial<
 >;
 
 type Props = {
-  propertiesForConfiguration: (keyof OpenPBRMaterial)[];
+  propertiesForConfiguration?: (keyof OpenPBRMaterial)[];
   defaultMaterialProperties?: PartialOpenPBRMaterialConfiguration;
   optionOverrides?: Omit<Partial<PathTracerOptions>, "enableDenoise">;
+  focusOptions?: (keyof typeof rendererOptionConfiguration)[];
 };
 
 function convertNormalizedToHex(c: number) {
@@ -36,7 +37,7 @@ function convertRGBToHex(c: Color) {
 
 const defaultColor = "#f20089";
 
-const defaultConfiguration: Partial<
+const materialOptionConfiguration: Partial<
   Record<
     keyof OpenPBRMaterial,
     {
@@ -101,14 +102,117 @@ const defaultConfiguration: Partial<
   },
 };
 
+const rendererOptionConfiguration = {
+  targetSamples: {
+    bindingParams: {
+      min: 0,
+      max: 10_000,
+      step: 1,
+    },
+  },
+  maxRayDepth: {
+    bindingParams: {
+      min: 1,
+      max: 10,
+      step: 1,
+    },
+  },
+  size: {
+    bindingParams: {
+      min: 64,
+      max: 2048,
+      step: 64,
+    },
+  },
+  denoiseThreshold: {
+    bindingParams: {
+      min: 0.0,
+      max: 10.0,
+      step: 0.01,
+    },
+  },
+  denoiseSigma: {
+    bindingParams: {
+      min: 0.0,
+      max: 10.0,
+      step: 0.01,
+    },
+  },
+  denoiseKSigma: {
+    bindingParams: {
+      min: 0.0,
+      max: 10.0,
+      step: 0.01,
+    },
+  },
+  clearColor: {
+    bindingParams: {
+      format: "rgb",
+    },
+  },
+  skyPower: {
+    bindingParams: {
+      min: 0.0,
+      max: 10.0,
+      step: 0.1,
+    },
+  },
+  skyColor: {
+    bindingParams: {
+      format: "rgb",
+    },
+  },
+  sunPower: {
+    bindingParams: {
+      min: 0.0,
+      max: 6.0,
+      step: 0.1,
+    },
+  },
+  sunAngularSize: {
+    bindingParams: {
+      min: 0.0,
+      max: 180.0,
+      step: 0.01,
+    },
+  },
+  sunColor: {
+    bindingParams: {
+      format: "rgb",
+    },
+  },
+  sunLatitude: {
+    bindingParams: {
+      min: -90,
+      max: 90,
+      step: 1,
+    },
+  },
+  sunLongitude: {
+    bindingParams: {
+      min: 0,
+      max: 360,
+      step: 1,
+    },
+  },
+} satisfies Partial<
+  Record<
+    string,
+    {
+      bindingParams?: BindingParams;
+    }
+  >
+>;
+
 export default function TracerExperiment({
-  propertiesForConfiguration,
+  propertiesForConfiguration = [],
   defaultMaterialProperties,
   optionOverrides,
+  focusOptions,
 }: Props): JSX.Element {
   const defaultMaterial = {
     ...Object.fromEntries(
-      Object.entries(defaultConfiguration).map(([key, { value }]) => [
+      Object.entries(materialOptionConfiguration).map(([key, { value }]) => [
         key,
         value,
       ]),
@@ -117,9 +221,9 @@ export default function TracerExperiment({
   };
   const buildMaterial = (overrides: PartialOpenPBRMaterialConfiguration) => {
     const material = new OpenPBRMaterial();
-    const allConfiguredMaterialKeys = Object.entries(defaultConfiguration).map(
-      ([key]) => key,
-    );
+    const allConfiguredMaterialKeys = Object.entries(
+      materialOptionConfiguration,
+    ).map(([key]) => key);
     for (const key of allConfiguredMaterialKeys) {
       material[key] = overrides[key] ?? defaultMaterial[key];
     }
@@ -181,7 +285,7 @@ export default function TracerExperiment({
   const paneRef = React.useRef<Pane | null>(null);
   React.useEffect(() => {
     let materialParams = Object.fromEntries(
-      Object.entries(defaultConfiguration).map(
+      Object.entries(materialOptionConfiguration).map(
         ([key, { convertToPaneValue, configKey }]) => [
           configKey,
           convertToPaneValue
@@ -194,9 +298,26 @@ export default function TracerExperiment({
       ...materialParams,
       ...defaultOptions,
       ...{
+        clearColor:
+          typeof defaultOptions.clearColor === "boolean"
+            ? defaultOptions.clearColor
+            : convertRGBToHex(defaultOptions.clearColor),
         denoiseKSigma: defaultOptions.enableDenoise.kSigma,
         denoiseSigma: defaultOptions.enableDenoise.sigma,
         denoiseThreshold: defaultOptions.enableDenoise.threshold,
+        skyPower: defaultOptions.environmentLightConfiguration.sky.power,
+        skyColor: convertRGBToHex(
+          defaultOptions.environmentLightConfiguration.sky.color,
+        ),
+        sunPower: defaultOptions.environmentLightConfiguration.sun.power,
+        sunAngularSize:
+          defaultOptions.environmentLightConfiguration.sun.angularSize,
+        sunColor: convertRGBToHex(
+          defaultOptions.environmentLightConfiguration.sun.color,
+        ),
+        sunLatitude: defaultOptions.environmentLightConfiguration.sun.latitude,
+        sunLongitude:
+          defaultOptions.environmentLightConfiguration.sun.longitude,
       },
     };
 
@@ -207,50 +328,47 @@ export default function TracerExperiment({
     for (const property of propertiesForConfiguration) {
       pane.addBinding(
         PARAMS,
-        defaultConfiguration[property].configKey,
-        defaultConfiguration[property].bindingParams,
+        materialOptionConfiguration[property].configKey,
+        materialOptionConfiguration[property].bindingParams,
+      );
+    }
+    const focusConfigurableOptions = focusOptions ?? [];
+    const putawayConfigurableOptions = Object.keys(
+      rendererOptionConfiguration,
+    ).filter((key) => !focusConfigurableOptions.includes(key));
+
+    console.log(
+      putawayConfigurableOptions,
+      Object.keys(focusConfigurableOptions),
+    );
+
+    for (const key of focusConfigurableOptions) {
+      pane.addBinding(
+        PARAMS,
+        key,
+        rendererOptionConfiguration[key].bindingParams,
       );
     }
 
     const rendererSettings = pane.addFolder({
       title: "Renderer",
     });
-    rendererSettings.addBinding(PARAMS, "targetSamples", {
-      min: 0,
-      max: 10_000,
-      step: 1,
-    });
-    rendererSettings.addBinding(PARAMS, "maxRayDepth", {
-      min: 1,
-      max: 10,
-      step: 1,
-    });
-    rendererSettings.addBinding(PARAMS, "size", {
-      min: 64,
-      max: 2048,
-      step: 64,
-    });
-    rendererSettings.addBinding(PARAMS, "denoiseThreshold", {
-      min: 0.0,
-      max: 10.0,
-      step: 0.01,
-    });
-    rendererSettings.addBinding(PARAMS, "denoiseSigma", {
-      min: 0.0,
-      max: 10.0,
-      step: 0.01,
-    });
-    rendererSettings.addBinding(PARAMS, "denoiseKSigma", {
-      min: 0.0,
-      max: 10.0,
-      step: 0.01,
-    });
+
+    for (const key of putawayConfigurableOptions) {
+      rendererSettings.addBinding(
+        PARAMS,
+        key,
+        rendererOptionConfiguration[key].bindingParams,
+      );
+    }
+
+    rendererSettings.expanded = false;
 
     paneRef.current = pane;
 
     function convertPaneToOpenPBRMaterial(): PartialOpenPBRMaterialConfiguration {
       return Object.fromEntries(
-        Object.entries(defaultConfiguration).map(
+        Object.entries(materialOptionConfiguration).map(
           ([key, { convertToMaterialValue, configKey }]) => [
             key,
             convertToMaterialValue
@@ -275,11 +393,28 @@ export default function TracerExperiment({
           targetSamples: PARAMS.targetSamples,
           maxRayDepth: PARAMS.maxRayDepth,
           size: PARAMS.size,
+          clearColor:
+            typeof PARAMS.clearColor === "boolean"
+              ? PARAMS.clearColor
+              : convertHexToRGB(PARAMS.clearColor),
           enableDenoise: {
             type: "gaussian",
             threshold: PARAMS.denoiseThreshold,
             kSigma: PARAMS.denoiseKSigma,
             sigma: PARAMS.denoiseSigma,
+          },
+          environmentLightConfiguration: {
+            sky: {
+              power: PARAMS.skyPower,
+              color: convertHexToRGB(PARAMS.skyColor),
+            },
+            sun: {
+              power: PARAMS.sunPower,
+              angularSize: PARAMS.sunAngularSize,
+              latitude: PARAMS.sunLatitude,
+              longitude: PARAMS.sunLongitude,
+              color: convertHexToRGB(PARAMS.sunColor),
+            },
           },
         };
       });
