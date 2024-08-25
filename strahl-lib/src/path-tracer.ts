@@ -25,8 +25,8 @@ import { Group, Matrix4 } from "three";
 import { prepareGeometry } from "./prepare-geometry.ts";
 import { Color } from "./core/types.ts";
 import {
-  prepareDenoiseData,
   oidnDenoise,
+  prepareDenoiseData,
   writeDenoisedOutput,
 } from "./oidn-denoise.ts";
 import { generateGeometryBuffer } from "./buffers/geometry-buffer.ts";
