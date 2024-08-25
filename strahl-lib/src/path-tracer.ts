@@ -170,7 +170,7 @@ async function runPathTracer(
   });
 
   const TARGET_SAMPLES = targetSamples;
-  const initLog = logGroup("init");
+  const initLog = logGroup();
 
   const {
     indirectBuffer: indirectBufferData,
@@ -547,7 +547,7 @@ async function runPathTracer(
       const matrixWorld = cameraSetup.camera.matrixWorld;
       const invProjectionMatrix = cameraSetup.camera.projectionMatrixInverse;
 
-      const renderLog = logGroup("render");
+      const renderLog = logGroup();
       const writeTexture = currentSample % 2 === 0 ? texture : textureB;
       const readTexture = currentSample % 2 === 0 ? textureB : texture;
 

@@ -119,7 +119,7 @@ async function run(
   target: number,
   yielder: (params: FinishedSamplingOptions) => void | Promise<void>,
 ) {
-  const runStartGroup = logGroup("full-model");
+  const runStartGroup = logGroup();
 
   const MODEL_URL =
     target === 0
