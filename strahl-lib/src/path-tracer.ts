@@ -161,7 +161,7 @@ async function runPathTracer(
   const useFloatTextureFiltering =
     enableFloatTextureFiltering && supportsFilterableFloatTexture;
 
-  let featureList: GPUFeatureName[] = [];
+  const featureList: GPUFeatureName[] = [];
   if (useTimestampQuery) {
     featureList.push("timestamp-query");
   }
