@@ -1,8 +1,8 @@
 import { InvalidMaterialError } from "../core/exceptions";
 import {
+  VariableDefinition,
   getSizeAndAlignmentOfUnsizedArrayElement,
   makeStructuredView,
-  VariableDefinition,
 } from "webgpu-utils";
 import { OpenPBRMaterial } from "../openpbr-material";
 import { Material } from "three";

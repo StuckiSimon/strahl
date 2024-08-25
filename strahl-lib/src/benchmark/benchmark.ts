@@ -1,5 +1,5 @@
 import { logGroup } from "./cpu-performance-logger";
-import { asThreeJsMaterial, OpenPBRMaterial } from "../openpbr-material";
+import { OpenPBRMaterial, asThreeJsMaterial } from "../openpbr-material";
 import runPathTracer, { PathTracerOptions } from "../path-tracer";
 import getStatsForReportStructure from "./benchmark-analyser";
 import { isNil } from "../util/is-nil";

@@ -1,4 +1,4 @@
-import { getBVHExtremes, MeshBVH } from "three-mesh-bvh";
+import { MeshBVH, getBVHExtremes } from "three-mesh-bvh";
 import { logGroup } from "./benchmark/cpu-performance-logger";
 import { consolidateMesh } from "./consolidate-mesh";
 import { GeometryGroup, Group } from "three";

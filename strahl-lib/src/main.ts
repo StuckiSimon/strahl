@@ -1,4 +1,4 @@
-import { asThreeJsMaterial, OpenPBRMaterial } from "./openpbr-material";
+import { OpenPBRMaterial, asThreeJsMaterial } from "./openpbr-material";
 import runPathTracer from "./path-tracer";
 import { EnvironmentLightConfig } from "./environment-light";
 import { RawCameraSetup } from "./camera";

@@ -9,16 +9,16 @@ import {
   WebGPUNotSupportedError,
 } from "./core/exceptions";
 import {
-  defaultEnvironmentLightConfig,
   EnvironmentLightConfig,
+  defaultEnvironmentLightConfig,
   getSunDirection,
 } from "./environment-light";
 import { isNil } from "./util/is-nil";
 import {
   CustomCameraSetup,
+  ViewProjectionConfiguration,
   isCustomCameraSetup,
   makeRawCameraSetup,
-  ViewProjectionConfiguration,
 } from "./camera";
 import { buildAbortEventHub } from "./util/abort-event-hub";
 import { Group, Matrix4 } from "three";
@@ -33,10 +33,10 @@ import { generateGeometryBuffer } from "./buffers/geometry-buffer";
 import { generateIndicesBuffer } from "./buffers/indices-buffer";
 import { generateBvhBuffers } from "./buffers/bvh-buffers";
 import {
+  TimestampQueryContext,
   encodeTimestampQuery,
   generateTimestampQuery,
   retrieveTimestampQueryTime,
-  TimestampQueryContext,
 } from "./timestamp-query";
 import { generateObjectDefinitionBuffer } from "./buffers/object-definition-buffer";
 import {
