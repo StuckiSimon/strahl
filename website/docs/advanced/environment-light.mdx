@@ -1,3 +1,5 @@
+import TracerExperiment from "@site/src/components/TracerExperiment";
+
 # Environment Light
 
 Environment light is defined as the contribution of sky and sun. Sky settings are direction independent and are akin to `AmbientLight`. Sun is direction-dependent.
@@ -31,3 +33,18 @@ Use `angularSize` to determine the size of the sun, `latitude` and `longitude` t
 ### Sky Configuration
 
 Use `power` for intensity of ambient light and `color` for different effects.
+
+<TracerExperiment
+  focusOptions={[
+    "skyPower",
+    "skyColor",
+    "sunPower",
+    "sunAngularSize",
+    "sunLatitude",
+    "sunLongitude",
+    "sunColor",
+  ]}
+  optionOverrides={{
+    clearColor: false,
+  }}
+/>
