@@ -1,15 +1,10 @@
 import { buildPathTracerShader } from "./shaders/tracer-shader.ts";
 import { buildRenderShader } from "./shaders/render-shader";
 import { logGroup } from "./benchmark/cpu-performance-logger.ts";
-import { OpenPBRMaterial } from "./openpbr-material";
-import {
-  getSizeAndAlignmentOfUnsizedArrayElement,
-  makeShaderDataDefinitions,
-  makeStructuredView,
-} from "webgpu-utils";
+import { makeShaderDataDefinitions, makeStructuredView } from "webgpu-utils";
 import {
   CanvasReferenceError,
-  InvalidMaterialError,
+  InternalError,
   SignalAlreadyAbortedError,
   WebGPUNotSupportedError,
 } from "./core/exceptions.ts";
@@ -43,7 +38,10 @@ import {
   retrieveTimestampQueryTime,
   TimestampQueryContext,
 } from "./timestamp-query.ts";
-import { generateObjectDefinitionsBuffer } from "./buffers/object-definitions.ts";
+import {
+  generateMaterialBuffer,
+  isValidMaterialStructure,
+} from "./buffers/material-buffer.ts";
 
 type GaussianConfig = {
   type: "gaussian";
@@ -422,60 +420,17 @@ async function runPathTracer(
   );
 
   const materials = modelMaterials;
+  if (!isValidMaterialStructure(materials)) {
+    throw new InternalError("Materials not be nested arrays");
+  }
 
-  // CODE#MEMORY-VIEW
   const definitions = makeShaderDataDefinitions(tracerShaderCode);
-  const { size: bytesPerMaterial } = getSizeAndAlignmentOfUnsizedArrayElement(
-    definitions.storages.materials,
+  const materialDefinitions = definitions.storages.materials;
+  const materialBuffer = generateMaterialBuffer(
+    device,
+    materials,
+    materialDefinitions,
   );
-
-  const materialDataView = makeStructuredView(
-    definitions.storages.materials,
-    new ArrayBuffer(bytesPerMaterial * materials.length),
-  );
-
-  const materialBuffer = device.createBuffer({
-    label: "Material buffer",
-    size: bytesPerMaterial * materials.length,
-    usage: GPUBufferUsage.STORAGE,
-    mappedAtCreation: true,
-  });
-
-  // CODE#BUFFER-MAPPING
-  materialDataView.set(
-    materials.map((m) => {
-      if (!(m instanceof OpenPBRMaterial)) {
-        throw new InvalidMaterialError(m);
-      }
-      return {
-        baseWeight: m.oBaseWeight,
-        baseColor: m.oBaseColor,
-        baseDiffuseRoughness: m.oBaseDiffuseRoughness,
-        baseMetalness: m.oBaseMetalness,
-        specularWeight: m.oSpecularWeight,
-        specularColor: m.oSpecularColor,
-        specularRoughness: m.oSpecularRoughness,
-        specularAnisotropy: m.oSpecularRoughnessAnisotropy,
-        specularIor: m.oSpecularIOR,
-        coatWeight: m.oCoatWeight,
-        coatColor: m.oCoatColor,
-        coatRoughness: m.oCoatRoughness,
-        coatRoughnessAnisotropy: m.oCoatRoughnessAnisotropy,
-        // todo: Align casing for IOR parameter
-        coatIor: m.oCoatIor,
-        coatDarkening: m.oCoatDarkening,
-        emissionLuminance: m.oEmissionLuminance,
-        emissionColor: m.oEmissionColor,
-        thinFilmThickness: m.oThinFilmThickness,
-        thinFilmIOR: m.oThinFilmIOR,
-      };
-    }),
-  );
-
-  const materialMapped = materialBuffer.getMappedRange();
-  const materialMappedData = new Uint8Array(materialMapped);
-  materialMappedData.set(new Uint8Array(materialDataView.arrayBuffer));
-  materialBuffer.unmap();
 
   const computeBindGroupLayout = device.createBindGroupLayout({
     label: "Static compute bind group layout",
