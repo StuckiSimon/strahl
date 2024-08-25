@@ -20,7 +20,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest",
-    "lint": "eslint src/"
+    "lint": "eslint src/",
+    "lint:fix": "eslint --fix src/"
   },
   "exports": {
     ".": {
