@@ -525,7 +525,7 @@ async function runPathTracer(
 
   initLog.end();
 
-  const renderLoopStart = logGroup("render loop full");
+  const renderLoopStart = logGroup();
   const buildRenderLoop = () => {
     let state: "running" | "halted" | "denoise" = "running";
 
