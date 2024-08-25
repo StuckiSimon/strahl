@@ -33,6 +33,7 @@ import { Color } from "./core/types.ts";
 import { oidnDenoise } from "./oidn-denoise.ts";
 import { generateGeometryBuffer } from "./buffers/geometry-buffer.ts";
 import { generateIndicesBuffer } from "./buffers/indices-buffer.ts";
+import { generateBvhBuffers } from "./buffers/bvh-buffers.ts";
 
 type GaussianConfig = {
   type: "gaussian";
@@ -417,44 +418,12 @@ async function runPathTracer(
   const indicesBuffer = generateIndicesBuffer(device, meshIndices);
   const geometryBuffer = generateGeometryBuffer(device, positions, normals);
 
-  // Prepare BVH Bounds
-  const boundsBuffer = device.createBuffer({
-    label: "BVH bounds buffer",
-    size: Float32Array.BYTES_PER_ELEMENT * boundsArray.length,
-    usage: GPUBufferUsage.STORAGE,
-    mappedAtCreation: true,
-  });
-
-  const boundsMapped = boundsBuffer.getMappedRange();
-  const boundsData = new Float32Array(boundsMapped);
-  boundsData.set(boundsArray);
-  boundsBuffer.unmap();
-
-  // Prepare BVH Contents
-  const contentsBuffer = device.createBuffer({
-    label: "BVH contents buffer",
-    size: Uint32Array.BYTES_PER_ELEMENT * contentsArray.length,
-    usage: GPUBufferUsage.STORAGE,
-    mappedAtCreation: true,
-  });
-
-  const contentsMapped = contentsBuffer.getMappedRange();
-  const contentsData = new Uint32Array(contentsMapped);
-  contentsData.set(contentsArray);
-  contentsBuffer.unmap();
-
-  // Prepare BVH indirect buffer
-  const indirectBuffer = device.createBuffer({
-    label: "BVH indirect buffer",
-    size: Uint32Array.BYTES_PER_ELEMENT * indirectBufferData.length,
-    usage: GPUBufferUsage.STORAGE,
-    mappedAtCreation: true,
-  });
-
-  const indirectMapped = indirectBuffer.getMappedRange();
-  const indirectData = new Uint32Array(indirectMapped);
-  indirectData.set(indirectBufferData);
-  indirectBuffer.unmap();
+  const { boundsBuffer, contentsBuffer, indirectBuffer } = generateBvhBuffers(
+    device,
+    boundsArray,
+    contentsArray,
+    indirectBufferData,
+  );
 
   // Prepare Object Definitions
   const OBJECT_DEFINITION_SIZE_PER_ENTRY = Uint32Array.BYTES_PER_ELEMENT * 3;
