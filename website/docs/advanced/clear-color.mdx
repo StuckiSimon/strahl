@@ -1,3 +1,5 @@
+import TracerExperiment from "@site/src/components/TracerExperiment";
+
 # Clear Color
 
 The clear color is used as the background of the rendering. Per default, the background is rendered as white, as is common for product renderings. However, you can either disable it or add a custom clear color.
@@ -25,3 +27,5 @@ runPathTracer(target, model, {
 :::info
 The `clearColor` has no impact on the rendering, it does not affect the lighting situation. If you want to change the lighting, you may use [environment light](./environment-light.md).
 :::
+
+<TracerExperiment focusOptions={["clearColor"]} />
