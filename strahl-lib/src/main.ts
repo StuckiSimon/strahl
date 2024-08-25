@@ -3,14 +3,7 @@ import { OpenPBRMaterial } from "./openpbr-material";
 import runPathTracer from "./path-tracer";
 import { EnvironmentLightConfig } from "./environment-light";
 import { RawCameraSetup } from "./camera";
-
-const gltfLoader = new GLTFLoader();
-
-async function loadGltf(url: string) {
-  return new Promise((resolve, reject) => {
-    gltfLoader.load(url, resolve, undefined, reject);
-  });
-}
+import { loadGltf } from "./load-gltf.ts";
 
 const defaultBlueMaterial = new OpenPBRMaterial();
 defaultBlueMaterial.oBaseColor = [0.0, 0.9, 1.0];
@@ -387,7 +380,7 @@ async function run() {
   const modelConfig = CONFIGURATION_LIST[7];
   const materialMap = modelConfig.materials;
 
-  const model: any = await loadGltf(modelConfig.url);
+  const model = await loadGltf(modelConfig.url);
 
   // NOTE: This is a hack because on one model, the material name is off
   let alreadyLoadedTheRedOne = false;

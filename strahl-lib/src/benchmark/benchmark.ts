@@ -1,4 +1,3 @@
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { logGroup } from "./cpu-performance-logger.ts";
 import { OpenPBRMaterial } from "../openpbr-material.ts";
 import runPathTracer, { PathTracerOptions } from "../path-tracer.ts";
@@ -9,18 +8,11 @@ import {
   getSampleMean,
   getStandardDeviation,
 } from "./maths.ts";
+import { loadGltf } from "../load-gltf.ts";
 
 const MODEL_URL_FULL = "models/series-61-rotated/61-serie-edit.gltf"; // 1'068'735
 const MODEL_URL_BARE_BONES = "models/series-61-simplified-2/61-serie-edit.gltf"; // 10'687
 const MODEL_URL_MID = "models/series-61-simplified/61-serie-edit.gltf"; // 106'873
-
-const gltfLoader = new GLTFLoader();
-
-async function loadGltf(url: string) {
-  return new Promise((resolve, reject) => {
-    gltfLoader.load(url, resolve, undefined, reject);
-  });
-}
 
 const defaultBlueMaterial = new OpenPBRMaterial();
 defaultBlueMaterial.oBaseColor = [0.0, 0.9, 1.0];
@@ -131,7 +123,7 @@ async function run(
         ? MODEL_URL_MID
         : MODEL_URL_BARE_BONES;
 
-  const model: any = await loadGltf(MODEL_URL);
+  const model = await loadGltf(MODEL_URL);
 
   model.scene.traverseVisible((object: any) => {
     if (object.material === undefined) {
