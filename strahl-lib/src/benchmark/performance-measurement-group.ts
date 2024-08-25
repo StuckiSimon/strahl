@@ -1,4 +1,4 @@
-export function logGroup() {
+export function startMeasurementGroup() {
   const start = window.performance.now();
 
   return {

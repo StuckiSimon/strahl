@@ -1,5 +1,5 @@
 import { buildPathTracerShader } from "./shaders/tracer-shader";
-import { logGroup } from "./benchmark/cpu-performance-logger";
+import { startMeasurementGroup } from "./benchmark/performance-measurement-group.ts";
 import { makeShaderDataDefinitions, makeStructuredView } from "webgpu-utils";
 import {
   CanvasReferenceError,
@@ -170,7 +170,7 @@ async function runPathTracer(
   });
 
   const TARGET_SAMPLES = targetSamples;
-  const initLog = logGroup();
+  const initLog = startMeasurementGroup();
 
   const {
     indirectBuffer: indirectBufferData,
@@ -525,7 +525,7 @@ async function runPathTracer(
 
   initLog.end();
 
-  const renderLoopStart = logGroup();
+  const renderLoopStart = startMeasurementGroup();
   const buildRenderLoop = () => {
     let state: "running" | "halted" | "denoise" = "running";
 
@@ -547,7 +547,7 @@ async function runPathTracer(
       const matrixWorld = cameraSetup.camera.matrixWorld;
       const invProjectionMatrix = cameraSetup.camera.projectionMatrixInverse;
 
-      const renderLog = logGroup();
+      const renderLog = startMeasurementGroup();
       const writeTexture = currentSample % 2 === 0 ? texture : textureB;
       const readTexture = currentSample % 2 === 0 ? textureB : texture;
 

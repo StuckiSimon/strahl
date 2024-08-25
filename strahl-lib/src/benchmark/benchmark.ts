@@ -1,4 +1,4 @@
-import { logGroup } from "./cpu-performance-logger";
+import { startMeasurementGroup } from "./performance-measurement-group.ts";
 import { OpenPBRMaterial, asThreeJsMaterial } from "../openpbr-material";
 import runPathTracer, { PathTracerOptions } from "../path-tracer";
 import getStatsForReportStructure from "./benchmark-analyser";
@@ -119,7 +119,7 @@ async function run(
   target: number,
   yielder: (params: FinishedSamplingOptions) => void | Promise<void>,
 ) {
-  const runStartGroup = logGroup();
+  const runStartGroup = startMeasurementGroup();
 
   const MODEL_URL =
     target === 0
