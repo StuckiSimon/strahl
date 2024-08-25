@@ -292,48 +292,23 @@ async function runPathTracer(
     },
   });
 
-  const textureData = new Float32Array(width * height * 4);
-
   const texture = device.createTexture({
     size: [width, height],
     format: "rgba32float",
     usage:
       GPUTextureUsage.TEXTURE_BINDING |
-      GPUTextureUsage.COPY_DST |
       GPUTextureUsage.COPY_SRC |
       GPUTextureUsage.STORAGE_BINDING, // Permit writing to texture in compute shader
   });
-
-  device.queue.writeTexture(
-    { texture },
-    textureData,
-    { bytesPerRow: width * 4 * Float32Array.BYTES_PER_ELEMENT },
-    { width: width, height: height },
-  );
 
   const textureB = device.createTexture({
     size: [width, height],
     format: "rgba32float",
     usage:
       GPUTextureUsage.TEXTURE_BINDING |
-      GPUTextureUsage.COPY_DST |
       GPUTextureUsage.COPY_SRC |
       GPUTextureUsage.STORAGE_BINDING, // Permit writing to texture in compute shader
   });
-
-  device.queue.writeTexture(
-    {
-      texture: textureB,
-    },
-    textureData,
-    {
-      bytesPerRow: width * 4 * Float32Array.BYTES_PER_ELEMENT,
-    },
-    {
-      width: width,
-      height: height,
-    },
-  );
 
   const sampler = device.createSampler({
     magFilter: useFloatTextureFiltering ? "linear" : "nearest",
