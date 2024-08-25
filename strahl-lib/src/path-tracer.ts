@@ -756,7 +756,7 @@ async function runPathTracer(
     let currentAnimationFrameRequest: number | null = null;
     let currentSample = 0;
     let renderAgg = 0;
-    let renderTimes = [];
+    const renderTimes = [];
 
     const render = async () => {
       const isLastSample = currentSample === TARGET_SAMPLES;
