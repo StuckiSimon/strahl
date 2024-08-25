@@ -28,7 +28,7 @@ export function prepareGeometry(model: { scene: Group }) {
   const cpuLogGroup = logGroup("cpu");
   const boundsTree = new MeshBVH(reducedModel.geometry, {
     // This property is not officially supported by three-mesh-bvh just yet
-    // @ts-ignore
+    // @ts-expect-error
     indirect: true,
   });
 
