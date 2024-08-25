@@ -15,7 +15,15 @@ In order to expose in local network, run:
 
 ### Testing
 
+The project uses `vitest` for unit testing.
+
 `npm run test`
+
+### Linting
+
+The project uses `eslint` for static code analysis.
+
+`npm run lint`
 
 ### Access
 
