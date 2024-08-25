@@ -34,6 +34,12 @@ import { oidnDenoise } from "./oidn-denoise.ts";
 import { generateGeometryBuffer } from "./buffers/geometry-buffer.ts";
 import { generateIndicesBuffer } from "./buffers/indices-buffer.ts";
 import { generateBvhBuffers } from "./buffers/bvh-buffers.ts";
+import {
+  encodeTimestampQuery,
+  generateTimestampQuery,
+  retrieveTimestampQueryTime,
+  TimestampQueryContext,
+} from "./timestamp-query.ts";
 
 type GaussianConfig = {
   type: "gaussian";
@@ -180,32 +186,9 @@ async function runPathTracer(
     device.destroy();
   });
 
-  let timestampQueryData: {
-    querySet: GPUQuerySet;
-    resolveBuffer: GPUBuffer;
-    resultBuffer: GPUBuffer;
-  } | null = null;
+  let timestampQueryContext: TimestampQueryContext | null = null;
   if (useTimestampQuery) {
-    const timestampQuerySet = device.createQuerySet({
-      type: "timestamp",
-      count: 2,
-    });
-
-    const timestampQueryResolveBuffer = device.createBuffer({
-      size: timestampQuerySet.count * 8,
-      usage: GPUBufferUsage.COPY_SRC | GPUBufferUsage.QUERY_RESOLVE,
-    });
-
-    const timestampQueryResultBuffer = device.createBuffer({
-      size: timestampQueryResolveBuffer.size,
-      usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
-    });
-
-    timestampQueryData = {
-      querySet: timestampQuerySet,
-      resolveBuffer: timestampQueryResolveBuffer,
-      resultBuffer: timestampQueryResultBuffer,
-    };
+    timestampQueryContext = generateTimestampQuery(device);
   }
 
   const context = canvas.getContext("webgpu");
@@ -745,11 +728,11 @@ async function runPathTracer(
       const encoder = device.createCommandEncoder();
 
       const computePass = encoder.beginComputePass(
-        isNil(timestampQueryData)
+        isNil(timestampQueryContext)
           ? undefined
           : {
               timestampWrites: {
-                querySet: timestampQueryData.querySet,
+                querySet: timestampQueryContext.querySet,
                 beginningOfPassWriteIndex: 0,
                 endOfPassWriteIndex: 1,
               },
@@ -766,24 +749,8 @@ async function runPathTracer(
 
       computePass.end();
 
-      if (!isNil(timestampQueryData)) {
-        encoder.resolveQuerySet(
-          timestampQueryData.querySet,
-          0,
-          2,
-          timestampQueryData.resolveBuffer,
-          0,
-        );
-
-        if (timestampQueryData.resultBuffer.mapState === "unmapped") {
-          encoder.copyBufferToBuffer(
-            timestampQueryData.resolveBuffer,
-            0,
-            timestampQueryData.resultBuffer,
-            0,
-            timestampQueryData.resolveBuffer.size,
-          );
-        }
+      if (!isNil(timestampQueryContext)) {
+        encodeTimestampQuery(encoder, timestampQueryContext);
       }
 
       const executeRenderPass = (
@@ -837,12 +804,12 @@ async function runPathTracer(
 
       executeRenderPass(texture, encoder);
 
-      if (
-        !isNil(timestampQueryData) &&
-        timestampQueryData.resultBuffer.mapState === "unmapped"
-      ) {
+      if (!isNil(timestampQueryContext)) {
         try {
-          await timestampQueryData.resultBuffer.mapAsync(GPUMapMode.READ);
+          const gpuTime = await retrieveTimestampQueryTime(
+            timestampQueryContext,
+          );
+          console.log(`GPU Time: ${gpuTime}ns`);
         } catch (e) {
           // In case of planned cancellation, this is expected
           if (!abortEventHub.isRunning()) {
@@ -851,12 +818,6 @@ async function runPathTracer(
           }
           throw e;
         }
-        const data = new BigUint64Array(
-          timestampQueryData.resultBuffer.getMappedRange(),
-        );
-        const gpuTime = data[1] - data[0];
-        console.log(`GPU Time: ${gpuTime}ns`);
-        timestampQueryData.resultBuffer.unmap();
       }
 
       const currentRenderTime = renderLog.end();
