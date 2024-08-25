@@ -1,4 +1,4 @@
-export function generateObjectDefinitionsBuffer(
+export function generateObjectDefinitionBuffer(
   device: GPUDevice,
   modelGroups: Array<{ start: number; count: number; materialIndex: number }>,
 ) {

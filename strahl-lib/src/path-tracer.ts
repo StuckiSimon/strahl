@@ -38,6 +38,7 @@ import {
   retrieveTimestampQueryTime,
   TimestampQueryContext,
 } from "./timestamp-query.ts";
+import { generateObjectDefinitionBuffer } from "./buffers/object-definition-buffer.ts";
 import {
   generateMaterialBuffer,
   isValidMaterialStructure,
@@ -414,7 +415,7 @@ async function runPathTracer(
     indirectBufferData,
   );
 
-  const objectDefinitionsBuffer = generateObjectDefinitionsBuffer(
+  const objectDefinitionBuffer = generateObjectDefinitionBuffer(
     device,
     modelGroups,
   );
@@ -557,7 +558,7 @@ async function runPathTracer(
       {
         binding: 6,
         resource: {
-          buffer: objectDefinitionsBuffer,
+          buffer: objectDefinitionBuffer,
         },
       },
       {
