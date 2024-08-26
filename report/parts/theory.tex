@@ -484,6 +484,10 @@ Environment maps can be used to simulate reflections. The technique uses a textu
 
 Shadow maps are employed to store shadow information for a scene based on the available light sources. These shadows are pregenerated, before being employed in the rendering process. While this technique is suitable for static scenes, there are limitations in dynamic lighting situations and scenes where different components of an assembly cast shadow on one another.
 
+\paragraph{Screen Space Methods}
+
+Screen space methods operate on the rendered image. Their input varies, but they frequently rely on the depth buffer, surface normals, and the rendered image. The main drawback of these methods is their limitation to the information available in the rendered image. Occlusion or out-of-view objects are not considered.
+
 \paragraph{Multi-pass Rendering}
 
 Multi-pass rendering is a technique which, among other effects, can be used to simulate reflections. Instead of rendering the scene in a single pass, the scene is rendered multiple times with different configurations. For example, to simulate reflections, one first renders from the perspective of the reflective object and then renders a second pass from the camera while leveraging the first pass as a texture. When having multiple reflective objects, the technique can become computationally expensive.
