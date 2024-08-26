@@ -47,7 +47,7 @@ Preprocessing includes triangulation of the meshes, which is a common requiremen
 
 While numerous \gls{CAD} formats include material information, they are often unsuitable for rendering because they do not describe optical properties. To address this, a material mapping can be defined, translating \gls{CAD} materials to a suitable representation for the rendering pipeline. The concrete formats used for the preprocessing step are dependent on the \gls{CAD} software. However, conversion tools exist for most common \gls{CAD} formats and the general approach remains similar. After the preparation process, a rendering architecture paradigm can be employed to enable users to assemble the product virtually.
 
-In addition, a rule set for the assembly must be defined. This rule set provides data on what component types can be added to the assembly and where they can be attached to. This interface definition can be provided using meta information files. Alternatively, this can also be represented geometrically within the model by using identifiable shapes to attach components to.
+In addition, a rule set for the assembly must be defined. This rule set provides data on what component types can be added to the assembly and where they can be attached. This interface definition can be provided using meta information files. Alternatively, it can also be represented geometrically within the model by using identifiable shapes or reference nodes.
 
 \section{Rendering Architecture Paradigms}
 
@@ -200,6 +200,7 @@ All of these path tracers are based on \gls{WebGL} and are either plugins for \g
 
 \subsection*{WebGPU}
 
+% what does "new" mean
 \gls{WebGPU} is a new web \fGls{API}{\e{Application Programming Interface}} that leverages the power of \glspl{GPU} and serves as a successor to \gls{WebGL}. Various applications of \gls{WebGPU} have been investigated in recent years. Examples include \texttt{Dynamical.JS}, a framework for visualizing graphs \cite{dotson2022dynamicaljs}; RenderCore, a research-oriented rendering engine \cite{Bohak_Kovalskyi_Linev_Mrak_Tadel_Strban_Tadel_Yagil_2024}; and demonstrations of how to use \gls{WebGPU} for client-side data aggregation \cite{kimmersdorfer2023webgpu}.
 
 Research on the performance comparison between existing 3D engines and \gls{WebGPU} engines has been conducted as part of the development of FusionRender, which concluded that measurable performance gains can be achieved by using \gls{WebGPU}, but only when effectively leveraging its novel design principles \cite{fusionRenderWebGPU}. Similar findings have emerged from other independent studies, showing that \gls{WebGPU} can be faster than \gls{WebGL} \cite{webGPUWebGis, fransson2023performance, CHICKERUR2024919}.
