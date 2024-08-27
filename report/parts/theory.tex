@@ -285,13 +285,43 @@ In order to generate images using computer graphics, understanding the physics i
 
 \subsubsection{Reflection}
 
-Reflection is the process of light bouncing off a surface. The angle of incidence equals the angle of reflection, as visualized in \autoref{fig:reflection}. An example of such an effect can be seen when looking at a mirror.
+Reflection is the process of light bouncing off a surface. The angle of incidence equals the angle of reflection, as visualized in \autoref{fig:basic-reflection}. An example of such an effect can be seen when looking at a mirror.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.4\textwidth]{resources/reflection.png}
+    \tikzsetnextfilename{basic-reflection}
+    \begin{tikzpicture}
+    \coordinate (A) at (0,3);
+    \coordinate (AA) at (1,2);
+    \coordinate (BB) at (2,1);
+    \coordinate (B) at (3,0);
+    \coordinate (C) at (6,3);
+    \coordinate (BC) at (4,1);
+    \coordinate (CB) at (5,2);
+
+    \coordinate (BN) at (3,2);
+
+    \centerarc[thick](B)(90:135:1)
+    \node at (2.75,0.7) {$\theta$};
+    
+    \centerarc[thick](B)(45:90:1)
+    \node at (3.25,0.7) {$\theta'$};
+
+    \draw[dashed, thick] (A) -- (B);
+    \draw[-latex, thick] (AA) -- (BB);
+
+    \draw[dashed, thick] (C) -- (B);
+    \draw[-latex, thick] (BC) -- (CB);
+
+    \draw[darkgray, -latex, thick] (B) --node[midway, left, yshift=0.4cm] {$n$} (BN);
+
+    \fill[rgreen](B) circle (0.1);
+
+    \fill[gray!20] (0,0) rectangle (6,-1);
+    \draw[gray!40] (0,0) -- (6,0);
+    \end{tikzpicture}
   \caption{Reflection of light when hitting a surface.}
-  \label{fig:reflection}
+  \label{fig:basic-reflection}
 \end{figure}
 
 This can be described using the law of reflection \cite{fowles1989introduction}:
@@ -305,13 +335,46 @@ where $\theta$ is the angle of incidence and $\theta'$ is the angle of reflectio
 
 \subsubsection{Refraction}
 
-Refraction is the bending of light when passing through a medium as visualized in \autoref{fig:refraction}. The distortion of objects underwater is an example of such an effect.
+Refraction is the bending of light when passing through a medium as visualized in \autoref{fig:basic-refraction}. The distortion of objects underwater is an example of such an effect.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.4\textwidth]{resources/refraction.png}
+    \tikzsetnextfilename{basic-refraction}
+    \begin{tikzpicture}
+    \coordinate (A) at (0,3);
+    \coordinate (AA) at (1,2);
+    \coordinate (BB) at (2,1);
+    \coordinate (B) at (3,0);
+    \coordinate (Bl) at (3,-3);
+    \coordinate (C) at (5,-3);
+    \coordinate (BC) at (3.665,-1);
+    \coordinate (CB) at (4.335,-2);
+
+    \coordinate (BN) at (3,2);
+
+    \centerarc[thick](B)(90:135:1)
+    \node at (2.75,0.7) {$\theta$};
+
+    \draw[darkgray, -latex, thick] (B) --node[midway, left, yshift=2cm] {$n$} (BN);
+
+    \draw[dashed, thick] (A) -- (B);
+    \draw[-latex, thick] (AA) -- (BB);
+
+    \fill[rgreen](B) circle (0.1);
+
+    \fill[gray!20] (0,0) rectangle (6,-3);
+
+    \draw[darkgray,thick] (Bl) -- (B);
+
+    \centerarc[thick](B)(-56:-90:1)
+    \node at (3.2,-0.7) {$\phi$};
+
+    \draw[dashed, thick] (C) -- (B);
+    \draw[-latex, thick] (BC) -- (CB);
+    \draw[gray!40] (0,0) -- (6,0);
+    \end{tikzpicture}
   \caption{Refraction of light when passing through a medium.}
-  \label{fig:refraction}
+  \label{fig:basic-refraction}
 \end{figure}
 
 It can roughly be defined by using Snell's law \cite{fowles1989introduction}:
