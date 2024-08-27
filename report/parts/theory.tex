@@ -1055,7 +1055,7 @@ Three major implementations of \gls{WebGPU} exist:
     \item{WebKit \gls{WebGPU}} — Developed by Apple, WebKit is used in Safari \cite{webKitWebGPUImplementation}.
 \end{itemize}
 
-As the standard is under active development, there are differences between the implementations as well as the specification \cite{wgpuStandardDeviation}. Thanks to alignment and the extensive conformance test suite \cite{WebGPUConformanceTestSuite}, the implementations are largely compatible. Generally, these implementations run natively on modern graphics \glspl{API} such as \gls{Vulkan}, \gls{Metal}, and \gls{DirectX 12}. Some also support \gls{OpenGL} and \gls{WebGL} as a fallback.
+As the standard is under active development, there are differences between the implementations as well as the specification \cite{wgpuStandardDeviation}. However, the implementations are largely compatible thanks to alignment efforts and the extensive conformance test suite \cite{WebGPUConformanceTestSuite}. Generally, these implementations run natively on modern graphics \glspl{API} such as \gls{Vulkan}, \gls{Metal}, and \gls{DirectX 12}. Some also support \gls{OpenGL} and \gls{WebGL} as a fallback.
 
 \subsubsection{Core Concepts}
 
@@ -1417,7 +1417,7 @@ Technically, a node-based system also supports an \gls{uber shader} approach, bu
 \paragraph{Material Description Standards}
 \label{ch:materialDescriptionStandards}
 
-Many exchange formats, such as \gls{glTF}, support material description as part of the standard. The material description in \gls{glTF} supports a \gls{PBR} approach which is based on the metallic-roughness material model \cite{gltfSpecification}. However, the \gls{PBR} material description in \gls{glTF} is limited in terms of feature set, by lacking features such as subsurface scattering, and is not intended to become an open standard across a variety of applications.
+Many exchange formats, such as \gls{glTF}, support material description as part of the standard. The material description in \gls{glTF} supports a \gls{PBR} approach, based on the metallic-roughness material model \cite{gltfSpecification}. However, the \gls{PBR} material description in \gls{glTF} is limited in terms of feature set, by lacking features such as subsurface scattering, and is not intended to become an open standard across a variety of applications.
 
 Over the years, different parties have developed their own shading models. Some prominent options include:
 
