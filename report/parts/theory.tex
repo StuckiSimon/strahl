@@ -444,6 +444,7 @@ Many surfaces combine these effects and need to consider the incident and outgoi
       \centerarc[rgreen,ultra thick](B)(0:180:1)
 
       \fill[gray!20] (0,0) rectangle (6,-1);
+      \draw[gray!40] (0,0) -- (6,0);
     \end{tikzpicture}
     \caption{Diffuse surface with light scattering in all directions.}
     \label{fig:reflection-lobe-intro-diffuse}
@@ -475,6 +476,7 @@ Many surfaces combine these effects and need to consider the incident and outgoi
       \centerarc[rgreen,ultra thick](B)(40:50:1)
 
       \fill[gray!20] (0,0) rectangle (6,-1);
+      \draw[gray!40] (0,0) -- (6,0);
     \end{tikzpicture}
     \caption{Mirror-like surface with a small reflection lobe.}
     \label{fig:reflection-lobe-intro-specular}
@@ -594,6 +596,9 @@ Early algorithms were based on recursive ray tracing \cite{whittedGlobalIllumina
 
       \fill[gray!20] (0,0) rectangle (6,-1.5);
       \fill[gray!20] (2,2) rectangle (6,3.5);
+      \draw[gray!40] (0,0) -- (6,0);
+      \draw[gray!40] (2,2) -- (6,2);
+      \draw[gray!40] (2,2) -- (2,3.5);
   
       \draw[dashed, thick] (A) -- node[midway, right] {$i$} (B);
       \draw[-latex, thick] (AB) -- (BA);
@@ -731,6 +736,7 @@ To do the sampling, different strategies can be considered. For example, one can
       \centerarc[rgreen,ultra thick](B)(0:180:1)
   
       \fill[gray!20] (0,0) rectangle (6,-1);
+      \draw[gray!40] (0,0) -- (6,0);
     \end{tikzpicture}
     \caption{Ray hitting a diffuse surface with bad-performing material sampling.}
     \label{fig:material-sampling-bad}
@@ -770,6 +776,7 @@ To do the sampling, different strategies can be considered. For example, one can
       \centerarc[rgreen,ultra thick](B)(40:50:1)
 
       \fill[gray!20] (0,0) rectangle (6,-1);
+      \draw[gray!40] (0,0) -- (6,0);
     \end{tikzpicture}
     \caption{Ray hitting a mirror-like surface with well-performing material sampling.}
     \label{fig:material-sampling-good}
@@ -812,6 +819,7 @@ Light source sampling is an alternative sampling strategy that can alleviate thi
       \centerarc[rgreen,ultra thick](B)(40:50:1)
   
       \fill[gray!20] (0,0) rectangle (6,-1);
+      \draw[gray!40] (0,0) -- (6,0);
     \end{tikzpicture}
     \caption{Ray hitting a mirror-like surface with bad-performing light source sampling.}
     \label{fig:light-sampling-bad}
@@ -846,6 +854,7 @@ Light source sampling is an alternative sampling strategy that can alleviate thi
       \centerarc[rgreen,ultra thick](B)(0:180:1)
   
       \fill[gray!20] (0,0) rectangle (6,-1);
+      \draw[gray!40] (0,0) -- (6,0);
     \end{tikzpicture}
     \caption{Ray hitting a diffuse surface with well-performing light source sampling.}
     \label{fig:light-sampling-good}
@@ -1396,6 +1405,7 @@ These functions define the distribution of light in different directions, as des
       \centerarc[rgreen,ultra thick](B)(120:150:1)
   
       \fill[gray!20] (0,0) rectangle (6,-1);
+      \draw[gray!40] (0,0) -- (6,0);
       \end{tikzpicture}
       \caption{Retroreflective reflection, as can be encountered in materials such as velvet.}
       \label{fig:reflectionRetroreflective}
@@ -1427,6 +1437,7 @@ These functions define the distribution of light in different directions, as des
       \centerarc[rgreen,ultra thick](B)(30:60:1)
   
       \fill[gray!20] (0,0) rectangle (6,-1);
+      \draw[gray!40] (0,0) -- (6,0);
       \end{tikzpicture}
       \caption{Glossy reflection, as can be encountered in materials such as plastic.}
       \label{fig:reflectionGlossy}
@@ -1471,6 +1482,7 @@ where $d$ references to the differential nature, $L_o$ is the radiance leaving t
     \fill[rgreen] (B) circle (0.1);
 
     \fill[gray!20] (0,0) rectangle (6,-1);
+    \draw[gray!40] (0,0) -- (6,0);
     \node[rgreen, anchor=north, yshift=-0.05cm] at (B) {$p$};
     \end{tikzpicture}
   \caption{Variables of \gls{BRDF} visualized for a sample $\omega_o$ and $\omega_i$ at $p$ \cite{Pharr_Physically_Based_Rendering_2023}.}
