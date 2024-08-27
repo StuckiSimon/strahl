@@ -57,15 +57,13 @@ In order to render the assemblies based on the preprocessed information, three m
 
 Offline rendering requires pre-rendering all product configurations. This is theoretically possible for a finite number of configurations, but computationally expensive.
 
-An offline rendering pipeline generates static images of the assembly, which are then displayed in the browser. This means that all possible assemblies need to be rendered and stored upfront. As the number of component types increases, the number of possible combinations grows exponentially, which can lead to large amounts of storage and processing power being required, as shown in \autoref{fig:cad-offline}.
+An offline rendering pipeline generates static images of the assembly, which are then displayed in the browser. This means that all possible assemblies need to be rendered and stored upfront. As the number of component types increases, the number of possible combinations grows exponentially, which can lead to large amounts of storage and processing power being required, as shown in \autoref{fig:cad-offline}. Interactivity is limited by requiring all desired viewing angles to be defined upfront. 360° viewing experience using a single degree of freedom can be provided by rendering images in regular intervals. 100 images would be needed to get an image every 3.6°. These images can then be loaded in the browser as the user drags. However, if more degrees of freedom, different lighting situations, and zoom levels need to be supported, a similar growth in rendered images can be observed as for the assemblies.
 
 \begin{figure}[H]
   \includegraphics[width=\columnwidth]{resources/cad-pipeline-offline.png}
   \caption{In an offline rendering setup, the number of images grows exponentially. The number of images increases further when offering 360° viewing.}
   \label{fig:cad-offline}
 \end{figure}
-
-Interactivity is limited by requiring all desired viewing angles to be defined upfront. 360° viewing experience using a single degree of freedom can be provided by rendering images in regular intervals. 100 images would be needed to get an image every 3.6°. These images can then be loaded in the browser as the user drags. However, if more degrees of freedom, different lighting situations, and zoom levels need to be supported, a similar growth in rendered images can be observed as for the assemblies.
 
 In order to address latency, pre-loading images can be used. This may entail loading additional images in the background to enable a smooth user experience. However, this leads to increased bandwidth usage.
 

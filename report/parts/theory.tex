@@ -43,23 +43,24 @@ As visualized in \autoref{fig:cross-product}, the cross product gives a vector $
 
 \begin{figure}[H]
   \centering
-  \tikzsetnextfilename{cross-product}
-  \begin{tikzpicture}
-    \coordinate (O) at (0,0);
-    \coordinate (P) at (0,1);
-    \coordinate (V) at (-1,0.25);
-    \coordinate (W) at (-0.8,-0.7);
+  \resizebox{0.1\textwidth}{!}{
+    \tikzsetnextfilename{cross-product}
+    \begin{tikzpicture}
+      \coordinate (O) at (0,0);
+      \coordinate (P) at (0,1);
+      \coordinate (V) at (-1,0.25);
+      \coordinate (W) at (-0.8,-0.7);
 
-    \draw[thick,fill=lightgray] (-0.3,0.08) -- (-0.3,0.36) -- (0.0,0.3) -- (0,0);
+      \draw[thick,fill=lightgray] (-0.3,0.08) -- (-0.3,0.36) -- (0.0,0.3) -- (0,0);
 
-    \draw[thick] (O) -- (P);
-    \draw[thick] (V) -- (O);
-    \draw[thick] (W) -- (O);
+      \draw[thick] (O) -- (P);
+      \draw[thick] (V) -- (O);
+      \draw[thick] (W) -- (O);
 
-    \node[above] at (P) {p};
-    \node[left] at (V) {v};
-    \node[below] at (W) {w};
-  \end{tikzpicture}
+      \node[above] at (P) {p};
+      \node[left] at (V) {v};
+      \node[below] at (W) {w};
+    \end{tikzpicture}}
   \caption{Cross product of two vectors $v$ and $w$, resulting in a vector $p$ orthogonal to $v$ and $w$.}
   \label{fig:cross-product}
 \end{figure}
@@ -115,6 +116,7 @@ An alternative way to define a triangle is using three vertices, each in world s
 
 In computer graphics, a triangle has a normal associated with each of its three vertices. Per default, the normal of a vertex is orthogonal to the two adjacent edges of the vertex and can be calculated using the cross product.
 
+\newpage
 \subsubsection{Frustum}
 
 The frustum is a geometric shape that defines the camera's view. For a visual representation, see \autoref{fig:camera-frustum}.
@@ -145,6 +147,7 @@ An integral determines the area under a curve, as visualized in \autoref{fig:int
         ylabel=$y$,
         domain=0:2,
         samples=100,
+        clip=false,
         axis lines=middle,
         ymin=0, ymax=3.5,
         xmin=0, xmax=2.5,
@@ -155,6 +158,9 @@ An integral determines the area under a curve, as visualized in \autoref{fig:int
       \addplot[name path=A, rblue, thick] {x/2.5+((x^2)/2)} node[above,pos=1] {$f(x)$};
       \path[name path=B] (axis cs:0,0) -- (axis cs:2,0);
       \addplot[rblue!50, opacity=0.5] fill between[of=A and B, soft clip={domain=0.5:1.5}];
+
+      % otherwise the left axis will be cropped, even if clip is set to false
+      \addplot[draw=none] coordinates {(-0.1,0)};
     \end{axis}
   \end{tikzpicture}
   \caption{Visualization of integral, the area under the curve $f(x)$ between $a$ and $b$.}
@@ -168,6 +174,7 @@ In order to take an integral over a different domain $S$, which may represent a 
   \int_{S} f(x) dx
 \end{equation}
 
+\newpage
 \subsubsection{Probability Theory}
 \label{sec:probabilityTheory}
 
@@ -199,7 +206,7 @@ Another important concept is the probability density function (\gls{PDF}). It de
     \tikzsetnextfilename{pdf-theory}
     \begin{tikzpicture}
       \begin{axis}[
-          width=4cm,
+          width=6cm,
           axis lines = left,
           xlabel = $x$,
           ylabel = $f(x)$,
@@ -225,7 +232,7 @@ Another important concept is the probability density function (\gls{PDF}). It de
     \tikzsetnextfilename{cdf-theory}
     \begin{tikzpicture}
       \begin{axis}[
-          width=4cm,
+          width=6cm,
           axis lines = left,
           xlabel = $x$,
           ylabel = $F(x)$,
@@ -257,11 +264,12 @@ The Bachmann-Landau notation, or more specifically, the Big O notation, is used 
   \tikzsetnextfilename{big-o-visualization}
   \begin{tikzpicture}
     \begin{axis}[
-        width=0.4\textwidth,
+        width=0.3\textwidth,
         xlabel=$x$,
         ylabel=$y$,
         domain=0:10,
         samples=100,
+        clip=false,
         axis lines=middle,
         ymin=0, ymax=20,
         xmin=0, xmax=11,
@@ -270,8 +278,12 @@ The Bachmann-Landau notation, or more specifically, the Big O notation, is used 
         xticklabels={0},
       ]
       \addplot[rblue, thick] {x} node[above,pos=1] {$O(n)$};
-      \addplot[rgreen, thick] {x/1.7} node[below,pos=1] {$f(x)$};
+      \addplot[rgreen, thick] {x/1.7} node[right,pos=1] {$f(x)$};
       \addplot[rred, thick, domain=0:5.5] {(x^2)/2} node[above,pos=1] {$g(x)$};
+
+      % otherwise the left axis will be cropped, even if clip is set to false
+      \addplot[draw=none] coordinates {(-0.2,0)};
+      \addplot[draw=none] coordinates {(0,-0.5)};
     \end{axis}
   \end{tikzpicture}
   \caption{Example of Big O notation, the function $f(x)$ is $O(n)$, but $g(x)$ is not.}
@@ -286,6 +298,16 @@ In order to generate images using computer graphics, understanding the physics i
 \subsubsection{Reflection}
 
 Reflection is the process of light bouncing off a surface. The angle of incidence equals the angle of reflection, as visualized in \autoref{fig:basic-reflection}. An example of such an effect can be seen when looking at a mirror.
+
+
+This can be described using the law of reflection \cite{fowles1989introduction}:
+
+\begin{equation}
+  \label{eqn:law-of-reflection}
+  \theta = \theta'
+\end{equation}
+
+where $\theta$ is the angle of incidence and $\theta'$ is the angle of reflection.
 
 \begin{figure}[H]
   \centering
@@ -323,15 +345,6 @@ Reflection is the process of light bouncing off a surface. The angle of incidenc
   \caption{Reflection of light when hitting a surface.}
   \label{fig:basic-reflection}
 \end{figure}
-
-This can be described using the law of reflection \cite{fowles1989introduction}:
-
-\begin{equation}
-  \label{eqn:law-of-reflection}
-  \theta = \theta'
-\end{equation}
-
-where $\theta$ is the angle of incidence and $\theta'$ is the angle of reflection.
 
 \subsubsection{Refraction}
 
@@ -677,6 +690,7 @@ where $I(x, x')$ is the radiance from point $x$ to point $x'$. $x$ for example b
 
 Further research into light transport techniques such as bidirectional light transport or Metropolis light transport has been conducted in the 1990s \cite{veachMonteCarloLightTransport}. Concrete techniques will be described in the next section.
 
+\newpage
 \subsubsection{Monte Carlo Integration}
 \label{sec:monte-carlo-integration-sampling}
 
@@ -1111,6 +1125,7 @@ Workarounds have been developed to provide \gls{GPGPU} capabilities. The basic i
 
 Since its introduction, \gls{WebGL} has been extended with new features. \gls{WebGL} 2.0, based on \gls{OpenGL ES} 3.0, was released in 2017. Of the major browsers, Safari was the last to support it out of the box in 2021. Since \gls{WebGL} 2.0, no major versions have been released, but new features have been added. This makes it evident that while \gls{WebGL} will remain a viable option for the foreseeable future, \gls{WebGPU} is likely to become the preferred choice in the long term.
 
+\newpage
 \subsection*{WebGPU}
 
 \gls{WebGPU} is a new web standard developed by \fGls{W3C}{\e{World Wide Web Consortium}, a non-profit organization dedicated to developing web standards} \cite{webgpuSpecification}. Unlike its predecessor, \gls{WebGL}, it is no longer based on \gls{OpenGL}. One of the main capabilities is support for \gls{GPGPU} by design. While all major browser vendors have announced intent to support \gls{WebGPU}, to date only Chrome has shipped \gls{WebGPU} for general use on desktop as well as mobile.
@@ -1315,7 +1330,7 @@ Technically, the format offers two different encoding formats which differ in fi
 
 \begin{figure}[H]
   \centering
-  \resizebox{0.6\textwidth}{!}{
+  \resizebox{0.8\textwidth}{!}{
     \tikzsetnextfilename{gltf-hierarchy}
     \begin{tikzpicture}[
         unused/.style={rectangle, draw=gray, ultra thick, inner sep=0.2cm, text width=2.5cm, align=center},
