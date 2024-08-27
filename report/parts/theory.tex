@@ -1299,10 +1299,11 @@ Research into \gls{PBR} has been conducted for a similar amount of time as ray t
 In general, there is no \gls{PBR} standard. Instead, a variety of different models have been developed over time. In recent years, however, a convergence towards a common set of principles has been observed and certain aspects of \gls{PBR} are found in most models. This section explains these common principles and standards which can be used to obtain consistent renderings.
 
 \subsection*{BxDF}
+\label{sec:bxdf}
 
 The definition of the bidirectional distribution functions (\gls{BxDF}) is a key concept in \gls{PBR}. The $x$ stands for the different kinds of distributions to consider. In general, the functions describe how light is reflected or transmitted. The two functions are usually abbreviated as \gls{BRDF}, the $r$ for reflectance, and \gls{BTDF}, the $t$ for transmittance. The combination of the two is often referred to as \gls{BSDF}, the $s$ for scattering \cite{Pharr_Physically_Based_Rendering_2023}.
 
-These functions define the distribution of light in different directions, as described in \autoref{sec:physics-generalization}. Samples of different kinds of \glspl{BRDF} can be seen in \autoref{fig:brdf-special}. Many objects exhibit a combination of different reflectance distributions.
+These functions define the distribution of light in different directions, as described in \autoref{sec:physics-generalization}. Samples of different kinds of \glspl{BRDF} can be seen in \autoref{fig:brdf-special}.
 
 \begin{figure}[H]
   \centering
@@ -1331,7 +1332,7 @@ These functions define the distribution of light in different directions, as des
       \fill[rgreen] (B) circle (0.1);
       \centerarc[rgreen,ultra thick](B)(120:150:1)
   
-      \fill[gray!20] (0,0) rectangle (6,-2);
+      \fill[gray!20] (0,0) rectangle (6,-1);
       \end{tikzpicture}
       \caption{Retroreflective reflection, as can be encountered in materials such as velvet.}
       \label{fig:reflectionRetroreflective}
@@ -1362,14 +1363,64 @@ These functions define the distribution of light in different directions, as des
       \fill[rgreen] (B) circle (0.1);
       \centerarc[rgreen,ultra thick](B)(30:60:1)
   
-      \fill[gray!20] (0,0) rectangle (6,-2);
+      \fill[gray!20] (0,0) rectangle (6,-1);
       \end{tikzpicture}
       \caption{Glossy reflection, as can be encountered in materials such as plastic.}
       \label{fig:reflectionGlossy}
   \end{subfigure}
   \caption{Special types of reflectance distributions using the same visualization as \autoref{fig:reflection-lobe-intro} \cite{Pharr_Physically_Based_Rendering_2023}.}
   \label{fig:brdf-special}
-  \end{figure}
+\end{figure}
+
+The \gls{BRDF} ($f_r$) describes how much incident light along a differential cone of directions ($\omega_i$) is scattered from a point ($p$) into a direction ($\omega_o$) and can be defined as:
+
+\begin{equation}
+  f_r(p, \omega_o, \omega_i) = \frac{dL_o(p, \omega_o)}{L_i(p, \omega_i) \cos(\theta_i) d\omega_i}
+\end{equation}
+
+where $d$ references to the differential nature, $L_o$ is the radiance leaving the surface in the outgoing direction, $L_i$ is the radiance arriving at the surface from the incident direction, and $\cos(\theta_i)$ is the cosine of the angle between the normal and the incident direction that reduces the intensity of the light for grazing angles. See \autoref{fig:brdf-visualized} for a visualization of the variables.
+
+\begin{figure}[H]
+  \centering
+    \tikzsetnextfilename{brdf-visualized}
+    \begin{tikzpicture}
+    \coordinate (A) at (0,3);
+    \coordinate (AA) at (1,2);
+    \coordinate (BB) at (2,1);
+    \coordinate (B) at (3,0);
+    \coordinate (C) at (5,3);
+    \coordinate (BC) at (3.67,1);
+    \coordinate (CB) at (4.332,2);
+
+    \coordinate (BN) at (3,2);
+
+    \centerarc[darkgray, thick](B)(56:90:1)
+    \node[darkgray] at (3.25,0.75) {$\theta_i$};
+
+    \draw[rgreen, dashed, thick] (A) -- (B);
+    \draw[rgreen, -latex, thick] (BB) --node[midway, right] {$\omega_o$} (AA);
+
+    \draw[rgreen, dashed, thick] (C) -- (B);
+    \draw[rgreen, -latex, thick] (BC) --node[midway, left] {$\omega_i$} (CB);
+
+    \draw[darkgray, -latex, thick] (B) --node[midway, left] {$n$} (BN);
+
+    \fill[rgreen] (B) circle (0.1);
+
+    \fill[gray!20] (0,0) rectangle (6,-1);
+    \node[rgreen, anchor=north, yshift=-0.05cm] at (B) {$p$};
+    \end{tikzpicture}
+  \caption{Variables of \gls{BRDF} visualized for a sample $\omega_o$ and $\omega_i$ at $p$ \cite{Pharr_Physically_Based_Rendering_2023}.}
+  \label{fig:brdf-visualized}
+\end{figure}
+
+Many objects exhibit a combination of different reflectance distributions. To obtain the radiance ($L_o$), the \gls{BRDF} can be integrated over the hemisphere of incoming directions. When also considering the \gls{BTDF}, the integral to determine the combined \gls{BSDF} ($f$) can be defined as:
+
+\begin{equation}
+  L_o(p, \omega_o) = \int_{S} f(p, \omega_o, \omega_i) L_i(p, \omega_i) |\cos(\theta_i)| d\omega_i
+\end{equation}
+
+where $S$ is the sphere of all incoming directions. The integral can be approximated using Monte Carlo integration. \cite{Pharr_Physically_Based_Rendering_2023}
 
 \subsection*{Microfacet Theory}
 
