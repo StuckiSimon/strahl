@@ -55,11 +55,11 @@ As visualized in \autoref{fig:cross-product}, the cross product gives a vector $
     \draw[thick] (O) -- (P);
     \draw[thick] (V) -- (O);
     \draw[thick] (W) -- (O);
-    
+
     \node[above] at (P) {p};
     \node[left] at (V) {v};
     \node[below] at (W) {w};
-    \end{tikzpicture}
+  \end{tikzpicture}
   \caption{Cross product of two vectors $v$ and $w$, resulting in a vector $p$ orthogonal to $v$ and $w$.}
   \label{fig:cross-product}
 \end{figure}
@@ -86,12 +86,12 @@ A triangle can be defined as $t = (Q, u, v)$, where $Q$ is the position of the t
   \tikzsetnextfilename{q-u-v-parameterization}
   \begin{tikzpicture}
     \draw[fill=lightgray]   (0,0) coordinate[label=below:$Q$] (q) --
-      (2,1) coordinate[label=right:$v$] (v) --
-      (0.2,1) coordinate[label=above:$u$] (u) -- cycle;
+    (2,1) coordinate[label=right:$v$] (v) --
+    (0.2,1) coordinate[label=above:$u$] (u) -- cycle;
 
     \draw[-latex, thick] (q) -- (u);
     \draw[-latex, thick] (q) -- (v);
-    \end{tikzpicture}
+  \end{tikzpicture}
   \caption{Triangle defined using three vertices, $Q$ as the position and $u$,$v$ as direction vectors starting at $Q$.}
   \label{fig:q-u-v-parameterization}
 \end{figure}
@@ -139,23 +139,23 @@ An integral determines the area under a curve, as visualized in \autoref{fig:int
   \centering
   \tikzsetnextfilename{integral}
   \begin{tikzpicture}
-      \begin{axis}[
-          width=0.4\textwidth,
-          xlabel=$x$,
-          ylabel=$y$,
-          domain=0:2, 
-          samples=100,
-          axis lines=middle,
-          ymin=0, ymax=3.5,
-          xmin=0, xmax=2.5,
-          xtick={0, 0.5, 1.5},
-          ytick={0},
-          xticklabels={0, $a$, $b$},
-          ]
-          \addplot[name path=A, rblue, thick] {x/2.5+((x^2)/2)} node[above,pos=1] {$f(x)$};
-          \path[name path=B] (axis cs:0,0) -- (axis cs:2,0);
-          \addplot[rblue!50, opacity=0.5] fill between[of=A and B, soft clip={domain=0.5:1.5}];
-      \end{axis}
+    \begin{axis}[
+        width=0.4\textwidth,
+        xlabel=$x$,
+        ylabel=$y$,
+        domain=0:2,
+        samples=100,
+        axis lines=middle,
+        ymin=0, ymax=3.5,
+        xmin=0, xmax=2.5,
+        xtick={0, 0.5, 1.5},
+        ytick={0},
+        xticklabels={0, $a$, $b$},
+      ]
+      \addplot[name path=A, rblue, thick] {x/2.5+((x^2)/2)} node[above,pos=1] {$f(x)$};
+      \path[name path=B] (axis cs:0,0) -- (axis cs:2,0);
+      \addplot[rblue!50, opacity=0.5] fill between[of=A and B, soft clip={domain=0.5:1.5}];
+    \end{axis}
   \end{tikzpicture}
   \caption{Visualization of integral, the area under the curve $f(x)$ between $a$ and $b$.}
   \label{fig:integral}
@@ -199,21 +199,21 @@ Another important concept is the probability density function (\gls{PDF}). It de
     \tikzsetnextfilename{pdf-theory}
     \begin{tikzpicture}
       \begin{axis}[
-        width=4cm,
-        axis lines = left,
-        xlabel = $x$,
-        ylabel = $f(x)$,
-        domain=-4:4,
-        samples=100,
-        enlargelimits=upper,
-        xtick=\empty,
-        ytick=\empty,
-      ]
-      \addplot[
-        smooth,
-        ultra thick,
-        rblue,
-      ] {1/(sqrt(2*pi))*exp(-x^2/2)};
+          width=4cm,
+          axis lines = left,
+          xlabel = $x$,
+          ylabel = $f(x)$,
+          domain=-4:4,
+          samples=100,
+          enlargelimits=upper,
+          xtick=\empty,
+          ytick=\empty,
+        ]
+        \addplot[
+          smooth,
+          ultra thick,
+          rblue,
+        ] {1/(sqrt(2*pi))*exp(-x^2/2)};
       \end{axis}
     \end{tikzpicture}
     \caption{\gls{PDF} visualized}
@@ -225,20 +225,20 @@ Another important concept is the probability density function (\gls{PDF}). It de
     \tikzsetnextfilename{cdf-theory}
     \begin{tikzpicture}
       \begin{axis}[
-        width=4cm,
-        axis lines = left,
-        xlabel = $x$,
-        ylabel = $F(x)$,
-        samples=100,
-        enlargelimits=upper,
-        xtick=\empty,
-        ytick={0,1},
-      ]
-      \addplot[
-        smooth,
-        ultra thick,
-        rgreen,
-      ] {1/(1+e^(-1.65451*x))}; % See https://mathoverflow.net/q/273754
+          width=4cm,
+          axis lines = left,
+          xlabel = $x$,
+          ylabel = $F(x)$,
+          samples=100,
+          enlargelimits=upper,
+          xtick=\empty,
+          ytick={0,1},
+        ]
+        \addplot[
+          smooth,
+          ultra thick,
+          rgreen,
+        ] {1/(1+e^(-1.65451*x))}; % See https://mathoverflow.net/q/273754
       \end{axis}
     \end{tikzpicture}
     \caption{\gls{CDF} visualized}
@@ -256,23 +256,23 @@ The Bachmann-Landau notation, or more specifically, the Big O notation, is used 
   \centering
   \tikzsetnextfilename{big-o-visualization}
   \begin{tikzpicture}
-      \begin{axis}[
-          width=0.4\textwidth,
-          xlabel=$x$,
-          ylabel=$y$,
-          domain=0:10, 
-          samples=100,
-          axis lines=middle,
-          ymin=0, ymax=20,
-          xmin=0, xmax=11,
-          xtick={0},
-          ytick={0},
-          xticklabels={0},
-          ]
-          \addplot[rblue, thick] {x} node[above,pos=1] {$O(n)$};
-          \addplot[rgreen, thick] {x/1.7} node[below,pos=1] {$f(x)$};
-          \addplot[rred, thick, domain=0:5.5] {(x^2)/2} node[above,pos=1] {$g(x)$};
-      \end{axis}
+    \begin{axis}[
+        width=0.4\textwidth,
+        xlabel=$x$,
+        ylabel=$y$,
+        domain=0:10,
+        samples=100,
+        axis lines=middle,
+        ymin=0, ymax=20,
+        xmin=0, xmax=11,
+        xtick={0},
+        ytick={0},
+        xticklabels={0},
+      ]
+      \addplot[rblue, thick] {x} node[above,pos=1] {$O(n)$};
+      \addplot[rgreen, thick] {x/1.7} node[below,pos=1] {$f(x)$};
+      \addplot[rred, thick, domain=0:5.5] {(x^2)/2} node[above,pos=1] {$g(x)$};
+    \end{axis}
   \end{tikzpicture}
   \caption{Example of Big O notation, the function $f(x)$ is $O(n)$, but $g(x)$ is not.}
   \label{fig:big-o-visualization}
@@ -289,8 +289,8 @@ Reflection is the process of light bouncing off a surface. The angle of incidenc
 
 \begin{figure}[H]
   \centering
-    \tikzsetnextfilename{basic-reflection}
-    \begin{tikzpicture}
+  \tikzsetnextfilename{basic-reflection}
+  \begin{tikzpicture}
     \coordinate (A) at (0,3);
     \coordinate (AA) at (1,2);
     \coordinate (BB) at (2,1);
@@ -303,7 +303,7 @@ Reflection is the process of light bouncing off a surface. The angle of incidenc
 
     \centerarc[thick](B)(90:135:1)
     \node at (2.75,0.7) {$\theta$};
-    
+
     \centerarc[thick](B)(45:90:1)
     \node at (3.25,0.7) {$\theta'$};
 
@@ -319,7 +319,7 @@ Reflection is the process of light bouncing off a surface. The angle of incidenc
 
     \fill[gray!20] (0,0) rectangle (6,-1);
     \draw[gray!40] (0,0) -- (6,0);
-    \end{tikzpicture}
+  \end{tikzpicture}
   \caption{Reflection of light when hitting a surface.}
   \label{fig:basic-reflection}
 \end{figure}
@@ -339,8 +339,8 @@ Refraction is the bending of light when passing through a medium as visualized i
 
 \begin{figure}[H]
   \centering
-    \tikzsetnextfilename{basic-refraction}
-    \begin{tikzpicture}
+  \tikzsetnextfilename{basic-refraction}
+  \begin{tikzpicture}
     \coordinate (A) at (0,3);
     \coordinate (AA) at (1,2);
     \coordinate (BB) at (2,1);
@@ -372,7 +372,7 @@ Refraction is the bending of light when passing through a medium as visualized i
     \draw[dashed, thick] (C) -- (B);
     \draw[-latex, thick] (BC) -- (CB);
     \draw[gray!40] (0,0) -- (6,0);
-    \end{tikzpicture}
+  \end{tikzpicture}
   \caption{Refraction of light when passing through a medium.}
   \label{fig:basic-refraction}
 \end{figure}
@@ -437,8 +437,8 @@ Many surfaces combine these effects and need to consider the incident and outgoi
       \def\tangentr{3.04}
 
       \foreach \angle in {-20, -40, -60, -80, -100, -120, -140, -160} {
-        \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (\angle:\tangentr)$);
-      }
+          \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (\angle:\tangentr)$);
+        }
 
       \fill[rgreen] (B) circle (0.1);
       \centerarc[rgreen,ultra thick](B)(0:180:1)
@@ -458,20 +458,20 @@ Many surfaces combine these effects and need to consider the incident and outgoi
       \coordinate (AA) at (1,2);
       \coordinate (BB) at (2,1);
       \coordinate (B) at (3,0);
-  
+
       \coordinate (L) at (4.5,3);
-  
+
       \draw[dashed, thick] (A) -- (B);
       \draw[-latex, thick] (AA) -- (BB);
-  
+
       \def\tangentx{3}
       \def\tangenty{0}
       \def\tangentr{3.04}
-  
+
       \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (-131:\tangentr)$);
       \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (-135:\tangentr)$);
       \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (-139:\tangentr)$);
-  
+
       \fill[rgreen] (B) circle (0.1);
       \centerarc[rgreen,ultra thick](B)(40:50:1)
 
@@ -498,7 +498,7 @@ A 3D scene can be defined as a collection of objects in a three-dimensional spac
 
 Research to render advanced lighting effects using computer graphics was conducted as early as the 1960s. One of the earliest papers describing approaches to render shadow casting was written in 1968 by Appel \cite{appel1968shading}. In order to describe the phenomena, a more advanced shading model was required.
 
-To describe these phenomena, the term global illumination was coined by Whitted in 1979 \cite{whittedGlobalIllumination}. It describes a complete shading model that simulates real lighting and reflection as accurately as possible \cite{whitted2020OriginsOfGlobalIllumination}. 
+To describe these phenomena, the term global illumination was coined by Whitted in 1979 \cite{whittedGlobalIllumination}. It describes a complete shading model that simulates real lighting and reflection as accurately as possible \cite{whitted2020OriginsOfGlobalIllumination}.
 
 While global illumination commonly refers to a subset of effects, the term is used here to encompass a wide range of effects. Simulating real lighting includes effects such as:
 
@@ -599,7 +599,7 @@ Early algorithms were based on recursive ray tracing \cite{whittedGlobalIllumina
       \draw[gray!40] (0,0) -- (6,0);
       \draw[gray!40] (2,2) -- (6,2);
       \draw[gray!40] (2,2) -- (2,3.5);
-  
+
       \draw[dashed, thick] (A) -- node[midway, right] {$i$} (B);
       \draw[-latex, thick] (AB) -- (BA);
 
@@ -614,8 +614,8 @@ Early algorithms were based on recursive ray tracing \cite{whittedGlobalIllumina
 
       \draw[dashed, thick] (C) -- node[midway, right] {$s_2$} (D);
       \draw[-latex, thick] (CD) -- (DC);
-  
- 
+
+
       \fill[rgray] (B) circle (0.1);
       \fill[rgray] (C) circle (0.1);
     \end{tikzpicture}
@@ -644,7 +644,7 @@ Early algorithms were based on recursive ray tracing \cite{whittedGlobalIllumina
       \coordinate (B1B12) at (-0.75, -1.25);
       \coordinate (B12B1) at (-0.25, -1.75);
       \coordinate (B12) at (0,-2);
- 
+
       \draw[dashed, thick] (A0) -- node[midway, right] {$i$} (A);
       \draw[-latex, thick] (A0A) -- (AA0);
       \draw[dashed, thick] (A) -- node[midway, right] {$s_1$} (B1);
@@ -655,7 +655,7 @@ Early algorithms were based on recursive ray tracing \cite{whittedGlobalIllumina
       \draw[-latex, thick] (B1B12) -- (B12B1);
       \draw[dashed, thick] (A) -- node[midway, right] {$t_1$} (B2);
       \draw[-latex, thick] (AB2) -- (B2A);
- 
+
       \fill[rgray] (A) circle (0.1);
       \fill[rgray] (B1) circle (0.1);
     \end{tikzpicture}
@@ -689,7 +689,7 @@ Monte Carlo integration is a statistical technique to approximate the solution o
 
 where $G$ is the estimate of the solution, $g$ is the function to be approximated, and $X_i$ is the random sample. Taking $M$ samples and averaging the results provides an estimate of the solution. \cite{kalos2009monte}
 
-In the context of ray tracing, a path tracing algorithm leverages Monte Carlo integration to approximate the rendering equation, as defined in \autoref{eqn:rendering-equation}. The radiance of a pixel can be approximated by iteratively casting rays into the scene and averaging the results. 
+In the context of ray tracing, a path tracing algorithm leverages Monte Carlo integration to approximate the rendering equation, as defined in \autoref{eqn:rendering-equation}. The radiance of a pixel can be approximated by iteratively casting rays into the scene and averaging the results.
 
 While Monte Carlo integration is a powerful technique, it heavily relies on the quality of the estimator that is employed. Using importance sampling can improve the rate of convergence. Importance sampling is a technique that leverages a proposal \gls{PDF}, different from the target \gls{PDF}, to estimate the expected value of a target function. By sampling more frequently in regions where the function has a higher value, the variance of the estimator can be reduced. In order to account for the probability distribution and prevent bias in the estimator, the estimator can be defined as:
 
@@ -712,29 +712,29 @@ To do the sampling, different strategies can be considered. For example, one can
       \coordinate (AA) at (1,2);
       \coordinate (BB) at (2,1);
       \coordinate (B) at (3,0);
-  
+
       \coordinate (L) at (4.66,2.9);
-  
+
       \draw[dashed, thick] (A) -- (B);
       \draw[-latex, thick] (AA) -- (BB);
-  
+
       \def\radius{0.3}
 
       \def\tangentx{3}
       \def\tangenty{0}
       \def\tangentr{3.04}
-  
+
       \shade[ball color=yellow!50, opacity=0.3] (L) circle (\radius);
       \draw[yellow!50!black] (L) circle (\radius);
-  
+
       \foreach \angle in {-20, -40, -60, -80, -100, -140, -160} {
-        \draw[-latex, rred] (B) -- ($(\tangentx,\tangenty) - (\angle:\tangentr)$);
-      }
+          \draw[-latex, rred] (B) -- ($(\tangentx,\tangenty) - (\angle:\tangentr)$);
+        }
       \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (-120:\tangentr)$);
-  
+
       \fill[rgreen] (B) circle (0.1);
       \centerarc[rgreen,ultra thick](B)(0:180:1)
-  
+
       \fill[gray!20] (0,0) rectangle (6,-1);
       \draw[gray!40] (0,0) -- (6,0);
     \end{tikzpicture}
@@ -750,12 +750,12 @@ To do the sampling, different strategies can be considered. For example, one can
       \coordinate (AA) at (1,2);
       \coordinate (BB) at (2,1);
       \coordinate (B) at (3,0);
-  
+
       \coordinate (L) at (4.5,3);
-  
+
       \draw[dashed, thick] (A) -- (B);
       \draw[-latex, thick] (AA) -- (BB);
-  
+
       \def\centerx{4.5}
       \def\centery{3}
       \def\radius{1.2}
@@ -763,15 +763,15 @@ To do the sampling, different strategies can be considered. For example, one can
       \def\tangentx{3}
       \def\tangenty{0}
       \def\tangentr{3.04}
-  
+
       \shade[ball color=yellow!50, opacity=0.3] (L) circle (\radius);
       \draw[yellow!50!black] (L) circle (\radius);
-  
+
       \draw[-latex, rgreen] (B) -- ($(\centerx,\centery) - (96:\radius)$);
       \draw[-latex, rgreen] (B) -- ($(\centerx,\centery) - (108:\radius)$);
 
       \draw[-latex, rred] (B) -- ($(\tangentx,\tangenty) - (-139:\tangentr)$);
-  
+
       \fill[rgreen] (B) circle (0.1);
       \centerarc[rgreen,ultra thick](B)(40:50:1)
 
@@ -797,27 +797,27 @@ Light source sampling is an alternative sampling strategy that can alleviate thi
       \coordinate (AA) at (1,2);
       \coordinate (BB) at (2,1);
       \coordinate (B) at (3,0);
-  
+
       \coordinate (L) at (4.5,3);
-  
+
       \draw[dashed, thick] (A) -- (B);
       \draw[-latex, thick] (AA) -- (BB);
-  
+
       \def\centerx{4.5}
       \def\centery{3}
       \def\radius{1.2}
-  
+
       \shade[ball color=yellow!50, opacity=0.3] (L) circle (\radius);
       \draw[yellow!50!black] (L) circle (\radius);
-  
+
       \foreach \angle in {0,21.6,43.2,64.8,86.4} {
-        \draw[-latex, rred] (B) -- ($(\centerx,\centery) - (\angle:\radius)$);
-      }
+          \draw[-latex, rred] (B) -- ($(\centerx,\centery) - (\angle:\radius)$);
+        }
       \draw[-latex, rgreen] (B) -- ($(\centerx,\centery) - (108:\radius)$);
-  
+
       \fill[rgreen] (B) circle (0.1);
       \centerarc[rgreen,ultra thick](B)(40:50:1)
-  
+
       \fill[gray!20] (0,0) rectangle (6,-1);
       \draw[gray!40] (0,0) -- (6,0);
     \end{tikzpicture}
@@ -833,26 +833,26 @@ Light source sampling is an alternative sampling strategy that can alleviate thi
       \coordinate (AA) at (1,2);
       \coordinate (BB) at (2,1);
       \coordinate (B) at (3,0);
-  
+
       \coordinate (L) at (4.5,3);
-  
+
       \draw[dashed, thick] (A) -- (B);
       \draw[-latex, thick] (AA) -- (BB);
-  
+
       \def\centerx{4.5}
       \def\centery{3}
       \def\radius{0.3}
-  
+
       \shade[ball color=yellow!50, opacity=0.3] (L) circle (\radius);
       \draw[yellow!50!black] (L) circle (\radius);
-  
+
       \foreach \angle in {0,21.6,43.2,64.8,86.4,108} {
-        \draw[-latex, rgreen] (B) -- ($(\centerx,\centery) - (\angle:\radius)$);
-      }
-  
+          \draw[-latex, rgreen] (B) -- ($(\centerx,\centery) - (\angle:\radius)$);
+        }
+
       \fill[rgreen] (B) circle (0.1);
       \centerarc[rgreen,ultra thick](B)(0:180:1)
-  
+
       \fill[gray!20] (0,0) rectangle (6,-1);
       \draw[gray!40] (0,0) -- (6,0);
     \end{tikzpicture}
@@ -899,9 +899,9 @@ An \gls{AABB} ($b$) can be defined as $b = (min, max)$, where $min$ and $max$ ar
 \begin{figure}[H]
   \centering
   \begin{subfigure}[b]{0.45\textwidth}
-      \includegraphics[width=\textwidth]{resources/bvh-bad-visualized.png}
-      \caption{Poorly constructed \gls{BVH}, which requires seven intersection tests for $r$, essentially testing against all objects.}
-      \label{fig:bvhBad}
+    \includegraphics[width=\textwidth]{resources/bvh-bad-visualized.png}
+    \caption{Poorly constructed \gls{BVH}, which requires seven intersection tests for $r$, essentially testing against all objects.}
+    \label{fig:bvhBad}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.45\textwidth}
@@ -937,33 +937,33 @@ Different types of view projection can be used depending on the use case. The mo
 These two projection types differ in the view projection matrix. For perspective projection, the following parameters need to be defined:
 
 \begin{description}
-    \item[near ($n$)] The distance from the camera to the near clipping plane.
-    \item[far ($f$)] The distance from the camera to the far clipping plane.
-    \item[fov ($\theta$)] The \textit{field of view} angle, measured in degrees.
-    \item[aspect ratio ($r$)] The ratio of the viewport's width to its height.
+  \item[near ($n$)] The distance from the camera to the near clipping plane.
+  \item[far ($f$)] The distance from the camera to the far clipping plane.
+  \item[fov ($\theta$)] The \textit{field of view} angle, measured in degrees.
+  \item[aspect ratio ($r$)] The ratio of the viewport's width to its height.
 \end{description}
 
 The clipping plane parameters $n$ and $f$ are primarily used in rasterization to determine the camera frustum. Objects outside of the frustum are not rendered. Using equations \ref{eqn:perspectiveProjectionHeight} and \ref{eqn:perspectiveProjectionWidth}, the view projection matrix ($P$) for perspective projection is defined in equation \ref{eqn:perspectiveProjectionMatrix}.
 
 \begin{equation}
-    \label{eqn:perspectiveProjectionHeight}
-    h = 2n \cdot \tan(\frac{\theta}{2} \underbrace{\pi / 180}_{\text{deg to rad}})
+  \label{eqn:perspectiveProjectionHeight}
+  h = 2n \cdot \tan(\frac{\theta}{2} \underbrace{\pi / 180}_{\text{deg to rad}})
 \end{equation}
 
 \begin{equation}
-    \label{eqn:perspectiveProjectionWidth}
-    w = rh
+  \label{eqn:perspectiveProjectionWidth}
+  w = rh
 \end{equation}
 
 \begin{equation}
-    \label{eqn:perspectiveProjectionMatrix}
-    P = 
-    \begin{bmatrix}
-        \frac{2n}{w} & 0 & 0 & 0 \\
-        0 & \frac{2n}{h} & 0 & 0 \\
-        0 & 0 & -\frac{f + n}{f - n} & -\frac{2fn}{f - n} \\
-        0 & 0 & -1 & 0
-    \end{bmatrix}
+  \label{eqn:perspectiveProjectionMatrix}
+  P =
+  \begin{bmatrix}
+    \frac{2n}{w} & 0            & 0                    & 0                  \\
+    0            & \frac{2n}{h} & 0                    & 0                  \\
+    0            & 0            & -\frac{f + n}{f - n} & -\frac{2fn}{f - n} \\
+    0            & 0            & -1                   & 0
+  \end{bmatrix}
 \end{equation}
 
 The elements $P_{1,1}$ and $P_{2,2}$ adjust the field of view and therefore the perspective effect. The elements $P_{3,3}$, $P_{3,4}$ and $P_{4,3}$ adjust the near and far clipping planes. In comparison to rasterization, the view projection matrix is used differently in ray tracing. In rasterization, every vertex is transformed by the view projection matrix. In ray tracing, the view projection matrix is only applied to the camera rays.
@@ -971,14 +971,14 @@ The elements $P_{1,1}$ and $P_{2,2}$ adjust the field of view and therefore the 
 For orthographic projection, no such projection matrix is required in ray tracing. Instead, parallel rays are cast from the camera grid.
 
 \subsubsection{Random Number Generator}
-  
+
 To simulate light transport, the path tracer needs to pick random directions. Generating a random direction vector, defined as $v = (x, y, z)$, can be achieved by picking three random numbers independent of one another. This is done using a random number generator (\gls{RNG}). In rasterization, the necessity for \gls{RNG} is less common but may still be required for specific effects. There are a variety of \glspl{RNG} available which differ in essential characteristics. Some of the characteristics to consider when choosing a suitable \gls{RNG} are:
 
 \begin{itemize}
-    \item{Statistical Quality} – The \gls{RNG} should generate numbers that are statistically random. This means that the numbers should be uniformly distributed and have a low correlation between them.
-    \item{Period} – The length of the cycle before the sequence of generated numbers starts to repeat itself.
-    \item{Time Performance} – The time it takes to generate a random number. This is influenced by the algorithm as well as the hardware, which may support dedicated instructions.
-    \item{Space Usage} – The amount of memory required to store state.
+  \item{Statistical Quality} – The \gls{RNG} should generate numbers that are statistically random. This means that the numbers should be uniformly distributed and have a low correlation between them.
+  \item{Period} – The length of the cycle before the sequence of generated numbers starts to repeat itself.
+  \item{Time Performance} – The time it takes to generate a random number. This is influenced by the algorithm as well as the hardware, which may support dedicated instructions.
+  \item{Space Usage} – The amount of memory required to store state.
 \end{itemize}
 
 Based on the use case, other factors such as prediction difficulty or others such as highlighted by O’Neill \cite{o2014pcg} may be important. Cryptography, for example, requires randomness of the \gls{RNG} to prevent an adversary from predicting secret keys. Options to generate the randomness require additional signals \cite{randomnessCryptography} or may require special hardware, such as \fGls{Lavarand}{Hardware \gls{RNG} based on pictures taken of lava lamps to generate randomness} \cite{cloudflareLavaRand}. Many generators are pseudorandom generators. These generators are deterministic and require a seed to start the sequence. For cryptographically secure generators, the seed must be random.
@@ -987,13 +987,13 @@ However, for a path tracer, there is no need for cryptographic security. Instead
 One option for such a pseudorandom generator is using Xorshifts, such as described by Marsaglia \cite{marsaglia2003xorshift}. The algorithm can be defined as shown in Figure \ref{code:xorShift}. $x$ is the state of the \gls{RNG} and $a$, $b$ and $c$ are constants which are chosen to achieve good statistical properties. Frequent choices for these constants are $a = 13$, $b = 17$, and $c = 5$.
 
 \begin{figure}[H]
-\begin{lstlisting}[style=wgsl]
+  \begin{lstlisting}[style=wgsl]
 x ^= x << a;
 x ^= x >> b;
 x ^= x << c;
 \end{lstlisting}
-\caption{Xorshift \gls{RNG} implementation.}
-\label{code:xorShift}
+  \caption{Xorshift \gls{RNG} implementation.}
+  \label{code:xorShift}
 \end{figure}
 
 The Mersenne Twister \cite{rngMersenneTwister} is an alternative \gls{RNG}. It is a pseudorandom number generator which has a long period and good statistical properties. However, it is slower than Xorshifts \cite{o2014pcg}. More recently, \fGls{PCG}{\e{Permuted Congruential Generator}, a family of random number generators} has been proposed as an alternative to these options. \gls{PCG} is a family of fast generators well-suited for ray tracing use.
@@ -1004,20 +1004,20 @@ The Mersenne Twister \cite{rngMersenneTwister} is an alternative \gls{RNG}. It i
 Aliasing is a common issue in computer graphics. It occurs when the resolution of the screen is not sufficient to represent the scene accurately. One such example is jagged edges on diagonal lines. Anti-aliasing techniques can be employed to reduce the effect. The negative effect of aliasing is demonstrated in \autoref{fig:aliasingA}.
 
 \begin{figure}[H]
-    \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{resources/aliasing.png}
-        \caption{Rendering showing aliasing.}
-        \label{fig:aliasingA}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{resources/anti-aliasing.png}
-        \caption{Rendering with anti-aliasing applied.}
-        \label{fig:aliasingB}
-    \end{subfigure}
-    \caption{The two images show the effect of aliasing and anti-aliasing.}
-    \label{fig:aliasing}
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics[width=\textwidth]{resources/aliasing.png}
+    \caption{Rendering showing aliasing.}
+    \label{fig:aliasingA}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics[width=\textwidth]{resources/anti-aliasing.png}
+    \caption{Rendering with anti-aliasing applied.}
+    \label{fig:aliasingB}
+  \end{subfigure}
+  \caption{The two images show the effect of aliasing and anti-aliasing.}
+  \label{fig:aliasing}
 \end{figure}
 
 In ray tracing, aliasing can be alleviated by randomizing the direction of the rays for the different samples taken. The result of applying anti-aliasing can be seen in \autoref{fig:aliasingB}.
@@ -1072,8 +1072,8 @@ Modern \gls{GPU} hardware offers support for hardware-accelerated ray tracing. E
 Specific basic definitions have established themselves as standard practices for graphics \glspl{API}. The term shader describes a program that runs on the \gls{GPU}. The term shader is frequently used in conjunction with different shader types which are used as part of the graphics pipeline in rasterization. The pipeline in its basic form consists of two steps which are executed on the \gls{GPU} in sequence:
 
 \begin{itemize}
-    \item{Vertex Shader} — The vertex shader is responsible for transforming the vertices of the geometry into screen space. The output of the vertex shader is a set of vertices which are then rasterized.
-    \item{Fragment Shader} — The fragment shader is responsible for determining the color of the fragments that are generated by the rasterizer. It is executed once for each fragment.
+  \item{Vertex Shader} — The vertex shader is responsible for transforming the vertices of the geometry into screen space. The output of the vertex shader is a set of vertices which are then rasterized.
+  \item{Fragment Shader} — The fragment shader is responsible for determining the color of the fragments that are generated by the rasterizer. It is executed once for each fragment.
 \end{itemize}
 
 In addition to this standard graphics pipeline, many \glspl{API} also support custom code which does not need to be used exclusively for rendering. This code can be used for general-purpose computing and is generally referred to as \gls{GPGPU}. The corresponding compute pipeline consists of a single stage where input and output can be configured. Shaders that are used for \gls{GPGPU} are often called compute shaders.
@@ -1094,9 +1094,9 @@ To date, \gls{OpenGL} is still widely used in the industry, but it has been repl
 While \gls{OpenGL} and derivatives such as \fgls{OpenGL ES}{\e{OpenGL for Embedded Systems}, subset of OpenGL designed for embedded systems like smartphones} have been widely adopted, the introduction of a number of new \glspl{API} has changed the landscape. The standards share an understanding of giving developers more control over the hardware and can be more efficient than \gls{OpenGL}. Modern hardware-accelerated features such as ray tracing are more easily accessible using these new \glspl{API}. Some of the most notable \glspl{API} are:
 
 \begin{itemize}
-    \item{\gls{Vulkan}} — Developed by the \fgls{Khronos Group}{consortium for developing interoperability standards for 3D graphics}, \gls{Vulkan} is a low-level \gls{API} that is supported on a wide range of platforms.
-    \item{\gls{Metal}} — Developed by Apple, \gls{Metal} is a low-level \gls{API} that is supported on Apple devices.
-    \item{\gls{DirectX 12}} — Developed by Microsoft, DirectX is a collection of \glspl{API} for Microsoft Windows.
+  \item{\gls{Vulkan}} — Developed by the \fgls{Khronos Group}{consortium for developing interoperability standards for 3D graphics}, \gls{Vulkan} is a low-level \gls{API} that is supported on a wide range of platforms.
+  \item{\gls{Metal}} — Developed by Apple, \gls{Metal} is a low-level \gls{API} that is supported on Apple devices.
+  \item{\gls{DirectX 12}} — Developed by Microsoft, DirectX is a collection of \glspl{API} for Microsoft Windows.
 \end{itemize}
 
 None of these \glspl{API} are supported in the browser, which makes them unsuitable for the discussed use case.
@@ -1122,9 +1122,9 @@ Common 3D engines such as \gls{Babylon.js}, \gls{Three.js}, \gls{PlayCanvas} and
 Three major implementations of \gls{WebGPU} exist:
 
 \begin{itemize}
-    \item{\gls{Dawn}} — Developed by Google, \gls{Dawn} is a C++ library which provides a \gls{WebGPU} implementation. It is used in Chromium-based browsers \cite{dawnImplementation}.
-    \item{\gls{wgpu}} — A Rust library which provides a \gls{WebGPU} implementation. It is used in Firefox and \fGls{Deno}{JavaScript runtime, alternative to Node.js} \cite{wgpuImplementation}.
-    \item{WebKit \gls{WebGPU}} — Developed by Apple, WebKit is used in Safari \cite{webKitWebGPUImplementation}.
+  \item{\gls{Dawn}} — Developed by Google, \gls{Dawn} is a C++ library which provides a \gls{WebGPU} implementation. It is used in Chromium-based browsers \cite{dawnImplementation}.
+  \item{\gls{wgpu}} — A Rust library which provides a \gls{WebGPU} implementation. It is used in Firefox and \fGls{Deno}{JavaScript runtime, alternative to Node.js} \cite{wgpuImplementation}.
+  \item{WebKit \gls{WebGPU}} — Developed by Apple, WebKit is used in Safari \cite{webKitWebGPUImplementation}.
 \end{itemize}
 
 As the standard is under active development, there are differences between the implementations as well as the specification \cite{wgpuStandardDeviation}. However, the implementations are largely compatible thanks to alignment efforts and the extensive conformance test suite \cite{WebGPUConformanceTestSuite}. Generally, these implementations run natively on modern graphics \glspl{API} such as \gls{Vulkan}, \gls{Metal}, and \gls{DirectX 12}. Some also support \gls{OpenGL} and \gls{WebGL} as a fallback.
@@ -1139,20 +1139,20 @@ For a compute pipeline, one needs to define a pipeline layout that consists of m
   \centering
   \tikzsetnextfilename{webgpu-arch}
   \begin{tikzpicture}[
-    abstract/.style={rectangle, draw=rblue, ultra thick, fill=rbblue, inner sep=0.4cm},
-    concrete/.style={rectangle, draw=rgreen, ultra thick, fill=rbgreen, inner sep=0.4cm},
-  ]
+      abstract/.style={rectangle, draw=rblue, ultra thick, fill=rbblue, inner sep=0.4cm},
+      concrete/.style={rectangle, draw=rgreen, ultra thick, fill=rbgreen, inner sep=0.4cm},
+    ]
 
-  \node[abstract] (bgl) {Bind Group Layout};
-  \node[concrete, below=of bgl] (bg) {Bind Group};
-  \node[concrete, right=of bg] (sm) {Shader Module};
-  \node[concrete, right=of sm] (cp) {Compute Pipeline};
-  \node[abstract, above=of cp] (pl) {Pipeline Layout};
+    \node[abstract] (bgl) {Bind Group Layout};
+    \node[concrete, below=of bgl] (bg) {Bind Group};
+    \node[concrete, right=of bg] (sm) {Shader Module};
+    \node[concrete, right=of sm] (cp) {Compute Pipeline};
+    \node[abstract, above=of cp] (pl) {Pipeline Layout};
 
-  \draw[-latex, thick] (bg) -- (bgl);
-  \draw[-latex, thick] (pl) -- (bgl);
-  \draw[-latex, thick] (cp) -- (sm);
-  \draw[-latex, thick] (cp) -- (pl);
+    \draw[-latex, thick] (bg) -- (bgl);
+    \draw[-latex, thick] (pl) -- (bgl);
+    \draw[-latex, thick] (cp) -- (sm);
+    \draw[-latex, thick] (cp) -- (pl);
   \end{tikzpicture}
   \caption{Core concepts in \gls{WebGPU}, the arrow direction indicates references to. Blue elements are independent of concrete references to data and code, while green elements are concrete references.}
   \label{fig:webgpu-arch}
@@ -1165,16 +1165,16 @@ Having set up the compute pipeline, one needs to define the bind groups which co
   \tikzsetnextfilename{gpu-workgroup-layout}
   \begin{tikzpicture}
     \foreach \x in {0,0.8,1.6,2.4} {
-      \foreach \y in {0,0.8,1.6,2.4} {
-        \draw[thick, rblue] (\x,\y) rectangle (\x+0.8,\y+0.8);
-        % threads within workgroup
-        \foreach \i in {0,1,2} {
-          \foreach \j in {0,1,2} {
-            \draw[thick, rgreen, fill=rbgreen] (\x+\i*0.25+0.1,\y+\j*0.25+0.1) rectangle (\x+\i*0.25+0.2,\y+\j*0.25+0.2);
+        \foreach \y in {0,0.8,1.6,2.4} {
+            \draw[thick, rblue] (\x,\y) rectangle (\x+0.8,\y+0.8);
+            % threads within workgroup
+            \foreach \i in {0,1,2} {
+                \foreach \j in {0,1,2} {
+                    \draw[thick, rgreen, fill=rbgreen] (\x+\i*0.25+0.1,\y+\j*0.25+0.1) rectangle (\x+\i*0.25+0.2,\y+\j*0.25+0.2);
+                  }
+              }
           }
-        }
       }
-    }
   \end{tikzpicture}
   \caption{\gls{GPU} workgroup layout. Each green square represents a thread within a workgroup. Each blue square represents a workgroup.}
   \label{fig:gpu-workgroup-layout}
@@ -1243,7 +1243,7 @@ Each type in \gls{WGSL} has specific alignment requirements independent of the s
   \end{lstlisting}
   \caption{\gls{WGSL} \texttt{struct} containing three fields of type \texttt{f32} and \texttt{vec3f}.}
   \label{code:memoryAlignment}
-  \end{figure}
+\end{figure}
 
 \begin{figure}[H]
   \centering
@@ -1270,11 +1270,11 @@ const c = new Float32Array(ValueBuffer, 28, 1);
 In order to exchange 3D scenes between a multitude of applications, various standardized formats have been developed. These formats are optimized for different use cases depending on the requirements of the application. For this thesis, the focus is on formats well-suited for real-time rendering on the web. In comparison to other use cases, certain aspects are critical on the web. These aspects include:
 
 \begin{itemize}
-    \item{Efficiency} – It should be optimized for transmission and loading. While data compression algorithms such as \fGls{gzip}{\e{GNU zip}, file format and software application for compression and decompression.} can alleviate some of the issues during transmission, pure text-based formats are generally less efficient than binary formats.
-    \item{Feature Set} – The format should support a wide range of features such as geometry, materials, and scene graphs.
-    \item{Extensibility} — The format should be extensible to support additional features.
-    \item{Interoperability} – 3D engines and applications should widely support the format.
-    \item{Openness} — The format should be open and not proprietary. Additionally, it should be actively maintained.
+  \item{Efficiency} – It should be optimized for transmission and loading. While data compression algorithms such as \fGls{gzip}{\e{GNU zip}, file format and software application for compression and decompression.} can alleviate some of the issues during transmission, pure text-based formats are generally less efficient than binary formats.
+  \item{Feature Set} – The format should support a wide range of features such as geometry, materials, and scene graphs.
+  \item{Extensibility} — The format should be extensible to support additional features.
+  \item{Interoperability} – 3D engines and applications should widely support the format.
+  \item{Openness} — The format should be open and not proprietary. Additionally, it should be actively maintained.
 \end{itemize}
 
 The following section categorizes the formats based on their use case and highlights well-established formats.
@@ -1307,8 +1307,8 @@ For usage in end-user applications, such as for the use cases in this thesis, th
 Technically, the format offers two different encoding formats which differ in file ending:
 
 \begin{itemize}
-    \item{\texttt{.glb}} – Binary format which is optimized for transmission and loading.
-    \item{\texttt{.gltf}} – Text-based, human-readable format.
+  \item{\texttt{.glb}} – Binary format which is optimized for transmission and loading.
+  \item{\texttt{.gltf}} – Text-based, human-readable format.
 \end{itemize}
 
 \gls{glTF} is designed to be extensible and a variety of extensions have been developed to support features such as mesh compression using Draco. The hierarchy structure of a \gls{glTF} file is shown in \autoref{fig:gltf-hierarchy}. Many of the official extensions extend the material nodes to support more advanced features. Its focus on transmission and loading efficiency makes it well-suited for the web.
@@ -1316,45 +1316,45 @@ Technically, the format offers two different encoding formats which differ in fi
 \begin{figure}[H]
   \centering
   \resizebox{0.6\textwidth}{!}{
-  \tikzsetnextfilename{gltf-hierarchy}
-  \begin{tikzpicture}[
-    unused/.style={rectangle, draw=gray, ultra thick, inner sep=0.2cm, text width=2.5cm, align=center},
-    structure/.style={rectangle, draw=rblue, ultra thick, fill=rbblue, inner sep=0.2cm, text width=2.5cm, align=center},
-  ]
+    \tikzsetnextfilename{gltf-hierarchy}
+    \begin{tikzpicture}[
+        unused/.style={rectangle, draw=gray, ultra thick, inner sep=0.2cm, text width=2.5cm, align=center},
+        structure/.style={rectangle, draw=rblue, ultra thick, fill=rbblue, inner sep=0.2cm, text width=2.5cm, align=center},
+      ]
 
-  \node[structure] (scene) {scene};
-  \node[structure, below=0.6cm of scene] (node) {node};
-  \node[unused, right=4.5cm of node] (skin) {skin};
-  \node[unused, below right=-0.2cm and of node] (camera) {camera};
-  \node[structure, below=of node] (mesh) {mesh};
-  \node[structure, below=0.3cm of mesh] (accessor) {accessor};
-  \node[structure, below=0.3cm of accessor] (buffer view) {buffer view};
-  \node[structure, below=0.3cm of buffer view] (buffer) {buffer};
+      \node[structure] (scene) {scene};
+      \node[structure, below=0.6cm of scene] (node) {node};
+      \node[unused, right=4.5cm of node] (skin) {skin};
+      \node[unused, below right=-0.2cm and of node] (camera) {camera};
+      \node[structure, below=of node] (mesh) {mesh};
+      \node[structure, below=0.3cm of mesh] (accessor) {accessor};
+      \node[structure, below=0.3cm of accessor] (buffer view) {buffer view};
+      \node[structure, below=0.3cm of buffer view] (buffer) {buffer};
 
-  \node[unused, right=of accessor] (animation) {animation};
+      \node[unused, right=of accessor] (animation) {animation};
 
-  \node[structure, right=4.5cm of mesh] (material) {material};
-  \node[structure, below=0.3cm of material] (texture) {texture};
-  \node[unused, below=0.3cm of texture] (image) {image};
-  \node[unused, below left=0.43cm of texture] (sampler) {sampler};
+      \node[structure, right=4.5cm of mesh] (material) {material};
+      \node[structure, below=0.3cm of material] (texture) {texture};
+      \node[unused, below=0.3cm of texture] (image) {image};
+      \node[unused, below left=0.43cm of texture] (sampler) {sampler};
 
-  \draw[-latex, thick] (scene) -- (node);
-  \draw[thick,-latex] (node.90)++(-1.04cm, 0) arc (0:264:4mm);
-  \draw[>=latex,thick,<->] (skin) -- (node);
-  \draw[-latex, thick] (node) -- (camera);
-  \draw[-latex, thick] (node) -- (mesh);
-  \draw[-latex, thick] (mesh) -- (accessor);
-  \draw[-latex, thick] (accessor) -- (buffer view);
-  \draw[-latex, thick] (buffer view) -- (buffer);
+      \draw[-latex, thick] (scene) -- (node);
+      \draw[thick,-latex] (node.90)++(-1.04cm, 0) arc (0:264:4mm);
+      \draw[>=latex,thick,<->] (skin) -- (node);
+      \draw[-latex, thick] (node) -- (camera);
+      \draw[-latex, thick] (node) -- (mesh);
+      \draw[-latex, thick] (mesh) -- (accessor);
+      \draw[-latex, thick] (accessor) -- (buffer view);
+      \draw[-latex, thick] (buffer view) -- (buffer);
 
-  \draw[-latex, thick] (animation) -- (accessor);
+      \draw[-latex, thick] (animation) -- (accessor);
 
-  \draw[-latex, thick] (mesh) -- (material);
-  \draw[-latex, thick] (material) -- (texture);
-  \draw[-latex, thick] (texture) -- (sampler);
-  \draw[-latex, thick] (texture) -- (image);
+      \draw[-latex, thick] (mesh) -- (material);
+      \draw[-latex, thick] (material) -- (texture);
+      \draw[-latex, thick] (texture) -- (sampler);
+      \draw[-latex, thick] (texture) -- (image);
 
-  \end{tikzpicture}
+    \end{tikzpicture}
   }
   \caption{\gls{glTF} hierarchy starting with the \texttt{scene} object. Arrows indicate parent-child relationships. Gray objects are not mentioned in this thesis.}
   \label{fig:gltf-hierarchy}
@@ -1380,67 +1380,67 @@ These functions define the distribution of light in different directions, as des
 \begin{figure}[H]
   \centering
   \begin{subfigure}[t]{0.45\textwidth}
-      \centering
-      \tikzsetnextfilename{reflection-retroreflective}
-      \begin{tikzpicture}
+    \centering
+    \tikzsetnextfilename{reflection-retroreflective}
+    \begin{tikzpicture}
       \coordinate (A) at (0,3);
       \coordinate (AA) at (1,2);
       \coordinate (BB) at (2,1);
       \coordinate (B) at (3,0);
-  
+
       \coordinate (L) at (4.5,3);
-  
+
       \draw[dashed, thick] (A) -- (B);
       \draw[-latex, thick] (AA) -- (BB);
-  
+
       \def\tangentx{3}
       \def\tangenty{0}
       \def\tangentr{3.04}
-  
+
       \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (-41:\tangentr)$);
       \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (-45:\tangentr)$);
       \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (-49:\tangentr)$);
-  
+
       \fill[rgreen] (B) circle (0.1);
       \centerarc[rgreen,ultra thick](B)(120:150:1)
-  
+
       \fill[gray!20] (0,0) rectangle (6,-1);
       \draw[gray!40] (0,0) -- (6,0);
-      \end{tikzpicture}
-      \caption{Retroreflective reflection, as can be encountered in materials such as velvet.}
-      \label{fig:reflectionRetroreflective}
+    \end{tikzpicture}
+    \caption{Retroreflective reflection, as can be encountered in materials such as velvet.}
+    \label{fig:reflectionRetroreflective}
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.45\textwidth}
-      \centering
-      \tikzsetnextfilename{reflection-glossy}
-      \begin{tikzpicture}
+    \centering
+    \tikzsetnextfilename{reflection-glossy}
+    \begin{tikzpicture}
       \coordinate (A) at (0,3);
       \coordinate (AA) at (1,2);
       \coordinate (BB) at (2,1);
       \coordinate (B) at (3,0);
-  
+
       \coordinate (L) at (4.5,3);
-  
+
       \draw[dashed, thick] (A) -- (B);
       \draw[-latex, thick] (AA) -- (BB);
-  
+
       \def\tangentx{3}
       \def\tangenty{0}
       \def\tangentr{3.04}
-  
+
       \foreach \angle in {-127, -131, -135, -139, -143} {
           \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (\angle:\tangentr)$);
-      }
-  
+        }
+
       \fill[rgreen] (B) circle (0.1);
       \centerarc[rgreen,ultra thick](B)(30:60:1)
-  
+
       \fill[gray!20] (0,0) rectangle (6,-1);
       \draw[gray!40] (0,0) -- (6,0);
-      \end{tikzpicture}
-      \caption{Glossy reflection, as can be encountered in materials such as plastic.}
-      \label{fig:reflectionGlossy}
+    \end{tikzpicture}
+    \caption{Glossy reflection, as can be encountered in materials such as plastic.}
+    \label{fig:reflectionGlossy}
   \end{subfigure}
   \caption{Special types of reflectance distributions using the same visualization as \autoref{fig:reflection-lobe-intro} \cite{Pharr_Physically_Based_Rendering_2023}.}
   \label{fig:brdf-special}
@@ -1456,8 +1456,8 @@ where $d$ references to the differential nature, $L_o$ is the radiance leaving t
 
 \begin{figure}[H]
   \centering
-    \tikzsetnextfilename{brdf-visualized}
-    \begin{tikzpicture}
+  \tikzsetnextfilename{brdf-visualized}
+  \begin{tikzpicture}
     \coordinate (A) at (0,3);
     \coordinate (AA) at (1,2);
     \coordinate (BB) at (2,1);
@@ -1484,7 +1484,7 @@ where $d$ references to the differential nature, $L_o$ is the radiance leaving t
     \fill[gray!20] (0,0) rectangle (6,-1);
     \draw[gray!40] (0,0) -- (6,0);
     \node[rgreen, anchor=north, yshift=-0.05cm] at (B) {$p$};
-    \end{tikzpicture}
+  \end{tikzpicture}
   \caption{Variables of \gls{BRDF} visualized for a sample $\omega_o$ and $\omega_i$ at $p$ \cite{Pharr_Physically_Based_Rendering_2023}.}
   \label{fig:brdf-visualized}
 \end{figure}
@@ -1508,20 +1508,20 @@ While the macroscopic appearance of a surface is visible to the human eye, the m
     \draw[-latex] (4,0.0) -- (4,0.6) node[above]{n};
 
     \draw[rgreen, thick] (0,0) to[out=0,in=180] (5,0);
-    
-    \draw[rred, thick] 
-      (0,0) to[out=20,in=180]
-      (0.2,0.3) to[out=-20,in=160]
-      (0.7,-0.1) to[out=-30,in=150]
-      (1.2,0.4) to[out=-30,in=150]
-      (1.6,-0.2) to[out=-30,in=150]
-      (2,0.2) to[out=-30,in=150]
-      (2.5,0.4) to[out=-30,in=150]
-      (3,-0.2) to[out=-30,in=150]
-      (3.5,0.25) to[out=-30,in=150]
-      (4,-0.3) to[out=-30,in=150]
-      (4.5,0.3) to[out=-30,in=180]
-      (5,0);
+
+    \draw[rred, thick]
+    (0,0) to[out=20,in=180]
+    (0.2,0.3) to[out=-20,in=160]
+    (0.7,-0.1) to[out=-30,in=150]
+    (1.2,0.4) to[out=-30,in=150]
+    (1.6,-0.2) to[out=-30,in=150]
+    (2,0.2) to[out=-30,in=150]
+    (2.5,0.4) to[out=-30,in=150]
+    (3,-0.2) to[out=-30,in=150]
+    (3.5,0.25) to[out=-30,in=150]
+    (4,-0.3) to[out=-30,in=150]
+    (4.5,0.3) to[out=-30,in=180]
+    (5,0);
 
   \end{tikzpicture}
   \caption{Microsurface (red) compared to macrosurface (green) and normals $m$ for microsurface sample and $n$ as surface normal of the underlying triangle plane. While all $n$ on the plane are identical, the microsurface normals vary significantly. Visualized as per Walter et al. \cite{walter2007microfacet}.}
@@ -1548,10 +1548,10 @@ Many exchange formats, such as \gls{glTF}, support material description as part 
 Over the years, different parties have developed their own shading models. Some prominent options include:
 
 \begin{itemize}
-    \item{Disney Principled \gls{BRDF}} \cite{disney2012pbr} – Developed by Disney in 2012, the model is not necessarily physically accurate and focuses on being art-directable with limited parameters. Although the model is influential, it is not an established standard and lacks a reference implementation despite being adopted by some applications, including \gls{RenderMan} \cite{renderManDisneyPbrDocs}.
-    \item{Autodesk Standard Surface} \cite{autodeskStandardSurface} – Developed by Autodesk, the goals are similar to Disney Principled \gls{BRDF} in that the parameter set is kept small in order to be easier to use. The model is developed as an open standard with a reference implementation in \fgls{OSL}{\e{Open Shading Language}, shading language for production global illumination renderers maintained by Academy Software Foundation}. However, the standard has not seen much development in recent years.
-    \item{Adobe Standard Material} \cite{adobeStandardMaterial} – Developed by Adobe, the model is also influenced by the Disney Principled \gls{BRDF} and Autodesk Standard Surface. It has a full specification and has been adopted by Adobe for its applications.
-    \item{\gls{DSPBR}} \cite{dspbrModel} – Developed by Dassault Systèmes, it is also influenced by the Disney Principled \gls{BRDF}. The specification is detailed and the model is designed for industrial use cases.
+  \item{Disney Principled \gls{BRDF}} \cite{disney2012pbr} – Developed by Disney in 2012, the model is not necessarily physically accurate and focuses on being art-directable with limited parameters. Although the model is influential, it is not an established standard and lacks a reference implementation despite being adopted by some applications, including \gls{RenderMan} \cite{renderManDisneyPbrDocs}.
+  \item{Autodesk Standard Surface} \cite{autodeskStandardSurface} – Developed by Autodesk, the goals are similar to Disney Principled \gls{BRDF} in that the parameter set is kept small in order to be easier to use. The model is developed as an open standard with a reference implementation in \fgls{OSL}{\e{Open Shading Language}, shading language for production global illumination renderers maintained by Academy Software Foundation}. However, the standard has not seen much development in recent years.
+  \item{Adobe Standard Material} \cite{adobeStandardMaterial} – Developed by Adobe, the model is also influenced by the Disney Principled \gls{BRDF} and Autodesk Standard Surface. It has a full specification and has been adopted by Adobe for its applications.
+  \item{\gls{DSPBR}} \cite{dspbrModel} – Developed by Dassault Systèmes, it is also influenced by the Disney Principled \gls{BRDF}. The specification is detailed and the model is designed for industrial use cases.
 \end{itemize}
 
 In addition to these standards, many real-time rendering engines, such as \gls{Unity} and \fGls{Unreal}{Unreal Engine, cross-platform game engine developed by Epic Games}, and modeling software, such as \fGls{Blender}{open-source 3D computer graphics software toolset} and \fGls{Rhino3D}{\e{Rhinoceros}, proprietary 3D computer graphics and \gls{CAD} toolset}, have their own shading models. Supporting many different shading models in a web-based real-time rendering application can be challenging, making the need for a common material description standard apparent. This is where new material description standards come into play. These are open standards developed by multiple companies to address the siloed development of prior shading models intended to be used across different applications.
@@ -1588,31 +1588,31 @@ The substrate is defined as a mixture of metal, translucent base, subsurface, an
   \centering
   \tikzsetnextfilename{open-pbr}
   \begin{tikzpicture}[
-    every node/.style={font=\small},
-    layer/.style={draw, minimum height=1.4cm, minimum width=2.5cm, anchor=south west, text width=2cm, align=center},
-    mid/.style={draw, minimum height=0.7cm, minimum width=2.5cm, anchor=south west, align=center},
-    thin/.style={draw, minimum height=0.7cm, anchor=south west, minimum width=10cm, align=center},
-  ]
-  
-  \draw[dotted] (0,1) -- (0,-0.4);
-  \draw[dotted] (2.5,1) -- (2.5,-0.4);
-  \draw[dotted] (5,1) -- (5,-0.4);
-  \draw[dotted] (10,1) -- (10,-0.4);
-  
-  \node[layer, fill=lightgray] (metal) at (0,1) {metal};
-  \node[layer] (translucent) at (2.5,1) {translucent base};
-  \node[layer] (subsurface) at (5,1) {subsurface};
-  \node[mid] (gloss) at (7.5,1.7) {gloss};
-  \node[mid, fill=lightgray] (diffuse) at (7.5,1) {diffuse};
-  
-  \node[thin] (fuzz) at (0,3.1) {fuzz};
-  \node[thin] (coat) at (0,2.4) {coat};
-  
-  \draw[>=latex,thick,<->] (0,0.6) -- (10,0.6) node[midway, fill=white] {base};
-  \draw[>=latex,thick,<->] (5,-0.2) -- (10,-0.2) node[midway, fill=white] {opaque-base};
-  \draw[>=latex,thick,<->] (2.5,0.2) -- (10,0.2) node[midway, fill=white] {dielectric-base};
-  
-  
+      every node/.style={font=\small},
+      layer/.style={draw, minimum height=1.4cm, minimum width=2.5cm, anchor=south west, text width=2cm, align=center},
+      mid/.style={draw, minimum height=0.7cm, minimum width=2.5cm, anchor=south west, align=center},
+      thin/.style={draw, minimum height=0.7cm, anchor=south west, minimum width=10cm, align=center},
+    ]
+
+    \draw[dotted] (0,1) -- (0,-0.4);
+    \draw[dotted] (2.5,1) -- (2.5,-0.4);
+    \draw[dotted] (5,1) -- (5,-0.4);
+    \draw[dotted] (10,1) -- (10,-0.4);
+
+    \node[layer, fill=lightgray] (metal) at (0,1) {metal};
+    \node[layer] (translucent) at (2.5,1) {translucent base};
+    \node[layer] (subsurface) at (5,1) {subsurface};
+    \node[mid] (gloss) at (7.5,1.7) {gloss};
+    \node[mid, fill=lightgray] (diffuse) at (7.5,1) {diffuse};
+
+    \node[thin] (fuzz) at (0,3.1) {fuzz};
+    \node[thin] (coat) at (0,2.4) {coat};
+
+    \draw[>=latex,thick,<->] (0,0.6) -- (10,0.6) node[midway, fill=white] {base};
+    \draw[>=latex,thick,<->] (5,-0.2) -- (10,-0.2) node[midway, fill=white] {opaque-base};
+    \draw[>=latex,thick,<->] (2.5,0.2) -- (10,0.2) node[midway, fill=white] {dielectric-base};
+
+
   \end{tikzpicture}
   \caption{The different layers of the \gls{OpenPBR} surface shading model. The workflow supports various features such as metallic, glossy, and diffuse reflection renderings that are important for industrial use cases.}
   \label{fig:openPBR}

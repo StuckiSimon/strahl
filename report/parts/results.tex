@@ -45,32 +45,32 @@ A high-level view of the data structures is shown in \autoref{fig:memory-structu
     \centering
     \tikzsetnextfilename{memory-structure}
     \begin{tikzpicture}[
-      bvh/.style={rectangle, draw=rred, ultra thick, fill=rbred, inner sep=0.2cm, text width=3.0cm, align=center},
-      geo/.style={rectangle, draw=rgreen, ultra thick, fill=rbgreen, inner sep=0.2cm, text width=3.0cm, align=center},
-      mat/.style={rectangle, draw=rblue, ultra thick, fill=rbblue, inner sep=0.2cm, text width=3.0cm, align=center},
-    ]
-  
-      \node[bvh] (bounds) {bounds};
-      \node[bvh, above=0.6cm of bounds] (contents) {contents};
-  
-      \node[bvh, right=0.6cm of contents] (indirect) {indirect indices};
-      \node[geo, right=0.6cm of indirect] (indices) {indices};
-  
-      \node[geo, right=0.6cm of indices] (geometry) {geometry};
-  
-      \node[mat, below=0.6cm of indices] (object) {object definitions};
-      \node[mat, right=0.6cm of object] (materials) {materials};
-  
-      \draw[thick] (bounds) -- node[midway, right] {1:1} (contents);
-      \draw[-latex, thick] (contents) -- (indirect);
-      \draw[-latex, thick] (indirect) -- (indices);
-      \draw[-latex, thick] (indices) -- (geometry);
-      \draw[-latex, thick] (indices) -- (object);
-      \draw[-latex, thick] (object) -- (materials);
-  \end{tikzpicture}
+            bvh/.style={rectangle, draw=rred, ultra thick, fill=rbred, inner sep=0.2cm, text width=3.0cm, align=center},
+            geo/.style={rectangle, draw=rgreen, ultra thick, fill=rbgreen, inner sep=0.2cm, text width=3.0cm, align=center},
+            mat/.style={rectangle, draw=rblue, ultra thick, fill=rbblue, inner sep=0.2cm, text width=3.0cm, align=center},
+        ]
+
+        \node[bvh] (bounds) {bounds};
+        \node[bvh, above=0.6cm of bounds] (contents) {contents};
+
+        \node[bvh, right=0.6cm of contents] (indirect) {indirect indices};
+        \node[geo, right=0.6cm of indirect] (indices) {indices};
+
+        \node[geo, right=0.6cm of indices] (geometry) {geometry};
+
+        \node[mat, below=0.6cm of indices] (object) {object definitions};
+        \node[mat, right=0.6cm of object] (materials) {materials};
+
+        \draw[thick] (bounds) -- node[midway, right] {1:1} (contents);
+        \draw[-latex, thick] (contents) -- (indirect);
+        \draw[-latex, thick] (indirect) -- (indices);
+        \draw[-latex, thick] (indices) -- (geometry);
+        \draw[-latex, thick] (indices) -- (object);
+        \draw[-latex, thick] (object) -- (materials);
+    \end{tikzpicture}
     \caption{Main data buffers used by the path tracer. Data structures associated with the \gls{BVH} are red, geometry information is green, and material or object information is blue. Arrows indicate the pointers between the buffers.}
     \label{fig:memory-structure}
-  \end{figure}
+\end{figure}
 
 \subsection*{Ray Generator}
 
@@ -146,26 +146,26 @@ The path tracer is the core of the library and is responsible to test for inters
     \centering
     \tikzsetnextfilename{path-tracer-workflow}
     \begin{tikzpicture}[
-      pre/.style={rectangle, draw=lightgray, ultra thick, inner sep=0.2cm, text width=3.0cm, align=center},
-      core/.style={rectangle, draw=rblue, ultra thick, fill=rbblue, inner sep=0.2cm, text width=3.0cm, align=center},
-    ]
-  
-      \node[pre] (ray) {Ray Generator};
-      \node[core, right=1.5cm of ray] (intersection) {Intersection Test};
-      \node[core, below left=1.2cm and 0cm of intersection] (shader) {Surface Shading};
-      \node[core, right= 3cm of shader] (russian) {Russian Roulette};
-      \node[pre, right= 1.5cm of intersection] (terminate) {Termination};
-  
-      \draw[-latex, thick] (ray) -- node[midway, above] {ray} (intersection);
-      \draw[-latex, thick] (intersection) -- node[midway, left=0.2cm] {surface} (shader);
-      \draw[-latex, thick] (shader) -- node[midway, above] {throughput} node[midway, below] {ray} (russian);
-      \draw[-latex, thick] (intersection) -- (terminate);
-      \draw[-latex, thick] (russian) -- (terminate);
-      \draw[-latex, thick] (russian) -- node[midway, right] {ray} (intersection);
+            pre/.style={rectangle, draw=lightgray, ultra thick, inner sep=0.2cm, text width=3.0cm, align=center},
+            core/.style={rectangle, draw=rblue, ultra thick, fill=rbblue, inner sep=0.2cm, text width=3.0cm, align=center},
+        ]
+
+        \node[pre] (ray) {Ray Generator};
+        \node[core, right=1.5cm of ray] (intersection) {Intersection Test};
+        \node[core, below left=1.2cm and 0cm of intersection] (shader) {Surface Shading};
+        \node[core, right= 3cm of shader] (russian) {Russian Roulette};
+        \node[pre, right= 1.5cm of intersection] (terminate) {Termination};
+
+        \draw[-latex, thick] (ray) -- node[midway, above] {ray} (intersection);
+        \draw[-latex, thick] (intersection) -- node[midway, left=0.2cm] {surface} (shader);
+        \draw[-latex, thick] (shader) -- node[midway, above] {throughput} node[midway, below] {ray} (russian);
+        \draw[-latex, thick] (intersection) -- (terminate);
+        \draw[-latex, thick] (russian) -- (terminate);
+        \draw[-latex, thick] (russian) -- node[midway, right] {ray} (intersection);
     \end{tikzpicture}
     \caption{High-level workflow of path tracing core routine. Blue are the main parts of the recursive path tracing algorithm, gray are the pre- and post-processing steps. The arrows indicate the flow of data, describing the primary information passed between the steps.}
     \label{fig:path-tracer-workflow}
-  \end{figure}
+\end{figure}
 
 \subsubsection{Intersection Test}
 \label{sec:bvh-implementation}
@@ -204,8 +204,8 @@ The output of the path tracing compute shader is a texture, which is then passed
 As rendering progresses, the image becomes increasingly less noisy. However, as the number of samples increases, the noise reduction achieved by each additional sample diminishes. At this stage, denoising can significantly enhance image quality by further reducing noise. The renderer allows for an optional denoising step to be performed after sampling is complete. The renderer supports two mutually exclusive denoising modes:
 
 \begin{itemize}
-  \item{Denoise filtering} — A filter to reduce noise based on a circular Gaussian kernel \cite{conventionalGaussianDenoise}. The denoise filter is integrated into the render pipeline. See \coderef{DENOISE-FILTERING} for implementation.
-  \item{\gls{OIDN}} — Open Image Denoise \cite{openImageDenoise}, developed by Intel, is a state-of-the-art denoising library that uses \gls{ML} and is built for noise reduction in ray tracing. The web library is developed by Shen \cite{oidnWeb} and based on \gls{WebGPU}, making it well-suited for integration into the path tracer as a subsequent step. After denoising, the image is rendered using the render pipeline.
+    \item{Denoise filtering} — A filter to reduce noise based on a circular Gaussian kernel \cite{conventionalGaussianDenoise}. The denoise filter is integrated into the render pipeline. See \coderef{DENOISE-FILTERING} for implementation.
+    \item{\gls{OIDN}} — Open Image Denoise \cite{openImageDenoise}, developed by Intel, is a state-of-the-art denoising library that uses \gls{ML} and is built for noise reduction in ray tracing. The web library is developed by Shen \cite{oidnWeb} and based on \gls{WebGPU}, making it well-suited for integration into the path tracer as a subsequent step. After denoising, the image is rendered using the render pipeline.
 \end{itemize}
 
 Results of simple renderings with and without denoising can be seen in \autoref{fig:denoise-samples}. Note that \gls{OIDN} can effectively denoise images even with a low number of samples, as shown in \autoref{fig:denoise-oidn-10-samples}. The difference in denoising on 100 samples, as shown in \autoref{fig:denoise-oidn-100-samples} for \gls{OIDN} and \autoref{fig:denoise-gaussian-100-samples} for the denoise filter, is less pronounced in local areas. However, \gls{OIDN} is more effective in reducing noise in global regions.
@@ -309,12 +309,12 @@ As described in \autoref{ch:russianRoulette}, Russian roulette is a technique fo
     \centering
     \ra{1.3}
     \begin{tabular}{@{}lrr@{}}
-    \toprule
-    & With Russian roulette & Without Russian roulette \\
-    High & 2,361.77 ms $\pm$ 11.27 ms & 2,583.40 ms $\pm$ 12.84 ms \\
-    Mid & 2,018.03 ms $\pm$ 8.76 ms & 2,135.94 ms $\pm$ 8.14 ms \\
-    Low & 2,028.04 ms $\pm$ 10.78 ms & 2,200.00 ms $\pm$ 8.91 ms \\
-    \bottomrule
+        \toprule
+             & With Russian roulette      & Without Russian roulette   \\
+        High & 2,361.77 ms $\pm$ 11.27 ms & 2,583.40 ms $\pm$ 12.84 ms \\
+        Mid  & 2,018.03 ms $\pm$ 8.76 ms  & 2,135.94 ms $\pm$ 8.14 ms  \\
+        Low  & 2,028.04 ms $\pm$ 10.78 ms & 2,200.00 ms $\pm$ 8.91 ms  \\
+        \bottomrule
     \end{tabular}
     \caption{Benchmark results for Russian roulette optimization.}
     \label{tab:russian-roulette-measurements}
@@ -328,12 +328,12 @@ For the intersection tests using the \gls{BVH}, the split axis is used as a heur
     \centering
     \ra{1.3}
     \begin{tabular}{@{}lrr@{}}
-    \toprule
-    & With split axis heuristic & Without split axis heuristic \\
-    High & 3,244.30 ms $\pm$ 45.71 ms & 4,039.87 ms $\pm$ 33.51 ms \\
-    Mid & 2,663.14 ms $\pm$ 35.57 ms & 3,181.89 ms $\pm$ 24.92 ms \\
-    Low & 2,698.65 ms $\pm$ 27.60 ms & 3,124.27 ms $\pm$ 36.02 ms \\
-    \bottomrule
+        \toprule
+             & With split axis heuristic  & Without split axis heuristic \\
+        High & 3,244.30 ms $\pm$ 45.71 ms & 4,039.87 ms $\pm$ 33.51 ms   \\
+        Mid  & 2,663.14 ms $\pm$ 35.57 ms & 3,181.89 ms $\pm$ 24.92 ms   \\
+        Low  & 2,698.65 ms $\pm$ 27.60 ms & 3,124.27 ms $\pm$ 36.02 ms   \\
+        \bottomrule
     \end{tabular}
     \caption{Benchmark results for \gls{BVH} split axis heuristic.}
     \label{tab:bvh-split-axis-measurements}
@@ -344,35 +344,35 @@ For the intersection tests using the \gls{BVH}, the split axis is used as a heur
 A final performance test was conducted on two machines. The AMD/NVIDIA machine is a desktop computer with an AMD Ryzen 5 5600X \gls{CPU} and NVIDIA GeForce RTX 3080 (10 GB) \gls{GPU}. The \gls{CPU} results to setup the \gls{BVH} are presented in Table~\ref{tab:cpuPerformance}. The \gls{GPU} results for the core path tracing are presented in Table~\ref{tab:gpuPerformance}. Note that the number of samples required for high-quality renderings is dependent on the scene. Effects such as rough metallic reflection require more samples to converge than a diffuse surface. However, for many use cases, the number is in the range of 100 to 1000 samples per pixel, with an additional denoising step.
 
 \begin{table}[H]
-  \centering
-  \ra{1.3}
-  \begin{tabular}{lrr}
-    \toprule
-    & Apple M1 Max    & AMD/NVIDIA \\
-    High     & 327.57 ms $\pm$ 0.56 ms     & 383.10 ms $\pm$ 4.06 ms \\
-    Mid     & 45.49 ms $\pm$ 0.31 ms    & 41.77 ms $\pm$ 0.43 ms \\
-    Low     & 10.53 ms $\pm$ 0.24 ms    & 8.43 ms $\pm$ 0.22 ms \\
-    \bottomrule
-  \end{tabular}
-  \caption{\gls{BVH} setup time based on model complexity}
-  \label{tab:cpuPerformance}
+    \centering
+    \ra{1.3}
+    \begin{tabular}{lrr}
+        \toprule
+             & Apple M1 Max            & AMD/NVIDIA              \\
+        High & 327.57 ms $\pm$ 0.56 ms & 383.10 ms $\pm$ 4.06 ms \\
+        Mid  & 45.49 ms $\pm$ 0.31 ms  & 41.77 ms $\pm$ 0.43 ms  \\
+        Low  & 10.53 ms $\pm$ 0.24 ms  & 8.43 ms $\pm$ 0.22 ms   \\
+        \bottomrule
+    \end{tabular}
+    \caption{\gls{BVH} setup time based on model complexity}
+    \label{tab:cpuPerformance}
 \end{table}
 
 \begin{table}[H]
-  \centering
-  \ra{1.3}
-  \begin{tabular}{lrr}
-    \toprule
-    & Apple M1 Max    & AMD/NVIDIA \\
-    High     & 2,319.45 ms $\pm$ 11.14 ms    & 1,058.73 ms $\pm$ 59.47 ms \\
-    Mid     & 1,992.11 ms $\pm$ 8.49 ms    & 790.20 ms $\pm$ 3.79 ms\\
-    Low     & 2,031.38 ms $\pm$ 9.87 ms    & 790.83 ms $\pm$ 4.18 ms \\
-    \bottomrule
-  \end{tabular}
-  \caption{\gls{GPU} path tracer time based on model complexity}
-  \label{tab:gpuPerformance}
+    \centering
+    \ra{1.3}
+    \begin{tabular}{lrr}
+        \toprule
+             & Apple M1 Max               & AMD/NVIDIA                 \\
+        High & 2,319.45 ms $\pm$ 11.14 ms & 1,058.73 ms $\pm$ 59.47 ms \\
+        Mid  & 1,992.11 ms $\pm$ 8.49 ms  & 790.20 ms $\pm$ 3.79 ms    \\
+        Low  & 2,031.38 ms $\pm$ 9.87 ms  & 790.83 ms $\pm$ 4.18 ms    \\
+        \bottomrule
+    \end{tabular}
+    \caption{\gls{GPU} path tracer time based on model complexity}
+    \label{tab:gpuPerformance}
 \end{table}
-  
+
 \newpage
 \section{Use Case Scenarios}
 

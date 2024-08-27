@@ -55,7 +55,7 @@ In order to render the assemblies based on the preprocessed information, three m
 
 \subsection*{Offline Rendering}
 
-Offline rendering requires pre-rendering all product configurations. This is theoretically possible for a finite number of configurations, but computationally expensive. 
+Offline rendering requires pre-rendering all product configurations. This is theoretically possible for a finite number of configurations, but computationally expensive.
 
 An offline rendering pipeline generates static images of the assembly, which are then displayed in the browser. This means that all possible assemblies need to be rendered and stored upfront. As the number of component types increases, the number of possible combinations grows exponentially, which can lead to large amounts of storage and processing power being required, as shown in \autoref{fig:cad-offline}.
 
@@ -138,18 +138,18 @@ Each of the paradigms has its own advantages. \autoref{tab:paradigmComparison} h
   \centering
   \ra{1.3}
   \begin{tabular}{@{}p{5cm}p{2.5cm}p{2.5cm}p{2.5cm}@{}}
-  \toprule
-  Rendering Paradigm & \textbf{Offline} & \multicolumn{2}{c}{\textbf{Real-time}} \\
-   &  & \textbf{Client-Side} & \textbf{Remote} \\
-  Preprocessing Cost & High & Low & Low \\
-  Hosting Cost & Low & Low & High \\
-  Storage & High & Low & Low \\
-  Main Performance \newline Dependency & network & device & network \\
-  Interactivity & Low & High & High \\
-  Network Dependency & Low & Low & High \\
-  Max Complexity Dependency & server & device & server \\
-  Change Management \newline Complexity & High & Low & Low \\
-  \bottomrule
+    \toprule
+    Rendering Paradigm                    & \textbf{Offline} & \multicolumn{2}{c}{\textbf{Real-time}}                   \\
+                                          &                  & \textbf{Client-Side}                   & \textbf{Remote} \\
+    Preprocessing Cost                    & High             & Low                                    & Low             \\
+    Hosting Cost                          & Low              & Low                                    & High            \\
+    Storage                               & High             & Low                                    & Low             \\
+    Main Performance \newline Dependency  & network          & device                                 & network         \\
+    Interactivity                         & Low              & High                                   & High            \\
+    Network Dependency                    & Low              & Low                                    & High            \\
+    Max Complexity Dependency             & server           & device                                 & server          \\
+    Change Management \newline Complexity & High             & Low                                    & Low             \\
+    \bottomrule
   \end{tabular}
   \caption{High-level comparison between different rendering architecture paradigms.}
   \label{tab:paradigmComparison}
@@ -179,7 +179,7 @@ Different web-based real-time rasterizers exist. The main options include:
 
 In addition, \gls{Unity}, a common game engine for desktop and mobile applications, also supports \fgls{WebGL}{\e{Web Graphics Library}, since 2011 the de-facto standard API for rendering 3D graphics on the web} \cite{unityWebGLCompatibility}.
 
-These engines focus on rasterization techniques and are widely used for web-based applications. The focus of these engines lies in real-time rendering performance as used in games, advertising campaigns, virtual reality (VR), augmented reality (AR), medical imaging, scientific visualization, and educational applications. However, they lack support for ray tracing. 
+These engines focus on rasterization techniques and are widely used for web-based applications. The focus of these engines lies in real-time rendering performance as used in games, advertising campaigns, virtual reality (VR), augmented reality (AR), medical imaging, scientific visualization, and educational applications. However, they lack support for ray tracing.
 
 \subsection*{Web Path Tracers}
 \label{sec:web-path-tracers}

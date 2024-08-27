@@ -43,9 +43,9 @@
 % Finish paragraph so that it can be used as a title
 \makeatletter
 \renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
-            {-2.5ex\@plus -1ex \@minus -.25ex}%
-            {1.25ex \@plus .25ex}%
-            {\normalfont\normalsize\itshape\bfseries}}
+  {-2.5ex\@plus -1ex \@minus -.25ex}%
+  {1.25ex \@plus .25ex}%
+  {\normalfont\normalsize\itshape\bfseries}}
 \makeatother
 
 % Package for adding todo notes and highlighting them in color
@@ -80,9 +80,9 @@
 \usepackage[hidelinks,breaklinks]{hyperref}
 \hypersetup{%
   pdftitle={Physically-based Path Tracer using WebGPU and OpenPBR},
-% Use \plainauthor for final version.
+  % Use \plainauthor for final version.
   pdfauthor={Simon Stucki},
-%  pdfauthor={\emptyauthor},
+  %  pdfauthor={\emptyauthor},
   pdfdisplaydoctitle=true, % For Accessibility
   bookmarksnumbered,
   pdfstartview={FitH}
@@ -108,7 +108,7 @@
 % Syntax: [draw options] (center) (initial angle:final angle:radius)
 % Source: https://tex.stackexchange.com/questions/66216/draw-arc-in-tikz-when-center-of-circle-is-specified
 \def\centerarc[#1](#2)(#3:#4:#5)
-    { \draw[#1] ($(#2)+({#5*cos(#3)},{#5*sin(#3)})$) arc (#3:#4:#5); }
+{ \draw[#1] ($(#2)+({#5*cos(#3)},{#5*sin(#3)})$) arc (#3:#4:#5); }
 
 % Set color style
 \definecolor{rblue}{HTML}{3F72AF}
@@ -138,35 +138,35 @@
 
 % Shortcut for first glossary reference: lower-case & singular
 \newcommand{\fgls}[2]{{
-  \newglossaryentry{#1}
-  {
-    name={#1},
-    description={{#2}}
-  }\gls{#1}\footnote{#2}}}
+      \newglossaryentry{#1}
+      {
+        name={#1},
+        description={{#2}}
+      }\gls{#1}\footnote{#2}}}
 
 % Shortcut for first glossary reference: lower-case & plural
 \newcommand{\fglspl}[2]{{
-  \newglossaryentry{#1}
-  {
-    name={#1},
-    description={{#2}}
-  }\glspl{#1}\footnote{#2}}}
+      \newglossaryentry{#1}
+      {
+        name={#1},
+        description={{#2}}
+      }\glspl{#1}\footnote{#2}}}
 
 % Shortcut for first glossary reference: Upper-case & singular
 \newcommand{\fGls}[2]{{
-  \newglossaryentry{#1}
-  {
-    name={#1},
-    description={{#2}}
-  }\Gls{#1}\footnote{#2}}}
+      \newglossaryentry{#1}
+      {
+        name={#1},
+        description={{#2}}
+      }\Gls{#1}\footnote{#2}}}
 
 % Shortcut for first glossary reference: Upper-case & plural
 \newcommand{\fGlspl}[2]{{
-  \newglossaryentry{#1}
-  {
-    name={#1},
-    description={{#2}}
-  }\Glspl{#1}\footnote{#2}}}
+      \newglossaryentry{#1}
+      {
+        name={#1},
+        description={{#2}}
+      }\Glspl{#1}\footnote{#2}}}
 
 \pgfplotsset{compat=1.16}
 
@@ -196,7 +196,7 @@
 }
 \lstdefinestyle{JavaScript} {%
   % General design
-%  backgroundcolor=\color{editorGray},
+  %  backgroundcolor=\color{editorGray},
   basicstyle={\footnotesize\ttfamily},
   frame=b,
   % line-numbers
@@ -261,41 +261,41 @@
 
 \makeatletter
 \renewcommand\listoffigures{%
-    \section{\listfigurename}% Used to be \section*{\listfigurename}
-      \@mkboth{\MakeUppercase\listfigurename}%
-              {\MakeUppercase\listfigurename}%
-    \@starttoc{lof}%
-    }
+  \section{\listfigurename}% Used to be \section*{\listfigurename}
+  \@mkboth{\MakeUppercase\listfigurename}%
+  {\MakeUppercase\listfigurename}%
+  \@starttoc{lof}%
+}
 \makeatother
 
 \makeatletter
 \renewcommand\listoftables{%
-    \section{\listtablename}% Used to be \section*{\listtablename}
-      \@mkboth{\MakeUppercase\listtablename}%
-              {\MakeUppercase\listtablename}%
-    \@starttoc{lot}%
-    }
+  \section{\listtablename}% Used to be \section*{\listtablename}
+  \@mkboth{\MakeUppercase\listtablename}%
+  {\MakeUppercase\listtablename}%
+  \@starttoc{lot}%
+}
 \makeatother
 
 \makeatletter
 \renewenvironment{thebibliography}[1]
-     {\section{\bibname}% <-- this line was changed from \chapter* to \section
-      \@mkboth{\MakeUppercase\bibname}{\MakeUppercase\bibname}%
-      \list{\@biblabel{\@arabic\c@enumiv}}%
-           {\settowidth\labelwidth{\@biblabel{#1}}%
-            \leftmargin\labelwidth
-            \advance\leftmargin\labelsep
-            \@openbib@code
-            \usecounter{enumiv}%
-            \let\p@enumiv\@empty
-            \renewcommand\theenumiv{\@arabic\c@enumiv}}%
-      \sloppy
-      \clubpenalty4000
-      \@clubpenalty \clubpenalty
-      \widowpenalty4000%
-      \sfcode`\.\@m}
-     {\def\@noitemerr
-       {\@latex@warning{Empty `thebibliography' environment}}%
-      \endlist}
+{\section{\bibname}% <-- this line was changed from \chapter* to \section
+  \@mkboth{\MakeUppercase\bibname}{\MakeUppercase\bibname}%
+  \list{\@biblabel{\@arabic\c@enumiv}}%
+  {\settowidth\labelwidth{\@biblabel{#1}}%
+    \leftmargin\labelwidth
+    \advance\leftmargin\labelsep
+    \@openbib@code
+    \usecounter{enumiv}%
+    \let\p@enumiv\@empty
+    \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+  \sloppy
+  \clubpenalty4000
+  \@clubpenalty \clubpenalty
+  \widowpenalty4000%
+  \sfcode`\.\@m}
+{\def\@noitemerr
+  {\@latex@warning{Empty `thebibliography' environment}}%
+  \endlist}
 \makeatother
 
