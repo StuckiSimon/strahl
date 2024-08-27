@@ -1180,7 +1180,7 @@ Each type in \gls{WGSL} has specific alignment requirements independent of the s
   \label{fig:memory-alignment}
 \end{figure}
 
-Memory alignment is opaque while writing \gls{WGSL} code, but it is relevant when providing data to the \gls{GPU}. The alignment requirements need to be considered when creating buffers. When using JavaScript to create buffers, the standard Web \glspl{API} such as \texttt{Float32Array} or \texttt{Uint32Array} can be used to provide data. In order to write data to the \texttt{struct} in \autoref{code:memoryAlignment}, the views can be created as shown in \autoref{code:memoryAlignmentJs}.
+Memory alignment is opaque while writing \gls{WGSL} code, but it is relevant when providing data to the \gls{GPU}. The alignment requirements need to be considered when creating buffers. When using JavaScript to create buffers, the standard web \glspl{API} such as \texttt{Float32Array} or \texttt{Uint32Array} can be used to provide data. In order to write data to the \texttt{struct} in \autoref{code:memoryAlignment}, the views can be created as shown in \autoref{code:memoryAlignmentJs}.
 
 \begin{figure}[H]
   \begin{lstlisting}[style=JavaScript]
