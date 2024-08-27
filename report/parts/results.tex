@@ -17,7 +17,7 @@ A consistent notation is used for references to the implementation of the path t
 
 \section{Implementation}
 
-The goal of the implementation is to be compatible with a large variety of devices and make the setup for consumers straightforward. Therefore, it is implemented and tested mainly in Chrome, which uses \gls{Dawn} as the underlying implementation of \gls{WebGPU}. Most notably, this means that dedicated features from other implementations, such as \gls{wgpu}, cannot be used. Neither can experimental extensions be leveraged.
+The goal of the implementation is to be compatible with a large variety of devices and to make the setup for consumers straightforward. Therefore, it is implemented and tested mainly in Chrome, which uses \gls{Dawn} as the underlying implementation of \gls{WebGPU}. Most notably, this means that dedicated features from other implementations, such as \gls{wgpu}, cannot be used. Neither can experimental extensions be leveraged.
 
 Figure~\ref{fig:path-tracer} illustrates the procedure of the path tracer. Scene preparation is performed on the \gls{CPU}. This setup needs to be done once per visualization. Subsequent scene sampling is carried out repeatedly on the \gls{GPU}, which constitutes the most computationally intensive part of the process.
 
@@ -86,13 +86,13 @@ In order to set up the Monte Carlo method, the \gls{RNG} needs to be employed in
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
         \includegraphics[width=\textwidth]{resources/single-sample-bad-seed.png}
-        \caption{identical seed for all pixels}
+        \caption{Identical seed for all pixels.}
         \label{fig:rngBadSeed}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.45\textwidth}
         \includegraphics[width=\textwidth]{resources/single-sample-good-seed.png}
-        \caption{independent seed for every pixel}
+        \caption{Independent seed for every pixel.}
         \label{fig:rngGoodSeed}
     \end{subfigure}
     \caption{Both images consist of only one sample.}
@@ -121,13 +121,13 @@ When increasing the sample count, the differences in the setup remain visible. A
     \hspace*{2cm}
     \begin{subfigure}[t]{0.3\textwidth}
         \includegraphics[width=\textwidth]{resources/bad-seed-anti-aliasing.png}
-        \caption{On the right side, anti-aliasing is rather noticeable.}
+        \caption{On the right side of the image, anti-aliasing is rather noticeable.}
         \label{fig:rngNoiseArtifactsHighlightsBadAnti}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.3\textwidth}
         \includegraphics[width=\textwidth]{resources/good-seed-anti-aliasing.png}
-        \caption{On the right side, anti-aliasing is less noticeable.}
+        \caption{On the right side of the image, anti-aliasing is less noticeable.}
         \label{fig:rngNoiseArtifactsHighlightsGoodAnti}
     \end{subfigure}
     \hspace*{2cm}
@@ -205,7 +205,7 @@ As rendering progresses, the image becomes increasingly less noisy. However, as 
 
 \begin{itemize}
   \item{Denoise filtering} — A filter to reduce noise based on a circular Gaussian kernel \cite{conventionalGaussianDenoise}. The denoise filter is integrated into the render pipeline. See \coderef{DENOISE-FILTERING} for implementation.
-  \item{\gls{OIDN}} — Open Image Denoise \cite{openImageDenoise}, developed by Intel, is a state-of-the-art denoising library that uses \gls{ML} and is built for noise reduction in ray tracing. The concrete library is developed by Shen \cite{oidnWeb} and based on \gls{WebGPU}, making it well-suited for integration into the path tracer as a subsequent step. After denoising, the image is rendered using the render pipeline.
+  \item{\gls{OIDN}} — Open Image Denoise \cite{openImageDenoise}, developed by Intel, is a state-of-the-art denoising library that uses \gls{ML} and is built for noise reduction in ray tracing. The web library is developed by Shen \cite{oidnWeb} and based on \gls{WebGPU}, making it well-suited for integration into the path tracer as a subsequent step. After denoising, the image is rendered using the render pipeline.
 \end{itemize}
 
 Results of simple renderings with and without denoising can be seen in \autoref{fig:denoise-samples}. Note that \gls{OIDN} can effectively denoise images even with a low number of samples, as shown in \autoref{fig:denoise-oidn-10-samples}. The difference in denoising on 100 samples, as shown in \autoref{fig:denoise-oidn-100-samples} for \gls{OIDN} and \autoref{fig:denoise-gaussian-100-samples} for the denoise filter, is less pronounced in local areas. However, \gls{OIDN} is more effective in reducing noise in global regions.
@@ -398,7 +398,7 @@ Different assemblies of production \gls{CAD} data used by EAO as rendered by the
     \hspace*{1cm}
     \begin{subfigure}[t]{0.4\textwidth}
         \includegraphics[width=\textwidth]{resources/demo-color-bleeding.png}
-        \caption{Rear view exhibiting red color bleeding.}
+        \caption{Rear view exhibiting slight color bleeding, visible as a red tint on the black surface.}
         \label{fig:demo-color-bleeding}
     \end{subfigure}
     \hfill
@@ -408,6 +408,6 @@ Different assemblies of production \gls{CAD} data used by EAO as rendered by the
         \label{fig:demo-ambient-occlusion}
     \end{subfigure}
     \hspace*{1cm}
-    \caption{Path traced renderings of pushbutton \gls{CAD} models.}
+    \caption{Path-traced renderings of pushbutton \gls{CAD} models.}
     \label{fig:rendering-showcase}
 \end{figure}
