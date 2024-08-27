@@ -18,7 +18,7 @@ In order to contextualize the results, the presented work is compared to existin
 \subsection*{Comparison to Prior Work}
 \label{sec:comparisonToPriorWork}
 
-The three open-source path tracers introduced in \autoref{sec:web-path-tracers} are alternatives to the renderer developed in this work. While comparing them based on quantitative measures such as \fGls{FPS}{\e{Frames per second}, measure of the rate at which consecutive images are rendered and displayed} is not meaningful as the number of samples, which are required for high-fidelity renderings, differs across the renderers, it is still possible to define a set of criteria to compare them.
+The three open-source path tracers introduced in \autoref{sec:web-path-tracers} are alternatives to the renderer developed in this work. Comparing them based on quantitative measures such as \fGls{FPS}{\e{Frames per second}, measure of the rate at which consecutive images are rendered and displayed} is not meaningful as the number of samples required for high-fidelity renderings differs across the renderers. Nevertheless, defining a set of criteria to compare them is still possible.
 
 
 \subsubsection*{WebGPU Support}
@@ -109,15 +109,15 @@ This means that using \gls{WebGPU} is straightforward on most modern devices, wi
 
 \subsubsection*{Ray Tracing}
 
-To date, \gls{WebGPU} does not support some features that are common in modern rendering \glspl{API} and would be beneficial for the path tracer. The most prominent example is hardware-accelerated ray tracing. \glspl{API} such as Vulkan support hardware-accelerated ray tracing \cite{vulkanRayTracing}. This entails helpers for building common acceleration structures, such as \gls{BVH} and ray querying functions to determine intersections. \gls{WebGPU} does not yet support these features, but there are discussions ongoing to add extensions \cite{webGPURayTracing} as well as a demonstration implemented in a Dawn fork \cite{webGPURayTracingFork}.
+To date, \gls{WebGPU} does not support some features common in modern rendering \glspl{API} and would be beneficial for the path tracer. The most prominent example is hardware-accelerated ray tracing. \glspl{API} such as \gls{Vulkan} support hardware-accelerated ray tracing \cite{vulkanRayTracing}. This entails helpers for building common acceleration structures, such as \gls{BVH} and ray querying functions to determine intersections. \gls{WebGPU} does not yet support these features, but discussions are ongoing to add extensions \cite{webGPURayTracing} as well as a demonstration implemented in a modified version of \gls{Dawn} \cite{webGPURayTracingFork}.
 
 \subsubsection*{Debuggability}
 
-None of the major browser engines, Chrome, Firefox, and Safari, provide debugging as part of the developer tools. Tools for inspecting \gls{WebGPU} applications exist \cite{webGpuDevToolsDuncan, webGpuDevToolsTakahiro} but are limited in terms of feature set. While they are helpful in inspecting the pipelines, capturing frames, and inspecting resources, they do not provide debugging capabilities such as breakpoints, stepping, or variable inspection. For specific setups, there are methods to setup profiling \cite{webGpuProfilingWithPix}, but these are not integrated into the browser developer tools and are dependent on the concrete machine hardware. Improvements in this area would be beneficial for productivity.
+None of the major browser engines, Chrome, Firefox, and Safari, provide debugging as part of the developer tools. Tools for inspecting \gls{WebGPU} applications exist \cite{webGpuDevToolsDuncan, webGpuDevToolsTakahiro} but are limited in terms of feature set. While they are helpful in inspecting the pipelines, capturing frames, and inspecting resources, they do not provide debugging capabilities such as breakpoints, stepping, or variable inspection. For specific setups, there are methods to setup profiling \cite{webGpuProfilingWithPix}, but these are not integrated into the browser developer tools and are dependent on the concrete machine hardware. Improvements in this area would facilitate troubleshooting.
 
 \subsubsection*{Stability}
 
-To date, there are reports of stability issues with \gls{WebGPU}. This includes crashes of the browser, but on macOS using Chrome system-wide crashes have been observed with faulty \gls{WebGPU} code. Such issues can look like shown in \autoref{fig:webgpu-crash}. Due to the early stage of the technology and the complexity of the underlying system, such stability issues ought to be expected. As implementations mature, these issues are likely to be resolved.
+To date, there are reports of stability issues with \gls{WebGPU}. This includes browser crashes, but on macOS using Chrome, even system-wide crashes have been observed with faulty \gls{WebGPU} code. Such issues can look like shown in \autoref{fig:webgpu-crash}. Due to the early stage of the technology and the complexity of the underlying system, such stability issues ought to be expected. As implementations mature, these issues are likely to be resolved.
 
 \begin{figure}[H]
   \centering
@@ -216,9 +216,9 @@ During the specification phase of \gls{WebGPU}, the relation to \fgls{SPIR-V}{\e
 
 \subsubsection*{Low-Level Performance Optimizations}
 
-This target is likely at odds to provide automatic shader generation. The current implementation is not optimized for performance. Therefore, optimizing the \gls{WGSL} code could improve the performance of the renderer. Due to the nature of the design of \gls{OpenPBR}, it would be possible to optimize and improve real-time rendering performance. One approach to do so is to establish so-called wavefront path tracing \cite{laine2013megakernels}. Instead of a single megakernel, the renderer could be split into multiple smaller kernels. One kernel would be responsible for ray generation, another for intersection testing, and multiple kernels for shading - one per workflow. This would reduce the divergence of the shader programs and could improve performance. Further investigation of potential performance improvements is required \cite{wavefrontComparisonInTableA5,mitsubaWavefrontVsMegakernel}.
+The current implementation is not optimized for performance. Therefore, optimizing the \gls{WGSL} code could improve the performance of the renderer. Due to the nature of the design of \gls{OpenPBR}, it would be possible to optimize and improve real-time rendering performance. One approach to do so is to establish so-called wavefront path tracing \cite{laine2013megakernels}. Instead of a single megakernel, the renderer could be split into multiple smaller kernels. One kernel would be responsible for ray generation, another for intersection testing, and multiple kernels for shading - one per workflow. This would reduce the divergence of the shader programs and could improve performance. Further investigation of potential performance improvements is required \cite{wavefrontComparisonInTableA5,mitsubaWavefrontVsMegakernel}.
 
-Automatic shader generation is helpful but likely not as optimized as a carefully tuned implementation. However, both endeavors are of interest for potential benefits.
+This objective may be incompatible with the goal of providing automatic shader generation. Automatic shader generation is helpful but likely not as optimized as a carefully tuned implementation. However, both endeavors are of interest for potential benefits.
 
 \subsection*{Quality Improvements}
 
