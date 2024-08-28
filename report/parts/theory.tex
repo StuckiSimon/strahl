@@ -525,12 +525,26 @@ While global illumination commonly refers to a subset of effects, the term is us
 
 The importance of achieving these effects depends on the use case. For the use case of this thesis, shadows and reflections are pivotal for the realism and perceived quality of the images. Refraction and caustics were not encountered in the use case of this thesis and are, therefore, not covered in detail.
 
-\autoref{fig:global-illumination-demo} shows a visualization of the most notable effects. The image shows a floor with a white diffuse material, two walls with a red diffuse material, and a sphere with specular reflection. The sphere casts a shadow onto the floor, the walls are reflected onto the sphere, the prominent red color bleeds onto the white floor.
+\autoref{fig:global-illumination-demo} depicts the most notable effects and their absence. The scene consists of a floor with a white diffuse material, two walls with a red diffuse material, and a sphere with specular reflection. The sphere casts a shadow onto the floor, the walls are reflected onto the sphere, the prominent red color bleeds onto the white floor.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.3\columnwidth]{resources/global-illumination-demonstration.png}
-  \caption{Image showing the different kinds of effects that can be achieved using global illumination.}
+  \hspace*{1.8cm}
+  \begin{subfigure}[b]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{resources/global-illumination-demonstration-negative.png}
+    \caption{No global illumination.}
+    \label{fig:global-illumination-demo-bad}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{resources/global-illumination-demonstration.png}
+    \caption{With global illumination.}
+    \label{fig:global-illumination-demo-good}
+  \end{subfigure}
+  \hspace*{1.8cm}
+  \caption{Side-by-side demonstration of different kinds of global illumination effects.}
   \label{fig:global-illumination-demo}
 \end{figure}
 
