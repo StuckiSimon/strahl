@@ -1,9 +1,19 @@
-@article{ownShortPaper,
-  author={Stucki, Simon and Ackermann, Philipp},
-  journal={Proceedings WEB3D '24: The 29th International ACM Conference on 3D Web Technology}, 
-  title={Physically-based Path Tracer using WebGPU and OpenPBR}, 
-  year={2024},
-  doi={10.1145/3665318.3677158}
+@inproceedings{ownShortPaper,
+  author = {Stucki, Simon and Ackermann, Philipp},
+  title = {Physically-based Path Tracer using WebGPU and OpenPBR},
+  year = {2024},
+  isbn = {9798400706899},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  url = {https://doi.org/10.1145/3665318.3677158},
+  doi = {10.1145/3665318.3677158},
+  abstract = {This work presents a web-based, open-source path tracer for rendering physically-based 3D scenes using WebGPU and the OpenPBR surface shading model. While rasterization has been the dominant real-time rendering technique on the web since WebGL’s introduction in 2011, it struggles with global illumination. This necessitates more complex techniques, often relying on pregenerated artifacts to attain the desired level of visual fidelity. Path tracing inherently addresses these limitations but at the cost of increased rendering time. Our work focuses on industrial applications where highly customizable products are common and real-time performance is not critical. We leverage WebGPU to implement path tracing on the web, integrating the OpenPBR standard for physically-based material representation. The result is a near real-time path tracer capable of rendering high-fidelity 3D scenes directly in web browsers, eliminating the need for pregenerated assets. Our implementation demonstrates the potential of WebGPU for advanced rendering techniques and opens new possibilities for web-based 3D visualization in industrial applications.},
+  booktitle = {Proceedings of the 29th International ACM Conference on 3D Web Technology},
+  articleno = {4},
+  numpages = {6},
+  keywords = {OpenPBR, WebGPU, physically-based rendering, web path tracer},
+  location = {Guimar\~{a}es, Portugal},
+  series = {WEB3D '24}
 }
 
 @online{webgpuSpecification,
