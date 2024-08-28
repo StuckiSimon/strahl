@@ -33,7 +33,7 @@ struct Material {
   emissionLuminance: f32,
   emissionColor: Color,
   thinFilmThickness: f32,
-  thinFilmIOR: f32,
+  thinFilmIor: f32,
 }
 
 struct UniformData {

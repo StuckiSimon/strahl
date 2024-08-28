@@ -10,7 +10,8 @@ export class OpenPBRMaterial {
   oSpecularColor: Color = [1.0, 1.0, 1.0];
   oSpecularRoughness: number = 0.3;
   oSpecularRoughnessAnisotropy: number = 0.0;
-  oSpecularIOR: number = 1.5;
+  oSpecularIor: number = 1.5;
+  // NOTE: Coat workflow is not yet supported by the renderer
   oCoatWeight: number = 0.0;
   oCoatColor: Color = [1.0, 1.0, 1.0];
   oCoatRoughness: number = 0.0;
@@ -19,9 +20,9 @@ export class OpenPBRMaterial {
   oCoatDarkening: number = 1.0;
   oEmissionLuminance: number = 0.0;
   oEmissionColor: Color = [1.0, 1.0, 1.0];
-  // todo: add oThinFilmWeight
+  // NOTE: Thin-film workflow is not yet supported by the renderer
   oThinFilmThickness: number = 0.5;
-  oThinFilmIOR: number = 1.5;
+  oThinFilmIor: number = 1.5;
 }
 
 /**
