@@ -16,8 +16,8 @@
     "purge-cache": "rm -rf node_modules/.cache"
   },
   "dependencies": {
-    "@docusaurus/core": "3.4.0",
-    "@docusaurus/preset-classic": "3.4.0",
+    "@docusaurus/core": "3.5.2",
+    "@docusaurus/preset-classic": "3.5.2",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
@@ -31,13 +31,13 @@
     "tweakpane": "^4.0.4"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "3.4.0",
-    "@docusaurus/tsconfig": "3.4.0",
-    "@docusaurus/types": "3.4.0",
+    "@docusaurus/module-type-aliases": "3.5.2",
+    "@docusaurus/tsconfig": "3.5.2",
+    "@docusaurus/types": "3.5.2",
     "@tweakpane/core": "^2.0.4",
     "docusaurus-plugin-typedoc": "^1.0.5",
-    "typedoc": "^0.26.5",
-    "typedoc-plugin-markdown": "^4.2.3",
+    "typedoc": "^0.26.6",
+    "typedoc-plugin-markdown": "^4.2.6",
     "typescript": "~5.5.4"
   },
   "browserslist": {
