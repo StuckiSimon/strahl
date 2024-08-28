@@ -22,3 +22,7 @@ material.oBaseColor = [0.6, 0.9, 0.5];
 :::tip
 Use code completion to aid in finding parameters.
 :::
+
+## Material Mapping
+
+For information on how to apply a material onto an existing object, see the instructions in [Material Mapping](../techniques/material-mapping).
