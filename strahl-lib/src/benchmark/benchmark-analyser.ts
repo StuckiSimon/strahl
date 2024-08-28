@@ -1,7 +1,10 @@
+import { isNil } from "../util/is-nil";
+
 type ReportEntry = {
   bvhBuildTime: number;
   fullRenderLoopTime: number;
   allRenderTime: number;
+  renderTimes: number[];
 };
 
 type ReportStructure = {
@@ -81,6 +84,19 @@ export default function getStatsForReportStructure(
       ).marginOfError,
   );
 
+  const primaryPot = activeStructures[0];
+  const renderTimePots = getReportData(primaryPot)
+    .map((item) => item.renderTimes)
+    .reduce<Record<string, number[]>>((agg, times) => {
+      times.forEach((entry, i) => {
+        if (isNil(agg[i])) {
+          agg[i] = [];
+        }
+        agg[i].push(entry);
+      });
+      return agg;
+    }, {});
+
   return {
     max: {
       averageBvhBuildTime: orderedAverageBvhBuildTimes[MAX_KEY]?.toFixed(2),
@@ -105,6 +121,20 @@ export default function getStatsForReportStructure(
       averageAllRenderTime: orderedAverageAllRenderTimes[MIN_KEY]?.toFixed(2),
       marginOfErrorAllRenderTime:
         orderedMarginOfErrorAllRenderTimes[MIN_KEY]?.toFixed(2),
+    },
+    renderTimeAnalysis: {
+      ...Object.fromEntries(
+        Object.entries(renderTimePots).map(([key, times]) => [
+          key,
+          {
+            mean: getSampleMean(times).toFixed(2),
+            marginOfError:
+              calculateConfidenceIntervalForSamples(
+                times,
+              ).marginOfError.toFixed(2),
+          },
+        ]),
+      ),
     },
   };
 }

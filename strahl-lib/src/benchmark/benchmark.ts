@@ -355,7 +355,9 @@ async function main() {
 
     const fullReport = { ...gpuInfo, ...state };
 
-    const stats = getStatsForReportStructure(fullReport);
+    const { renderTimeAnalysis, ...stats } =
+      getStatsForReportStructure(fullReport);
+    console.log(renderTimeAnalysis);
     console.log(stats);
     console.table(stats);
 
