@@ -1148,12 +1148,12 @@ Common 3D engines such as \gls{Babylon.js}, \gls{Three.js}, \gls{PlayCanvas} and
 Three major implementations of \gls{WebGPU} exist:
 
 \begin{itemize}
-  \item{\gls{Dawn}} — Developed by Google, \gls{Dawn} is a C++ library which provides a \gls{WebGPU} implementation. It is used in Chromium-based browsers \cite{dawnImplementation}.
-  \item{\gls{wgpu}} — A Rust library which provides a \gls{WebGPU} implementation. It is used in Firefox and \fGls{Deno}{JavaScript runtime, alternative to Node.js} \cite{wgpuImplementation}.
-  \item{WebKit \gls{WebGPU}} — Developed by Apple, WebKit is used in Safari \cite{webKitWebGPUImplementation}.
+  \item{\gls{Dawn}} \cite{dawnImplementation} — Developed by Google, \gls{Dawn} is a C++ library which provides a \gls{WebGPU} implementation. It is used in browsers based on \fGls{Chromium}{a browser engine primarily developed by Google, used in browsers such as Chrome, Edge, and Opera}.
+  \item{\gls{wgpu}} \cite{wgpuImplementation} — A Rust library which provides a \gls{WebGPU} implementation. It is used in Firefox and \fGls{Deno}{a JavaScript runtime, alternative to Node.js}.
+  \item{\fGls{WebKit}{a browser engine primarily used in Safari} \gls{WebGPU}} \cite{webKitWebGPUImplementation} — Developed by Apple for Safari.
 \end{itemize}
 
-As the standard is under active development, there are differences between the implementations as well as the specification \cite{wgpuStandardDeviation}. However, the implementations are largely compatible thanks to alignment efforts and the extensive conformance test suite \cite{WebGPUConformanceTestSuite}. Generally, these implementations run natively on modern graphics \glspl{API} such as \gls{Vulkan}, \gls{Metal}, and \gls{DirectX 12}. Some also support \gls{OpenGL} and \gls{WebGL} as a fallback.
+As the standard is under active development, there are differences between the implementations and the specification \cite{wgpuStandardDeviation}. However, the implementations are largely compatible thanks to alignment efforts and the extensive conformance test suite \cite{WebGPUConformanceTestSuite}. Generally, these implementations run natively on modern graphics \glspl{API} such as \gls{Vulkan}, \gls{Metal}, and \gls{DirectX 12}. Some also support \gls{OpenGL} and \gls{WebGL} as a fallback.
 
 \subsubsection{Core Concepts}
 
