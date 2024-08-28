@@ -53,3 +53,13 @@ The packages are:
 
 > [!NOTE]
 > The workspaces `strahl-lib` and `website` also require to run `npm ci` when first setting them up.
+
+### Prettier
+
+Prettier is used to format files in `strahl-lib` and `website`.
+
+`npm run prettier`
+
+To fix formatting, run:
+
+`npm run prettier:fix`
