@@ -11,9 +11,8 @@ alias Color = vec3f;
 struct Material {
   baseWeight: f32,
   baseColor: Color,
-  // todo: switch order of baseDiffuseRoughness and baseMetalness
-  baseDiffuseRoughness: f32,
   baseMetalness: f32,
+  baseDiffuseRoughness: f32,
   specularWeight: f32,
   specularColor: Color,
   specularRoughness: f32,
