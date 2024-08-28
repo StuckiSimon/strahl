@@ -339,6 +339,55 @@ For the intersection tests using the \gls{BVH}, the split axis is used as a heur
     \label{tab:bvh-split-axis-measurements}
 \end{table}
 
+\subsection*{Sampling Time Comparison}
+
+The time for each individual sample remains consistent across benchmark runs. This means that sample \#1 will take a similar amount of time during all runs. However, the time between the different samples is not consistent. Primarily, the first sample takes substantially longer than the rest of the samples, as can be seen in \autoref{dia:sampling-times}. The average time for sample \#2 is 27.53~ms $\pm$ 1.38~ms, whereas sample \#1 takes 102.83~ms $\pm$ 1.26~ms. These measurements were collected using the high \gls{LOD} artifact. After the \gls{CPU} preparation and \gls{GPU} preheating, which consists of the first sample, the path tracer can render approximately 35 samples per second.
+
+\begin{figure}
+    \centering
+    \tikzsetnextfilename{sampling-times}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=14cm,
+                height=6.5cm,
+                xlabel={Sample Number},
+                ylabel={Render Time (ms)},
+                ylabel near ticks,
+                symbolic x coords={\#1,\#2,\#3,\#4,\#5,\#6,\#7,\#8,\#9,\#10},
+                xtick=data,
+                ytick={30, 60, 100},
+                ymin=0,
+                ymax=110,
+                ymajorgrids=true,
+                grid style=dashed,
+            ]
+            \addplot[
+                ybar,
+                fill=rbblue,
+                draw=rblue,
+                thick,
+                error bars/.cd,
+                y dir=both,
+                y explicit
+            ]
+            coordinates {
+                    (\#1,102.83) +- (0,1.26)
+                    (\#2,27.53) +- (0,1.38)
+                    (\#3,26.94) +- (0,1.11)
+                    (\#4,26.41) +- (0,1.29)
+                    (\#5,26.96) +- (0,1.25)
+                    (\#6,26.19) +- (0,1.13)
+                    (\#7,26.41) +- (0,1.09)
+                    (\#8,26.08) +- (0,1.27)
+                    (\#9,25.97) +- (0,0.82)
+                    (\#10,26.64) +- (0,1.10)
+                };
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Mean time per sample, showing that the first sample consistently takes longer than subsequent samples.}
+    \label{dia:sampling-times}
+\end{figure}
+
 \newpage
 \subsection*{Overall Performance}
 
