@@ -13,7 +13,7 @@ export type CustomCameraSetup = {
   controls?: EventDispatcher;
 };
 
-type Matrix = number[] & { length: 16 };
+export type Matrix = number[] & { length: 16 };
 
 export type RawCameraSetup = {
   matrixWorldContent: Matrix;

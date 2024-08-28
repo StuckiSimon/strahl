@@ -17,6 +17,8 @@ import {
   CustomCameraSetup,
   isCustomCameraSetup,
   makeRawCameraSetup,
+  Matrix,
+  RawCameraSetup,
   ViewProjectionConfiguration,
 } from "./camera";
 import { buildAbortEventHub } from "./util/abort-event-hub";
@@ -94,6 +96,9 @@ export type PathTracerOptions = {
    * Maximum number of ray bounces
    */
   maxRayDepth?: number;
+  onSampleStart?: (params: {
+    cameraPosition: RawCameraSetup["matrixWorldContent"];
+  }) => void;
   /**
    * Callback for when the path tracer has finished sampling.
    */
@@ -151,6 +156,7 @@ async function runPathTracer(
     maxRayDepth = 5,
     enableTimestampQuery = true,
     enableFloatTextureFiltering = true,
+    onSampleStart,
     finishedSampling,
     signal = new AbortController().signal,
     enableDenoise = false,
@@ -546,6 +552,10 @@ async function runPathTracer(
 
       const matrixWorld = cameraSetup.camera.matrixWorld;
       const invProjectionMatrix = cameraSetup.camera.projectionMatrixInverse;
+
+      onSampleStart?.({
+        cameraPosition: matrixWorld.elements as Matrix,
+      });
 
       const renderLog = startMeasurementGroup();
       const writeTexture = currentSample % 2 === 0 ? texture : textureB;
