@@ -106,7 +106,7 @@ const MATERIAL_MAP = {
 };
 
 type FinishedSamplingOptions = Parameters<
-  Exclude<PathTracerOptions["finishedSampling"], undefined>
+  Exclude<PathTracerOptions["onSamplingFinished"], undefined>
 >[0] & {
   fullRunTime: number;
 };
@@ -163,7 +163,7 @@ async function run(
       fov: 23.6701655,
       aspect: 1,
     },
-    finishedSampling: (params) => {
+    onSamplingFinished: (params) => {
       const fullRunTime = runStartGroup.end();
       yielder({
         fullRunTime,

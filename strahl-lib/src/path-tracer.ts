@@ -102,7 +102,7 @@ export type PathTracerOptions = {
   /**
    * Callback for when the path tracer has finished sampling.
    */
-  finishedSampling?: (result: {
+  onSamplingFinished?: (result: {
     bvhBuildTime: number;
     fullRenderLoopTime: number;
     allRenderTime: number;
@@ -157,7 +157,7 @@ async function runPathTracer(
     enableTimestampQuery = true,
     enableFloatTextureFiltering = true,
     onSampleStart,
-    finishedSampling,
+    onSamplingFinished,
     signal = new AbortController().signal,
     enableDenoise = false,
   }: PathTracerOptions = {},
@@ -722,7 +722,7 @@ async function runPathTracer(
           );
         }
 
-        finishedSampling?.({
+        onSamplingFinished?.({
           bvhBuildTime,
           fullRenderLoopTime,
           allRenderTime: renderAgg,
