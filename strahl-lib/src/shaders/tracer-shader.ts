@@ -241,7 +241,7 @@ fn fresnelSchlickV2(F0: vec3f, mu: f32) -> vec3f {
 }
 
 fn computeFresnel(cosTheta: f32, fd: FresnelData) -> vec3f {
-  // todo: implement other models (dielectric, conductor, airy)
+  // NOTE: implement other models (dielectric, conductor, airy)
   if (fd.model == FRESNEL_MODEL_SCHLICK) {
     return fresnelSchlick(cosTheta, fd.F0, fd.F90, fd.exponent);
   }
@@ -390,7 +390,7 @@ struct LobeData {
   probs: LobeProbs,
 }
 
-// todo: implement
+// NOTE: placeholder for other workflows
 fn placeholderBrdfAlbedo() -> Color {
   return Color(0.0, 0.0, 0.0);
 }
@@ -427,7 +427,7 @@ fn metalBrdfEvaluate(pW: vec3f, basis: Basis, winputL: vec3f, woutputL: vec3f, m
 
   let FnoFilm = fresnelF82Tint(abs(dot(winputR, mR)), material.baseWeight * material.baseColor, material.specularWeight * material.specularColor);
 
-  // todo: thin film workflow
+  // NOTE: placeholder for thin-film workflows
 
   let F = FnoFilm;
 
@@ -461,7 +461,7 @@ fn metalBrdfSample(pW: vec3f, basis: Basis, winputL: vec3f, material: Material, 
   let dwhDwo = 1.0 / max(abs(4.0*dot(winputR, mR)), DENOM_TOLERANCE);
   (*pdfWoutputL) = max(PDF_EPSILON, DV * dwhDwo);
 
-  // todo: implement thin film workflow
+  // NOTE: placeholder for thin-film
   let F_nofilm = fresnelF82Tint(abs(dot(winputR, mR)), material.baseWeight * material.baseColor, material.specularWeight * material.specularColor);
   let F = F_nofilm;
   
@@ -596,7 +596,7 @@ fn specularBrdfSample(material: Material, pW: vec3f, basis: Basis, winputL: vec3
 
   let G2 = ggxG2(winputR, woutputR, alpha);
 
-  // todo: coat workflow
+  // NOTE: placeholder for coat workflow
   let F = vec3f(fresnelDielectricReflectance(abs(dot(winputR, mR)), etaTiRefl));
   
   let f = F * D * G2 / max(4.0 * abs(woutputL.z) * abs(winputL.z), DENOM_TOLERANCE);
@@ -642,7 +642,7 @@ fn specularBrdfEvaluate(material: Material, pW: vec3f, basis: Basis, winputL: ve
 
   let G2 = ggxG2(winputR, woutputR, alpha);
 
-  // todo: coat workflow
+  // NOTE: placeholder for coat workflow
   let F = vec3f(fresnelDielectricReflectance(abs(dot(winputR, mR)), etaTiRefl));
 
   let f = F * D * G2 / max(4.0 * abs(woutputL.z) * abs(winputL.z), DENOM_TOLERANCE);
@@ -698,11 +698,11 @@ struct WeightsAndAlbedo {
 }
 
 fn openPbrLobeWeights(pW: vec3f, basis: Basis, winputL: vec3f, material: Material, seed: ptr<function, u32>) -> WeightsAndAlbedo {
-  let F = 0.0; // todo: move to material definition fuzzWeight
+  let F = 0.0; // NOTE: placeholder for fuzzWeight
   let C = material.coatWeight;
   let M = material.baseMetalness;
-  let T = 0.0; // todo: move to material definition transmissionWeight
-  let S = 0.0; // todo: move to material definition subsurfaceWeight
+  let T = 0.0; // NOTE: placeholder for transmissionWeight
+  let S = 0.0; // NOTE: placeholder for subsurfaceWeight
 
   let coated = C > 0.0;
   let metallic = M > 0.0;
@@ -722,15 +722,15 @@ fn openPbrLobeWeights(pW: vec3f, basis: Basis, winputL: vec3f, material: Materia
 
   var weights = LobeWeights();
 
-  weights.m[ID_FUZZ_BRDF] = vec3f(0.0); // todo: check
+  weights.m[ID_FUZZ_BRDF] = vec3f(0.0); // NOTE: placeholder for other workflows
 
-  let wCoatedBase = vec3f(1.0); // todo: check 
+  let wCoatedBase = vec3f(1.0); // NOTE: placeholder for other workflows
 
   weights.m[ID_COAT_BRDF] = wCoatedBase * C;
 
-  // todo: implement coat workflow
-  let baseDarkening = vec3f(1.0); // todo: check
-  let materialCoatColor = vec3f(1.0); // todo: move to material definition (coat_color)
+  // NOTE: placeholder for coat workflow
+  let baseDarkening = vec3f(1.0); // NOTE: placeholder for other workflows
+  let materialCoatColor = vec3f(1.0); // NOTE: placeholder for other workflows (coat_color)
   let wBaseSubstrate = wCoatedBase * mix(vec3f(1.0), baseDarkening * materialCoatColor * (vec3(1.0) - albedos.m[ID_COAT_BRDF]), C);
 
   weights.m[ID_META_BRDF] = wBaseSubstrate * M;
@@ -883,7 +883,7 @@ fn openpbrBsdfEvaluateLobes(pW: vec3f, basis: Basis, material: Material, winputL
   let evalSsscBtdf = skipLobeId != ID_SSSC_BTDF && lobeData.probs.m[ID_SSSC_BTDF] > 0.0;
   let evalTransmission = evalSpecBtdf || evalSsscBtdf;
   if (evalTransmission) {
-    // todo: implement
+    // NOTE: placeholder for transmission workflow
   }
 
   return f;
@@ -945,7 +945,7 @@ fn sampleBsdf(pW: vec3f, basis: Basis, winputL: vec3f, lobeData: LobeData, mater
         return f;
       }
 
-      // todo: volume
+      // NOTE: placeholder for volume workflows
 
       return f;
     }
@@ -1051,7 +1051,6 @@ fn rayColor(cameraRay: Ray, seed: ptr<function, u32>, sunBasis: Basis) -> vec4f 
   var inDielectric = false;
 
   for (var i = 0; i < uniformData.maxRayDepth; i += 1) {
-    // todo: handle setting t nicely
     hitRecord.t = TRIANGLE_MAX_DISTANCE_THRESHOLD;
     let hit = hittableListHit(ray, Interval(TRIANGLE_MIN_DISTANCE_THRESHOLD, TRIANGLE_MAX_DISTANCE_THRESHOLD), &hitRecord);
 

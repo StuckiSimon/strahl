@@ -195,10 +195,7 @@ fn getRayOutput(cameraRay: Ray, seed: ptr<function, u32>) -> vec4f {
   hitRecord.t = TRIANGLE_MAX_DISTANCE_THRESHOLD;
   let hit = hittableListHit(ray, Interval(TRIANGLE_MIN_DISTANCE_THRESHOLD, TRIANGLE_MAX_DISTANCE_THRESHOLD), &hitRecord);
 
-  // todo: consider normal handling
-
   if (!hit) {
-    // todo: reconsider
     return vec4f(1);
   }
 
