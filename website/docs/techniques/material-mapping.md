@@ -19,6 +19,9 @@ const MATERIAL_MAP = {
   name: new OpenPBRMaterial(),
 };
 
+const defaultBlueMaterial = new OpenPBRMaterial();
+defaultBlueMaterial.oBaseColor = [0.0, 0.9, 1.0];
+
 model.scene.traverseVisible((object) => {
   if (object.material === undefined) {
     return;
