@@ -51,6 +51,7 @@ struct UniformData {
   objectDefinitionLength: i32,
 }
 
+// NOTE: i16 is not supported in WGSL
 // Use due to 16 bytes alignment of vec3
 struct IndicesPackage {
   x: i32,
@@ -64,7 +65,6 @@ override imageHeight: u32 = 512;
 
 // CODE#BUFFER-BINDINGS
 @group(0) @binding(0) var<storage, read> positions: array<array<vec3f, 2>>;
-// todo: Check when i16 is supported
 @group(0) @binding(1) var<storage, read> indices: array<IndicesPackage>;
 
 @group(0) @binding(2) var<storage, read> bounds: array<array<vec4f, 2>>;
