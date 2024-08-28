@@ -24,10 +24,14 @@ runPathTracer(target, model, {
 });
 ```
 
-- `matrixWorldContent` — rotation and position of the camera
+- `matrixWorldContent` — rotation and position of the camera as `4x4` matrix
 - `fov` — field of view of the camera in degrees
 - `aspect` — aspect ratio
 - `cameraTargetDistance` — the distance to the center that the `OrbitControls` should orbit around
+
+:::tip
+To get the `matrixWorldContent` of the current scene, you can use the corresponding lifecycle hook as described in [Lifecycle Hooks](./lifecycle-hooks.md).
+:::
 
 ## Full Configuration
 
