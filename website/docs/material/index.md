@@ -16,7 +16,7 @@ These tutorials establish an understanding of the parameters available to adjust
 
 ```js
 const material = new OpenPBRMaterial();
-material.oBaseColor = [0.4, 1.0, 0.0];
+material.oBaseColor = [0.6, 0.9, 0.5];
 ```
 
 :::tip
