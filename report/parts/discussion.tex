@@ -107,13 +107,13 @@ The main browser that supports \gls{WebGPU} to date is Chrome. \gls{WebGPU} has 
 
 This means that using \gls{WebGPU} is straightforward on most modern devices, with the notable exception of Apple iOS and iPadOS devices.
 
-\subsubsection*{Ray Tracing}
+\subsubsection*{Feature Set}
 
-To date, \gls{WebGPU} does not support some features common in modern rendering \glspl{API} and would be beneficial for the path tracer. The most prominent example is hardware-accelerated ray tracing. \glspl{API} such as \gls{Vulkan} support hardware-accelerated ray tracing \cite{vulkanRayTracing}. This entails helpers for building common acceleration structures, such as \gls{BVH} and ray querying functions to determine intersections. \gls{WebGPU} does not yet support these features, but discussions are ongoing to add extensions \cite{webGPURayTracing} as well as a demonstration implemented in a modified version of \gls{Dawn} \cite{webGPURayTracingFork}.
+To date, \gls{WebGPU} does not support some common features found in modern rendering \glspl{API}. For instance, it lacks an alternative to the \texttt{i32} data type, such as \texttt{i16}. Other common data types are also not available. Other missing features would be beneficial for path tracing. The most prominent example is hardware-accelerated ray tracing. \glspl{API} such as \gls{Vulkan} support hardware-accelerated ray tracing \cite{vulkanRayTracing}. This entails helpers for building common acceleration structures, such as \gls{BVH} and ray querying functions to determine intersections. \gls{WebGPU} does not yet support these features. However, discussions are ongoing to add extensions \cite{webGPURayTracing}. Additionally, a demonstration has been implemented to show hardware-accelerated ray tracing in a modified version of \gls{Dawn} \cite{webGPURayTracingFork}.
 
 \subsubsection*{Debuggability}
 
-None of the major browser engines, Chrome, Firefox, and Safari, provide debugging as part of the developer tools. Tools for inspecting \gls{WebGPU} applications exist \cite{webGpuDevToolsDuncan, webGpuDevToolsTakahiro} but are limited in terms of feature set. While they are helpful in inspecting the pipelines, capturing frames, and inspecting resources, they do not provide debugging capabilities such as breakpoints, stepping, or variable inspection. For specific setups, there are methods to setup profiling \cite{webGpuProfilingWithPix}, but these are not integrated into the browser developer tools and are dependent on the concrete machine hardware. Improvements in this area would facilitate troubleshooting.
+None of the major browser engines, Chrome, Firefox, and Safari, provide debugging as part of the developer tools. Tools for inspecting \gls{WebGPU} applications exist \cite{webGpuDevToolsDuncan, webGpuDevToolsTakahiro} but are limited in terms of feature set. While they are helpful in inspecting the pipelines, capturing frames, and inspecting resources, they do not provide debugging capabilities such as breakpoints, stepping, or variable inspection. For specific setups, there are methods to setup profiling \cite{webGpuProfilingWithPix}, but these are not integrated into the browser developer tools and are dependent on the concrete machine hardware. Improvements in this area facilitate troubleshooting.
 
 \subsubsection*{Stability}
 
