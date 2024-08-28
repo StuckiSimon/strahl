@@ -90,7 +90,7 @@ Please adhere to licenses associated with the model as described in [Sample Mode
 
 Load 3D models using `three` loaders.
 
-```ts title="main.js"
+```js title="main.js"
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 const gltfLoader = new GLTFLoader();
@@ -115,7 +115,7 @@ You should see the log of the model in the console (DevTools shortcut is often `
 
 Now, we need to set a material onto the objects.
 
-```ts title="main.js"
+```js title="main.js"
 // diff-add
 import { OpenPBRMaterial } from "strahl";
 …
@@ -149,7 +149,7 @@ That's it! You're ready to start path tracing.
 
 To start tracing, we'll have to configure the model and camera settings.
 
-```ts title="main.js"
+```js title="main.js"
 // diff-remove
 import { OpenPBRMaterial } from "strahl";
 // diff-add
