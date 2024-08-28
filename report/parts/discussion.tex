@@ -189,7 +189,7 @@ While \texttt{webgpu-utils} \cite{webgpuUtilsLib} is helpful for memory manageme
 
 \subsubsection*{Web Worker Support}
 
-Web Workers are a web technology that allows to run scripts off the main thread. This can be used to offload \gls{CPU}-heavy tasks to a separate thread to prevent blocking the main thread, which is responsible for rendering the user interface.
+Web Workers are a web technology that allows to run scripts off the main thread. Running \gls{CPU}-intensive tasks on the main thread can cause the interface to become unresponsive, preventing the user from interacting with it. By using Web Workers to handle these tasks on a separate thread, the main thread remains unblocked, improving responsiveness. This approach could be applied to tasks such as \gls{BVH} construction. However, one important consideration is the data transfer handling. Per default, communication between the main thread and a Web Worker involves copying data. Utilizing more advanced memory-sharing \glspl{API}, such as \texttt{SharedArrayBuffer}, may offer a more efficient solution.
 
 \subsubsection*{BVH Construction}
 \label{sec:bvhConstructionDiscussion}
