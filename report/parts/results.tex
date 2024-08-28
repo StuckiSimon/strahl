@@ -290,7 +290,7 @@ The documentation includes showcases for the \gls{OpenPBR} surface shading model
 
 In order to assess the effectiveness of specific measures, a benchmark is defined to measure the performance of the path tracer. This benchmark is used for quantitative evaluation of the path tracer. Prior sections, such as anti-aliasing as described in \autoref{sec:anti-aliasing-implementation} focused on qualitative aspects of the renderer. Depending on the use case, the benchmark can be adjusted to focus on different aspects. However, the core design of the benchmark remains the same. Generally, measurements are taken for the entirety of a stage instead of focusing on individual routines within a stage. This gives a more holistic view of the performance of the path tracer. The results for \gls{CPU} performance were recorded using the Performance \gls{API} and exclude time for loading the model. The results for \gls{GPU} performance were recorded using two measurement systems. The first is based on \gls{WebGPU} timestamp queries that only account for the compute pipeline. The second is taking wall-clock time using the Performance \gls{API} for the entire \gls{GPU} part. The results presented are based on wall-clock time.
 
-A total of 100 samples per pixel with a ray depth of five was used. The image was rendered in Chrome 126/127 at a resolution of 512$\times$512 pixels. Experiments were conducted with different model complexities. The simplified versions are decimated meshes of the original, which consists of roughly one million triangles. The \gls{LOD} artifacts are shown in Figure~\ref{fig:benchmark-models}. The first two levels are intended to be visually similar, while the third level is a simplified version intended to demonstrate the effect of non-manifold geometry for ray tracing.
+A total of 100 samples per pixel with a ray depth of five was used. The image was rendered in Chrome 127/128 at a resolution of 512$\times$512 pixels. Experiments were conducted with different model complexities. The simplified versions are decimated meshes of the original, which consists of roughly one million triangles. The \gls{LOD} artifacts are shown in Figure~\ref{fig:benchmark-models}. The first two levels are intended to be visually similar, while the third level is a simplified version intended to demonstrate the effect of non-manifold geometry for ray tracing.
 
 Unless otherwise specified, the benchmarks are conducted on a MacBook Pro with Apple Silicon M1 Max. The measurements were calculated using the mean time of 30 runs with a confidence interval of 95\% given as $\pm$ standard deviation from the mean time in milliseconds (ms) as described in \autoref{sec:probabilityTheory}. The different measurement sections should not be compared directly, as different factors influence them and may have been taken on different development stages of the renderer. They are only intended for comparison within the same measurement category.
 
@@ -350,9 +350,9 @@ A final performance test was conducted on two machines. The AMD/NVIDIA machine i
     \begin{tabular}{lrr}
         \toprule
              & Apple M1 Max            & AMD/NVIDIA              \\
-        High & 327.57 ms $\pm$ 0.56 ms & 383.10 ms $\pm$ 4.06 ms \\
-        Mid  & 45.49 ms $\pm$ 0.31 ms  & 41.77 ms $\pm$ 0.43 ms  \\
-        Low  & 10.53 ms $\pm$ 0.24 ms  & 8.43 ms $\pm$ 0.22 ms   \\
+        High & 351.87 ms $\pm$ 1.04 ms & 366.33 ms $\pm$ 1.10 ms \\
+        Mid  & 47.63 ms $\pm$ 0.33 ms  & 46.43 ms $\pm$ 1.10 ms  \\
+        Low  & 9.79 ms $\pm$ 0.07 ms   & 10.03 ms $\pm$ 0.25 ms  \\
         \bottomrule
     \end{tabular}
     \caption{\gls{BVH} setup time based on model complexity}
@@ -364,10 +364,10 @@ A final performance test was conducted on two machines. The AMD/NVIDIA machine i
     \ra{1.3}
     \begin{tabular}{lrr}
         \toprule
-             & Apple M1 Max               & AMD/NVIDIA                 \\
-        High & 2,319.45 ms $\pm$ 11.14 ms & 1,058.73 ms $\pm$ 59.47 ms \\
-        Mid  & 1,992.11 ms $\pm$ 8.49 ms  & 790.20 ms $\pm$ 3.79 ms    \\
-        Low  & 2,031.38 ms $\pm$ 9.87 ms  & 790.83 ms $\pm$ 4.18 ms    \\
+             & Apple M1 Max               & AMD/NVIDIA                  \\
+        High & 2,693.78 ms $\pm$ 14.96 ms & 1,398.57 ms $\pm$ 131.38 ms \\
+        Mid  & 2,315.97 ms $\pm$ 27.52 ms & 1,071.33 ms $\pm$ 83.74 ms  \\
+        Low  & 2,387.14 ms $\pm$ 26.56 ms & 1,126.50 ms $\pm$ 73.92 ms  \\
         \bottomrule
     \end{tabular}
     \caption{\gls{GPU} path tracer time based on model complexity}
