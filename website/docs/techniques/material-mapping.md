@@ -1,6 +1,6 @@
 # Material Mapping
 
-Assigning materials is crucial for rendering. This chapter explains how to map materials onto a model using masterial mapping.
+Assigning materials is crucial for rendering. This chapter explains how to map materials onto a model using material mapping.
 
 :::warning
 All materials of an object need to be `OpenPBRMaterial` instances.
