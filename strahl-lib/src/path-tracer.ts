@@ -96,6 +96,9 @@ export type PathTracerOptions = {
    * Maximum number of ray bounces
    */
   maxRayDepth?: number;
+  /**
+   * Callback called before a sample is started.
+   */
   onSampleStart?: (params: {
     cameraPosition: RawCameraSetup["matrixWorldContent"];
   }) => void;
