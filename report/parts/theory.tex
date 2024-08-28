@@ -293,14 +293,13 @@ The Bachmann-Landau notation, or more specifically, the Big O notation, is used 
 \section{Physics}
 \label{ch:physics}
 
-In order to generate images using computer graphics, understanding the physics is crucial. More specifically, optics, the study of light and its perception, is essential. The field encompasses topics such as light propagation and optical properties of matter. Maxwell's equations are a set of equations in electromagnetism that describe the behavior of electromagnetic fields. Formulated by James Clerk Maxwell in the 19th century, they provide a mathematical framework for understanding the propagation of electromagnetic waves, including, but not limited to, visible light. Light can be described as a wave or particle, generally known as wave-particle duality. \cite{fowles1989introduction} In a simplified model, the particles, called photons, are emitted by a light source and travel in straight lines until they hit a surface. The interaction of light with surfaces can be described as a combination of absorption, the law of reflection, and the law of refraction. Absorption is the process of light being converted into other forms of energy, such as heat.
+In order to generate images using computer graphics, understanding the physics is crucial. More specifically, optics, the study of light and its perception, is essential. The field encompasses topics such as light propagation and optical properties of matter. Maxwell's equations are a set of equations in electromagnetism that describe the behavior of electromagnetic fields. Formulated by James Clerk Maxwell in the 19th century, they provide a mathematical framework for understanding the propagation of electromagnetic waves, including, but not limited to, visible light. Light can be described as a wave or particle, generally known as wave-particle duality. \cite{fowles1989introduction}
+
+In a simplified model, the particles, called photons, are emitted by a light source and travel in straight lines until they hit a surface. The interaction of light with surfaces can be described as a combination of absorption, the law of reflection, and the law of refraction. Absorption is the process of light being converted into other forms of energy, such as heat.
 
 \subsubsection{Reflection}
 
-Reflection is the process of light bouncing off a surface. The angle of incidence equals the angle of reflection, as visualized in \autoref{fig:basic-reflection}. An example of such an effect can be seen when looking at a mirror.
-
-
-This can be described using the law of reflection \cite{fowles1989introduction}:
+Reflection is the process of light bouncing off a surface. The angle of incidence equals the angle of reflection, as visualized in \autoref{fig:basic-reflection}. An example of such an effect can be seen when looking at a mirror. This can be described using the law of reflection \cite{fowles1989introduction}:
 
 \begin{equation}
   \label{eqn:law-of-reflection}
@@ -368,7 +367,7 @@ Refraction is the bending of light when passing through a medium as visualized i
     \centerarc[thick](B)(90:135:1)
     \node at (2.75,0.7) {$\theta$};
 
-    \draw[darkgray, -latex, thick] (B) --node[midway, left, yshift=2cm] {$n$} (BN);
+    \draw[darkgray, -latex, thick] (B) --node[midway, left, yshift=0.4cm] {$n$} (BN);
 
     \draw[dashed, thick] (A) -- (B);
     \draw[-latex, thick] (AA) -- (BB);
