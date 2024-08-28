@@ -46,6 +46,7 @@ import {
 } from "./buffers/material-buffer";
 import { prepareTargetTexture } from "./buffers/target-texture.ts";
 import { setupRenderPipeline } from "./render-pipeline.ts";
+import { getBaseUniformData } from "./buffers/base-uniform.ts";
 
 const MAX_WORKGROUP_DIMENSION = 16;
 
@@ -511,24 +512,20 @@ async function runPathTracer(
     matrixWorld: Matrix4,
     currentSample: number,
   ) => {
-    uniformData.set({
-      invProjectionMatrix: invProjectionMatrix.elements,
-      cameraWorldMatrix: matrixWorld.elements,
-      invModelMatrix: sceneMatrixWorld.clone().invert().elements,
-      seedOffset: Math.random() * Number.MAX_SAFE_INTEGER,
-      priorSamples: currentSample,
-      samplesPerPixel: samplesPerIteration,
-      sunDirection,
-      skyPower: environmentLightConfiguration.sky.power,
-      skyColor: environmentLightConfiguration.sky.color,
-      sunPower: Math.pow(10, environmentLightConfiguration.sun.power),
-      sunAngularSize: environmentLightConfiguration.sun.angularSize,
-      sunColor: environmentLightConfiguration.sun.color,
-      clearColor: clearColor === false ? [0, 0, 0] : clearColor,
-      enableClearColor: clearColor === false ? 0 : 1,
-      maxRayDepth,
-      objectDefinitionLength: modelGroups.length,
-    });
+    uniformData.set(
+      getBaseUniformData(
+        invProjectionMatrix.elements,
+        matrixWorld.elements,
+        sceneMatrixWorld.clone().invert().elements,
+        currentSample,
+        samplesPerIteration,
+        sunDirection,
+        environmentLightConfiguration,
+        clearColor,
+        maxRayDepth,
+        modelGroups.length,
+      ),
+    );
     device.queue.writeBuffer(uniformBuffer, 0, uniformData.arrayBuffer);
   };
 
@@ -672,24 +669,18 @@ async function runPathTracer(
               maxBvhDepth,
               MAX_WORKGROUP_DIMENSION,
               sizeConfiguration,
-              {
-                invProjectionMatrix: invProjectionMatrix.elements,
-                cameraWorldMatrix: matrixWorld.elements,
-                invModelMatrix: sceneMatrixWorld.clone().invert().elements,
-                seedOffset: Math.random() * Number.MAX_SAFE_INTEGER,
-                priorSamples: currentSample,
-                samplesPerPixel: samplesPerIteration,
+              getBaseUniformData(
+                invProjectionMatrix.elements,
+                matrixWorld.elements,
+                sceneMatrixWorld.clone().invert().elements,
+                currentSample,
+                samplesPerIteration,
                 sunDirection,
-                skyPower: environmentLightConfiguration.sky.power,
-                skyColor: environmentLightConfiguration.sky.color,
-                sunPower: Math.pow(10, environmentLightConfiguration.sun.power),
-                sunAngularSize: environmentLightConfiguration.sun.angularSize,
-                sunColor: environmentLightConfiguration.sun.color,
-                clearColor: clearColor === false ? [0, 0, 0] : clearColor,
-                enableClearColor: clearColor === false ? 0 : 1,
+                environmentLightConfiguration,
+                clearColor,
                 maxRayDepth,
-                objectDefinitionLength: modelGroups.length,
-              },
+                modelGroups.length,
+              ),
               computeBindGroupLayout,
               computeBindGroup,
               writeTexture,
