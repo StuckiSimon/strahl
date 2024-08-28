@@ -4,6 +4,10 @@
   "description": "Strahl Root Package",
   "author": "Simon Stucki",
   "license": "MIT",
+  "scripts": {
+    "prettier": "npx prettier . --check",
+    "prettier:fix": "npx prettier . --check --write"
+  },
   "devDependencies": {
     "prettier": "3.3.2"
   }

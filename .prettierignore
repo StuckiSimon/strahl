@@ -1,0 +1,6 @@
+**/*.bin
+**/*.gltf
+/report/**/*
+website/docs/api/**/*
+website/build/**/*
+website/.docusaurus/**/*
