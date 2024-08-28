@@ -36,7 +36,7 @@ A basic website should be set up with Vite running on `http://localhost:5173/` (
 
 ## Strahl Installation
 
-The library is available in the npm registry. To install it, run:
+The library is available in the [npm registry](https://www.npmjs.com/package/strahl). To install it, run:
 
 ```
 npm install --save strahl three
