@@ -47,6 +47,8 @@ import {
 import { prepareTargetTexture } from "./buffers/target-texture.ts";
 import { setupRenderPipeline } from "./render-pipeline.ts";
 
+const MAX_WORKGROUP_DIMENSION = 16;
+
 export type GaussianConfig = {
   type: "gaussian";
   sigma?: number;
@@ -293,8 +295,6 @@ async function runPathTracer(
       ...enableDenoise,
     };
   }
-
-  const maxWorkgroupDimension = 16;
 
   const tracerShaderCode = buildPathTracerShader({
     bvhParams: {
@@ -594,7 +594,7 @@ async function runPathTracer(
           module: computeShaderModule,
           entryPoint: "computeMain",
           constants: {
-            wgSize: maxWorkgroupDimension,
+            wgSize: MAX_WORKGROUP_DIMENSION,
             imageWidth: width,
             imageHeight: height,
           },
@@ -619,8 +619,8 @@ async function runPathTracer(
 
       computePass.setPipeline(computePipeline);
 
-      const dispatchX = Math.ceil(width / maxWorkgroupDimension);
-      const dispatchY = Math.ceil(height / maxWorkgroupDimension);
+      const dispatchX = Math.ceil(width / MAX_WORKGROUP_DIMENSION);
+      const dispatchY = Math.ceil(height / MAX_WORKGROUP_DIMENSION);
       computePass.dispatchWorkgroups(dispatchX, dispatchY);
 
       computePass.end();
@@ -670,7 +670,7 @@ async function runPathTracer(
             prepareDenoiseData(
               device,
               maxBvhDepth,
-              maxWorkgroupDimension,
+              MAX_WORKGROUP_DIMENSION,
               sizeConfiguration,
               {
                 invProjectionMatrix: invProjectionMatrix.elements,
