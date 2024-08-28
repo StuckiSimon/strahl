@@ -4,11 +4,11 @@ sidebar_position: 2
 
 # Getting Started
 
-This is the full guide on how to setup `strahl` in a new project.
+This is the complete guide on how to set up `strahl` for a new project.
 
 ## Project Setup
 
-While `strahl` can be set up in a variety of projects, we'll take [Vite](https://vitejs.dev/) as a basis. If you already have a project setup, you can skip to [Strahl Installation](#strahl-installation).
+While `strahl` can be set up in various projects, we'll take [Vite](https://vitejs.dev/) as a basis. If you already have a project setup, skip to [Strahl Installation](#strahl-installation).
 
 Open a terminal in your project folder and run:
 
@@ -16,7 +16,11 @@ Open a terminal in your project folder and run:
 npm create vite@latest
 ```
 
-In the wizard, choose a project name (`your-name`) and set the follow-up prompts to `Vanilla` for framework and `JavaScript` for variant respectively.
+The wizard prompts for a couple of questions:
+
+- choose a project name (`your-name`)
+- framework `Vanilla`
+- variant `JavaScript`
 
 ## Setup Verification
 
@@ -28,7 +32,7 @@ npm install
 npm run dev
 ```
 
-You should have a basic website set up with Vite running on `http://localhost:5173/` (port may vary). Now we're ready to install `strahl`.
+A basic website should be set up with Vite running on `http://localhost:5173/` (port may vary). Now we're ready to install `strahl`.
 
 ## Strahl Installation
 
@@ -70,7 +74,7 @@ Let's replace the app div with our canvas.
 
 ### Change `main.js`
 
-Let's remove the demo code from `main.js`. Delete all the contents within `main.js`. You can also remove the corresponding resources which are imported.
+Let's remove the demo code from `main.js`. Delete all the contents within `main.js`. You can also remove the corresponding resources that are imported.
 
 :::note
 The file should be empty.
@@ -109,7 +113,7 @@ You should see the log of the model in the console (DevTools shortcut is often `
 
 #### Assign material
 
-Now we need to set a material onto the objects.
+Now, we need to set a material onto the objects.
 
 ```ts title="main.js"
 // diff-add
@@ -139,11 +143,11 @@ model.scene.traverseVisible((object) => {
 console.log(model);
 ```
 
-That's it! Now you're ready to start path tracing.
+That's it! You're ready to start path tracing.
 
 ### Initialize `strahl`
 
-To start tracing, we'll have to configure the model and the camera settings.
+To start tracing, we'll have to configure the model and camera settings.
 
 ```ts title="main.js"
 // diff-remove
@@ -183,15 +187,17 @@ await runPathTracer("render-target", model, {
 });
 ```
 
-Et voilà! You should now see the path tracer rendering the scene.
+Et voilà! You should see the path-traced rendering.
 
 ## Help me! It doesn't work
 
-Feel free to reach out, happy to help you out and potentially improve guidance or fix bugs.
+Feel free to reach out, happy to help you out and improve guidance or fix bugs.
+
+See [Support on GitHub](https://github.com/StuckiSimon/strahl?tab=readme-ov-file#support) for contact details.
 
 ## What's next?
 
-There's lots more to try out, you can:
+There's lots more to try out. Try:
 
 - do [material configuration](./material/)
 - apply [material mapping](./techniques/material-mapping) to have multiple different materials in the same scene
