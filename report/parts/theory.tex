@@ -893,7 +893,9 @@ Both strategies are good candidates under different circumstances. To leverage t
   \label{eq:multipleImportanceSampling}
 \end{equation}
 
-where $w_h$ is the weight of the $h$-th sampling strategy, and $p_h(X_{h,i})$ is the probability distribution of the $h$-th sampling strategy. $w_h$ is the weighting function for the estimator such that the expected value of the estimator is unbiased.
+where $k$ is the number of different sampling strategies, the weight of sampling strategy $h$ is denoted $w_h$, whereas $p_h(X_{h,i})$ is the probability distribution. $w_h$ is the weighting function for the estimator such that the expected value of the estimator is unbiased. Veach also proposed several heuristics for the weighting function, including the power heuristic.
+
+This Monte Carlo integration, based on \gls{MIS}, constitutes the basis for sampling in a path tracer algorithm.
 
 \subsubsection{Russian Roulette}
 \label{ch:russianRoulette}
