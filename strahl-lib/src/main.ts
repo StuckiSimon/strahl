@@ -105,7 +105,14 @@ const MATERIAL_MAP = {
     metalMaterial.oBaseDiffuseRoughness = 0.0;
     return metalMaterial;
   })(),
-  material_name_metall_stahl737364_abgenutzt_rau_1_mtl: roughMetalMaterial3,
+  material_name_metall_stahl737364_abgenutzt_rau_1_mtl: (() => {
+    const metalMaterial = new OpenPBRMaterial();
+    metalMaterial.oBaseColor = [0.96, 0.94, 0.922];
+    metalMaterial.oBaseMetalness = 1.0;
+    metalMaterial.oSpecularRoughness = 0.2;
+    metalMaterial.oBaseDiffuseRoughness = 0.0;
+    return metalMaterial;
+  })(),
   material_name_kunststoff_weissDCDCDC_transparent_trueb_3_mtl: greyPlastic,
   material_name_kunststoff_gelbFCBE37_rau_4_mtl: greenPlastic,
   material_name_metall_aluminium939393_gebuerstet_5_mtl: plasticYellow,
