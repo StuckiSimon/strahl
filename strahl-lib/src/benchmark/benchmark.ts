@@ -23,7 +23,7 @@ plasticYellow.oBaseColor = [0.9, 0.7, 0.23];
 plasticYellow.oSpecularWeight = 0.01;
 
 const greenPlastic = new OpenPBRMaterial();
-greenPlastic.oBaseColor = [0.4, 0.6, 0.33];
+greenPlastic.oBaseColor = [0.2, 0.35, 0.2];
 
 const redPlasticMaterial = new OpenPBRMaterial();
 redPlasticMaterial.oBaseColor = [0.67, 0.18, 0.12];
@@ -130,6 +130,8 @@ async function run(
 
   const model = await loadGltf(MODEL_URL);
 
+  // NOTE: This is a hack because on one model, the material name is off
+  let alreadyLoadedTheRedOne = false;
   model.scene.traverseVisible((object) => {
     if (
       !isMesh(object) ||
@@ -143,6 +145,14 @@ async function run(
       object.material = asThreeJsMaterial(
         MATERIAL_MAP[materialName as keyof typeof MATERIAL_MAP],
       );
+      if (
+        materialName === "material_name_kunststoff_verkehrsrotB81D12_rau_5_mtl"
+      ) {
+        if (!alreadyLoadedTheRedOne) {
+          object.material = asThreeJsMaterial(copperMetalMaterial);
+        }
+        alreadyLoadedTheRedOne = true;
+      }
     } else {
       console.log(materialName);
       object.material = asThreeJsMaterial(defaultBlueMaterial);
@@ -162,6 +172,19 @@ async function run(
       cameraTargetDistance: 200,
       fov: 23.6701655,
       aspect: 1,
+    },
+    environmentLightConfiguration: {
+      sky: {
+        power: 0.5,
+        color: [0.8, 0.8, 1.0],
+      },
+      sun: {
+        power: 1.0,
+        angularSize: 35,
+        latitude: 30,
+        longitude: 180,
+        color: [1.0, 1.0, 0.9],
+      },
     },
     onSamplingFinished: (params) => {
       const fullRunTime = runStartGroup.end();
