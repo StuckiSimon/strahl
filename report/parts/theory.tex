@@ -16,9 +16,7 @@ This section highlights some basics about the mathematics involved in computer g
 
 \subsubsection{Vectors}
 
-Euclidean vectors are fundamental in computer graphics and are generally defined by a magnitude and a direction. In a three-dimensional space, a vector can be defined as $v = (x, y, z)$. This definition can be used to represent points in space (vertex) as well as directions.
-
-The magnitude, or length, of the vector can be calculated using the Euclidean norm:
+Euclidean vectors are fundamental in computer graphics and are generally defined by a magnitude and a direction. In a three-dimensional space, a vector can be defined as $v = (x, y, z)$. This definition can be used to represent points in space, called vertices, and directions. The magnitude, or length, of the vector can be calculated using the Euclidean norm:
 
 \begin{equation}
   \label{eqn:euclidean-norm}
@@ -39,7 +37,7 @@ The cross product (vector $p$) of two vectors $v = (x_1, y_1, z_1)$ and $w = (x_
   p = v \times w = (y_1 \cdot z_2 - z_1 \cdot y_2, z_1 \cdot x_2 - x_1 \cdot z_2, x_1 \cdot y_2 - y_1 \cdot x_2)
 \end{equation}
 
-As visualized in \autoref{fig:cross-product}, the cross product gives a vector $p$ which is orthogonal to the two input vectors $v$ and $w$.
+As visualized in \autoref{fig:cross-product}, the cross product gives a vector $p$ that is orthogonal to the two input vectors $v$ and $w$.
 
 \begin{figure}[H]
   \centering
