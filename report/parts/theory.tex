@@ -518,7 +518,7 @@ While global illumination commonly refers to a subset of effects, the term is us
   \item{Color Bleeding} — Special type of reflection where a surface is colored by reflection of colored light.
   \item{Ambient Occlusion} — Special type of shadow casting, where light transport as impacted by nearby objects is considered. This is frequently encountered on objects with complex topology.
   \item{Refraction}
-  \item{Caustics} - Effect produced by either reflection or refraction of light.
+  \item{Caustics} — Effect produced by either reflection or refraction of light.
 \end{itemize}
 
 The importance of achieving these effects depends on the use case. For the use case of this thesis, shadows and reflections are pivotal for the realism and perceived quality of the images. Refraction and caustics were not encountered in the use case of this thesis and are, therefore, not covered in detail.
@@ -962,10 +962,10 @@ Different types of view projection can be used depending on the use case. The mo
 These two projection types differ in the view projection matrix. For perspective projection, the following parameters need to be defined:
 
 \begin{description}
-  \item[near ($n$)] The distance from the camera to the near clipping plane.
-  \item[far ($f$)] The distance from the camera to the far clipping plane.
-  \item[fov ($\theta$)] The \textit{field of view} angle, measured in degrees.
-  \item[aspect ratio ($r$)] The ratio of the viewport's width to its height.
+  \item[near ($n$)] — The distance from the camera to the near clipping plane.
+  \item[far ($f$)] — The distance from the camera to the far clipping plane.
+  \item[fov ($\theta$)] — The \textit{field of view} angle, measured in degrees.
+  \item[aspect ratio ($r$)] — The ratio of the viewport's width to its height.
 \end{description}
 
 The clipping plane parameters $n$ and $f$ are primarily used in rasterization to determine the camera frustum. Objects outside of the frustum are not rendered. Using equations \ref{eqn:perspectiveProjectionHeight} and \ref{eqn:perspectiveProjectionWidth}, the view projection matrix ($P$) for perspective projection is defined in equation \ref{eqn:perspectiveProjectionMatrix}.
@@ -1000,10 +1000,10 @@ For orthographic projection, no such projection matrix is required in ray tracin
 To simulate light transport, the path tracer needs to pick random directions. Generating a random direction vector, defined as $v = (x, y, z)$, can be achieved by picking three random numbers independent of one another. This is done using a random number generator (\gls{RNG}). In rasterization, the necessity for \gls{RNG} is less common but may still be required for specific effects. There are a variety of \glspl{RNG} available which differ in essential characteristics. Some of the characteristics to consider when choosing a suitable \gls{RNG} are:
 
 \begin{itemize}
-  \item{Statistical Quality} – The \gls{RNG} should generate numbers that are statistically random. This means that the numbers should be uniformly distributed and have a low correlation between them.
-  \item{Period} – The length of the cycle before the sequence of generated numbers starts to repeat itself.
-  \item{Time Performance} – The time it takes to generate a random number. This is influenced by the algorithm as well as the hardware, which may support dedicated instructions.
-  \item{Space Usage} – The amount of memory required to store state.
+  \item{Statistical Quality} — The \gls{RNG} should generate numbers that are statistically random. This means that the numbers should be uniformly distributed and have a low correlation between them.
+  \item{Period} — The length of the cycle before the sequence of generated numbers starts to repeat itself.
+  \item{Time Performance} — The time it takes to generate a random number. This is influenced by the algorithm as well as the hardware, which may support dedicated instructions.
+  \item{Space Usage} — The amount of memory required to store state.
 \end{itemize}
 
 Based on the use case, other factors such as prediction difficulty or others such as highlighted by O’Neill \cite{o2014pcg} may be important. Cryptography, for example, requires randomness of the \gls{RNG} to prevent an adversary from predicting secret keys. Options to generate the randomness require additional signals \cite{randomnessCryptography} or may require special hardware, such as \fGls{Lavarand}{a hardware \gls{RNG} based on pictures taken of lava lamps to generate randomness} \cite{cloudflareLavaRand}. Many generators are pseudorandom generators. These generators are deterministic and require a seed to start the sequence. For cryptographically secure generators, the seed must be random.
@@ -1296,10 +1296,10 @@ const c = new Float32Array(ValueBuffer, 28, 1);
 In order to exchange 3D scenes between a multitude of applications, various standardized formats have been developed. These formats are optimized for different use cases depending on the requirements of the application. For this thesis, the focus is on formats well-suited for real-time rendering on the web. In comparison to other use cases, certain aspects are critical on the web. These aspects include:
 
 \begin{itemize}
-  \item{Efficiency} – It should be optimized for transmission and loading. While data compression algorithms such as \fGls{gzip}{\e{GNU zip}, a file format and software application for compression and decompression} can alleviate some of the issues during transmission, pure text-based formats are generally less efficient than binary formats.
-  \item{Feature Set} – The format should support a wide range of features such as geometry, materials, and scene graphs.
+  \item{Efficiency} — It should be optimized for transmission and loading. While data compression algorithms such as \fGls{gzip}{\e{GNU zip}, a file format and software application for compression and decompression} can alleviate some of the issues during transmission, pure text-based formats are generally less efficient than binary formats.
+  \item{Feature Set} — The format should support a wide range of features such as geometry, materials, and scene graphs.
   \item{Extensibility} — The format should be extensible to support additional features.
-  \item{Interoperability} – 3D engines and applications should widely support the format.
+  \item{Interoperability} — 3D engines and applications should widely support the format.
   \item{Openness} — The format should be open and not proprietary. Additionally, it should be actively maintained.
 \end{itemize}
 
@@ -1333,8 +1333,8 @@ For usage in end-user applications, such as for the use cases in this thesis, th
 Technically, the format offers two different encoding formats which differ in file ending:
 
 \begin{itemize}
-  \item{\texttt{.glb}} – Binary format which is optimized for transmission and loading.
-  \item{\texttt{.gltf}} – Text-based, human-readable format.
+  \item{\texttt{.glb}} — Binary format which is optimized for transmission and loading.
+  \item{\texttt{.gltf}} — Text-based, human-readable format.
 \end{itemize}
 
 \gls{glTF} is designed to be extensible and a variety of extensions have been developed to support features such as mesh compression using Draco. The hierarchy structure of a \gls{glTF} file is shown in \autoref{fig:gltf-hierarchy}. Many of the official extensions extend the material nodes to support more advanced features. Its focus on transmission and loading efficiency makes it well-suited for the web.
