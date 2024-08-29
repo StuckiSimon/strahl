@@ -30,6 +30,10 @@ The project uses `eslint` for static code analysis.
 - [https://localhost:5173/](https://localhost:5173/) - Demo Scene
 - [https://localhost:5173/benchmark.html](https://localhost:5173/benchmark.html) - Benchmark Setup
 
+### Code Style
+
+There are magic comments, using the form of: `CODE#ABC`. These comments are references from the master thesis to the implementation.
+
 ### Publish
 
 1. `git stash --include-untracked`
