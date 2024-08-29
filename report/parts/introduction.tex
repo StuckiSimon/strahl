@@ -41,7 +41,7 @@ To leverage production \gls{CAD} models, the models need to be preprocessed befo
   \label{fig:cad-preprocessing}
 \end{figure}
 
-\fGls{STEP}{\e{Standard for the Exchange of Product model data}, a standard formalized in ISO 10303 for product manufacturing information.} files are a common format for exchanging \gls{CAD} data and can be used for this purpose. However, as will be discussed in \autoref{ch:specializedFormats}, other formats are more suitable for rendering and address the inherent limitations of \gls{STEP} files. An important consideration is intellectual property rights when using \gls{CAD} models from production processes. The models may contain proprietary information which should not be disclosed to the end user. As described by Stjepandić et al. \cite{ipr}, steps to circumvent this issue may include data filtering. Filtering can be implemented by removing meta information such as constraints or by removing occluded parts of the model, limiting the model to the hull of the assembly. As a positive side-effect, this potentially reduces the complexity of the model, which can be beneficial for rendering performance.
+\fGls{STEP}{\e{Standard for the Exchange of Product model data}, a standard formalized in ISO 10303 for product manufacturing information} files are a common format for exchanging \gls{CAD} data and can be used for this purpose. However, as will be discussed in \autoref{ch:specializedFormats}, other formats are more suitable for rendering and address the inherent limitations of \gls{STEP} files. An important consideration is intellectual property rights when using \gls{CAD} models from production processes. The models may contain proprietary information which should not be disclosed to the end user. As described by Stjepandić et al. \cite{ipr}, steps to circumvent this issue may include data filtering. Filtering can be implemented by removing meta information such as constraints or by removing occluded parts of the model, limiting the model to the hull of the assembly. As a positive side-effect, this potentially reduces the complexity of the model, which can be beneficial for rendering performance.
 
 Preprocessing includes triangulation of the meshes, which is a common requirement for rendering engines. Frequently, the triangulated meshes are fine-grained and consist of a large number of triangles. This can lead to performance issues when rendering the scene. One way to handle this is to simplify the meshes by decimating triangles. Procedures for this purpose are well-established and include algorithms for generating level of detail (\gls{LOD}) artifacts \cite{luebke2003level}.
 
@@ -65,7 +65,7 @@ In order to address latency, pre-loading images can be used. This may entail loa
 
 \subsection*{Client-Side Real-time Rendering}
 
-An alternative to offline rendering is real-time rendering. Client-side rendering is a frequently used option for real-time rendering. The assemblies are only rendered as requested by the end user. This is the main benefit of using a real-time rendering pipeline, as illustrated in \autoref{fig:cad-online}. The rendering is done in the browser, limiting the server to serve the role of a file host and provide the geometry and material information in a 3D exchange format such as \fgls{glTF}{\e{Graphics Library Transmission Format, common 3D exchange format optimized for transmission and real-time rendering}}. This approach is more flexible and can be used for a large number of configurations. The amount of data to be stored and processed offline grows linearly with the number of components, independent of the number of possible configurations.
+An alternative to offline rendering is real-time rendering. Client-side rendering is a frequently used option for real-time rendering. The assemblies are only rendered as requested by the end user. This is the main benefit of using a real-time rendering pipeline, as illustrated in \autoref{fig:cad-online}. The rendering is done in the browser, limiting the server to serve the role of a file host and provide the geometry and material information in a 3D exchange format such as \fgls{glTF}{\e{Graphics Library Transmission Format}, a common 3D exchange format optimized for transmission and real-time rendering}. This approach is more flexible and can be used for a large number of configurations. The amount of data to be stored and processed offline grows linearly with the number of components, independent of the number of possible configurations.
 
 \begin{figure}[H]
   \includegraphics[width=\columnwidth]{resources/cad-pipeline-online.png}
@@ -77,7 +77,7 @@ This approach limits the technology that can be used for rendering. The renderin
 
 \subsection*{Remote Real-time Rendering}
 
-For real-time rendering, an alternative paradigm is remote rendering \cite{remoteRendering}, which employs a server to render the scene and stream the visualization to the browser. The main drawbacks of this approach are network latency, reliance on network stability, and operational cost for the server infrastructure, which frequently requires dedicated \fGlspl{GPU}{\e{Graphics Processing Unit}, specialized processor for parallel computation} for rendering.
+For real-time rendering, an alternative paradigm is remote rendering \cite{remoteRendering}, which employs a server to render the scene and stream the visualization to the browser. The main drawbacks of this approach are network latency, reliance on network stability, and operational cost for the server infrastructure, which frequently requires dedicated \fGlspl{GPU}{\e{Graphics Processing Unit}, a specialized processor for parallel computation} for rendering.
 
 \begin{figure}[H]
   \includegraphics[width=\columnwidth]{resources/cad-pipeline-remote.png}
@@ -97,7 +97,7 @@ Measure how much computation effort is required to prepare the data for renderin
 
 \subsubsection{Hosting Cost}
 
-The infrastructure cost involved in hosting the application during operations. Generally, lower is better. Offline rendering does not require application servers and mainly relies on storage for the generated images. Similarly, client-side rendering needs storage for the models. These two paradigms may employ \fglspl{CDN}{\e{Content Delivery Network}, distributed group of servers for caching content near end users}. Remote rendering requires a rendering server. For scenarios where load is unpredictable, additional techniques such as auto-scaling and load balancing may be required. This can be costly and may induce additional complexity. In addition, bandwidth costs need to be considered.
+The infrastructure cost involved in hosting the application during operations. Generally, lower is better. Offline rendering does not require application servers and mainly relies on storage for the generated images. Similarly, client-side rendering needs storage for the models. These two paradigms may employ \fglspl{CDN}{\e{Content Delivery Network}, a distributed group of servers for caching content near end users}. Remote rendering requires a rendering server. For scenarios where load is unpredictable, additional techniques such as auto-scaling and load balancing may be required. This can be costly and may induce additional complexity. In addition, bandwidth costs need to be considered.
 
 \subsubsection{Storage}
 
@@ -169,7 +169,7 @@ Different real-time rasterizers for the web exist. Some of the most prominent op
   \item {\gls{A-Frame}} \cite{aFrameWebsite} — web framework for building virtual reality experiences.
 \end{itemize}
 
-In addition, \gls{Unity}, a common game engine for desktop and mobile applications, also supports \fgls{WebGL}{\e{Web Graphics Library}, since 2011 the de-facto standard API for rendering 3D graphics on the web} \cite{unityWebGLCompatibility}.
+In addition, \gls{Unity}, a common game engine for desktop and mobile applications, also supports \fgls{WebGL}{\e{Web Graphics Library}, since 2011 the de-facto standard API for 3D graphics on the web} \cite{unityWebGLCompatibility}.
 
 These engines focus on rasterization techniques and are widely used for web-based applications. The focus of these engines lies in real-time rendering performance as used in games, advertising campaigns, virtual reality (VR), augmented reality (AR), medical imaging, scientific visualization, and educational applications. However, they lack support for ray tracing.
 
