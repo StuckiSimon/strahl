@@ -29,13 +29,11 @@ The goal of the implementation is to be compatible with a large variety of devic
 
 \subsection*{Scene Description}
 
-In order to be easy to integrate for developers familiar with existing web-based rendering engines, the renderer utilizes many of the scene description constructs provided by \gls{Three.js}. This includes the representation of geometry using \texttt{BufferGeometry}, camera using \texttt{PerspectiveCamera}, and arbitrary camera controls such as \texttt{OrbitControls}.
-
-This also enables the use of a variety of loaders for different file formats, such as \gls{OBJ} or \gls{glTF}. However, due to its advantages for transmission, it's advised to use \gls{glTF}, which can be imported using the loader provided by \gls{Three.js}.
+In order to be easy to integrate for developers familiar with existing web-based rendering engines, the renderer utilizes many of the scene description constructs provided by \gls{Three.js}. This includes the representation of geometry using \texttt{BufferGeometry}, camera using \texttt{PerspectiveCamera}, and arbitrary camera controls such as \texttt{OrbitControls}. This also enables the use of a variety of loaders for different file formats, such as \gls{OBJ} or \gls{glTF}. However, due to its advantages for transmission, it's advised to use \gls{glTF}, which can be imported using the loader provided by \gls{Three.js}.
 
 \subsubsection{Scene Preparation}
 
-The primary process involved with setting up the scene is the preparation of the \gls{BVH}. For \gls{BVH} construction, well-established solutions for the web are available. The path tracer uses \texttt{three-mesh-bvh} \cite{threeMeshBvh}. This method builds the \gls{BVH} on the \gls{CPU}; the code for transferring the \gls{BVH} to the \gls{GPU} is in \coderef{BVH-TRANSFER}.
+The primary process involved with setting up the scene is the preparation of the \gls{BVH}. For \gls{BVH} construction, well-established solutions for the web are available. The path tracer uses \texttt{three-mesh-bvh} \cite{threeMeshBvh}. This library builds the \gls{BVH} on the \gls{CPU} and is optimized for \gls{WebGL} use, which necessitates custom code for buffer creation in \gls{WebGPU}. See \coderef{BVH-TRANSFER} for transfer preparation.
 
 In order to address memory alignment, as described in \autoref{ch:memoryAlignmentTheory}, the path tracer uses \texttt{webgpu-utils} \cite{webgpuUtilsLib}. The library enables a straightforward way to map data to buffers and align them correctly. See \coderef{MEMORY-VIEW} for the creation of the type definition and \coderef{BUFFER-MAPPING} for the mapping of data to buffers.
 
@@ -75,13 +73,11 @@ A high-level view of the data structures is shown in \autoref{fig:memory-structu
 
 \subsection*{Ray Generator}
 
-The ray generator is responsible for casting rays into the scene according to the view projection. The path tracer employs a backward ray tracing approach, tracing rays from the camera into the scene.
+The ray generator is responsible for casting rays into the scene according to the view projection. The path tracer employs a backward ray tracing approach, tracing rays from the camera into the scene. For many applications, especially photorealistic rendering, perspective projection is prevalent. Therefore, based on the assessed use case, the path tracer uses perspective projection. See \coderef{VIEWPROJECTION} for implementation.
 
-For many applications, especially photorealistic rendering, perspective projection is prevalent. Therefore, based on the assessed use case, the path tracer uses perspective projection. See \coderef{VIEWPROJECTION} for implementation.
+\label{sec:anti-aliasing-implementation}
 
-For \gls{RNG}, the path tracer uses \gls{PCG}, specifically the \texttt{PCG-RXS-M-XS} variant, as described by O’Neill \cite{o2014pcg}. See \coderef{RNG} for implementation.
-
-In order to set up the Monte Carlo method, the \gls{RNG} needs to be employed in a suitable manner. As a pseudorandom generator, it necessitates a seed to start the cycle. If the seed is identical for all pixels, the results of a single sample will frequently share similar patterns in adjacent surfaces, as shown in \autoref{fig:rngBadSeed}. The result for independent seeds differs in a pronounced manner as demonstrated in \autoref{fig:rngGoodSeed}.
+For \gls{RNG}, the path tracer uses \gls{PCG}, specifically the \texttt{PCG-RXS-M-XS} variant, as described by O’Neill \cite{o2014pcg}. See \coderef{RNG} for implementation. In order to set up the Monte Carlo sampling, the \gls{RNG} needs to be employed in a suitable manner. As a pseudorandom generator, \gls{PCG} necessitates a seed to start the cycle. If the seed is identical for all pixels, the results of a single sample will frequently share similar patterns in adjacent surfaces, as shown in \autoref{fig:rngBadSeed}. The result for independent seeds differs in a pronounced manner as demonstrated in \autoref{fig:rngGoodSeed}.
 
 \begin{figure}[H]
     \centering
@@ -100,7 +96,7 @@ In order to set up the Monte Carlo method, the \gls{RNG} needs to be employed in
     \label{fig:rngSeed}
 \end{figure}
 
-When increasing the sample count, the differences in the setup remain visible. Adjacent surfaces show similar patterns, as shown in \autoref{fig:rngNoiseArtifactsHighlightsBadNoisy}. These patterns resemble image compression artifacts encountered in aggressively compressed \fGlspl{JPEG}{\e{Joint Photographic Experts Group}, a common method for lossy image compression}. In contrast, the renderings with independent seeds show stark differences in adjacent pixels akin to noise as shown in \autoref{fig:rngNoiseArtifactsHighlightsGoodNoisy}. As shown in \autoref{fig:rngNoiseArtifactsHighlightsBadAnti} compared to \autoref{fig:rngNoiseArtifactsHighlightsGoodAnti}, the anti-aliasing is less noticeable when using independent seeds.
+When increasing the sample count, the differences in the setup remain visible. Adjacent surfaces show similar patterns, as shown in \autoref{fig:rngNoiseArtifactsHighlightsBadNoisy}. These patterns resemble image compression artifacts encountered in aggressively compressed \fGlspl{JPEG}{\e{Joint Photographic Experts Group}, a common method for lossy image compression}. In contrast, the renderings with independent seeds show stark differences in adjacent pixels akin to noise as shown in \autoref{fig:rngNoiseArtifactsHighlightsGoodNoisy}. As shown in \autoref{fig:rngNoiseArtifactsHighlightsBadAnti} compared to \autoref{fig:rngNoiseArtifactsHighlightsGoodAnti}, the anti-aliasing is less noticeable when using independent seeds. The implementation of the anti-aliasing strategy indicated in \autoref{sec:anti-aliasing} is implemented in \coderef{ALIASING} and is highly dependent on the \gls{RNG} setup.
 
 \begin{figure}[H]
     \centering
@@ -132,16 +128,13 @@ When increasing the sample count, the differences in the setup remain visible. A
         \label{fig:rngNoiseArtifactsHighlightsGoodAnti}
     \end{subfigure}
     \hspace*{2cm}
-    \caption{Magnified images of renderings with low sample count showing difference based on seed setup. The left column has identical seed for all pixels of a sample, but varying seeds for different samples. The right column has independent seeds for every pixel of a sample as well as across samples.}
+    \caption{Magnified images of renderings with low sample count showing differences based on seed setup. The left column has identical seed for all pixels of a sample, but varying seeds for different samples. The right column has independent seeds for every pixel of a sample as well as across samples.}
     \label{fig:rngNoiseArtifactsHighlights}
 \end{figure}
 
-\label{sec:anti-aliasing-implementation}
-The implementation of the anti-aliasing strategy indicated in \autoref{sec:anti-aliasing} is implemented in \coderef{ALIASING} and is highly dependent on the \gls{RNG} setup.
-
 \subsection*{Path Tracer}
 
-The path tracer is the core of the library and is responsible to test for intersections, sample the scene, and calculate the final radiance. The basic procedure can be seen in \autoref{fig:path-tracer-workflow}. The ray, cast by the ray generator, is tested for intersections. If it misses, the path will be terminated. If a surface hit is detected, the shading will be generated based on the \gls{OpenPBR} specification. The shading generates a new scattered ray and determines the throughput of the ray. Russian roulette uses the throughput to perform probabilistic path termination. If it should be continued, the ray is cast again. The max depth of the ray determines the end of the path. During termination, the radiance contribution is collected in \fGls{RGB}{\e{red, green, and blue}, a common system for color representation in computer graphics} color space.
+The path tracer is the core of the library and is responsible to test for intersections, conduct scene sampling, and calculate the final radiance. The basic procedure can be seen in \autoref{fig:path-tracer-workflow}. The ray, cast by the ray generator, is tested for intersections. If it misses, the path will be terminated. If a surface hit is detected, the shading will be generated based on the \gls{OpenPBR} specification. The shading generates a new scattered ray and determines the throughput of the ray. Russian roulette uses the throughput to perform probabilistic path termination. If it should be continued, the ray is cast again. The max depth of the ray determines the end of the path. During termination, the radiance contribution is collected in \fGls{RGB}{\e{red, green, and blue}, a common system for color representation in computer graphics} color space.
 
 \begin{figure}[H]
     \centering
@@ -164,7 +157,7 @@ The path tracer is the core of the library and is responsible to test for inters
         \draw[-latex, thick] (russian) -- (terminate);
         \draw[-latex, thick] (russian) -- node[midway, right] {ray} (intersection);
     \end{tikzpicture}
-    \caption{High-level workflow of path tracing core routine. Blue are the main parts of the recursive path tracing algorithm, gray are the pre- and post-processing steps. The arrows indicate the flow of data, describing the primary information passed between the steps.}
+    \caption{High-level workflow of core path tracing routine. Blue are the main parts of the recursive path tracing algorithm, gray are the pre- and post-processing steps. The arrows indicate the flow of data, describing the primary information passed between the steps.}
     \label{fig:path-tracer-workflow}
 \end{figure}
 
@@ -192,13 +185,13 @@ Intersection tests based on the \gls{BVH} are implemented in \gls{WGSL}, see \co
 
 \subsubsection{Surface Shading}
 
-For each intersection, sampling is done according to the \gls{MIS} scheme using a combination of light source sampling and \gls{BSDF} sampling as described in \autoref{sec:monte-carlo-integration-sampling}. For light source sampling, an additional shadow ray is cast to determine the visibility of the light source. See \coderef{RAY-COLOR} for implementation. The surface shading method is based on \gls{OpenPBR} reference implementation in \gls{MaterialX} and the reference viewer by Portsmouth \cite{openPbrViewer}. Shading starts by sampling the reflection functions based on definitions of \gls{OpenPBR}, which reference the Monte Carlo sampling scheme described in the \gls{pbrt} book \cite{Pharr_Physically_Based_Rendering_2023} for sampling \glspl{BSDF}, as described in \autoref{sec:bxdf}. See \coderef{REFLECTION-LOBE-WEIGHTS} and subsequent methods for implementation. Using these probabilities, one specific reflection lobe is sampled, and an outgoing direction is determined as implemented in \coderef{BSDF-SAMPLE}. These different lobes correspond to different workflows, such as diffuse, specular, or metal. The implementation does not constitute a complete conformance to the \gls{OpenPBR} specification but instead covers a subset of the features.
+For each intersection, sampling is done according to the \gls{MIS} scheme using a combination of light source sampling and \gls{BSDF} sampling as described in \autoref{sec:monte-carlo-integration-sampling}. For light source sampling, an additional shadow ray is cast to determine the visibility of the light source. See \coderef{RAY-COLOR} for implementation. The surface shading method is based on the \gls{OpenPBR} reference implementation in \gls{MaterialX} and the reference viewer by Portsmouth \cite{openPbrViewer}. Shading starts by sampling the reflection functions based on definitions of \gls{OpenPBR}, which reference the Monte Carlo sampling scheme described in the \gls{pbrt} book \cite{Pharr_Physically_Based_Rendering_2023} for sampling \glspl{BSDF}, as described in \autoref{sec:bxdf}. See \coderef{REFLECTION-LOBE-WEIGHTS} and subsequent methods for implementation. Using these probabilities, one specific reflection lobe is sampled, and an outgoing direction is determined as implemented in \coderef{BSDF-SAMPLE}. These different lobes correspond to different workflows, such as diffuse, specular, or metal. The implementation does not constitute a complete conformance to the \gls{OpenPBR} specification but instead covers a subset of the features.
 
 The outgoing path and radiance, determined by the surface shading, are used for Russian roulette. At this stage, it is either terminated or continued based on the throughput. Once the path is terminated, the radiance is written to a texture. A ping-pong technique is used for writing and reading. This means that the output of the previous frame is used as the input for the current frame and vice versa.
 
 \subsection*{Render Pipeline}
 
-The output of the path tracing compute shader is a texture, which is then passed to a rasterizer. The rasterizer renders the texture to the canvas using a fullscreen quad consisting of two triangles. Tone mapping is done using the Khronos \gls{PBR} Neutral Tone Mapper described in \autoref{sec:toneMappingTheory}. See \coderef{TONE-MAPPER} for implementation. Progressive rendering is a technique that renders an image in multiple passes. Each render pass improves the quality of the image. Per default, a pass consists of a single sample per pixel. This enables the user to see the rough image quickly while it gets refined over time.
+The output of the path tracing compute pipeline is a texture, which is then passed to a rasterizer. The rasterizer renders the texture to the canvas using a fullscreen quad consisting of two triangles. Tone mapping is done using the Khronos \gls{PBR} Neutral Tone Mapper described in \autoref{sec:toneMappingTheory}. See \coderef{TONE-MAPPER} for implementation. Progressive rendering is a technique that renders an image in multiple passes. Each render pass improves the quality of the image. Per default, a pass consists of a single sample per pixel. This enables the user to see the rough image quickly while it gets refined over time.
 
 \subsection*{Denoise Pipeline}
 
@@ -249,7 +242,7 @@ Results of simple renderings with and without denoising can be seen in \autoref{
 
 \section{Documentation}
 
-The path tracer is designed to be integrated into existing web projects. The package is installable via \gls{npm}, but could also be downloaded and included manually. The complete documentation is available on the website. The website is designed to demonstrate the path tracer, provide a quick start guide, and offer detailed information on how to set up \texttt{strahl}. The website is shown in \autoref{fig:strahl-homepage}.
+The path tracer is designed to be integrated into existing web projects. The package is installable via \gls{npm}, but could also be downloaded and included manually. The complete documentation is available on the website. The documentation is designed to demonstrate the path tracer, provide a quick start guide, and offer detailed information on how to set up \texttt{strahl}. The website is shown in \autoref{fig:strahl-homepage}.
 
 \begin{figure}[H]
     \centering
@@ -258,16 +251,16 @@ The path tracer is designed to be integrated into existing web projects. The pac
     \label{fig:strahl-homepage}
 \end{figure}
 
-Documentation on how to configure the renderer is provided. The library uses custom exceptions that the user can catch and handle. It provides different exceptions to enable the user to react appropriately to different error conditions. This includes basic exceptions, where the action is limited, such as missing browser support for \gls{WebGPU}, as well as transparent information on what the user misconfigured. The use of \fGls{TypeScript}{a typed superset of JavaScript developed by Microsoft} enables code completion and type checking. The documentation describes how to control sampling, denoising, environment lighting, and more. See \autoref{fig:strahl-documentation} for an example.
+Documentation on how to configure the renderer is provided. The library uses custom exceptions that the user can catch and handle. It provides different exceptions to enable the user to react appropriately to different error conditions. This includes basic exceptions, where the action is limited, such as missing browser support for \gls{WebGPU}, as well as transparent information on what the user misconfigured. The use of \fGls{TypeScript}{a typed superset of JavaScript developed by Microsoft} enables code completion and type checking. The documentation describes how to control sampling, denoising, environment lighting, and more. See \autoref{fig:strahl-documentation} for an example of a code snippet with an interactive sandbox.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\columnwidth]{resources/website-documentation.png}
-    \caption{Extract of documentation on how to setup denoising, with interactive example.}
+    \caption{Extract of documentation on how to setup denoising, with interactive sandbox.}
     \label{fig:strahl-documentation}
 \end{figure}
 
-The documentation includes showcases for the \gls{OpenPBR} surface shading model. The goal is to enable users to understand the parameter set and how to configure them to get the desired result. The parameters can be adjusted in real-time to see the effect on the rendering as shown in \autoref{fig:docu-demo}.
+The documentation includes showcases for the \gls{OpenPBR} surface shading model. The goal is to enable users to understand the parameter set and document how to configure materials to get the desired result. The parameters can be adjusted in real-time to see the effect on the rendering, as shown in \autoref{fig:docu-demo}.
 
 \begin{figure}[H]
     \centering
@@ -289,7 +282,7 @@ The documentation includes showcases for the \gls{OpenPBR} surface shading model
 \section{Benchmark}
 \label{sec:benchmark}
 
-In order to assess the effectiveness of specific measures, a benchmark is defined to measure the performance of the path tracer. This benchmark is used for quantitative evaluation of the path tracer. Prior sections, such as anti-aliasing as described in \autoref{sec:anti-aliasing-implementation} focus on qualitative aspects of the renderer. Depending on the use case, the benchmark can be adjusted to measure different metrics. However, the core design of the benchmark remains the same. Generally, measurements are taken for the entirety of a stage instead of focusing on individual routines within a stage. This gives a more holistic view of the performance of the path tracer. The results focus on \gls{GPU} performance. The measurements are recorded using two systems. The first is based on \gls{WebGPU} timestamp queries that only account for the compute pipeline. The second is taking wall-clock time using the Performance \gls{API} for the entire \gls{GPU} part. The results presented are based on wall-clock time.
+Prior sections, such as anti-aliasing, as described in \autoref{sec:anti-aliasing-implementation}, focus on qualitative aspects of the renderer. In order to assess the effectiveness of specific measures, a benchmark is defined to measure the performance of the path tracer. This benchmark is used for quantitative evaluation of the path tracer. The metrics can be adjusted depending on the use case. However, the core design of the benchmark remains the same. Generally, measurements are taken for the entirety of a stage instead of focusing on individual routines within a stage. This gives a more holistic view of the performance of the path tracer. The results focus on \gls{GPU} performance. The measurements are recorded using two systems. The first is based on \gls{WebGPU} timestamp queries that only account for the compute pipeline. The second is taking wall-clock time using the Performance \gls{API} for the entire \gls{GPU} part. The results presented are based on wall-clock time.
 
 A total of 100 samples per pixel with a ray depth of five is used. The image is rendered in Chrome 127/128 at a resolution of 512$\times$512 pixels. Experiments are conducted with different model complexities. The simplified versions are decimated meshes of the original, which consists of roughly one million triangles. The \gls{LOD} artifacts can be seen in \autoref{fig:benchmark-models}. The first two levels are intended to be visually similar, while the third level is a simplified version intended to demonstrate the effect of non-manifold geometry for ray tracing.
 
@@ -342,7 +335,7 @@ For the intersection tests using the \gls{BVH}, the split axis is used as a heur
 
 \subsection*{Sampling Time Comparison}
 
-The time for each individual sample remains consistent across benchmark runs. This means that sample \#1 will take a similar amount of time during all runs. However, the time between the different samples is not consistent. Primarily, the first sample takes substantially longer than the rest of the samples, as can be seen in \autoref{dia:sampling-times}. The average time for sample \#2 is 27.53~ms $\pm$ 1.38~ms, whereas sample \#1 takes 102.83~ms $\pm$ 1.26~ms. These measurements were collected using the high \gls{LOD} artifact. After the \gls{CPU} preparation and \gls{GPU} preheating, which consists of the first sample, the path tracer can render approximately 35 samples per second.
+The time for each individual sample remains consistent across benchmark runs. This means that sample \#1 will take a similar amount of time during all runs. However, the time of different samples within the same run is inconsistent. Primarily, the first sample takes substantially longer than the rest of the samples, as can be seen in \autoref{dia:sampling-times}. The average time for sample \#2 is 27.53~ms $\pm$ 1.38~ms, whereas sample \#1 takes 102.83~ms $\pm$ 1.26~ms. These measurements were collected using the high \gls{LOD} artifact. After the \gls{CPU} preparation and \gls{GPU} preheating, which consists of the first sample, the path tracer can render approximately 35 samples per second.
 
 \begin{figure}
     \centering
@@ -385,7 +378,7 @@ The time for each individual sample remains consistent across benchmark runs. Th
                 };
         \end{axis}
     \end{tikzpicture}
-    \caption{Mean time per sample, showing that the first sample consistently takes longer than subsequent samples.}
+    \caption{Mean time per sample, showing that the first sample consistently takes longer than subsequent samples. The chart is limited to ten samples as the results for the remaining samples are similar to samples \#2 until \#10.}
     \label{dia:sampling-times}
 \end{figure}
 
@@ -405,7 +398,7 @@ A final performance test was conducted on two machines. The AMD/NVIDIA machine i
         Low  & 9.79 ms $\pm$ 0.07 ms   & 10.03 ms $\pm$ 0.25 ms  \\
         \bottomrule
     \end{tabular}
-    \caption{\gls{BVH} setup time based on model complexity}
+    \caption{\gls{BVH} setup time based on model complexity.}
     \label{tab:cpuPerformance}
 \end{table}
 
@@ -420,45 +413,45 @@ A final performance test was conducted on two machines. The AMD/NVIDIA machine i
         Low  & 2,387.14 ms $\pm$ 26.56 ms & 1,126.50 ms $\pm$ 73.92 ms  \\
         \bottomrule
     \end{tabular}
-    \caption{\gls{GPU} path tracer time based on model complexity}
+    \caption{\gls{GPU} path tracer time based on model complexity.}
     \label{tab:gpuPerformance}
 \end{table}
 
 \newpage
 \section{Use Case Scenarios}
 
-Different configurations based on engineering \gls{CAD} data used by EAO as rendered by the path tracer can be seen in \autoref{fig:rendering-showcase}. Note that artistic liberties were taken to highlight specific effects. The path tracer can render full assemblies without being impeded by the complexity of the geometry. The renderer offers flexibility by providing configuration of \gls{OpenPBR} parameters, environment lighting, denoising setup, and more. The required number of samples is dependent on the scene. Effects such as rough metallic reflection require more samples to converge than a diffuse surface. For many use cases, the number is in the range of 100 to 1,000 samples per pixel. The library enables the user to obtain high-fidelity renderings of \gls{CAD} data without the need for pregenerated artifacts.
+Different configurations based on engineering \gls{CAD} data used by EAO as rendered by the path tracer can be seen in \autoref{fig:rendering-showcase}. Note that artistic liberties were taken to highlight specific effects. The path tracer can render full configurations without being impeded by the complexity of the geometry. The renderer offers flexibility by providing configuration of \gls{OpenPBR} parameters, environment lighting, denoising setup, and more. The required number of samples is dependent on the scene. Effects such as rough metallic reflection require more samples to converge than a diffuse surface. For many use cases, the number is in the range of 100 to 1,000 samples per pixel. The library enables the user to obtain high-fidelity renderings of \gls{CAD} data without the need for pregenerated artifacts.
 
 \begin{figure}[H]
     \centering
-    \hspace*{1cm}
-    \begin{subfigure}[t]{0.38\textwidth}
+    \hspace*{0.6cm}
+    \begin{subfigure}[t]{0.4\textwidth}
         \includegraphics[width=\textwidth]{resources/demo-reflection.png}
         \caption{Pushbutton mounted on a metallic surface, including the reflection of the Stanford bunny model \cite{turkLevoy1994} positioned in the scene.}
         \label{fig:demo-reflection}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.38\textwidth}
+    \begin{subfigure}[t]{0.4\textwidth}
         \includegraphics[width=\textwidth]{resources/demo-color-bleeding.png}
         \caption{Rear view exhibiting slight color bleeding, visible as a red tint on the black surface.}
         \label{fig:demo-color-bleeding}
     \end{subfigure}
-    \hspace*{1cm}
+    \hspace*{0.6cm}
     \vfill
     \vspace*{0.5cm}
-    \hspace*{1cm}
-    \begin{subfigure}[t]{0.38\textwidth}
+    \hspace*{0.6cm}
+    \begin{subfigure}[t]{0.4\textwidth}
         \includegraphics[width=\textwidth]{resources/demo-specular.png}
         \caption{Front view of pushbutton with specular highlights.}
         \label{fig:demo-specular}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.38\textwidth}
+    \begin{subfigure}[t]{0.4\textwidth}
         \includegraphics[width=\textwidth]{resources/demo-ambient-occlusion.png}
         \caption{Rear view demonstrating ambient occlusion.}
         \label{fig:demo-ambient-occlusion}
     \end{subfigure}
-    \hspace*{1cm}
+    \hspace*{0.6cm}
     \caption{Path-traced renderings of pushbutton \gls{CAD} models.}
     \label{fig:rendering-showcase}
 \end{figure}
