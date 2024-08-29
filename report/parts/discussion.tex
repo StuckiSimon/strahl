@@ -7,11 +7,11 @@
 % !TEX encoding = UTF-8 Unicode
 % !TEX root = ../main.tex
 
-This chapter discusses the findings and experience gained by implementing a project using \gls{WebGPU}. In addition, a comparison of the results is provided and possible future work is outlined.
-
-The path tracer focuses on the given use case and is not a general-purpose rendering engine. For example, it does not offer a physics engine, support for animations, or other features that are common in rendering engines, such as \gls{Three.js} or \gls{Babylon.js}.
+This chapter discusses the findings and experience gained by implementing \gls{OpenPBR} in a project using \gls{WebGPU}. In addition, a comparison of the results is provided, possible future work is outlined, and a conclusion is derived.
 
 \section{Comparison}
+
+The path tracer focuses on the given use case and is not a general-purpose rendering engine. For example, it does not offer a physics engine, support for animations, or other features that are common in rendering engines, such as \gls{Three.js} or \gls{Babylon.js}.
 
 In order to contextualize the results, the presented work is compared in three different constellations. This includes a comparison with other open-source path tracers for the web, as well as a comparison with two alternative rendering strategies: web-based client-side real-time rendering using rasterization and offline ray-traced rendering. Finally, a comparison with a real photograph is conducted.
 
@@ -31,7 +31,7 @@ As discussed in \autoref{ch:materialDescriptionStandards}, a variety of standard
 
 \subsubsection*{Documentation}
 
-For developers to use the library, the renderer should be well-documented. \texttt{strahl} and \texttt{three-gpu-pathtracer} provide documentation. \texttt{Three.js PathTracer} and \texttt{dspbr-pt} provide minimal documentation. None of the three alternatives provide a material editor.
+For developers to use the library, the renderer should be well-documented. \texttt{strahl} and \texttt{three-gpu-pathtracer} provide documentation. \texttt{Three.js PathTracer} and \texttt{dspbr-pt} provide minimal documentation. None of the three alternatives provide an interactive material editor.
 
 \subsubsection*{Benchmark Setup}
 
@@ -95,7 +95,7 @@ Visually, differences in global illumination effects between the two ray-traced 
 \newpage
 \subsection*{Comparison to Photograph}
 
-The renderings for comparison to alternative rendering strategies used slight variations of parameters to show the quality of the generated effects. This includes the strong red color as well as the pronounced reflection on the metal part. These adjustments are not as in the real product. Therefore, a separate round of comparison to a real photograph taken under neutral lighting is conducted. The \gls{OpenPBR} material properties were adjusted to more closely resemble the photograph.
+The renderings for comparison to alternative strategies used slight variations of parameters to show the quality of the generated effects. This includes the strong red color as well as the pronounced reflection on the metal part. These adjustments do not fully replicate those found in the actual product. Therefore, a separate round of comparison to a real photograph taken under neutral lighting is conducted. The \gls{OpenPBR} material properties were adjusted to more closely resemble the photograph.
 
 \begin{figure}[H]
   \centering
@@ -116,9 +116,9 @@ The renderings for comparison to alternative rendering strategies used slight va
   \label{fig:real-rendering-comparison}
 \end{figure}
 
-The two images have slightly different lighting conditions. The rendering has a simple approximation of environment lighting. In contrast, the photograph was conducted with lower light exposure and additional ambient occlusion caused by the surface upon which the pushbutton is positioned. This mainly results in differences in the metal part, which is very dark in the photograph. In addition, other more nuanced effects are visible in the photograph; the metal surface has slight layers resembling a patina; the plastic of the terminal has slight scratches and fingerprints; and the red front has a visible contour where the two parts were attached. There are differences in the texture, which is not modeled in the path-traced rendering. Additionally, certain plastic parts are not part of the engineering \gls{CAD} models and are therefore missing in the rendering.
+The two images have slightly different lighting conditions. The rendering uses a simple approximation of environment lighting. In contrast, the photograph was conducted with lower light exposure and additional ambient occlusion caused by the surface upon which the pushbutton is positioned. This mainly results in differences in the metal part, which is very dark in the photograph. In addition, other more nuanced effects are visible in the photograph; the metal surface has slight layers resembling a patina; the plastic of the terminal has slight scratches and fingerprints; and the red front shows a seam where the two parts join. There are differences in the texture, which is not modeled in the path-traced rendering. Additionally, certain plastic parts are not part of the engineering \gls{CAD} models and are therefore missing in the rendering.
 
-While further alignment with the photograph can yield better results, it is questionable if all of these effects should be part of the renderings. Having more details and textures increases fidelity. However, for the considered use case of e-commerce, polished looks may be preferable to more realistic rendering. The results indicate that a high degree of fidelity can be achieved with a practical amount of effort.
+While having all parts and detailed textures increases fidelity, it is questionable whether all of these effects should be part of the renderings. For the considered use case of e-commerce, polished looks may be preferable to more realistic rendering. The results indicate that a high degree of fidelity can be achieved with a practical amount of effort.
 
 \newpage
 
@@ -132,19 +132,19 @@ The main novelty introduced in this work is the development of a path tracer wit
 
 \subsubsection*{Browser Support}
 
-Due to the current state of support for \gls{WebGPU} in Safari's \gls{WebKit} and Mozilla Firefox, the production readiness of \gls{WebGPU} is still limited. Safari has announced plans to support \gls{WebGPU} and has launched a preview version \cite{SafariWebGPUSupport}. Firefox also has plans to support WebGPU \cite{FirefoxWebGPUSupport}. Thanks to the extensive conformance test suite \cite{WebGPUConformanceTestSuite}, it is more likely that the different implementations will be compatible with each other.
+Due to the current state of support for \gls{WebGPU} in Safari's \gls{WebKit} and Mozilla Firefox, the production readiness of \gls{WebGPU} is still limited. Safari has announced plans to support \gls{WebGPU} and has launched a preview version \cite{SafariWebGPUSupport}. Firefox also has plans to support \gls{WebGPU} \cite{FirefoxWebGPUSupport}. Thanks to the extensive conformance test suite \cite{WebGPUConformanceTestSuite}, it is more likely that the different implementations will be compatible with each other.
 
-The main browser that supports \gls{WebGPU} to date is Chrome, or more generally \gls{Chromium}-based browsers. \gls{WebGPU} has shipped to general use on desktops in May of 2023 \cite{ChromeWebGPUSupport}. Since January 2024, \gls{WebGPU} is also supported on modern Android devices \cite{ChromeAndroidWebGPUSupport}.
+The main browser that supports \gls{WebGPU} to date is Chrome, or more generally \gls{Chromium}-based browsers. \gls{WebGPU} has shipped to general use on desktops in May of 2023 \cite{ChromeWebGPUSupport}. Since January 2024, \gls{WebGPU} has also been supported on modern Android devices \cite{ChromeAndroidWebGPUSupport}.
 
 This means that using \gls{WebGPU} is straightforward on most modern devices, with the notable exception of Apple iOS and iPadOS devices.
 
 \subsubsection*{Feature Set}
 
-To date, \gls{WebGPU} does not support some common features found in modern rendering \glspl{API}. For instance, it lacks an alternative to the \texttt{i32} data type, such as \texttt{i16}. Other common data types are also not available. Other missing features would be beneficial for path tracing. The most prominent example is hardware-accelerated ray tracing. \glspl{API} such as \gls{Vulkan} support hardware-accelerated ray tracing \cite{vulkanRayTracing}. This entails helpers for building common acceleration structures, such as \gls{BVH} and ray querying functions to determine intersections. \gls{WebGPU} does not yet support these features. However, discussions are ongoing to add extensions \cite{webGPURayTracing}. Additionally, a demonstration has been implemented to show hardware-accelerated ray tracing in a modified version of \gls{Dawn} \cite{webGPURayTracingFork}.
+To date, \gls{WebGPU} does not support some common features found in modern rendering \glspl{API}. For instance, it lacks an alternative to the \texttt{i32} data type, such as \texttt{i16}. Other common data types are also unavailable. Other missing features would be particularly beneficial for path tracing. The most prominent example is hardware-accelerated ray tracing. \glspl{API} such as \gls{Vulkan} support hardware-accelerated ray tracing \cite{vulkanRayTracing}. This entails helpers for building common acceleration structures, such as \gls{BVH} and ray querying functions to determine intersections. \gls{WebGPU} does not yet support these features. However, discussions are ongoing to add extensions \cite{webGPURayTracing}. Additionally, a demonstration has been implemented to show hardware-accelerated ray tracing in a modified version of \gls{Dawn} \cite{webGPURayTracingFork}.
 
 \subsubsection*{Debuggability}
 
-None of the major browser engines, Chrome, Firefox, and Safari, provide debugging as part of the developer tools. Tools for inspecting \gls{WebGPU} applications exist \cite{webGpuDevToolsDuncan, webGpuDevToolsTakahiro} but are limited in terms of feature set. While they are helpful in inspecting resources and capturing frames, they do not provide debugging capabilities such as breakpoints, stepping, or variable inspection. For specific setups, there are methods to setup profiling \cite{webGpuProfilingWithPix}, but these are not integrated into the browser developer tools and are dependent on the concrete machine hardware. Improvements in this area facilitate troubleshooting.
+None of the major browsers — Chrome, Firefox, and Safari — provide debugging as part of the developer tools. Tools for inspecting \gls{WebGPU} applications exist \cite{webGpuDevToolsDuncan, webGpuDevToolsTakahiro} but are limited in terms of feature set. While they are helpful in inspecting resources and capturing frames, they do not provide debugging capabilities such as breakpoints, stepping, or variable inspection. For specific setups, there are methods to setup profiling \cite{webGpuProfilingWithPix}, but these are not integrated into the browser developer tools and are dependent on the concrete machine hardware. Improvements in this area facilitate troubleshooting.
 
 \subsubsection*{Stability}
 
@@ -184,10 +184,6 @@ The focus on the defined use case means that certain rendering effects are not i
 
 While refraction, caustics, depth of field, and motion blur are questions of light transport, volumetric effects, hair and fur are features that are not part of the \gls{OpenPBR} specification. Other features in terms of rendering could be implemented. This section outlines some of the possibilities.
 
-\subsubsection*{Spectral Rendering}
-
-Instead of using \gls{RGB} color space, spectral rendering could leverage the full spectrum of visible light by modeling the light as a function of wavelength. This can improve the realism of the rendered images. Spectral rendering is well-suited for \gls{PBR} and is a natural extension of the current implementation. It is also possible to support both \gls{RGB} and spectral rendering.
-
 \subsubsection*{Texture Support}
 
 While not critical for the given use case, texture support is a common feature in rendering engines. The current implementation does not use textures. The renderer could be extended to support sampling \gls{OpenPBR} parameters from textures. This would enable more complex material variations and improve the realism of the rendered images.
@@ -197,6 +193,10 @@ This is distinct from texture mapping frequently used in rasterization-based ren
 \subsubsection*{Environment Mapping}
 
 The current implementation offers a environment light setup. However, no details about the environment are visible in the reflections. By adding environment mapping, more complex lighting scenarios can be achieved. This could be done by using a skybox or a \gls{HDR} environment map.
+
+\subsubsection*{Spectral Rendering}
+
+Instead of using \gls{RGB} color space, spectral rendering could leverage the full spectrum of visible light by modeling the light as a function of wavelength. This can improve the realism of the rendered images. Spectral rendering is well-suited for \gls{PBR} and is a natural extension of the current implementation. It is also possible to support both \gls{RGB} and spectral rendering.
 
 \subsubsection*{Full OpenPBR support}
 
@@ -216,11 +216,11 @@ The renderer uses \gls{GPU} parallelization to accelerate the rendering process.
 
 \subsubsection*{TypeScript Support for Memory Management}
 
-While \texttt{webgpu-utils} \cite{webgpuUtilsLib} is helpful for memory management, it does not provide TypeScript support for the generated definitions based on the underlying \gls{WGSL} code. Type safety could reduce the likelihood of errors in the code. As an alternative, runtime checks could be implemented to ensure the data is correctly mapped to all fields of the underlying structure.
+While \texttt{webgpu-utils} \cite{webgpuUtilsLib} is helpful for memory management, it does not provide \gls{TypeScript} support for the generated definitions based on the underlying \gls{WGSL} code. Type safety could reduce the likelihood of errors in the code. As an alternative, runtime checks could be implemented to ensure the data is correctly mapped to all fields of the underlying structure.
 
 \subsubsection*{Web Worker Support}
 
-Web Workers are a web technology that allows to run scripts off the main thread. Running \gls{CPU}-intensive tasks on the main thread can cause the interface to become unresponsive, preventing the user from interacting with it. By using Web Workers to handle these tasks on a separate thread, the main thread remains unblocked, improving responsiveness. This approach could be applied to tasks such as \gls{BVH} construction. However, one important consideration is the data transfer handling. Per default, communication between the main thread and a Web Worker involves copying data. Utilizing more advanced memory-sharing \glspl{API}, such as \texttt{SharedArrayBuffer}, may offer a more efficient solution.
+Web workers are a web technology that allows to run scripts off the main thread. Running \gls{CPU}-intensive tasks on the main thread can cause the interface to become unresponsive, preventing the user from interacting with it. By using web workers to handle these tasks on a separate thread, the main thread remains unblocked, improving responsiveness. This approach could be applied to tasks such as \gls{BVH} construction. However, one important consideration is the data transfer handling. Per default, communication between the main thread and a web worker involves copying data. Utilizing more advanced memory-sharing \glspl{API}, such as \texttt{SharedArrayBuffer}, may offer a more efficient solution.
 
 \subsubsection*{BVH Construction}
 \label{sec:bvhConstructionDiscussion}
@@ -239,7 +239,7 @@ For remote rendering, the renderer could be extended to render images on demand 
 
 \subsubsection*{WebGPU Compatibility Mode}
 
-There is a proposal under active development that aims to extend the reach of \gls{WebGPU} by providing a slightly restricted subset of \gls{WebGPU} \cite{WebGPUCompatibilityModeProposal}. Considering the suggested limits of the compatibility mode, it could be possible to deploy the renderer onto a broader range of devices. However, it is important to consider that path tracing is a computationally expensive task and might not be suitable for all devices. Therefore, increasing the reach might only be beneficial in some cases.
+There is a proposal under active development that aims to extend the reach of \gls{WebGPU} by providing a slightly restricted subset of \gls{WebGPU} \cite{WebGPUCompatibilityModeProposal}. Considering the suggested limits of the compatibility mode, it could be possible to deploy the renderer onto a broader range of devices. However, it is important to consider that path tracing is a computationally expensive technique and might not be suitable for all devices. Therefore, increasing the reach might only be beneficial in some cases.
 
 \subsubsection*{Automatic Shader Conversion}
 
@@ -265,9 +265,7 @@ The renderer currently provides two optional strategies for denoising: \gls{OIDN
 
 \subsubsection*{Qualitative Assessment}
 
-The provided results highlight the quantitative performance of the renderer. However, due to the nature of a renderer, qualitative assessment based on visual inspection is also used to determine the quality of the rendered images. This could be extended to include more advanced metrics such as peak signal to noise ratio (PSNR), structural similarity (SSIM) \cite{ssim}, or learned perceptual image patch similarity (LPIPS) \cite{lpips}.
-
-Such a comparison could be based on reference scenes such as the Cornell Box \cite{goral1984modeling} or the Sponza Atrium \cite{dabrovic2002sponza}. To assess the differences, different comparisons could be conducted:
+The provided results highlight the quantitative performance of the renderer. However, due to the nature of a renderer, qualitative assessment based on visual inspection is also used to determine the quality of the rendered images. This could be extended to include objective metrics such as peak signal to noise ratio (PSNR), structural similarity (SSIM) \cite{ssim}, or learned perceptual image patch similarity (LPIPS) \cite{lpips}. Such a comparison could be based on reference scenes such as the Cornell Box \cite{goral1984modeling} or the Sponza Atrium \cite{dabrovic2002sponza}. To assess the differences, different comparisons could be conducted:
 
 \begin{itemize}
   \item{Offline Renderer} — Comparison to other offline renderers such as Mitsuba \cite{Jakob2020DrJit}, \gls{pbrt} \cite{Pharr_Physically_Based_Rendering_2023}, or Cycles which is used by \gls{Blender} \cite{cycles}.
