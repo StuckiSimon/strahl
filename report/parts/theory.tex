@@ -249,7 +249,7 @@ Another important concept is the probability density function (\gls{PDF}). It de
     \caption{\gls{CDF} visualized}
     \label{fig:cdf-theory}
   \end{subfigure}
-  \caption{\gls{PDF} and \gls{CDF} of normal distribution visualized}
+  \caption{\gls{PDF} and \gls{CDF} of normal distribution visualized.}
   \label{fig:probability-theory}
 \end{figure}
 
@@ -498,9 +498,7 @@ Many surfaces combine these effects and need to consider the incident and outgoi
 \section{Computer Graphics}
 \label{ch:computerGraphics}
 
-This section provides an overview of computer graphics, including its history, key concepts, and applications.
-
-Since the early days of computing, researchers have explored ways to process visual information using computers. While the field also encompasses aspects such as image processing or two-dimensional graphics, this thesis focuses on three-dimensional computer graphics. Topics such as animation and geometry processing will not be covered. The main topics for this thesis are geometry representation, rendering, and shading.
+This section provides an overview of computer graphics, including its history, key concepts, and applications. Since the early days of computing, researchers have explored ways to process visual information using computers. While the field also encompasses aspects such as image processing or two-dimensional graphics, this thesis focuses on three-dimensional computer graphics. Topics such as animation and geometry processing will not be covered. The main topics for this thesis are geometry representation, rendering, and shading.
 
 A 3D scene can be defined as a collection of objects in a three-dimensional space. The basic building blocks of a 3D scene are the triangles, which form the geometry of the objects. The goal is to get this abstract representation of a scene onto a 2D screen. However, to obtain photorealistic images, the rendering needs to consider advanced lighting effects.
 
@@ -804,7 +802,7 @@ Different strategies can be considered for importance sampling. For example, one
     \caption{Ray hitting a mirror-like surface with well-performing material sampling.}
     \label{fig:material-sampling-good}
   \end{subfigure}
-  \caption{Material sampling strategy weakness and strength}
+  \caption{Material sampling strategy weakness and strength.}
   \label{fig:material-sampling}
 \end{figure}
 
@@ -882,7 +880,7 @@ Light source sampling is an alternative sampling strategy that can alleviate thi
     \caption{Ray hitting a diffuse surface with well-performing light source sampling.}
     \label{fig:light-sampling-good}
   \end{subfigure}
-  \caption{Light source sampling strategy weakness and strength}
+  \caption{Light source sampling strategy weakness and strength.}
   \label{fig:light-sampling}
 \end{figure}
 
@@ -893,9 +891,7 @@ Both strategies are good candidates under different circumstances. To leverage t
   \label{eq:multipleImportanceSampling}
 \end{equation}
 
-where $k$ is the number of different sampling strategies, the weight of sampling strategy $h$ is denoted $w_h$, whereas $p_h(X_{h,i})$ is the probability distribution. $w_h$ is the weighting function for the estimator such that the expected value of the estimator is unbiased. Veach also proposed several heuristics for the weighting function, including the power heuristic.
-
-This Monte Carlo integration, based on \gls{MIS}, constitutes the basis for sampling in a path tracer algorithm.
+where $k$ is the number of different sampling strategies, the weight of sampling strategy $h$ is denoted $w_h$, whereas $p_h(X_{h,i})$ is the probability distribution. $w_h$ is the weighting function for the estimator such that the expected value of the estimator is unbiased. Veach also proposed several heuristics for the weighting function, including the power heuristic. This Monte Carlo integration, based on \gls{MIS}, constitutes the basis for sampling in a path tracer algorithm.
 
 \subsubsection{Russian Roulette}
 \label{ch:russianRoulette}
@@ -1108,9 +1104,7 @@ In addition to this standard graphics pipeline, many \glspl{API} also support cu
 
 \subsection*{OpenGL}
 
-\gls{OpenGL} is an \gls{API} for rendering 3D graphics. After its introduction in 1992, it was widely adopted. Subsequently, the standard has been ported to other platforms and has been extended with new features. The \gls{API} has its own shading language called OpenGL Shading Language (\gls{GLSL}).
-
-To date, \gls{OpenGL} is still widely used in the industry, but it has been replaced by more modern \glspl{API} in recent years.
+\gls{OpenGL} is an \gls{API} for rendering 3D graphics. After its introduction in 1992, it was widely adopted. Subsequently, the standard has been ported to other platforms and has been extended with new features. The \gls{API} has its own shading language called OpenGL Shading Language (\gls{GLSL}). To date, \gls{OpenGL} is still widely used in the industry, but it has been replaced by more modern \glspl{API} in recent years.
 
 \subsection*{Modern Graphics APIs}
 
@@ -1126,13 +1120,7 @@ None of these \glspl{API} are supported in the browser, which makes them unsuita
 
 \subsection*{WebGL}
 
-\gls{WebGL} is a graphics \gls{API} for the web based on \gls{OpenGL ES} 2.0. It was initially released in 2011 and has since been adopted by all major browsers.
-
-\gls{WebGL} is designed to offer a rendering pipeline but does not offer \gls{GPGPU} capabilities. There have been efforts to extend with compute shaders, but efforts by the \gls{Khronos Group} have been halted in favor of focusing on \gls{WebGPU} instead.
-
-Workarounds have been developed to provide \gls{GPGPU} capabilities. The basic idea is to render the output of a fragment shader to a texture and interpret the output as binary data instead of color information. There are libraries such as \texttt{GPU.js} which provide \gls{GPGPU} capabilities using \gls{WebGL}. \texttt{Tensorflow.js}, a library for training and deploying \gls{ML} models, uses similar techniques in the \gls{WebGL} backend.
-
-Since its introduction, \gls{WebGL} has been extended with new features. \gls{WebGL} 2.0, based on \gls{OpenGL ES} 3.0, was released in 2017. Of the major browsers, Safari was the last to support it out of the box in 2021. Since \gls{WebGL} 2.0, no major versions have been released, but new features have been added. This makes it evident that while \gls{WebGL} will remain a viable option for the foreseeable future, \gls{WebGPU} is likely to become the preferred choice in the long term.
+\gls{WebGL} is a graphics \gls{API} for the web based on \gls{OpenGL ES} 2.0. All major browsers adopted the standard, which was initially released in 2011. It is designed to offer a rendering pipeline but does not offer \gls{GPGPU} capabilities. There have been efforts to extend \gls{WebGL} with compute shaders, but efforts by the \gls{Khronos Group} have been halted in favor of focusing on \gls{WebGPU} instead. Workarounds have been developed to provide \gls{GPGPU} capabilities. The basic idea is to render the output of a fragment shader to a texture and interpret the output as binary data instead of color information. There are libraries such as \texttt{GPU.js} which provide \gls{GPGPU} capabilities using \gls{WebGL}. \texttt{Tensorflow.js}, a library for training and deploying \gls{ML} models, uses similar techniques in the \gls{WebGL} backend. Since its introduction, \gls{WebGL} has been extended with new features. \gls{WebGL} 2.0, based on \gls{OpenGL ES} 3.0, was released in 2017. Of the major browsers, Safari was the last to support it out of the box in 2021. Since \gls{WebGL} 2.0, no major versions have been released, but new features have been added. This makes it evident that while \gls{WebGL} will remain a viable option for the foreseeable future, \gls{WebGPU} is likely to become the preferred choice in the long term.
 
 \subsection*{WebGPU}
 
@@ -1585,7 +1573,7 @@ In addition to these standards, many real-time rendering engines, such as \gls{U
 
 \gls{OpenPBR} is a surface shading model hosted by the \gls{ASWF} as an open standard \cite{openPBRSpec}. Version 1.0 of the standard was released in June of 2024 \cite{openPBR1Dot0Release}. The \gls{OpenPBR} specification includes a reference implementation in \gls{MaterialX}. It differs from \gls{MaterialX} in providing an \gls{uber shader} approach instead of a node-based one. This enables the use of shader generation of \gls{MaterialX} in order to get a reference implementation in \gls{GLSL} or \gls{OSL}.
 
-It combines Autodesk Standard Surface and Adobe Standard Material and is being worked on by both companies. The potential of this standard is to provide a common shading model that can be used across different applications. Support for the standard has already been announced in applications by Autodesk, Adobe, and NVIDIA \cite{omniverseOpenPBR}, among others. \gls{Blender} has reworked their Principled \gls{BSDF} shader to be based on \gls{OpenPBR} \cite{blenderOpenPBRInspiration}. These promising signs indicate that the standard has the potential to be widely adopted.
+\gls{OpenPBR} combines Autodesk Standard Surface and Adobe Standard Material and is being worked on by both companies. The potential of this standard is to provide a common shading model that can be used across different applications. Support for the standard has already been announced in applications by Autodesk, Adobe, and NVIDIA \cite{omniverseOpenPBR}, among others. \gls{Blender} has reworked their Principled \gls{BSDF} shader to be based on \gls{OpenPBR} \cite{blenderOpenPBRInspiration}. These promising signs indicate that the standard has the potential to be widely adopted.
 
 The \gls{uber shader} approach is defined by having a fix set of inputs that can be adjusted, but it does not allow for custom node graphs as \gls{MaterialX} does. \gls{OpenPBR} is designed for photorealistic material description. The first release focuses on surface shading and does not support specialized workflows such as advanced hair or volumetric effects.
 
