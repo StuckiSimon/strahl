@@ -13,7 +13,7 @@ The path tracer focuses on the given use case and is, therefore, not a general-p
 
 \section{Comparison}
 
-In order to contextualize the results, the presented work is compared to existing solutions. This includes a comparison to other open-source path tracers for the web, as well as a comparison to two alternative rendering strategies: web-based client-side real-time rendering using rasterization and offline ray-traced rendering.
+In order to contextualize the results, the presented work is compared in three different constellations. This includes a comparison with other open-source path tracers for the web, as well as a comparison with two alternative rendering strategies: web-based client-side real-time rendering using rasterization and offline ray-traced rendering. Finally, a comparison with a real photograph is conducted.
 
 \subsection*{Comparison to Prior Work}
 \label{sec:comparisonToPriorWork}
@@ -89,7 +89,35 @@ The chosen architecture paradigm serves as an alternative to offline rendering s
   \label{fig:final-rendering-comparison}
 \end{figure}
 
-Visually, differences in global illumination effects between the two ray-traced renderings and the rasterization rendering are apparent. Ambient occlusion on the terminal block is more pronounced in the ray-traced images. Reflection on the metal part is also more noticeable, and the surrounding environment is considered. Additionally, the shadows are more realistic and consider all light sources. The differences between the two ray-traced images are less apparent due to the similar rendering techniques. Certain differences, such as the color of the metal part and the reflection on the red part, are mainly due to changes in the material properties. This demonstrates the potential of the proposed solution to provide high-fidelity renderings in near real-time.
+Visually, differences in global illumination effects between the two ray-traced renderings and the rasterization rendering are apparent. Ambient occlusion on the terminal block is more pronounced in the ray-traced images. Reflection on the metal part is also more noticeable, and the surrounding environment is considered. Additionally, the shadows are more realistic and consider all light sources. The differences between the two ray-traced images are less apparent due to the similar rendering techniques. Certain differences, such as the color of the metal part and the reflection on the red part, are mainly due to changes in the material properties. This demonstrates the potential of the proposed solution to provide high-quality renderings in near real-time.
+
+\newpage
+\subsection*{Comparison to Photograph}
+
+The renderings for comparison to alternative rendering strategies used slight variations of parameters to show the quality of the generated effects. This includes the strong red color as well as the pronounced reflection on the metal part. These adjustments are not as in the real product. Therefore, a separate round of comparison to a real photograph taken under neutral lighting is conducted. The \gls{OpenPBR} material properties were adjusted to more closely resemble the photograph.
+
+\begin{figure}[H]
+  \centering
+  \hspace*{0.2cm}
+  \begin{subfigure}[t]{0.45\textwidth}
+    \includegraphics[width=\textwidth]{resources/comparison-real-image.png}
+    \caption{Photograph of pushbutton.}
+    \label{fig:real-photo}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.45\textwidth}
+    \includegraphics[width=\textwidth]{resources/comparison-real-strahl-rendering.png}
+    \caption{Scene rendered with the developed path tracer.}
+    \label{fig:real-rendering}
+  \end{subfigure}
+  \hspace*{0.2cm}
+  \caption{Comparison between photograph taken in neutral lighting situation and rendering.}
+  \label{fig:real-rendering-comparison}
+\end{figure}
+
+The two images have slightly different lighting conditions. The rendering has a simple approximation of environment lighting. In contrast, the photograph was conducted with lower light exposure and additional ambient occlusion caused by the surface upon which the pushbutton is positioned. This mainly results in differences in the metal part, which is very dark in the photograph. In addition, other more nuanced effects are visible in the photograph; the metal surface has slight layers resembling a patina; the plastic of the terminal has slight scratches and fingerprints; and the red front has a visible contour where the two parts were attached. There are differences in the texture, which is not modeled in the path-traced rendering. Additionally, certain plastic parts are not part of the engineering \gls{CAD} models and are therefore missing in the rendering.
+
+While further alignment with the photograph can yield better results, it is questionable if all of these effects should be part of the renderings. Having more details and textures increases fidelity. However, for the considered use case of e-commerce, polished looks may be preferable to more realistic rendering. The results indicate that a high degree of fidelity can be achieved with a practical amount of effort.
 
 \section{Findings}
 
