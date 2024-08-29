@@ -26,7 +26,7 @@ To illustrate the use case in a simplified and universal form, consider a produc
 
 For a product consisting of $n$ modules where each module has the same amount of options ($o$), the equation can be simplified to $t = o^n$. This shows the exponential growth of possible configurations.
 
-An instance at EAO involves a specific product family within the so-called series 45. This particular family comprises 14 modules ($n$), each with approximately ten different options ($o$). This results in $10^{14}$ possible configurations ($t$) based on 140 different components. In addition, EAO has many more product series with varying numbers of components and options. This constitutes the primary use case considered for this thesis. The presented work uses EAO engineering models to demonstrate the feasibility and challenges of real-time rendering for highly configurable products. Nevertheless, similar use cases can be observed in other industries.
+An instance at EAO involves a specific product family within the so-called series 45. This particular family comprises 14 modules ($n$), each with approximately ten different options ($o$). This results in $10^{14}$ possible configurations ($t$) based on 140 different options. In addition, EAO has many more product series with varying numbers of modules and options. This constitutes the primary use case considered for this thesis. The presented work uses EAO engineering models to demonstrate the feasibility and challenges of real-time rendering for highly configurable products. Nevertheless, similar use cases can be observed in other industries.
 
 A web-based configurator using computer graphics for virtual assembly is well-suited to address such use cases where exponential growth in possible configurations is present.
 
@@ -65,7 +65,7 @@ In order to address latency, pre-loading images can be used. This may entail loa
 
 \subsection*{Client-Side Real-time Rendering}
 
-An alternative to offline rendering is real-time rendering. Client-side rendering is a frequently used option for real-time rendering. The configurations are only rendered as requested by the end user. This is the main benefit of using a real-time rendering pipeline, as illustrated in \autoref{fig:cad-online}. The rendering is done in the browser, limiting the server to serve the role of a file host and provide the geometry and material information in a 3D exchange format such as \fgls{glTF}{\e{Graphics Library Transmission Format}, a common 3D exchange format optimized for transmission and real-time rendering}. This approach is more flexible and can be used for a large number of configurations. The amount of data to be stored and processed offline grows linearly with the number of components, independent of the number of possible configurations.
+An alternative to offline rendering is real-time rendering. Client-side rendering is a frequently used option for real-time rendering. The configurations are only rendered as requested by the end user. This is the main benefit of using a real-time rendering pipeline, as illustrated in \autoref{fig:cad-online}. The rendering is done in the browser, limiting the server to serve the role of a file host and provide the geometry and material information in a 3D exchange format such as \fgls{glTF}{\e{Graphics Library Transmission Format}, a common 3D exchange format optimized for transmission and real-time rendering}. This approach is more flexible and can be used for a large number of configurations. The amount of data to be stored and processed offline grows linearly with the number of options, independent of the number of possible configurations.
 
 \begin{figure}[H]
   \includegraphics[width=\columnwidth]{resources/cad-pipeline-online.png}
@@ -121,7 +121,7 @@ This determines the main bottleneck in terms of the complexity of the scene that
 
 \subsubsection{Change Management Complexity}
 
-This determines the ability to update the application based on new data. Generally, lower is better. Whenever a component changes, the application needs to be updated. Offline rendering necessitates re-rendering all images that contain the changed component. This can be a time-consuming process. Client-side rendering and remote rendering only require updating the model data and possibly meta information. This requires minimal changes in the application.
+This determines the ability to update the application based on new data. Generally, lower is better. Whenever an option within a module changes, the application needs to be updated. Offline rendering necessitates re-rendering all images that contain the changed option. This can be a time-consuming process. Client-side rendering and remote rendering only require updating the model data and possibly meta information. This requires minimal changes in the application.
 
 \subsection*{Assessment}
 \label{ch:paradigmAssessment}
