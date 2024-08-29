@@ -43,31 +43,32 @@ A high-level view of the data structures is shown in \autoref{fig:memory-structu
 
 \begin{figure}[H]
     \centering
-    \tikzsetnextfilename{memory-structure}
-    \begin{tikzpicture}[
-            bvh/.style={rectangle, draw=rred, ultra thick, fill=rbred, inner sep=0.2cm, text width=3.0cm, align=center},
-            geo/.style={rectangle, draw=rgreen, ultra thick, fill=rbgreen, inner sep=0.2cm, text width=3.0cm, align=center},
-            mat/.style={rectangle, draw=rblue, ultra thick, fill=rbblue, inner sep=0.2cm, text width=3.0cm, align=center},
-        ]
+    \resizebox{1.0\textwidth}{!}{
+        \tikzsetnextfilename{memory-structure}
+        \begin{tikzpicture}[
+                bvh/.style={rectangle, draw=rred, ultra thick, fill=rbred, inner sep=0.2cm, text width=3.0cm, align=center},
+                geo/.style={rectangle, draw=rgreen, ultra thick, fill=rbgreen, inner sep=0.2cm, text width=3.0cm, align=center},
+                mat/.style={rectangle, draw=rblue, ultra thick, fill=rbblue, inner sep=0.2cm, text width=3.0cm, align=center},
+            ]
 
-        \node[bvh] (bounds) {bounds};
-        \node[bvh, above=0.6cm of bounds] (contents) {contents};
+            \node[bvh] (bounds) {bounds};
+            \node[bvh, above=0.6cm of bounds] (contents) {contents};
 
-        \node[bvh, right=0.6cm of contents] (indirect) {indirect indices};
-        \node[geo, right=0.6cm of indirect] (indices) {indices};
+            \node[bvh, right=0.6cm of contents] (indirect) {indirect indices};
+            \node[geo, right=0.6cm of indirect] (indices) {indices};
 
-        \node[geo, right=0.6cm of indices] (geometry) {geometry};
+            \node[geo, right=0.6cm of indices] (geometry) {geometry};
 
-        \node[mat, below=0.6cm of indices] (object) {object definitions};
-        \node[mat, right=0.6cm of object] (materials) {materials};
+            \node[mat, below=0.6cm of indices] (object) {object definitions};
+            \node[mat, right=0.6cm of object] (materials) {materials};
 
-        \draw[thick] (bounds) -- node[midway, right] {1:1} (contents);
-        \draw[-latex, thick] (contents) -- (indirect);
-        \draw[-latex, thick] (indirect) -- (indices);
-        \draw[-latex, thick] (indices) -- (geometry);
-        \draw[-latex, thick] (indices) -- (object);
-        \draw[-latex, thick] (object) -- (materials);
-    \end{tikzpicture}
+            \draw[thick] (bounds) -- node[midway, right] {1:1} (contents);
+            \draw[-latex, thick] (contents) -- (indirect);
+            \draw[-latex, thick] (indirect) -- (indices);
+            \draw[-latex, thick] (indices) -- (geometry);
+            \draw[-latex, thick] (indices) -- (object);
+            \draw[-latex, thick] (object) -- (materials);
+        \end{tikzpicture}}
     \caption{Main data buffers used by the path tracer. Data structures associated with the \gls{BVH} are red, geometry information is green, and material or object information is blue. Arrows indicate the pointers between the buffers.}
     \label{fig:memory-structure}
 \end{figure}
