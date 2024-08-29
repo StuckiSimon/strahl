@@ -7,7 +7,7 @@
 % !TEX encoding = UTF-8 Unicode
 % !TEX root = ../main.tex
 
-As discussed in the introduction and theory chapters, the goal of this work is to implement a web-based path tracer. The path tracer is designed to be used for product visualization based on production \gls{CAD} data, leveraging the \gls{OpenPBR} surface shading model and \gls{WebGPU}.
+As discussed in the introduction and theory chapters, the goal of this work is to implement a web-based path tracer. The path tracer is designed to be used for product visualization based on engineering \gls{CAD} data, leveraging the \gls{OpenPBR} surface shading model and \gls{WebGPU}.
 
 The concrete result of this work consists of multiple parts. The core is a path tracing library called \texttt{strahl}. The code as well as documentation is published under the \fGls{MIT license}{a permissive license originating at the Massachusetts Institute of Technology (MIT)} on GitHub with an accompanying website. See \url{https://www.github.com/StuckiSimon/strahl} for details. This also includes detailed instructions on how to set up and configure the renderer. The library is published on the \fgls{npm}{a package manager for JavaScript} registry as \texttt{strahl}. This report serves as the primary documentation of the work but does not contain library usage documentation. In addition, a dedicated short paper has been published for WEB3D '24: The 29th International ACM Conference on 3D Web Technology \cite{ownShortPaper}. The short paper includes the main insights and results of this work.
 
@@ -427,7 +427,7 @@ A final performance test was conducted on two machines. The AMD/NVIDIA machine i
 \newpage
 \section{Use Case Scenarios}
 
-Different assemblies of production \gls{CAD} data used by EAO as rendered by the path tracer can be seen in \autoref{fig:rendering-showcase}. Note that artistic liberties were taken to highlight specific effects. The path tracer can render full assemblies without being impeded by the complexity of the geometry. The renderer offers flexibility by providing configuration of \gls{OpenPBR} parameters, environment lighting, denoising setup, and more. The required number of samples is dependent on the scene. Effects such as rough metallic reflection require more samples to converge than a diffuse surface. For many use cases, the number is in the range of 100 to 1,000 samples per pixel. The library enables the user to obtain high-fidelity renderings of \gls{CAD} data without the need for pregenerated artifacts.
+Different configurations based on engineering \gls{CAD} data used by EAO as rendered by the path tracer can be seen in \autoref{fig:rendering-showcase}. Note that artistic liberties were taken to highlight specific effects. The path tracer can render full assemblies without being impeded by the complexity of the geometry. The renderer offers flexibility by providing configuration of \gls{OpenPBR} parameters, environment lighting, denoising setup, and more. The required number of samples is dependent on the scene. Effects such as rough metallic reflection require more samples to converge than a diffuse surface. For many use cases, the number is in the range of 100 to 1,000 samples per pixel. The library enables the user to obtain high-fidelity renderings of \gls{CAD} data without the need for pregenerated artifacts.
 
 \begin{figure}[H]
     \centering
