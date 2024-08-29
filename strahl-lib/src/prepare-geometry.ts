@@ -2,7 +2,10 @@ import { MeshBVH, getBVHExtremes } from "three-mesh-bvh";
 import { startMeasurementGroup } from "./benchmark/performance-measurement-group.ts";
 import { consolidateMesh } from "./consolidate-mesh";
 import { GeometryGroup, Group } from "three";
-import { assertMeshBVHInternalStructure, bvhToTextures } from "./bvh-util";
+import {
+  assertMeshBVHInternalStructure,
+  convertBvhToDataViews,
+} from "./bvh-util";
 import { InternalError, InvalidMaterialGroupError } from "./core/exceptions";
 
 export type MaterializedGeometryGroup = {
@@ -41,7 +44,7 @@ export function prepareGeometry(model: { scene: Group }) {
   const correspondingExtremesEntry = extremes[0];
   const maxBvhDepth = correspondingExtremesEntry.depth.max;
 
-  const { boundsArray, contentsArray } = bvhToTextures(boundsTree);
+  const { boundsArray, contentsArray } = convertBvhToDataViews(boundsTree);
   const bvhBuildTime = cpuLogGroup.end();
 
   const meshPositions = boundsTree.geometry.attributes.position.array;

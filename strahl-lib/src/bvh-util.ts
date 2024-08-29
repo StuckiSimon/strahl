@@ -45,7 +45,7 @@ export function assertMeshBVHInternalStructure(
 
 // CODE#BVH-TRANSFER
 // Inspired by https://github.com/gkjohnson/three-mesh-bvh/blob/0eda7b718799e1709ad9efecdcc13c06ae3d5a55/src/gpu/MeshBVHUniformStruct.js#L110C1-L191C2
-export function bvhToTextures(bvh: MeshBVH) {
+export function convertBvhToDataViews(bvh: MeshBVH) {
   const isStructureMatching = assertMeshBVHInternalStructure(bvh);
   if (!isStructureMatching) {
     throw new InternalError(
