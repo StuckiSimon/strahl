@@ -43,18 +43,18 @@ The availability of an \gls{npm} package can simplify the integration of the ren
 
 \subsubsection*{Assessment}
 
-\autoref{tab:rendererComparison} contains a high-level comparison between the four renderers. The renderer developed in this work is the only one that supports \gls{WebGPU} and uses the \gls{OpenPBR} standard. The extensive documentation and benchmark setup further distinguish the developed solution. Therefore, \texttt{strahl} provides an alternative to the existing renderers.
+\autoref{tab:rendererComparison} contains a high-level comparison between the four renderers based on the criteria. The renderer developed in this work is the only one that supports \gls{WebGPU} and uses the \gls{OpenPBR} standard. The extensive documentation and benchmark setup further distinguish the developed solution. Therefore, \texttt{strahl} provides an alternative to the existing renderers.
 
 \begin{table}[H]
   \centering
   \ra{1.3}
-  \begin{tabular}{@{}p{3cm}p{1.9cm}p{2.8cm}p{3.2cm}p{2.0cm}@{}}
+  \begin{tabular}{@{}p{2.6cm}p{2.0cm}p{2.8cm}p{3.2cm}p{2.4cm}@{}}
     \toprule
                                   & \texttt{strahl} & \texttt{three-gpu-} \texttt{pathtracer} \cite{ThreeJsPathTracerJohnson} & \texttt{Three.js PathTracer} \cite{ThreeJsPathTracerLoftis} & \texttt{dspbr-pt} \cite{PathTracerDassault} \\
     \gls{WebGPU} \newline Support & Yes             & No                                                                      & No                                                          & No                                          \\
     \gls{PBR} Standard            & \gls{OpenPBR}   & Custom                                                                  & Custom                                                      & \gls{DSPBR}                                 \\
     Documentation                 & Yes             & Yes                                                                     & Minimal                                                     & Minimal                                     \\
-    Benchmark Setup               & Yes             & No                                                                      & No                                                          & No                                          \\
+    Benchmark \newline Setup      & Yes             & No                                                                      & No                                                          & No                                          \\
     Maintenance                   & Provided        & Provided                                                                & Lacking                                                     & Lacking                                     \\
     \bottomrule
   \end{tabular}
@@ -62,6 +62,7 @@ The availability of an \gls{npm} package can simplify the integration of the ren
   \label{tab:rendererComparison}
 \end{table}
 
+\newpage
 \subsection*{Comparison to Alternative Strategies}
 
 The chosen architecture paradigm serves as an alternative to offline rendering solutions. In addition, the decision to implement ray tracing techniques contrasts with rasterization-based rendering engines. This section shows the comparison between these different options. For rasterization, \gls{Three.js} is used as an example, based on a minimal setup without pregenerated artifacts or advanced rendering techniques. For offline rendering, \fGls{RealityServer}{a platform for 3D rendering, which integrates the NVIDIA Iray global illumination rendering technology} renderings used by EAO are shown as a representative example. The three different renderings are visualized in \autoref{fig:final-rendering-comparison}.
@@ -119,6 +120,8 @@ The two images have slightly different lighting conditions. The rendering has a 
 
 While further alignment with the photograph can yield better results, it is questionable if all of these effects should be part of the renderings. Having more details and textures increases fidelity. However, for the considered use case of e-commerce, polished looks may be preferable to more realistic rendering. The results indicate that a high degree of fidelity can be achieved with a practical amount of effort.
 
+\newpage
+
 \section{Findings}
 
 The main novelty introduced in this work is the development of a path tracer with \gls{WebGPU} using the \gls{OpenPBR} surface shading model. \gls{WebGPU} and \gls{OpenPBR} are promising endeavors for the future of 3D rendering, but as of 2024, they are relatively new and have yet to be widely adopted.
@@ -149,7 +152,7 @@ To date, there are reports of stability issues with \gls{WebGPU}. This includes 
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.35\columnwidth]{resources/webgpu-crashes.png}
+  \includegraphics[width=0.3\columnwidth]{resources/webgpu-crashes.png}
   \caption{Example of a provoked \gls{WebGPU} crash on macOS; note the black squares which correspond in size to the dispatched workgroup size.}
   \label{fig:webgpu-crash}
 \end{figure}
