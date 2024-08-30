@@ -18,10 +18,12 @@ This section highlights some basics about the mathematics involved in computer g
 
 Euclidean vectors are fundamental in computer graphics and are generally defined by a magnitude and a direction. In a three-dimensional space, a vector can be defined as $v = (x, y, z)$. This definition can be used to represent points in space called vertices as well as directions. The magnitude, or length, of the vector can be calculated using the Euclidean norm:
 
+\vspace*{-0.3cm}
 \begin{equation}
   \label{eqn:euclidean-norm}
   ||v|| = \sqrt{x^2 + y^2 + z^2}
 \end{equation}
+\vspace*{0.1cm}
 
 % The dot product (scalar $s$) of two vectors $v = (x_1, y_1, z_1)$ and $w = (x_2, y_2, z_2)$ is defined as:
 
@@ -32,10 +34,12 @@ Euclidean vectors are fundamental in computer graphics and are generally defined
 
 The cross product (vector $p$) of two vectors $v = (x_1, y_1, z_1)$ and $w = (x_2, y_2, z_2)$ is defined as:
 
+\vspace*{-0.3cm}
 \begin{equation}
   \label{eqn:cross-product}
   p = v \times w = (y_1 \cdot z_2 - z_1 \cdot y_2, z_1 \cdot x_2 - x_1 \cdot z_2, x_1 \cdot y_2 - y_1 \cdot x_2)
 \end{equation}
+\vspace*{0.1cm}
 
 As visualized in \autoref{fig:cross-product}, the cross product gives a vector $p$ that is orthogonal to the two input vectors $v$ and $w$.
 
@@ -112,6 +116,8 @@ An alternative way to define a triangle is using three vertices, each in world s
   v = v_3 - v_1
 \end{equation}
 
+\vspace*{0.6cm}
+
 In computer graphics, a triangle has a normal associated with each of its three vertices. Per default, the normal of a vertex is orthogonal to the two adjacent edges of the vertex and can be calculated using the cross product.
 
 \newpage
@@ -121,7 +127,7 @@ The frustum is a geometric shape that defines the camera's view. For a visual re
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.25\textwidth]{resources/camera-frustum.png}
+  \includegraphics[width=0.36\textwidth]{resources/camera-frustum.png}
   \caption{Frustum shape, the green dot indicates the position of a camera in perspective projection.}
   \label{fig:camera-frustum}
 \end{figure}
@@ -134,6 +140,8 @@ An integral determines the area under a curve, as visualized in \autoref{fig:int
   \label{eqn:integral}
   \int_{a}^{b} f(x) dx
 \end{equation}
+
+\vspace*{0.4cm}
 
 \begin{figure}[H]
   \centering
@@ -495,6 +503,8 @@ Many surfaces combine these effects and need to consider the incident and outgoi
   \label{fig:reflection-lobe-intro}
 \end{figure}
 
+\vspace*{0.4cm}
+
 \section{Computer Graphics}
 \label{ch:computerGraphics}
 
@@ -727,6 +737,8 @@ where $p(X_i)$ is the proposal \gls{PDF} \cite{Pharr_Physically_Based_Rendering_
 
 Different strategies can be considered for importance sampling. For example, one can use the material properties to determine where to cast the rays. A highly reflective surface, such as a mirror, will apply the law of reflection, while a diffuse surface will scatter the rays in all directions. This strategy yields solid results for scenes with large light sources and reflective surfaces, as illustrated in \autoref{fig:material-sampling-good}. However, for scenes with small light sources and diffuse surfaces, the strategy can lead to high variance due to rays that miss the emissive surfaces most of the time, as shown in \autoref{fig:material-sampling-bad}. The variance is visible to the human eye as noise in the image.
 
+Light source sampling is an alternative sampling strategy that can alleviate this issue. As shown in \autoref{fig:light-sampling-good}, it can significantly reduce the variance of the estimator when having diffuse surfaces and small light sources. Conversely, the strategy can lead to high variance when having large light sources and reflective surfaces, as shown in \autoref{fig:light-sampling-bad}. Both strategies are good candidates under different circumstances. To leverage the benefits of both strategies, Veach extended importance sampling in 1997 by introducing multiple importance sampling (\gls{MIS}) \cite{veachMonteCarloLightTransport}. The idea is to combine multiple sampling strategies to improve the overall estimator.
+
 \begin{figure}[H]
   \centering
   \begin{subfigure}[t]{0.45\textwidth}
@@ -810,8 +822,6 @@ Different strategies can be considered for importance sampling. For example, one
   \label{fig:material-sampling}
 \end{figure}
 
-Light source sampling is an alternative sampling strategy that can alleviate this issue. As shown in \autoref{fig:light-sampling-good}, it can significantly reduce the variance of the estimator when having diffuse surfaces and small light sources. Conversely, the strategy can lead to high variance when having large light sources and reflective surfaces, as shown in \autoref{fig:light-sampling-bad}.
-
 \begin{figure}[H]
   \centering
   \begin{subfigure}[t]{0.45\textwidth}
@@ -888,14 +898,14 @@ Light source sampling is an alternative sampling strategy that can alleviate thi
   \label{fig:light-sampling}
 \end{figure}
 
-Both strategies are good candidates under different circumstances. To leverage the benefits of both strategies, Veach extended importance sampling in 1997 by introducing multiple importance sampling (\gls{MIS}) \cite{veachMonteCarloLightTransport}. The idea is to combine multiple sampling strategies to improve the overall estimator. The \gls{MIS} estimator can be defined as:
+Mathematically, the \gls{MIS} estimator can be defined as:
 
 \begin{equation}
   G = \sum_{h=1}^k \frac{1}{M_h}\sum_{i=1}^{M_h} w_h(X_{h,i})\frac{g(X_{h,i})}{p_h(X_{h,i})}
   \label{eq:multipleImportanceSampling}
 \end{equation}
 
-where $k$ is the number of different sampling strategies, the weight of sampling strategy $h$ is denoted $w_h$, whereas $p_h(X_{h,i})$ is the probability distribution. $w_h$ is the weighting function for the estimator such that the expected value of the estimator is unbiased. Veach also proposed several heuristics for the weighting function, including the power heuristic. This Monte Carlo integration, based on \gls{MIS}, constitutes the basis for sampling in a path tracer algorithm.
+where $k$ is the number of different sampling strategies, the weight of sampling strategy $h$ is denoted $w_h$, whereas $p_h(X_{h,i})$ is the probability distribution. $w_h$ is the weighting function for the estimator such that the expected value of the estimator is unbiased. Veach also proposed several heuristics for the weighting function, including the power heuristic. This Monte Carlo integration, based on \gls{MIS}, constitutes the basis for sampling in a path tracer algorithm. \cite{veachMonteCarloLightTransport}
 
 \subsubsection{Russian Roulette}
 \label{ch:russianRoulette}
@@ -964,6 +974,8 @@ In order to render an image, a virtual camera needs to be defined. For rasteriza
 
 Different types of view projection can be used depending on the use case. The most common types are perspective and orthographic projection. Perspective projection simulates how the human eye perceives the world; objects that are further away appear smaller. On the other hand, orthographic projection does not consider distance; objects appear the same size regardless of their distance. Orthographic projection is frequently used in domains such as architecture.
 
+\newpage
+
 These two projection types differ in the view projection matrix. For perspective projection, the following parameters need to be defined:
 
 \begin{description}
@@ -996,11 +1008,16 @@ The clipping plane parameters $n$ and $f$ are primarily used in rasterization to
   \end{bmatrix}
 \end{equation}
 
+\vspace*{0.2cm}
+
 The elements $P_{1,1}$ and $P_{2,2}$ adjust the field of view and, therefore, the perspective effect. The elements $P_{3,3}$, $P_{3,4}$, and $P_{4,3}$ adjust the near and far clipping planes. Compared to rasterization, the view projection matrix is used differently in ray tracing. In rasterization, every vertex is transformed by the view projection matrix. In ray tracing, the view projection matrix is only applied to the primary camera rays cast into the scene. For orthographic projection, no such projection matrix is required in ray tracing. Instead, parallel rays are cast from the camera grid.
 
 \subsubsection{Random Number Generator}
 
-Randomness is used in different parts of a path tracer. One example is picking $\xi$ as part of the Russian roulette technique. Such a number is obtained by employing a random number generator (\gls{RNG}). In rasterization, the necessity for \gls{RNG} is less common but may still be required for specific effects. A variety of \glspl{RNG} are available that differ in essential characteristics. Some of the characteristics to consider when choosing a suitable \gls{RNG} are:
+Randomness is used in different parts of a path tracer. One example is picking $\xi$ as part of the Russian roulette technique. Such a number is obtained by employing a random number generator (\gls{RNG}). In rasterization, the necessity for \gls{RNG} is less common but may still be required for specific effects. A variety of \glspl{RNG} are available that differ in essential characteristics. Based on the use case, factors such as prediction difficulty or others such as highlighted by O’Neill \cite{o2014pcg} may be important. Cryptography, for example, requires randomness of the \gls{RNG} to prevent an adversary from predicting secret keys. Options to generate the randomness require additional signals \cite{randomnessCryptography} or may require special hardware, such as \fGls{Lavarand}{a hardware \gls{RNG} based on pictures taken of lava lamps to generate randomness.} \cite{cloudflareLavaRand}. Many generators are pseudorandom generators. These generators are deterministic and require a seed to start the sequence. For cryptographically secure generators, the seed must be random.
+However, for a path tracer, there is no need for cryptographic security. Instead, it is more important to have high performance and to have a long period to avoid repetition. Therefore, a pseudorandom number generator without a cryptographically secure seed is sufficient.
+
+Some of the characteristics to consider when choosing a suitable \gls{RNG} for a path tracer are:
 
 \begin{itemize}
   \item{Statistical Quality} — The \gls{RNG} should generate numbers that are statistically random. This means that the numbers should be uniformly distributed and have a low correlation between them.
@@ -1008,9 +1025,6 @@ Randomness is used in different parts of a path tracer. One example is picking $
   \item{Time Performance} — The time it takes to generate a random number. This is influenced by the algorithm as well as the hardware, which may support dedicated instructions.
   \item{Space Usage} — The amount of memory required to store state.
 \end{itemize}
-
-Based on the use case, other factors such as prediction difficulty or others such as highlighted by O’Neill \cite{o2014pcg} may be important. Cryptography, for example, requires randomness of the \gls{RNG} to prevent an adversary from predicting secret keys. Options to generate the randomness require additional signals \cite{randomnessCryptography} or may require special hardware, such as \fGls{Lavarand}{a hardware \gls{RNG} based on pictures taken of lava lamps to generate randomness.} \cite{cloudflareLavaRand}. Many generators are pseudorandom generators. These generators are deterministic and require a seed to start the sequence. For cryptographically secure generators, the seed must be random.
-However, for a path tracer, there is no need for cryptographic security. Instead, it is more important to have high performance and to have a long period to avoid repetition. Therefore, a pseudorandom number generator without a cryptographically secure seed is sufficient.
 
 One option for such a pseudorandom generator is using Xorshifts, such as described by Marsaglia \cite{marsaglia2003xorshift}. The algorithm can be defined as shown in \autoref{code:xorShift}. $x$ is the state of the \gls{RNG} and $a$, $b$, and $c$ are constants that are chosen to achieve good statistical properties. Frequent choices for these constants are $a = 13$, $b = 17$, and $c = 5$.
 
@@ -1026,6 +1040,7 @@ x ^= x << c;
 
 The Mersenne Twister \cite{rngMersenneTwister} is an alternative \gls{RNG}. It is a pseudorandom number generator that has a long period and good statistical properties. However, it is slower than Xorshifts \cite{o2014pcg}. More recently, \fGls{PCG}{\e{Permuted Congruential Generator}, a family of random number generators.} has been proposed as an alternative to these options. \gls{PCG} is a family of fast generators that is well-suited for ray tracing use.
 
+\newpage
 \subsubsection{Anti-aliasing}
 \label{sec:anti-aliasing}
 
@@ -1055,20 +1070,22 @@ In rasterization, similar solution strategies can be employed. Supersampling is 
 \subsubsection{Tone Mapping}
 \label{sec:toneMappingTheory}
 
-When simulating light transport, the radiance of the scene can exceed the displayable range. Tone mapping is a technique used to map the high dynamic range (\gls{HDR}) input generated by the renderer to a lower dynamic range. The basic idea is to adjust the radiance of the scene to resemble realistic lighting conditions more closely. One common algorithm to do so is the Reinhard tone mapping operator \cite{reinhardToneMapping}. In recent years, special tone mappers have been developed for dedicated use cases. One example is the Khronos \gls{PBR} Neutral Tone Mapper \cite{pbrNeutralToneMapping}, which is designed to work well with rendering true-to-life colors. See \autoref{fig:tone-mapping} for a comparison of tone mapping with and without the Khronos \gls{PBR} Neutral Tone Mapper.
+When simulating light transport, the radiance of the scene can exceed the displayable range. Tone mapping is a technique used to map the high dynamic range (\gls{HDR}) input generated by the renderer to a lower dynamic range. One common algorithm to do so is the Reinhard tone mapping operator \cite{reinhardToneMapping}. In recent years, special tone mappers have been developed for dedicated use cases. One example is the Khronos \gls{PBR} Neutral Tone Mapper \cite{pbrNeutralToneMapping}, which is designed to work well with rendering true-to-life colors. See \autoref{fig:tone-mapping} for a comparison of tone mapping with and without the Khronos \gls{PBR} Neutral Tone Mapper.
 
 \begin{figure}[H]
   \centering
   \hspace*{2cm}
   \begin{subfigure}[t]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{resources/tonemapping-none.png}
-    \caption{Rendering without tone mapping.}
+    \centering
+    \includegraphics[width=0.78\textwidth]{resources/tonemapping-none.png}
+    \caption{No tone mapping.}
     \label{fig:tone-mapping-none}
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{resources/tonemapping-khronos-pbr-neutraltone.png}
-    \caption{Rendering using tone mapper.}
+    \centering
+    \includegraphics[width=0.78\textwidth]{resources/tonemapping-khronos-pbr-neutraltone.png}
+    \caption{With tone mapping.}
     \label{fig:tone-mapping-applied}
   \end{subfigure}
   \hspace*{2cm}
@@ -1304,6 +1321,7 @@ One of the most widely used formats is Wavefront \gls{OBJ}, which was developed 
 
 Formats such as the proprietary \fGls{FBX}{\e{Filmbox}, a proprietary 3D exchange format nowadays managed by Autodesk.} by Autodesk, established in 2006, can address the shortcomings in terms of feature set. A wide range of applications supports the format. However, one of the main disadvantages is the proprietary nature of the format, which can make it challenging to integrate in applications that lack access to the software development kit (SDK).
 
+\newpage
 \subsection*{Specialized Formats}
 \label{ch:specializedFormats}
 
@@ -1385,79 +1403,77 @@ Defining the geometry is one part of the equation. Another major part is definin
 
 Research into \gls{PBR} has been conducted for a similar amount of time as ray tracing. Moreover, just like ray tracing, the computational complexity of the algorithms has limited the adoption of \gls{PBR} in real-time rendering for a long time. \gls{PBR} has generally coincided with the rise of ray tracing as it is a natural fit for the physics-based approach to light transport. One prominent example of a \gls{PBR} system is \gls{pbrt}, an open-source renderer with an associated literate programming book that has won an Academy Award for formalizing and providing a reference implementation for \gls{PBR} \cite{Pharr_Physically_Based_Rendering_2023}.
 
-\gls{PBR} and ray tracing are not mutually dependent, as \gls{PBR} can also be used in rasterization. In contrast to how ray tracing inherently addresses shortcomings of rasterization by leveraging an entirely different approach, \gls{PBR} is a more incremental improvement extending existing shading techniques with more sophisticated models. Many ray tracers use simple, non-standardized \gls{PBR} models that are suitable to demonstrate basic effects of global illumination but are unsuitable for high-fidelity rendering of complex scenes. Not having a clear standard makes alignment between different tools hard to manage and can lead to inconsistencies in the final rendering.
-
-In general, there is no \gls{PBR} standard. Instead, a variety of different models have been developed over time. In recent years, however, a convergence towards a common set of principles has been observed, and certain aspects of \gls{PBR} are found in most models. This section explains these common principles and standards which can be used to obtain consistent renderings.
+\gls{PBR} and ray tracing are not mutually dependent, as \gls{PBR} can also be used in rasterization. In contrast to how ray tracing inherently addresses shortcomings of rasterization by leveraging an entirely different approach, \gls{PBR} is a more incremental improvement extending existing shading techniques with more sophisticated models. Many ray tracers use simple, non-standardized \gls{PBR} models that are suitable to demonstrate basic effects of global illumination but are unsuitable for high-fidelity rendering of complex scenes. Not having a clear standard makes alignment between different tools hard to manage and can lead to inconsistencies in the final rendering. In general, there is no universal \gls{PBR} standard. Instead, a variety of different models have been developed over time. In recent years, however, a convergence towards a common set of principles has been observed, and certain aspects of \gls{PBR} are found in most models. This section explains these common principles and standards which can be used to obtain consistent renderings.
 
 \subsection*{BxDF}
 \label{sec:bxdf}
 
-The definition of the bidirectional distribution functions (\gls{BxDF}) is a key concept in \gls{PBR}. The $x$ stands for the different kinds of distributions to consider. In general, the functions describe how light is reflected or transmitted. The two functions are usually abbreviated as \gls{BRDF}, the $r$ for reflectance, and \gls{BTDF}, the $t$ for transmittance. The combination of the two is often referred to as \gls{BSDF}, the $s$ for scattering \cite{Pharr_Physically_Based_Rendering_2023}.
-
-These functions define the distribution of light in different directions, as described in \autoref{sec:physics-generalization}. Samples of different kinds of \glspl{BRDF} can be seen in \autoref{fig:brdf-special}.
+The definition of the bidirectional distribution functions (\gls{BxDF}) is a key concept in \gls{PBR}. The $x$ stands for the different kinds of distributions to consider. In general, the functions describe how light is reflected or transmitted. The two functions are usually abbreviated as \gls{BRDF}, the $r$ for reflectance, and \gls{BTDF}, the $t$ for transmittance. The combination of the two is often referred to as \gls{BSDF}, the $s$ for scattering \cite{Pharr_Physically_Based_Rendering_2023}. These functions define the distribution of light in different directions, as described in \autoref{sec:physics-generalization}. Samples of different kinds of \glspl{BRDF} can be seen in \autoref{fig:brdf-special}.
 
 \begin{figure}[H]
   \centering
   \begin{subfigure}[t]{0.45\textwidth}
     \centering
-    \tikzsetnextfilename{reflection-retroreflective}
-    \begin{tikzpicture}
-      \coordinate (A) at (0,3);
-      \coordinate (AA) at (1,2);
-      \coordinate (BB) at (2,1);
-      \coordinate (B) at (3,0);
+    \resizebox{0.85\textwidth}{!}{
+      \tikzsetnextfilename{reflection-retroreflective}
+      \begin{tikzpicture}
+        \coordinate (A) at (0,3);
+        \coordinate (AA) at (1,2);
+        \coordinate (BB) at (2,1);
+        \coordinate (B) at (3,0);
 
-      \coordinate (L) at (4.5,3);
+        \coordinate (L) at (4.5,3);
 
-      \draw[dashed, thick] (A) -- (B);
-      \draw[-latex, thick] (AA) -- (BB);
+        \draw[dashed, thick] (A) -- (B);
+        \draw[-latex, thick] (AA) -- (BB);
 
-      \def\tangentx{3}
-      \def\tangenty{0}
-      \def\tangentr{3.04}
+        \def\tangentx{3}
+        \def\tangenty{0}
+        \def\tangentr{3.04}
 
-      \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (-41:\tangentr)$);
-      \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (-45:\tangentr)$);
-      \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (-49:\tangentr)$);
+        \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (-41:\tangentr)$);
+        \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (-45:\tangentr)$);
+        \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (-49:\tangentr)$);
 
-      \fill[rgreen] (B) circle (0.1);
-      \centerarc[rgreen,ultra thick](B)(120:150:1)
+        \fill[rgreen] (B) circle (0.1);
+        \centerarc[rgreen,ultra thick](B)(120:150:1)
 
-      \fill[gray!20] (0,0) rectangle (6,-1);
-      \draw[gray!40] (0,0) -- (6,0);
-    \end{tikzpicture}
+        \fill[gray!20] (0,0) rectangle (6,-1);
+        \draw[gray!40] (0,0) -- (6,0);
+      \end{tikzpicture}}
     \caption{Retroreflective reflection, as can be encountered in materials such as velvet.}
     \label{fig:reflectionRetroreflective}
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.45\textwidth}
     \centering
-    \tikzsetnextfilename{reflection-glossy}
-    \begin{tikzpicture}
-      \coordinate (A) at (0,3);
-      \coordinate (AA) at (1,2);
-      \coordinate (BB) at (2,1);
-      \coordinate (B) at (3,0);
+    \resizebox{0.85\textwidth}{!}{
+      \tikzsetnextfilename{reflection-glossy}
+      \begin{tikzpicture}
+        \coordinate (A) at (0,3);
+        \coordinate (AA) at (1,2);
+        \coordinate (BB) at (2,1);
+        \coordinate (B) at (3,0);
 
-      \coordinate (L) at (4.5,3);
+        \coordinate (L) at (4.5,3);
 
-      \draw[dashed, thick] (A) -- (B);
-      \draw[-latex, thick] (AA) -- (BB);
+        \draw[dashed, thick] (A) -- (B);
+        \draw[-latex, thick] (AA) -- (BB);
 
-      \def\tangentx{3}
-      \def\tangenty{0}
-      \def\tangentr{3.04}
+        \def\tangentx{3}
+        \def\tangenty{0}
+        \def\tangentr{3.04}
 
-      \foreach \angle in {-127, -131, -135, -139, -143} {
-          \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (\angle:\tangentr)$);
-        }
+        \foreach \angle in {-127, -131, -135, -139, -143} {
+            \draw[-latex, rgreen] (B) -- ($(\tangentx,\tangenty) - (\angle:\tangentr)$);
+          }
 
-      \fill[rgreen] (B) circle (0.1);
-      \centerarc[rgreen,ultra thick](B)(30:60:1)
+        \fill[rgreen] (B) circle (0.1);
+        \centerarc[rgreen,ultra thick](B)(30:60:1)
 
-      \fill[gray!20] (0,0) rectangle (6,-1);
-      \draw[gray!40] (0,0) -- (6,0);
-    \end{tikzpicture}
+        \fill[gray!20] (0,0) rectangle (6,-1);
+        \draw[gray!40] (0,0) -- (6,0);
+      \end{tikzpicture}}
     \caption{Glossy reflection, as can be encountered in materials such as plastic.}
     \label{fig:reflectionGlossy}
   \end{subfigure}
@@ -1475,35 +1491,36 @@ where $d$ references the differential nature, $L_o$ is the radiance leaving the 
 
 \begin{figure}[H]
   \centering
-  \tikzsetnextfilename{brdf-visualized}
-  \begin{tikzpicture}
-    \coordinate (A) at (0,3);
-    \coordinate (AA) at (1,2);
-    \coordinate (BB) at (2,1);
-    \coordinate (B) at (3,0);
-    \coordinate (C) at (5,3);
-    \coordinate (BC) at (3.67,1);
-    \coordinate (CB) at (4.332,2);
+  \resizebox{0.6\textwidth}{!}{
+    \tikzsetnextfilename{brdf-visualized}
+    \begin{tikzpicture}
+      \coordinate (A) at (0,3);
+      \coordinate (AA) at (1,2);
+      \coordinate (BB) at (2,1);
+      \coordinate (B) at (3,0);
+      \coordinate (C) at (5,3);
+      \coordinate (BC) at (3.67,1);
+      \coordinate (CB) at (4.332,2);
 
-    \coordinate (BN) at (3,2);
+      \coordinate (BN) at (3,2);
 
-    \centerarc[darkgray, thick](B)(56:90:1)
-    \node[darkgray] at (3.25,0.75) {$\theta_i$};
+      \centerarc[darkgray, thick](B)(56:90:1)
+      \node[darkgray] at (3.25,0.75) {$\theta_i$};
 
-    \draw[rgreen, dashed, thick] (A) -- (B);
-    \draw[rgreen, -latex, thick] (BB) --node[midway, right] {$\omega_o$} (AA);
+      \draw[rgreen, dashed, thick] (A) -- (B);
+      \draw[rgreen, -latex, thick] (BB) --node[midway, right] {$\omega_o$} (AA);
 
-    \draw[rgreen, dashed, thick] (C) -- (B);
-    \draw[rgreen, -latex, thick] (BC) --node[midway, left] {$\omega_i$} (CB);
+      \draw[rgreen, dashed, thick] (C) -- (B);
+      \draw[rgreen, -latex, thick] (BC) --node[midway, left] {$\omega_i$} (CB);
 
-    \draw[darkgray, -latex, thick] (B) --node[midway, left] {$n$} (BN);
+      \draw[darkgray, -latex, thick] (B) --node[midway, left] {$n$} (BN);
 
-    \fill[rgreen] (B) circle (0.1);
+      \fill[rgreen] (B) circle (0.1);
 
-    \fill[gray!20] (0,0) rectangle (6,-1);
-    \draw[gray!40] (0,0) -- (6,0);
-    \node[rgreen, anchor=north, yshift=-0.05cm] at (B) {$p$};
-  \end{tikzpicture}
+      \fill[gray!20] (0,0) rectangle (6,-1);
+      \draw[gray!40] (0,0) -- (6,0);
+      \node[rgreen, anchor=north, yshift=-0.05cm] at (B) {$p$};
+    \end{tikzpicture}}
   \caption{Variables of \gls{BRDF} visualized for a sample $\omega_o$ and $\omega_i$ at $p$ \cite{Pharr_Physically_Based_Rendering_2023}.}
   \label{fig:brdf-visualized}
 \end{figure}
@@ -1603,34 +1620,35 @@ The layers are set up to be adjacent mediums where the \glspl{BSDF} of the indiv
 
 \begin{figure}[H]
   \centering
-  \tikzsetnextfilename{open-pbr}
-  \begin{tikzpicture}[
-      every node/.style={font=\small},
-      layer/.style={draw, minimum height=1.4cm, minimum width=2.5cm, anchor=south west, text width=2cm, align=center},
-      mid/.style={draw, minimum height=0.7cm, minimum width=2.5cm, anchor=south west, align=center},
-      thin/.style={draw, minimum height=0.7cm, anchor=south west, minimum width=10cm, align=center},
-    ]
+  \resizebox{0.95\textwidth}{!}{
+    \tikzsetnextfilename{open-pbr}
+    \begin{tikzpicture}[
+        every node/.style={font=\small},
+        layer/.style={draw, minimum height=1.4cm, minimum width=2.5cm, anchor=south west, text width=2cm, align=center},
+        mid/.style={draw, minimum height=0.7cm, minimum width=2.5cm, anchor=south west, align=center},
+        thin/.style={draw, minimum height=0.7cm, anchor=south west, minimum width=10cm, align=center},
+      ]
 
-    \draw[dotted] (0,1) -- (0,-0.4);
-    \draw[dotted] (2.5,1) -- (2.5,-0.4);
-    \draw[dotted] (5,1) -- (5,-0.4);
-    \draw[dotted] (10,1) -- (10,-0.4);
+      \draw[dotted] (0,1) -- (0,-0.4);
+      \draw[dotted] (2.5,1) -- (2.5,-0.4);
+      \draw[dotted] (5,1) -- (5,-0.4);
+      \draw[dotted] (10,1) -- (10,-0.4);
 
-    \node[layer, fill=lightgray] (metal) at (0,1) {metal};
-    \node[layer] (translucent) at (2.5,1) {translucent base};
-    \node[layer] (subsurface) at (5,1) {subsurface};
-    \node[mid] (gloss) at (7.5,1.7) {gloss};
-    \node[mid, fill=lightgray] (diffuse) at (7.5,1) {diffuse};
+      \node[layer, fill=lightgray] (metal) at (0,1) {metal};
+      \node[layer] (translucent) at (2.5,1) {translucent base};
+      \node[layer] (subsurface) at (5,1) {subsurface};
+      \node[mid] (gloss) at (7.5,1.7) {gloss};
+      \node[mid, fill=lightgray] (diffuse) at (7.5,1) {diffuse};
 
-    \node[thin] (fuzz) at (0,3.1) {fuzz};
-    \node[thin] (coat) at (0,2.4) {coat};
+      \node[thin] (fuzz) at (0,3.1) {fuzz};
+      \node[thin] (coat) at (0,2.4) {coat};
 
-    \draw[>=latex,thick,<->] (0,0.6) -- (10,0.6) node[midway, fill=white] {base};
-    \draw[>=latex,thick,<->] (5,-0.2) -- (10,-0.2) node[midway, fill=white] {opaque-base};
-    \draw[>=latex,thick,<->] (2.5,0.2) -- (10,0.2) node[midway, fill=white] {dielectric-base};
+      \draw[>=latex,thick,<->] (0,0.6) -- (10,0.6) node[midway, fill=white] {base};
+      \draw[>=latex,thick,<->] (5,-0.2) -- (10,-0.2) node[midway, fill=white] {opaque-base};
+      \draw[>=latex,thick,<->] (2.5,0.2) -- (10,0.2) node[midway, fill=white] {dielectric-base};
 
 
-  \end{tikzpicture}
+    \end{tikzpicture}}
   \caption{The different layers of the \gls{OpenPBR} surface shading model. The model supports various features such as metallic, glossy, and diffuse reflection renderings that are important for industrial use cases.}
   \label{fig:openPBR}
 \end{figure}
