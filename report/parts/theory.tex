@@ -1193,7 +1193,7 @@ Having set up the compute pipeline, one needs to define the bind groups which co
 
 \gls{WebGPU} introduces a new shading language called \gls{WebGPU} Shading Language (\gls{WGSL}) \cite{wgslSpecification}. The language is statically typed and supports a variety of data structures required for computer graphics and general-purpose computing.
 
-Every compute pipeline, or render pipeline, requires an entry point, as shown in \autoref{code:computePipelineJs}. This entry point can then be defined as shown in \autoref{code:computePipelineWgsl}. Note that the return type definition is optional for functions.
+Every compute pipeline, or render pipeline, requires an entry point, as shown in \autoref{code:computePipelineJs}. This entry point can then be defined as shown in \autoref{code:computePipelineWgsl}. Note that the return type definition is optional for functions. Attributes such as \texttt{@compute} are used to provide additional information to the compiler. In this case, it denotes the entry point for the compute pipeline and is mandatory as it enables usage of specific attributes such as \texttt{@builtin}, which may only be used on entry points.
 
 \begin{figure}[H]
   \begin{lstlisting}[style=JavaScript]
@@ -1221,7 +1221,6 @@ fn computeMain(@builtin(global_invocation_id) global_id: vec3<u32>) {
   \label{code:computePipelineWgsl}
 \end{figure}
 
-Attributes such as \texttt{@compute} are used to provide additional information to the compiler. In this case, it denotes the entry point for the compute pipeline and is mandatory as it enables usage of specific attributes such as \texttt{@builtin}, which may only be used on entry points.
 In terms of limitations, it is similar to other shading languages. For example, it does not support recursion because cycles are not permitted in declarations. It also does not have features such as an \gls{API} for \gls{RNG}. The shading language is designed for common use cases in computer graphics and general-purpose computing. One example is support for swizzling. Swizzling is a class of operations that facilitate managing vector elements. For example, given a vector \texttt{let v = vec3f(x, y, z)}, the operation \texttt{v.xy} returns a vector \texttt{(x, y)}.
 
 \subsubsection{Data}
