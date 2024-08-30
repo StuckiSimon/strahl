@@ -898,14 +898,14 @@ where $k$ is the number of different sampling strategies, the weight of sampling
 
 Russian roulette is a technique for improving efficiency by employing probabilistic path termination. It selectively discards paths with low expected radiance contribution. If a path contributes zero radiance to the final image, it can be terminated early without affecting the radiance of the final image. However, if the path has a small but non-zero contribution, discarding it introduces bias into the calculation. Russian roulette solves this by introducing a probability of termination which is inversely proportional to the radiance of the path. Paths with low radiance are more likely to be terminated. Paths that are continued are scaled by the inverse probability of termination. This ensures to account for the bias introduced by the termination.
 
-Mathematically, Russian roulette is commonly formulated as shown in \autoref{eqn:russian-roulette} \cite{Pharr_Physically_Based_Rendering_2023}.
+Mathematically, Russian roulette is commonly formulated as:
 
 \begin{equation}
   \label{eqn:russian-roulette}
   I' = \begin{cases} \frac{I-qc}{1-q} & \xi > q \\ c & otherwise \end{cases}
 \end{equation}
 
-where $I$ is the radiance of the path, and $q$ is the probability of termination, which can, for instance, be calculated based on the radiance of the path. $\xi$ is a random number between 0 and 1. $c$ is the contribution of the path which is terminated, commonly set to zero. $I'$ is the scaled radiance of the path.
+where $I$ is the radiance of the path, and $q$ is the probability of termination, which can, for instance, be calculated based on the radiance of the path. $\xi$ is a random number between 0 and 1. $c$ is the contribution of the path which is terminated, commonly set to zero. $I'$ is the scaled radiance of the path. \cite{Pharr_Physically_Based_Rendering_2023}
 
 \subsubsection{Intersection Testing}
 
