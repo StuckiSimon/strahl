@@ -233,7 +233,7 @@ For ease-of-use for developers, the renderer uses \gls{Three.js} helpers. This a
 
 As highlighted in \autoref{ch:paradigmAssessment}, it is possible to extend a real-time client-side renderer for offline and remote rendering scenarios. In order to implement offline rendering, one could opt to use a headless browser such as \texttt{Puppeteer}, a \fgls{Node.js}{a JavaScript runtime, frequently used for executing JavaScript outside of the browser.} library that provides a high-level \gls{API} to control browsers. The use of \gls{Deno} could reduce the overhead by providing a more direct \gls{API} to \gls{wgpu}. An alternative is to use \gls{wgpu} directly, but this would necessitate a rewrite of the renderer. Possibly, the rewritten renderer could also be used in the web context by using \fgls{WebAssembly}{a portable binary code format available in modern browser engines.}.
 
-For remote rendering, the renderer could be extended to render images on demand and encode them as video streams.
+For remote rendering, the renderer could be extended to render images on demand and encode them as video streams. There are widely supported standards for real-time communication on the web, such as \fGls{WebRTC}{\e{Web Real-Time Communication}, open-source project providing real-time communication for the web.}. They support transmission of video streams. The client could send the information of the desired configuration in combination with the view projection to the server, which uses the information to update the rendering.
 
 \subsubsection*{WebGPU Compatibility Mode}
 

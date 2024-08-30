@@ -561,9 +561,8 @@ One of the main limitations is the lack of support for global illumination. For 
 
 \subsubsection{Advanced Techniques}
 
-To address these limitations, the graphics pipeline can be extended with additional steps such as post-processing effects or advanced rendering techniques. Various methods have been developed, including pre-baked shadow, environment \cite{greene1986environment}, and light maps; screen space reflections (SSR) \cite{screenSpaceReflectionsStackowiak}; screen space ambient occlusion (SSAO) \cite{bavoil2008ssao}; and screen space directional occlusion (SSDO) \cite{ritschel2009ssdo}.
+This section highlights several techniques that can be used to simulate global illumination within a rasterization-based renderer. These techniques extend the graphics pipeline with additional steps such as post-processing effects or advanced rendering methods. Various methods have been developed, including pre-baked shadow, environment \cite{greene1986environment}, and light maps; screen space reflections (SSR) \cite{screenSpaceReflectionsStackowiak}; screen space ambient occlusion (SSAO) \cite{bavoil2008ssao}; and screen space directional occlusion (SSDO) \cite{ritschel2009ssdo}. These approaches differ in how they need to be set up. Understanding the inner workings aids in understanding their strengths and limitations.
 
-% todo: newpage?
 \paragraph{Environment Maps}
 
 Environment maps can be used to simulate reflections. The technique uses a texture that is mapped to the environment of the scene and is used to simulate reflections. Environment maps do not support reflections occurring dynamically in the scene, such as self-reflections or reflections of nearby objects.
@@ -941,6 +940,11 @@ An \gls{AABB} ($b$) can be defined as $b = (min, max)$, where $min$ and $max$ ar
 
 After the intersection tests on the \gls{AABB}, the actual intersection tests with the triangles contained in the bounding box need to be performed by using an algorithm such as the Möller-Trumbore algorithm \cite{mollerTrumboreFastRayTriangleIntersection}.
 
+\subsubsection{Conclusion}
+
+These methods constitute the core of a path tracer. By combining \gls{BVH} for intersection testing, the \gls{MIS} scheme for sampling, and leveraging Russian roulette for probabilistic path termination, Monte Carlo integration of the renderer equation is possible. These methods enable performant, robust light transport to implement ray tracing and are commonplace in other ray tracers.
+
+\newpage
 \subsubsection{Production Ray Tracing}
 
 Early ray tracing applications were primarily for research purposes or special effects in movies. Adoption expanded as computers became more powerful. One of the first widely used ray tracing software was \fGls{POV-Ray}{\e{Persistence of Vision Ray Tracer}, a cross-platform ray tracing renderer officially released in 1991.}, released in 1991 \cite{POV_Ray_Documentation}. Blue Moon Rendering Tools (\gls{BMRT}) \cite{bmrt}, a renderer compliant with \fGls{RenderMan}{a software for photorealistic 3D rendering developed by Pixar.}, was released in the mid-1990s and was one of the first ray tracing renderers to be used in the industry. In 2003, \gls{RenderMan} included ray tracing capabilities \cite{RenderMan_11_Release_Notes}. Nowadays, ray tracing is widely used in industries such as film, architecture, and automotive.
