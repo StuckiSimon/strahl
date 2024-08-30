@@ -18,7 +18,7 @@ In order to contextualize the results, the presented work is compared in three d
 \subsection*{Comparison to Prior Work}
 \label{sec:comparisonToPriorWork}
 
-The three open-source path tracers introduced in \autoref{sec:web-path-tracers} are alternatives to the renderer developed in this work. Comparing them based on quantitative measures such as \fGls{FPS}{\e{Frames Per Second}, a measure of the rate at which consecutive images are rendered and displayed} is not meaningful as the number of samples required for high-fidelity renderings differs across the renderers. Nevertheless, defining a set of criteria to compare them is still possible.
+The three open-source path tracers introduced in \autoref{sec:web-path-tracers} are alternatives to the renderer developed in this work. Comparing them based on quantitative measures such as \fGls{FPS}{\e{Frames Per Second}, a measure of the rate at which consecutive images are rendered and displayed.} is not meaningful as the number of samples required for high-fidelity renderings differs across the renderers. Nevertheless, defining a set of criteria to compare them is still possible.
 
 
 \subsubsection*{WebGPU Support}
@@ -65,7 +65,7 @@ The availability of an \gls{npm} package can simplify the integration of the ren
 \newpage
 \subsection*{Comparison to Alternative Strategies}
 
-The chosen architecture paradigm serves as an alternative to offline rendering solutions. In addition, the decision to implement ray tracing techniques contrasts with rasterization-based rendering engines. This section shows the comparison between these different options. For rasterization, \gls{Three.js} is used as an example, based on a minimal setup without pregenerated artifacts or advanced rendering techniques. For offline rendering, \fGls{RealityServer}{a platform for 3D rendering, which integrates the NVIDIA Iray global illumination rendering technology} renderings used by EAO are shown as a representative example. The three different renderings are visualized in \autoref{fig:final-rendering-comparison}.
+The chosen architecture paradigm serves as an alternative to offline rendering solutions. In addition, the decision to implement ray tracing techniques contrasts with rasterization-based rendering engines. This section shows the comparison between these different options. For rasterization, \gls{Three.js} is used as an example, based on a minimal setup without pregenerated artifacts or advanced rendering techniques. For offline rendering, \fGls{RealityServer}{a platform for 3D rendering, which integrates the NVIDIA Iray global illumination rendering technology.} renderings used by EAO are shown as a representative example. The three different renderings are visualized in \autoref{fig:final-rendering-comparison}.
 
 \begin{figure}[H]
   \centering
@@ -231,7 +231,7 @@ For ease-of-use for developers, the renderer uses \gls{Three.js} helpers. This a
 
 \subsubsection*{Offline and Remote Rendering}
 
-As highlighted in \autoref{ch:paradigmAssessment}, it is possible to extend a real-time client-side renderer for offline and remote rendering scenarios. In order to implement offline rendering, one could opt to use a headless browser such as \texttt{Puppeteer}, a \fgls{Node.js}{a JavaScript runtime, frequently used for executing JavaScript outside of the browser} library that provides a high-level \gls{API} to control browsers. The use of \gls{Deno} could reduce the overhead, by providing a more direct \gls{API} to \gls{wgpu}. An alternative is to use \gls{wgpu} directly, but this would necessitate a rewrite of the renderer. Possibly, the rewritten renderer could also be used in the web context by using \fgls{WebAssembly}{a portable binary code format available in modern browser engines}.
+As highlighted in \autoref{ch:paradigmAssessment}, it is possible to extend a real-time client-side renderer for offline and remote rendering scenarios. In order to implement offline rendering, one could opt to use a headless browser such as \texttt{Puppeteer}, a \fgls{Node.js}{a JavaScript runtime, frequently used for executing JavaScript outside of the browser.} library that provides a high-level \gls{API} to control browsers. The use of \gls{Deno} could reduce the overhead, by providing a more direct \gls{API} to \gls{wgpu}. An alternative is to use \gls{wgpu} directly, but this would necessitate a rewrite of the renderer. Possibly, the rewritten renderer could also be used in the web context by using \fgls{WebAssembly}{a portable binary code format available in modern browser engines.}.
 
 For remote rendering, the renderer could be extended to render images on demand and encode them as video streams.
 
@@ -241,7 +241,7 @@ There is a proposal under active development that aims to extend the reach of \g
 
 \subsubsection*{Automatic Shader Conversion}
 
-During the specification phase of \gls{WebGPU}, the relation to \fgls{SPIR-V}{\e{Standard Portable Intermediate Representation}, an intermediate language for parallel computing and graphics developed by the \gls{Khronos Group}} was discussed \cite{webGPUSpirVRelation}. In general, many of the modern shading languages can be compiled to one another. Projects such as \texttt{Tint}, which is part of \gls{Dawn} \cite{dawnImplementation} or \texttt{Naga} \cite{nagaImplementation} could be used to compile shaders from different frontends to different backends. Similarly, other engines, such as \gls{Three.js} with \fGls{TSL}{\e{Three.js Shading Language}, a shading language used in \gls{Three.js} that supports \gls{GLSL} as well as \gls{WGSL}}, have their own shading languages that support a variety of backends \cite{ThreeJSShadingLanguage}. Parts of \gls{MaterialX} shader generation could be used to generate shaders for \gls{WebGPU} and update them automatically as \gls{OpenPBR} is updated.
+During the specification phase of \gls{WebGPU}, the relation to \fgls{SPIR-V}{\e{Standard Portable Intermediate Representation}, an intermediate language for parallel computing and graphics developed by the \gls{Khronos Group}.} was discussed \cite{webGPUSpirVRelation}. In general, many of the modern shading languages can be compiled to one another. Projects such as \texttt{Tint}, which is part of \gls{Dawn} \cite{dawnImplementation} or \texttt{Naga} \cite{nagaImplementation} could be used to compile shaders from different frontends to different backends. Similarly, other engines, such as \gls{Three.js} with \fGls{TSL}{\e{Three.js Shading Language}, a shading language used in \gls{Three.js} that supports \gls{GLSL} as well as \gls{WGSL}.}, have their own shading languages that support a variety of backends \cite{ThreeJSShadingLanguage}. Parts of \gls{MaterialX} shader generation could be used to generate shaders for \gls{WebGPU} and update them automatically as \gls{OpenPBR} is updated.
 
 \subsubsection*{Low-Level Performance Optimizations}
 
