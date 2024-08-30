@@ -4,9 +4,6 @@
 [![Deploy Website](https://github.com/StuckiSimon/strahl/actions/workflows/deploy-website.yml/badge.svg)](https://github.com/StuckiSimon/strahl/actions/workflows/deploy-website.yml)
 [![Build Report](https://github.com/StuckiSimon/strahl/actions/workflows/build-report.yml/badge.svg)](https://github.com/StuckiSimon/strahl/actions/workflows/build-report.yml)
 
-> [!NOTE]
-> This is still a work in progress, expect major changes.
-
 ## What is strahl?
 
 **tl;dr** `strahl` is a WebGPU Path Tracer for the web.
