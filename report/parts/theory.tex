@@ -16,7 +16,7 @@ This section highlights some basics about the mathematics involved in computer g
 
 \subsubsection{Vectors}
 
-Euclidean vectors are fundamental in computer graphics and are generally defined by a magnitude and a direction. In a three-dimensional space, a vector can be defined as $v = (x, y, z)$. This definition can be used to represent points in space, called vertices, and directions. The magnitude, or length, of the vector can be calculated using the Euclidean norm:
+Euclidean vectors are fundamental in computer graphics and are generally defined by a magnitude and a direction. In a three-dimensional space, a vector can be defined as $v = (x, y, z)$. This definition can be used to represent points in space called vertices as well as directions. The magnitude, or length, of the vector can be calculated using the Euclidean norm:
 
 \begin{equation}
   \label{eqn:euclidean-norm}
@@ -194,7 +194,7 @@ The standard deviation ($\sigma$) is the square root of the variance ($\sigma^2$
 
 where $z$ is the z-score of the desired confidence level, for example, $1.96$ for a $95\%$ confidence interval, and $n$ is the number of samples.
 
-This can be used to assess the quality and reliability of measurements such as required for benchmarking.
+This can be used to assess the quality and reliability of measurements, such as those required for benchmarking.
 
 Another important concept is the probability density function (\gls{PDF}). It describes the likelihood of a random variable to take on a specific value. It is related to the cumulative distribution function (\gls{CDF}), which describes the probability that the random variable will be less than or equal to a specific value. The \gls{CDF} can be expressed as the integral of its \gls{PDF}. See \autoref{fig:probability-theory} for a visualization.
 
@@ -345,7 +345,7 @@ where $\theta$ is the angle of incidence and $\theta'$ is the angle of reflectio
 
 \subsubsection{Refraction}
 
-Refraction is the bending of light when passing through a medium as visualized in \autoref{fig:basic-refraction}. The distortion of objects underwater is an example of such an effect.
+Refraction is the bending of light when passing through a medium, as visualized in \autoref{fig:basic-refraction}. The distortion of objects underwater is an example of such an effect.
 
 \begin{figure}[H]
   \centering
@@ -411,7 +411,7 @@ Establishing terminology to describe the optical properties of materials helps u
 
 \begin{description}
   \item[Scattering] — determines if the material scatters light. This can be observed in so-called volumetric effects such as fog, smoke, dust, or clouds.
-  \item[Diffuse Reflection] — occur when light is scattered in all directions, independent of the viewing angle. An example of such a material is paper or chalk. As early as the 18th century, Lambert described the reflection of light on a surface \cite{lambert1760photometria}. Lambertian reflection is still used as a term for diffuse reflection.
+  \item[Diffuse Reflection] — occurs when light is scattered in all directions, independent of the viewing angle. An example of such a material is paper or chalk. As early as the 18th century, Lambert described the reflection of light on a surface \cite{lambert1760photometria}. Lambertian reflection is still used as a term for diffuse reflection.
   \item[Specular Reflection] — describes a phenomenon where light is reflected in a specific direction. This leads to highlights on the surface.
   \item[Roughness] — defines how smooth the surface of the material is. A rough surface scatters light in many directions, while a smooth surface reflects light in a specific direction.
   \item[Subsurface Scattering] — describes how light penetrates the material and is scattered. An example of such a material is skin or marble.
@@ -511,10 +511,10 @@ While global illumination commonly refers to a subset of effects, the term is us
 \begin{itemize}
   \item{Shadow Casting} — The absence of light as obstructed by other objects.
   \item{Reflection}
-  \item{Color Bleeding} — Special type of reflection where a surface is colored by reflection of colored light.
-  \item{Ambient Occlusion} — Special type of shadow casting, where light transport as impacted by nearby objects is considered. This is frequently encountered on objects with complex topology.
+  \item{Color Bleeding} — A special type of reflection where a surface is colored by reflection of colored light.
+  \item{Ambient Occlusion} — A special type of shadow casting, where light transport as impacted by nearby objects is considered. This is frequently encountered on objects with complex topology.
   \item{Refraction}
-  \item{Caustics} — Effect produced by either reflection or refraction of light.
+  \item{Caustics} — An effect produced by reflection or refraction of light.
 \end{itemize}
 
 The importance of achieving these effects depends on the use case. For the use case of this thesis, shadows and reflections are pivotal for the realism and perceived quality of the images. Refraction and caustics were not encountered in the use case of this thesis and are, therefore, not covered in detail.
@@ -561,15 +561,15 @@ One of the main limitations is the lack of support for global illumination. For 
 
 \subsubsection{Advanced Techniques}
 
-To address these limitations, the graphics pipeline can be extended with additional steps such as post-processing effects or advanced rendering techniques. Various methods have been developed, including pre-baked shadow, environment \cite{greene1986environment} and light maps; screen space reflections (SSR) \cite{screenSpaceReflectionsStackowiak}; screen space ambient occlusion (SSAO) \cite{bavoil2008ssao}; and screen space directional occlusion (SSDO) \cite{ritschel2009ssdo}.
+To address these limitations, the graphics pipeline can be extended with additional steps such as post-processing effects or advanced rendering techniques. Various methods have been developed, including pre-baked shadow, environment \cite{greene1986environment}, and light maps; screen space reflections (SSR) \cite{screenSpaceReflectionsStackowiak}; screen space ambient occlusion (SSAO) \cite{bavoil2008ssao}; and screen space directional occlusion (SSDO) \cite{ritschel2009ssdo}.
 
 \paragraph{Environment Maps}
 
-Environment maps can be used to simulate reflections. The technique uses a texture that is mapped to the environment of the scene and is used to simulate reflections. Environment maps not support reflections occurring dynamically in the scene, such as self-reflections or reflections of nearby objects.
+Environment maps can be used to simulate reflections. The technique uses a texture that is mapped to the environment of the scene and is used to simulate reflections. Environment maps do not support reflections occurring dynamically in the scene, such as self-reflections or reflections of nearby objects.
 
 \paragraph{Shadow Maps}
 
-Shadow maps are employed to store shadow information for a scene based on the available light sources. These shadows are pregenerated, before being employed in the rendering process. While this technique is suitable for static scenes, there are limitations in dynamic lighting situations and scenes where different parts of a product cast shadow on one another.
+Shadow maps are employed to store shadow information for a scene based on the available light sources. These shadows are pregenerated before being employed in the rendering process. While this technique is suitable for static scenes, there are limitations in dynamic lighting situations and scenes where different parts of a product cast shadows on one another.
 
 \paragraph{Screen Space Methods}
 
@@ -586,9 +586,9 @@ Each of these methods addresses only a specific limitation of rasterization. Som
 \subsection{Ray Tracing}
 \label{ch:rayTracingTheory}
 
-Ray tracing is a rendering technique which simulates light transport in a scene. Forward ray tracing traces the photons, commonly referred to as rays, from the light source onto the objects. These algorithms are inefficient as most rays do not contribute to the illumination visible in the viewport. Therefore, backward ray tracing is more commonly used. Rays are cast from the camera into the scene, and the object's radiance with which the ray intersects is computed. In contrast to a rasterizer, which iterates over the triangles of the scene, ray tracing iterates over the pixels of the image. For each pixel, a ray is cast into the scene. By adding additional bounces of the light ray, the technique can simulate global illumination.
+Ray tracing is a rendering technique that simulates light transport in a scene. Forward ray tracing traces the photons, commonly referred to as rays, from the light source onto the objects. These algorithms are inefficient as most rays do not contribute to the illumination visible in the viewport. Therefore, backward ray tracing is more commonly used. Rays are cast from the camera into the scene, and the object's radiance with which the ray intersects is computed. In contrast to a rasterizer, which iterates over the triangles of the scene, ray tracing iterates over the pixels of the image. For each pixel, a ray is cast into the scene. By adding additional bounces of the light ray, the technique can simulate global illumination.
 
-Early algorithms were based on recursive ray tracing \cite{whittedGlobalIllumination}. These algorithms determine intersection with geometry and iteratively generate branches as shown in \autoref{fig:recursiveRayTracing}. For each pixel, a primary ray is cast into the scene. When intersecting with a surface, the algorithm considers the light sources and generates secondary rays. These rays are then recursively traced and radiance is calculated until a maximum depth is reached.
+Early algorithms were based on recursive ray tracing \cite{whittedGlobalIllumination}. These algorithms determine intersection with geometry and iteratively generate branches, as shown in \autoref{fig:recursiveRayTracing}. For each pixel, a primary ray is cast into the scene. When intersecting with a surface, the algorithm considers the light sources and generates secondary rays. These rays are then recursively traced, and radiance is calculated until a maximum depth is reached.
 
 \begin{figure}[H]
   \centering
@@ -693,7 +693,7 @@ Due to the computational complexity of these early algorithms, ray tracing was n
   I(x, x') = g(x, x') [\epsilon(x, x') + \int_{S} p(x, x', x'')I(x', x'')dx'']
 \end{equation}
 
-where $I(x, x')$ is the radiance from point $x$ to point $x'$. $x$ for example being the camera position, and $x'$ the intersected object. $g(x, x')$ is a geometry term determining how much light is transmitted. This depends on the distance and possibly occlusions such as transparent surfaces. $\epsilon(x, x')$ is the emitted radiance, generally used for light sources. The integral term is taken over $S$ = $\cup S_i$ which is the union of all surfaces. $p(x, x', x'')$ is the bidirectional reflection function, which describes how light from all possible directions $x''$ is reflected at the surface. \cite{kajiya1986rendering}
+where $I(x, x')$ is the radiance from point $x$ to point $x'$. $x$, for example, being the camera position, and $x'$ the intersected object. $g(x, x')$ is a geometry term determining how much light is transmitted. This depends on the distance and possibly occlusions, such as transparent surfaces. $\epsilon(x, x')$ is the emitted radiance, generally used for light sources. The integral term is taken over $S$ = $\cup S_i$ which is the union of all surfaces. $p(x, x', x'')$ is the bidirectional reflection function, which describes how light from all possible directions $x''$ is reflected at the surface. \cite{kajiya1986rendering}
 
 Further research into light transport techniques such as bidirectional light transport or Metropolis light transport has been conducted in the 1990s \cite{veachMonteCarloLightTransport}. Concrete techniques will be described in the next section.
 
@@ -896,7 +896,7 @@ where $k$ is the number of different sampling strategies, the weight of sampling
 \subsubsection{Russian Roulette}
 \label{ch:russianRoulette}
 
-Russian roulette is a technique for improving efficiency by employing probabilistic path termination. It selectively discards paths with low expected radiance contribution. If a path contributes zero radiance to the final image, it can be terminated early without affecting the radiance of the final image. However, if the path has a small but non-zero contribution, discarding it introduces bias into the calculation. Russian roulette solves this by introducing a probability of termination which is inversely proportional to the radiance of the path. Paths with low radiance are more likely to be terminated. Paths that are continued are scaled by the inverse probability of termination. This ensures to account for the bias introduced by the termination.
+Russian roulette is a technique for improving efficiency by employing probabilistic path termination. It selectively discards paths with low expected radiance contribution. If a path contributes zero radiance to the final image, it can be terminated early without affecting the radiance of the final image. However, if the path has a small but non-zero contribution, discarding it introduces bias into the calculation. Russian roulette solves this by introducing a probability of termination that is inversely proportional to the radiance of the path. Paths with low radiance are more likely to be terminated. Paths that are continued are scaled by the inverse probability of termination. This ensures to account for the bias introduced by the termination.
 
 Mathematically, Russian roulette is commonly formulated as:
 
@@ -909,11 +909,11 @@ where $I$ is the radiance of the path, and $q$ is the probability of termination
 
 \subsubsection{Intersection Testing}
 
-When casting a ray into the scene, the first step in a ray tracer is to determine where the ray intersects with the geometry of the scene. A brute force approach could determine the intersection distance for each object to the ray and pick the one with the lowest distance. Given the fact, that common objects consist of thousands of triangles ($n$) and require tracing many rays, this approach is not efficient as it would require $O(n)$ intersection tests for each ray.
+When casting a ray into the scene, the first step in a ray tracer is to determine where the ray intersects with the geometry of the scene. A brute force approach could determine the intersection distance for each object to the ray and pick the one with the lowest distance. Given the fact that common objects consist of thousands of triangles ($n$) and require tracing many rays, this approach is not efficient as it would require $O(n)$ intersection tests for each ray.
 
 In order to accelerate the intersection testing, various approaches have been developed.
 
-The bounding volume hierarchy (\gls{BVH}) is an acceleration structure leveraged to reduce the number of ray intersection tests per ray. This method is widely used in ray tracing and has been studied for a long time \cite{rubinWhittedBvh}. The core idea is to group adjacent objects in a bounding volume and structure the hierarchy in a way that all child elements of a node are contained in the bounding volume of the parent node. The nodes, employed for storing the bounding volume are often axis-aligned bounding boxes (\gls{AABB}). This allows for early rejection of branches which are not intersected by the ray. By employing a \gls{BVH}, the number of intersection tests ($n$) can be reduced from $O(n)$ to $O(log(n))$.
+The bounding volume hierarchy (\gls{BVH}) is an acceleration structure leveraged to reduce the number of ray intersection tests per ray. This method is widely used in ray tracing and has been studied for a long time \cite{rubinWhittedBvh}. The core idea is to group adjacent objects in a bounding volume and structure the hierarchy in a way that all child elements of a node are contained in the bounding volume of the parent node. The nodes employed for storing the bounding volume are often axis-aligned bounding boxes (\gls{AABB}). This allows for early rejection of branches that are not intersected by the ray. By employing a \gls{BVH}, the number of intersection tests ($n$) can be reduced from $O(n)$ to $O(log(n))$.
 
 An \gls{AABB} ($b$) can be defined as $b = (min, max)$, where $min$ and $max$ are the minimum and maximum vertices of the bounding box. The boxes are then grouped into a hierarchy where the maximum and minimum vertices of the children define the bounding box of the parent, as visualized in \autoref{fig:bvhVisualized}. Good performance of the \gls{BVH} depends on the quality of the hierarchy. A poorly constructed \gls{BVH} can lead to more intersection tests, as shown in \autoref{fig:bvhBad}. This is because intersections need to be tested against all elements: three bounding boxes and four triangles. For a well-constructed \gls{BVH}, the algorithm can reduce the number of intersection tests by discarding branches that do not intersect. For \autoref{fig:bvhGood}, the intersection tests are as follows: $b_1$, which intersects; $b_2$, which can be discarded after checking; and $b_3$, which necessitates further intersection tests for the two contained triangles. For such a small number of triangles, the overhead of the \gls{BVH} outweighs its benefits. However, for larger scenes, the performance gain is substantial. In the case of well-balanced trees, the number of tests can be halved at each level of the hierarchy.
 
@@ -930,7 +930,7 @@ An \gls{AABB} ($b$) can be defined as $b = (min, max)$, where $min$ and $max$ ar
     \caption{Well-constructed \gls{BVH}, which reduces the required intersection tests for $r$ to four.}
     \label{fig:bvhGood}
   \end{subfigure}
-  \caption{Sample 2D \gls{BVH} visualization, which contains four triangles ($t_1$ to $t_4$) and their corresponding bounding boxes $b_1$ as parent and $b_2$ as well as $b_3$ as the children. $b_1$ is visualized bigger than needed to improve readability. The color of the triangles indicates to which bounding box they belong. $r$ indicates the ray to be tested for intersection.}
+  \caption{Sample 2D \gls{BVH} visualization, which contains four triangles ($t_1$ to $t_4$) and their corresponding bounding boxes $b_1$ as the parent and $b_2$ as well as $b_3$ as the children. $b_1$ is visualized bigger than needed to improve readability. The color of the triangles indicates to which bounding box they belong. $r$ indicates the ray to be tested for intersection.}
   \label{fig:bvhVisualized}
 \end{figure}
 
@@ -938,7 +938,7 @@ After the intersection tests on the \gls{AABB}, the actual intersection tests wi
 
 \subsubsection{Production Ray Tracing}
 
-Early ray tracing applications were primarily for research purposes or special effects in movies. Adoption expanded as computers became more powerful. One of the first widely used ray tracing software was \fGls{POV-Ray}{\e{Persistence of Vision Ray Tracer}, a cross-platform ray tracing renderer officially released in 1991.}, released in 1991 \cite{POV_Ray_Documentation}. Blue Moon Rendering Tools (\gls{BMRT}) \cite{bmrt}, a renderer compliant with \fGls{RenderMan}{a software for photorealistic 3D rendering developed by Pixar.}, was released in the mid-1990s and was one of the first ray tracing renderers to be used in the industry. In 2003 \gls{RenderMan} included ray tracing capabilities \cite{RenderMan_11_Release_Notes}. Nowadays, ray tracing is widely used in industries such as film, architecture, and automotive.
+Early ray tracing applications were primarily for research purposes or special effects in movies. Adoption expanded as computers became more powerful. One of the first widely used ray tracing software was \fGls{POV-Ray}{\e{Persistence of Vision Ray Tracer}, a cross-platform ray tracing renderer officially released in 1991.}, released in 1991 \cite{POV_Ray_Documentation}. Blue Moon Rendering Tools (\gls{BMRT}) \cite{bmrt}, a renderer compliant with \fGls{RenderMan}{a software for photorealistic 3D rendering developed by Pixar.}, was released in the mid-1990s and was one of the first ray tracing renderers to be used in the industry. In 2003, \gls{RenderMan} included ray tracing capabilities \cite{RenderMan_11_Release_Notes}. Nowadays, ray tracing is widely used in industries such as film, architecture, and automotive.
 
 \subsubsection{Hybrid Approaches}
 
@@ -987,7 +987,7 @@ The clipping plane parameters $n$ and $f$ are primarily used in rasterization to
   \end{bmatrix}
 \end{equation}
 
-The elements $P_{1,1}$ and $P_{2,2}$ adjust the field of view and, therefore, the perspective effect. The elements $P_{3,3}$, $P_{3,4}$ and $P_{4,3}$ adjust the near and far clipping planes. Compared to rasterization, the view projection matrix is used differently in ray tracing. In rasterization, every vertex is transformed by the view projection matrix. In ray tracing, the view projection matrix is only applied to the primary camera rays cast into the scene. For orthographic projection, no such projection matrix is required in ray tracing. Instead, parallel rays are cast from the camera grid.
+The elements $P_{1,1}$ and $P_{2,2}$ adjust the field of view and, therefore, the perspective effect. The elements $P_{3,3}$, $P_{3,4}$, and $P_{4,3}$ adjust the near and far clipping planes. Compared to rasterization, the view projection matrix is used differently in ray tracing. In rasterization, every vertex is transformed by the view projection matrix. In ray tracing, the view projection matrix is only applied to the primary camera rays cast into the scene. For orthographic projection, no such projection matrix is required in ray tracing. Instead, parallel rays are cast from the camera grid.
 
 \subsubsection{Random Number Generator}
 
@@ -1003,7 +1003,7 @@ Randomness is used in different parts of a path tracer. One example is picking $
 Based on the use case, other factors such as prediction difficulty or others such as highlighted by O’Neill \cite{o2014pcg} may be important. Cryptography, for example, requires randomness of the \gls{RNG} to prevent an adversary from predicting secret keys. Options to generate the randomness require additional signals \cite{randomnessCryptography} or may require special hardware, such as \fGls{Lavarand}{a hardware \gls{RNG} based on pictures taken of lava lamps to generate randomness.} \cite{cloudflareLavaRand}. Many generators are pseudorandom generators. These generators are deterministic and require a seed to start the sequence. For cryptographically secure generators, the seed must be random.
 However, for a path tracer, there is no need for cryptographic security. Instead, it is more important to have high performance and to have a long period to avoid repetition. Therefore, a pseudorandom number generator without a cryptographically secure seed is sufficient.
 
-One option for such a pseudorandom generator is using Xorshifts, such as described by Marsaglia \cite{marsaglia2003xorshift}. The algorithm can be defined as shown in \autoref{code:xorShift}. $x$ is the state of the \gls{RNG} and $a$, $b$ and $c$ are constants which are chosen to achieve good statistical properties. Frequent choices for these constants are $a = 13$, $b = 17$, and $c = 5$.
+One option for such a pseudorandom generator is using Xorshifts, such as described by Marsaglia \cite{marsaglia2003xorshift}. The algorithm can be defined as shown in \autoref{code:xorShift}. $x$ is the state of the \gls{RNG} and $a$, $b$, and $c$ are constants that are chosen to achieve good statistical properties. Frequent choices for these constants are $a = 13$, $b = 17$, and $c = 5$.
 
 \begin{figure}[H]
   \begin{lstlisting}[style=wgsl]
@@ -1015,7 +1015,7 @@ x ^= x << c;
   \label{code:xorShift}
 \end{figure}
 
-The Mersenne Twister \cite{rngMersenneTwister} is an alternative \gls{RNG}. It is a pseudorandom number generator which has a long period and good statistical properties. However, it is slower than Xorshifts \cite{o2014pcg}. More recently, \fGls{PCG}{\e{Permuted Congruential Generator}, a family of random number generators.} has been proposed as an alternative to these options. \gls{PCG} is a family of fast generators that is well-suited for ray tracing use.
+The Mersenne Twister \cite{rngMersenneTwister} is an alternative \gls{RNG}. It is a pseudorandom number generator that has a long period and good statistical properties. However, it is slower than Xorshifts \cite{o2014pcg}. More recently, \fGls{PCG}{\e{Permuted Congruential Generator}, a family of random number generators.} has been proposed as an alternative to these options. \gls{PCG} is a family of fast generators that is well-suited for ray tracing use.
 
 \subsubsection{Anti-aliasing}
 \label{sec:anti-aliasing}
@@ -1126,13 +1126,13 @@ None of these \glspl{API} are supported in the browser, which makes them unsuita
 
 \gls{WebGPU} is a new web standard developed by \fGls{W3C}{\e{World Wide Web Consortium}, a non-profit organization dedicated to developing web standards.} \cite{webgpuSpecification}. Unlike its predecessor, \gls{WebGL}, it is no longer based on \gls{OpenGL}. One of the main capabilities is support for \gls{GPGPU} by design. While all major browser vendors have announced intent to support \gls{WebGPU}, to date only Chrome has shipped \gls{WebGPU} for general use on desktop as well as mobile.
 The standard is still in development and new features are being added.
-Common 3D engines such as \gls{Babylon.js}, \gls{Three.js}, \gls{PlayCanvas} and \gls{Unity} have announced support for \gls{WebGPU}.
+Common 3D engines such as \gls{Babylon.js}, \gls{Three.js}, \gls{PlayCanvas}, and \gls{Unity} have announced support for \gls{WebGPU}.
 
 Three major implementations of \gls{WebGPU} exist:
 
 \begin{itemize}
   \item{\gls{Dawn}} \cite{dawnImplementation} — Developed by Google, \gls{Dawn} is a C++ library which provides a \gls{WebGPU} implementation. It is used in browsers based on \fGls{Chromium}{a browser engine primarily developed by Google, used in browsers such as Chrome, Edge, and Opera.}.
-  \item{\gls{wgpu}} \cite{wgpuImplementation} — A Rust library which provides a \gls{WebGPU} implementation. It is used in Firefox and \fGls{Deno}{a JavaScript runtime, alternative to Node.js.}.
+  \item{\gls{wgpu}} \cite{wgpuImplementation} — A Rust library that provides a \gls{WebGPU} implementation. It is used in Firefox and \fGls{Deno}{a JavaScript runtime, alternative to Node.js.}.
   \item{\fGls{WebKit}{a browser engine primarily used in Safari.} \gls{WebGPU}} \cite{webKitWebGPUImplementation} — Developed by Apple for Safari.
 \end{itemize}
 
@@ -1140,7 +1140,7 @@ As the standard is under active development, there are differences between the i
 
 \subsubsection{Core Concepts}
 
-\gls{WebGPU} is a low-level \gls{API} when compared to \gls{WebGL}. Users get access to the \gls{GPU} via adapters, which abstract the underlying hardware. \gls{WebGPU} fully supports common \gls{GPU} strategies as described in \autoref{sec:commonGpuStrategies}. Most of the commands are then executed on a logical device which is created using the adapter.
+\gls{WebGPU} is a low-level \gls{API} when compared to \gls{WebGL}. Users get access to the \gls{GPU} via adapters, which abstract the underlying hardware. \gls{WebGPU} fully supports common \gls{GPU} strategies, as described in \autoref{sec:commonGpuStrategies}. Most of the commands are then executed on a logical device, which is created using the adapter.
 
 For a compute pipeline, one needs to define a pipeline layout that consists of multiple bind group layouts. These define the memory layout of the data that is passed to the \gls{GPU}. The code to be executed is defined in a shader module. The compute pipeline is then created by combining the shader module and the pipeline layout. See \autoref{fig:webgpu-arch} for a visual representation of the core concepts in \gls{WebGPU}. Setting up a graphics pipeline is similar, but two shader module configurations are required.
 
@@ -1193,7 +1193,7 @@ Having set up the compute pipeline, one needs to define the bind groups which co
 
 \gls{WebGPU} introduces a new shading language called \gls{WebGPU} Shading Language (\gls{WGSL}) \cite{wgslSpecification}. The language is statically typed and supports a variety of data structures required for computer graphics and general-purpose computing.
 
-Every compute pipeline, or render pipeline, requires an entry point, as shown in \autoref{code:computePipelineJs}. This entry point can then be defined as shown in \autoref{code:computePipelineWgsl}. Note that the return type definition is optional for functions. Attributes such as \texttt{@compute} are used to provide additional information to the compiler. In this case, it denotes the entry point for the compute pipeline and is mandatory as it enables usage of specific attributes such as \texttt{@builtin}, which may only be used on entry points.
+Every compute pipeline, or render pipeline, requires an entry point, as shown in \autoref{code:computePipelineJs}. This entry point can then be defined as shown in \autoref{code:computePipelineWgsl}. Note that the return type definition is optional for functions. Attributes such as \texttt{@compute} are used to provide additional information to the compiler. In this case, it denotes the entry point for the compute pipeline and is mandatory as it enables the usage of specific attributes such as \texttt{@builtin}, which may only be used on entry points.
 
 \begin{figure}[H]
   \begin{lstlisting}[style=JavaScript]
@@ -1228,10 +1228,10 @@ In terms of limitations, it is similar to other shading languages. For example, 
 Data needs to be transferred between the \gls{CPU} and the \gls{GPU} within bind groups. The core methods to store data are textures and buffers. Textures are optimized for n-dimensional data such as images and offer additional features such as interpolation. Buffers are the primary method to store arbitrary data. Depending on the type of data to be transferred, different buffers can be used:
 
 \begin{itemize}
-  \item{Uniforms} — Uniform buffers are optimized for data which is read-only on the \gls{GPU} and is the same for all vertices or fragments. Such information could be the projection matrix.
+  \item{Uniforms} — Uniform buffers are optimized for data that is read-only on the \gls{GPU} and is the same for all vertices or fragments. Such information could be the projection matrix.
   \item{Storage} — Storage buffers are intended for read-write access on the \gls{GPU}. The size limits of these buffers are higher than for uniform buffers.
   \item{Vertex} — Alternative to storage buffers, intended for vertex data.
-  \item{Index} — Buffers which contain indices for the vertices.
+  \item{Index} — Buffers that contain indices for the vertices.
 \end{itemize}
 
 \subsubsection{Memory Alignment}
@@ -1239,7 +1239,7 @@ Data needs to be transferred between the \gls{CPU} and the \gls{GPU} within bind
 
 \gls{WGSL} supports \texttt{struct} for defining data structures. However, memory alignment must be considered when passing data between the \gls{CPU} and the \gls{GPU}. Alignment is a constraint, restricting the memory address at which a data structure can be stored. Having strict memory alignment enables the use of more efficient hardware instruction sets or addresses hardware requirements.
 
-Each type in \gls{WGSL} has specific alignment requirements independent of the size. For example, a \texttt{vec3f} has a size of 12 bytes but requires an alignment of 16 bytes. So for a struct definition such as can be seen in \autoref{code:memoryAlignment}, the struct requires 32 bytes of memory to store 20 bytes of data as illustrated in \autoref{fig:memory-alignment}. The excess 12 bytes are used for padding.
+Each type in \gls{WGSL} has specific alignment requirements independent of the size. For example, a \texttt{vec3f} has a size of 12 bytes but requires an alignment of 16 bytes. So, for a struct definition such as can be seen in \autoref{code:memoryAlignment}, the struct requires 32 bytes of memory to store 20 bytes of data, as illustrated in \autoref{fig:memory-alignment}. The excess 12 bytes are used for padding.
 
 \begin{figure}[H]
   \begin{lstlisting}[style=wgsl]
@@ -1298,7 +1298,7 @@ Formats such as the proprietary \fGls{FBX}{\e{Filmbox}, a proprietary 3D exchang
 
 For specific use cases, specialized formats have been developed. One such example is \gls{STEP}. The format is widely used in product manufacturing and offers support for a wide range of modeling features. The \fGls{ASCII}{\e{American Standard Code for Information Interchange}, a character encoding standard for electronic communication.} encoding of the format is human-readable but is not well-suited for real-time rendering requirements of the web due to transmission size and parsing complexity \cite{marjudi2010StepIgesreview}. Parsing complexity is exhibited by the large number of different entities which can be defined in the format.
 
-Another such format is \fGls{STL}{\e{Stereolithography}, a 3D exchange format developed by 3D Systems.} which is widely used in 3D printing and supports binary and \gls{ASCII} encoding. It lacks support for advanced features such as material representation, animations, and scene graphs.
+Another such format is \fGls{STL}{\e{Stereolithography}, a 3D exchange format developed by 3D Systems.}, which is widely used in 3D printing and supports binary and \gls{ASCII} encoding. It lacks support for advanced features such as material representation, animations, and scene graphs.
 
 \subsection*{Interoperability Formats}
 
@@ -1306,7 +1306,7 @@ The aforementioned formats have shortcomings in interoperability and feature set
 
 Other formats such as \fGls{COLLADA}{\e{Collaborative Design Activity}, a 3D exchange format managed by \gls{Khronos Group}.} have been developed to improve the exchange of 3D scenes between different applications. Based on \fGls{XML}{\e{Extensible Markup Language}.}, the format was established in 2004 and has been managed by the \gls{Khronos Group} since then. However, its latest release was in 2008.
 
-One notable format is \fGls{USD}{\e{Universal Scene Description}, a 3D exchange format.}, which has been open-sourced by Pixar in 2016. Similar to \gls{COLLADA}, the format is designed with interoperability in mind and is widely supported by 3D engines and applications. The main focus of \gls{USD} is support for complex scenes and complex collaboration workflows, which are common in the film industry but are less relevant for the use case in this thesis.
+One notable format is \fGls{USD}{\e{Universal Scene Description}, a 3D exchange format.}, which was open-sourced by Pixar in 2016. Similar to \gls{COLLADA}, the format is designed with interoperability in mind and is widely supported by 3D engines and applications. The main focus of \gls{USD} is support for complex scenes and complex collaboration workflows, which are common in the film industry but are less relevant for the use case in this thesis.
 
 \subsection*{Runtime Formats}
 
@@ -1319,7 +1319,7 @@ Technically, the format offers two different encoding formats which differ in fi
   \item{\texttt{.gltf}} — Text-based, human-readable format.
 \end{itemize}
 
-\gls{glTF} is designed to be extensible and a variety of extensions have been developed to support features such as mesh compression using Draco. The hierarchy structure of a \gls{glTF} file is shown in \autoref{fig:gltf-hierarchy}. Many of the official extensions extend the material nodes to support more advanced features. Its focus on transmission and parsing efficiency makes it well-suited for the web.
+\gls{glTF} is designed to be extensible, and a variety of extensions have been developed to support features such as mesh compression using Draco. The hierarchy structure of a \gls{glTF} file is shown in \autoref{fig:gltf-hierarchy}. Many of the official extensions extend the material nodes to support more advanced features. Its focus on transmission and parsing efficiency makes it well-suited for the web.
 
 \begin{figure}[H]
   \centering
@@ -1374,9 +1374,9 @@ Defining the geometry is one part of the equation. Another major part is definin
 
 Research into \gls{PBR} has been conducted for a similar amount of time as ray tracing. Moreover, just like ray tracing, the computational complexity of the algorithms has limited the adoption of \gls{PBR} in real-time rendering for a long time. \gls{PBR} has generally coincided with the rise of ray tracing as it is a natural fit for the physics-based approach to light transport. One prominent example of a \gls{PBR} system is \gls{pbrt}, an open-source renderer with an associated literate programming book that has won an Academy Award for formalizing and providing a reference implementation for \gls{PBR} \cite{Pharr_Physically_Based_Rendering_2023}.
 
-\gls{PBR} and ray tracing are not mutually dependent, as \gls{PBR} can also be used in rasterization. In contrast to how ray tracing inherently addresses shortcomings of rasterization by leveraging an entirely different approach, \gls{PBR} is a more incremental improvement extending existing shading techniques with more sophisticated models. Many ray tracers use simple non-standardized \gls{PBR} models that are suitable to demonstrate basic effects of global illumination but are unsuitable for high-fidelity rendering of complex scenes. Not having a clear standard makes alignment between different tools hard to manage and can lead to inconsistencies in the final rendering.
+\gls{PBR} and ray tracing are not mutually dependent, as \gls{PBR} can also be used in rasterization. In contrast to how ray tracing inherently addresses shortcomings of rasterization by leveraging an entirely different approach, \gls{PBR} is a more incremental improvement extending existing shading techniques with more sophisticated models. Many ray tracers use simple, non-standardized \gls{PBR} models that are suitable to demonstrate basic effects of global illumination but are unsuitable for high-fidelity rendering of complex scenes. Not having a clear standard makes alignment between different tools hard to manage and can lead to inconsistencies in the final rendering.
 
-In general, there is no \gls{PBR} standard. Instead, a variety of different models have been developed over time. In recent years, however, a convergence towards a common set of principles has been observed and certain aspects of \gls{PBR} are found in most models. This section explains these common principles and standards which can be used to obtain consistent renderings.
+In general, there is no \gls{PBR} standard. Instead, a variety of different models have been developed over time. In recent years, however, a convergence towards a common set of principles has been observed, and certain aspects of \gls{PBR} are found in most models. This section explains these common principles and standards which can be used to obtain consistent renderings.
 
 \subsection*{BxDF}
 \label{sec:bxdf}
@@ -1460,7 +1460,7 @@ The \gls{BRDF} ($f_r$) describes how much incident light along a differential co
   f_r(p, \omega_o, \omega_i) = \frac{dL_o(p, \omega_o)}{L_i(p, \omega_i) \cos(\theta_i) d\omega_i}
 \end{equation}
 
-where $d$ references to the differential nature, $L_o$ is the radiance leaving the surface in the outgoing direction, $L_i$ is the radiance arriving at the surface from the incident direction, and $\cos(\theta_i)$ is the cosine of the angle between the normal and the incident direction that reduces the intensity of the light for grazing angles. See \autoref{fig:brdf-visualized} for a visualization of the variables.
+where $d$ references the differential nature, $L_o$ is the radiance leaving the surface in the outgoing direction, $L_i$ is the radiance arriving at the surface from the incident direction, and $\cos(\theta_i)$ is the cosine of the angle between the normal and the incident direction that reduces the intensity of the light for grazing angles. See \autoref{fig:brdf-visualized} for a visualization of the variables.
 
 \begin{figure}[H]
   \centering
@@ -1551,7 +1551,7 @@ Technically, a node-based system also supports an \gls{uber shader} approach, bu
 \paragraph{Material Description Standards}
 \label{ch:materialDescriptionStandards}
 
-Many exchange formats, such as \gls{glTF}, support material description as part of the standard. The material description in \gls{glTF} supports a \gls{PBR} approach, based on the metallic-roughness material model \cite{gltfSpecification}. However, the \gls{PBR} material description in \gls{glTF} is limited in terms of feature set, by lacking features such as subsurface scattering, and is not intended to become an open standard across a variety of applications.
+Many exchange formats, such as \gls{glTF}, support material description as part of the standard. The material description in \gls{glTF} supports a \gls{PBR} approach based on the metallic-roughness material model \cite{gltfSpecification}. However, the \gls{PBR} material description in \gls{glTF} is limited in terms of feature set by lacking features such as subsurface scattering and is not intended to become an open standard across a variety of applications.
 
 Over the years, different parties have developed their own shading models. Some prominent options include:
 
@@ -1559,7 +1559,7 @@ Over the years, different parties have developed their own shading models. Some 
   \item{Disney Principled \gls{BRDF}} \cite{disney2012pbr} — Developed by Disney in 2012, the model is not necessarily physically accurate and focuses on being art-directable with limited parameters. Although the model is influential, it is not an established standard and lacks a reference implementation despite being adopted by some applications, including \gls{RenderMan} \cite{renderManDisneyPbrDocs}.
   \item{Autodesk Standard Surface} \cite{autodeskStandardSurface} — Developed by Autodesk, the goals are similar to Disney Principled \gls{BRDF} in that the parameter set is kept small in order to be easier to use. The model is developed as an open standard with a reference implementation in \fgls{OSL}{\e{Open Shading Language}, a shading language for production global illumination renderers maintained by the Academy Software Foundation.}. However, the standard has not seen much development in recent years.
   \item{Adobe Standard Material} \cite{adobeStandardMaterial} — Developed by Adobe, the model is also influenced by the Disney Principled \gls{BRDF} and Autodesk Standard Surface. It has a full specification and has been adopted by Adobe for its applications.
-  \item{\gls{DSPBR}} \cite{dspbrModel} — Developed by Dassault Systèmes, it is also influenced by the Disney Principled \gls{BRDF}. The specification is detailed and the model is designed for industrial use cases.
+  \item{\gls{DSPBR}} \cite{dspbrModel} — Developed by Dassault Systèmes, it is also influenced by the Disney Principled \gls{BRDF}. The specification is detailed, and the model is designed for industrial use cases.
 \end{itemize}
 
 In addition to these standards, many real-time rendering engines, such as \gls{Unity} and \fGls{Unreal}{Unreal Engine, a proprietary, cross-platform game engine developed by Epic Games.}, and modeling software, such as \fGls{Blender}{an open-source 3D computer graphics software toolset.} and \fGls{Rhino3D}{\e{Rhinoceros}, a proprietary 3D computer graphics and \gls{CAD} toolset.}, have their own shading models. Supporting many different shading models in a web-based real-time rendering application can be challenging, making the need for a common material description standard apparent. This is where new models come into play: open standards developed by multiple companies intended to be used across different applications to address the siloed development of prior shading models.
@@ -1570,15 +1570,15 @@ In addition to these standards, many real-time rendering engines, such as \gls{U
 
 \gls{OpenPBR} is a surface shading model hosted by the \gls{ASWF} as an open standard \cite{openPBRSpec}. Version 1.0 of the standard was released in June of 2024 \cite{openPBR1Dot0Release}. The \gls{OpenPBR} specification includes a reference implementation in \gls{MaterialX}. It differs from \gls{MaterialX} in providing an \gls{uber shader} approach instead of a node-based one. This enables the use of shader generation of \gls{MaterialX} in order to get a reference implementation in \gls{GLSL} or \gls{OSL}.
 
-\gls{OpenPBR} combines Autodesk Standard Surface and Adobe Standard Material and is being worked on by both companies. The potential of this standard is to provide a common shading model that can be used across different applications. Support for the standard has already been announced in applications by Autodesk, Adobe, and NVIDIA \cite{omniverseOpenPBR}, among others. \gls{Blender} has reworked their Principled \gls{BSDF} shader to be based on \gls{OpenPBR} \cite{blenderOpenPBRInspiration}. These promising signs indicate that the standard has the potential to be widely adopted.
+\gls{OpenPBR} combines Autodesk Standard Surface and Adobe Standard Material and is being worked on by both companies. The potential of this standard is to provide a common shading model that can be used across different applications. Support for the standard has already been announced in applications by Autodesk, Adobe, and NVIDIA \cite{omniverseOpenPBR}, among others. \gls{Blender} has reworked its Principled \gls{BSDF} shader to be based on \gls{OpenPBR} \cite{blenderOpenPBRInspiration}. These promising signs indicate that the standard has the potential to be widely adopted.
 
-The \gls{uber shader} approach is defined by having a fix set of inputs that can be adjusted, but it does not allow for custom node graphs as \gls{MaterialX} does. \gls{OpenPBR} is designed for photorealistic material description. The first release focuses on surface shading and does not support specialized workflows such as advanced hair or volumetric effects.
+The \gls{uber shader} approach is defined by having a fixed set of inputs that can be adjusted, but it does not allow for custom node graphs as \gls{MaterialX} does. \gls{OpenPBR} is designed for photorealistic material description. The first release focuses on surface shading and does not support specialized workflows such as advanced hair or volumetric effects.
 
 The specification is focused on physical aspects and does not specify implementation details. Implementations have an unambiguous target in terms of how it should look like, but have flexibility in terms of the degree of fidelity. While this makes alignment between different applications harder, it also allows for flexibility in the implementation of the standard, which is especially important for real-time rendering.
 
 \subsubsection{Formalism}
 
-One core tenet of \gls{OpenPBR} is energy conservation. This means that the \gls{BSDF} must not reflect more light than it receives. The structures consists of multiple layers to describe the material as visualized in \autoref{fig:openPBR}. The layers are:
+One core tenet of \gls{OpenPBR} is energy conservation. This means that the \gls{BSDF} must not reflect more light than it receives. The structure consists of multiple layers to describe the material as visualized in \autoref{fig:openPBR}. The layers are:
 
 \begin{itemize}
   \item{Base} — Substrate of the material, which can be a mixture of metal or dielectric.
