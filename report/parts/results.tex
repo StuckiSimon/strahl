@@ -73,7 +73,7 @@ A high-level view of the data structures is shown in \autoref{fig:memory-structu
 
 \subsection*{Ray Generator}
 
-The ray generator is responsible for casting rays into the scene according to the view projection. The path tracer employs a backward ray tracing approach, tracing rays from the camera into the scene. For many applications, especially photorealistic rendering, perspective projection is prevalent. Therefore, based on the assessed use case, the path tracer uses perspective projection. See \coderef{VIEWPROJECTION} for implementation.
+The ray generator is responsible for casting rays into the scene according to the view projection. For parallelization, each ray is cast in a separate thread; the degree of possible parallelization depends on the image's resolution. The path tracer employs a backward ray tracing approach, tracing rays from the camera into the scene. For many applications, especially photorealistic rendering, perspective projection is prevalent. Therefore, based on the assessed use case, the path tracer uses perspective projection. See \coderef{VIEWPROJECTION} for implementation.
 
 \label{sec:anti-aliasing-implementation}
 
