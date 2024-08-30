@@ -563,6 +563,7 @@ One of the main limitations is the lack of support for global illumination. For 
 
 To address these limitations, the graphics pipeline can be extended with additional steps such as post-processing effects or advanced rendering techniques. Various methods have been developed, including pre-baked shadow, environment \cite{greene1986environment}, and light maps; screen space reflections (SSR) \cite{screenSpaceReflectionsStackowiak}; screen space ambient occlusion (SSAO) \cite{bavoil2008ssao}; and screen space directional occlusion (SSDO) \cite{ritschel2009ssdo}.
 
+% todo: newpage?
 \paragraph{Environment Maps}
 
 Environment maps can be used to simulate reflections. The technique uses a texture that is mapped to the environment of the scene and is used to simulate reflections. Environment maps do not support reflections occurring dynamically in the scene, such as self-reflections or reflections of nearby objects.
@@ -585,6 +586,10 @@ Each of these methods addresses only a specific limitation of rasterization. Som
 
 \subsection{Ray Tracing}
 \label{ch:rayTracingTheory}
+
+% -> instead of gray plane, use color gradient to indicate material properties
+% -> missing rays a bit longer so that miss is obvious - esplain what red color means
+% -> define bias?
 
 Ray tracing is a rendering technique that simulates light transport in a scene. Forward ray tracing traces the photons, commonly referred to as rays, from the light source onto the objects. These algorithms are inefficient as most rays do not contribute to the illumination visible in the viewport. Therefore, backward ray tracing is more commonly used. Rays are cast from the camera into the scene, and the object's radiance with which the ray intersects is computed. In contrast to a rasterizer, which iterates over the triangles of the scene, ray tracing iterates over the pixels of the image. For each pixel, a ray is cast into the scene. By adding additional bounces of the light ray, the technique can simulate global illumination.
 
@@ -1221,6 +1226,8 @@ fn computeMain(@builtin(global_invocation_id) global_id: vec3<u32>) {
   \label{code:computePipelineWgsl}
 \end{figure}
 
+% todo: mention that texture sampling must only be called in uniform code? (non-divergent)
+% todo: mention error handling?
 In terms of limitations, it is similar to other shading languages. For example, it does not support recursion because cycles are not permitted in declarations. It also does not have features such as an \gls{API} for \gls{RNG}. The shading language is designed for common use cases in computer graphics and general-purpose computing. One example is support for swizzling. Swizzling is a class of operations that facilitate managing vector elements. For example, given a vector \texttt{let v = vec3f(x, y, z)}, the operation \texttt{v.xy} returns a vector \texttt{(x, y)}.
 
 \subsubsection{Data}
@@ -1550,6 +1557,8 @@ Technically, a node-based system also supports an \gls{uber shader} approach, bu
 
 \paragraph{Material Description Standards}
 \label{ch:materialDescriptionStandards}
+
+% todo: consider listing https://www.nvidia.com/en-us/design-visualization/technologies/material-definition-language/, however, its not that important for the context of this work
 
 Many exchange formats, such as \gls{glTF}, support material description as part of the standard. The material description in \gls{glTF} supports a \gls{PBR} approach based on the metallic-roughness material model \cite{gltfSpecification}. However, the \gls{PBR} material description in \gls{glTF} is limited in terms of feature set by lacking features such as subsurface scattering and is not intended to become an open standard across a variety of applications.
 
