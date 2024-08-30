@@ -96,7 +96,7 @@ For \gls{RNG}, the path tracer uses \gls{PCG}, specifically the \texttt{PCG-RXS-
     \label{fig:rngSeed}
 \end{figure}
 
-When increasing the sample count, the differences in the setup remain visible. Adjacent surfaces show similar patterns, as shown in \autoref{fig:rngNoiseArtifactsHighlightsBadNoisy}. These patterns resemble image compression artifacts encountered in aggressively compressed \fGlspl{JPEG}{\e{Joint Photographic Experts Group}, a common method for lossy image compression.}. In contrast, the renderings with independent seeds show stark differences in adjacent pixels akin to noise, as shown in \autoref{fig:rngNoiseArtifactsHighlightsGoodNoisy}. As shown in \autoref{fig:rngNoiseArtifactsHighlightsBadAnti} compared to \autoref{fig:rngNoiseArtifactsHighlightsGoodAnti}, the anti-aliasing is less noticeable when using independent seeds. The implementation of the anti-aliasing strategy indicated in \autoref{sec:anti-aliasing} is implemented in \coderef{ALIASING} and is highly dependent on the \gls{RNG} setup.
+When increasing the sample count, the differences in the setup remain visible. Adjacent surfaces show similar patterns, as shown in \autoref{fig:rngNoiseArtifactsHighlightsBadNoisy}. These patterns resemble image compression artifacts encountered in aggressively compressed \fGlspl{JPEG}{\e{Joint Photographic Experts Group}, a common method for lossy image compression.}. In contrast, the renderings with independent seeds show stark differences in adjacent pixels akin to noise, as shown in \autoref{fig:rngNoiseArtifactsHighlightsGoodNoisy}. As shown in \autoref{fig:rngNoiseArtifactsHighlightsBadAnti} compared to \autoref{fig:rngNoiseArtifactsHighlightsGoodAnti}, the aliasing is less noticeable when using independent seeds. The implementation of the anti-aliasing strategy indicated in \autoref{sec:anti-aliasing} is implemented in \coderef{ALIASING} and is highly dependent on the \gls{RNG} setup.
 
 \begin{figure}[H]
     \centering
@@ -242,7 +242,7 @@ Results of simple renderings with and without denoising can be seen in \autoref{
 
 \section{Documentation}
 
-The path tracer is designed to be integrated into existing web projects. The package is installable via \gls{npm} but could also be downloaded and included manually. The complete documentation is available on the website. The documentation is designed to demonstrate the path tracer, provide a quick start guide, and offer detailed information on how to set up \texttt{strahl}. The website is shown in \autoref{fig:strahl-homepage}.
+The path tracer is designed to be integrated into existing web projects. The package is installable via \gls{npm} but could also be downloaded and included manually. Complete documentation is available on the website and is designed to demonstrate the path tracer, provide a quick start guide, and offer detailed information on setting up \texttt{strahl}. The website is shown in \autoref{fig:strahl-homepage}.
 
 \begin{figure}[H]
     \centering
