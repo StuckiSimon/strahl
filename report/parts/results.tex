@@ -9,7 +9,7 @@
 
 As discussed in the introduction and theory chapters, the goal of this work is to implement a web-based path tracer. The path tracer is designed to be used for product visualization based on engineering \gls{CAD} data, leveraging the \gls{OpenPBR} surface shading model and \gls{WebGPU}.
 
-The concrete result of this work consists of multiple parts. The core is a path tracing library called \texttt{strahl}. The code as well as documentation is published under the \fGls{MIT license}{a permissive license originating at the Massachusetts Institute of Technology (MIT).} on GitHub with an accompanying website. See \url{https://www.github.com/StuckiSimon/strahl} for details. This also includes detailed instructions on how to set up and configure the renderer. The library is published on the \fgls{npm}{a package manager for JavaScript.} registry as \texttt{strahl}. This report serves as the primary documentation of the work but does not contain library usage documentation. In addition, a dedicated short paper has been published for WEB3D '24: The 29th International ACM Conference on 3D Web Technology \cite{ownShortPaper}. The short paper includes the main insights and results of this work.
+The concrete result of this work consists of multiple parts. The core is a path tracing library called \texttt{strahl}. The code and documentation are published under the \fGls{MIT license}{a permissive license originating at the Massachusetts Institute of Technology (MIT).} on GitHub, with an accompanying website. See \url{https://www.github.com/StuckiSimon/strahl} for details. This also includes detailed instructions on how to set up and configure the renderer. The library is published on the \fgls{npm}{a package manager for JavaScript.} registry as \texttt{strahl}. This report serves as the primary documentation of the work but does not contain library usage documentation. In addition, a dedicated short paper has been published for WEB3D '24: The 29th International ACM Conference on 3D Web Technology \cite{ownShortPaper}. The short paper includes the main insights and results of this work.
 
 This chapter focuses on the implementation details and highlights design decisions of the path tracer. It also provides an overview of the available documentation, insights into the performance of the renderer, and its applicability for the described use case.
 
@@ -37,7 +37,7 @@ The primary process involved with setting up the scene is the preparation of the
 
 In order to address memory alignment, as described in \autoref{ch:memoryAlignmentTheory}, the path tracer uses \texttt{webgpu-utils} \cite{webgpuUtilsLib}. The library enables a straightforward way to map data to buffers and align them correctly. See \coderef{MEMORY-VIEW} for the creation of the type definition and \coderef{BUFFER-MAPPING} for the mapping of data to buffers.
 
-A high-level view of the data structures is shown in \autoref{fig:memory-structure}. Using the \gls{BVH} it is possible to obtain the indices via indirect indices. Indirect indices are used because the \gls{BVH} re-orders the indices of the triangles, but the original indices are needed to get the correct object definition which stores the material information of the surface. See \coderef{BUFFER-BINDINGS} for definition. \gls{WebGPU} enforces limits on the maximum number of storage buffers that can be employed per compute pipeline. Therefore, buffers for geometry data, which contain position and normal information per vertex, are interleaved in order to reduce the amount of storage buffers. Interleaving is the practice of putting multiple data types into the same buffer. The following sections will discuss more details on the specific buffer contents.
+A high-level view of the data structures is shown in \autoref{fig:memory-structure}. Using the \gls{BVH}, it is possible to obtain the indices via indirect indices. Indirect indices are used because the \gls{BVH} re-orders them during construction. However, the original indices are needed to get the correct object definition, which stores the material information of the surface. See \coderef{BUFFER-BINDINGS} for the definition. \gls{WebGPU} enforces limits on the maximum number of storage buffers that can be employed per compute pipeline. Therefore, buffers for geometry data, which contain position and normal information per vertex, are interleaved in order to reduce the amount of storage buffers. Interleaving is the practice of putting multiple data types into the same buffer. The following sections will discuss more details on the specific buffer contents.
 
 \begin{figure}[H]
     \centering
@@ -77,7 +77,7 @@ The ray generator is responsible for casting rays into the scene according to th
 
 \label{sec:anti-aliasing-implementation}
 
-For \gls{RNG}, the path tracer uses \gls{PCG}, specifically the \texttt{PCG-RXS-M-XS} variant, as described by O’Neill \cite{o2014pcg}. See \coderef{RNG} for implementation. In order to set up the Monte Carlo sampling, the \gls{RNG} needs to be employed in a suitable manner. As a pseudorandom generator, \gls{PCG} necessitates a seed to start the cycle. If the seed is identical for all pixels, the results of a single sample will frequently share similar patterns in adjacent surfaces, as shown in \autoref{fig:rngBadSeed}. The result for independent seeds differs in a pronounced manner as demonstrated in \autoref{fig:rngGoodSeed}.
+For \gls{RNG}, the path tracer uses \gls{PCG}, specifically the \texttt{PCG-RXS-M-XS} variant, as described by O’Neill \cite{o2014pcg}. See \coderef{RNG} for implementation. In order to set up the Monte Carlo sampling, the \gls{RNG} needs to be employed in a suitable manner. As a pseudorandom generator, \gls{PCG} necessitates a seed to start the cycle. If the seed is identical for all pixels, the results of a single sample will frequently share similar patterns in adjacent surfaces, as shown in \autoref{fig:rngBadSeed}. The result for independent seeds differs in a pronounced manner, as demonstrated in \autoref{fig:rngGoodSeed}.
 
 \begin{figure}[H]
     \centering
@@ -96,7 +96,7 @@ For \gls{RNG}, the path tracer uses \gls{PCG}, specifically the \texttt{PCG-RXS-
     \label{fig:rngSeed}
 \end{figure}
 
-When increasing the sample count, the differences in the setup remain visible. Adjacent surfaces show similar patterns, as shown in \autoref{fig:rngNoiseArtifactsHighlightsBadNoisy}. These patterns resemble image compression artifacts encountered in aggressively compressed \fGlspl{JPEG}{\e{Joint Photographic Experts Group}, a common method for lossy image compression.}. In contrast, the renderings with independent seeds show stark differences in adjacent pixels akin to noise as shown in \autoref{fig:rngNoiseArtifactsHighlightsGoodNoisy}. As shown in \autoref{fig:rngNoiseArtifactsHighlightsBadAnti} compared to \autoref{fig:rngNoiseArtifactsHighlightsGoodAnti}, the anti-aliasing is less noticeable when using independent seeds. The implementation of the anti-aliasing strategy indicated in \autoref{sec:anti-aliasing} is implemented in \coderef{ALIASING} and is highly dependent on the \gls{RNG} setup.
+When increasing the sample count, the differences in the setup remain visible. Adjacent surfaces show similar patterns, as shown in \autoref{fig:rngNoiseArtifactsHighlightsBadNoisy}. These patterns resemble image compression artifacts encountered in aggressively compressed \fGlspl{JPEG}{\e{Joint Photographic Experts Group}, a common method for lossy image compression.}. In contrast, the renderings with independent seeds show stark differences in adjacent pixels akin to noise, as shown in \autoref{fig:rngNoiseArtifactsHighlightsGoodNoisy}. As shown in \autoref{fig:rngNoiseArtifactsHighlightsBadAnti} compared to \autoref{fig:rngNoiseArtifactsHighlightsGoodAnti}, the anti-aliasing is less noticeable when using independent seeds. The implementation of the anti-aliasing strategy indicated in \autoref{sec:anti-aliasing} is implemented in \coderef{ALIASING} and is highly dependent on the \gls{RNG} setup.
 
 \begin{figure}[H]
     \centering
@@ -128,13 +128,13 @@ When increasing the sample count, the differences in the setup remain visible. A
         \label{fig:rngNoiseArtifactsHighlightsGoodAnti}
     \end{subfigure}
     \hspace*{2cm}
-    \caption{Magnified images of renderings with low sample count showing differences based on seed setup. The left column has identical seed for all pixels of a sample, but varying seeds for different samples. The right column has independent seeds for every pixel of a sample as well as across samples.}
+    \caption{Magnified images of renderings with low sample count showing differences based on seed setup. The left column has an identical seed for all pixels of a sample but varying seeds for different samples. The right column has independent seeds for every pixel of a sample as well as across samples.}
     \label{fig:rngNoiseArtifactsHighlights}
 \end{figure}
 
 \subsection*{Path Tracer}
 
-The path tracer is the core of the library and is responsible to test for intersections, conduct scene sampling, and calculate the final radiance. The basic procedure can be seen in \autoref{fig:path-tracer-workflow}. The ray, cast by the ray generator, is tested for intersections. If it misses, the path will be terminated. If a surface hit is detected, the shading will be generated based on the \gls{OpenPBR} specification. The shading generates a new scattered ray and determines the throughput of the ray. Russian roulette uses the throughput to perform probabilistic path termination. If it should be continued, the ray is cast again. The max depth of the ray determines the end of the path. During termination, the radiance contribution is collected in \fGls{RGB}{\e{red, green, and blue}, a common system for color representation in computer graphics.} color space.
+The path tracer is the core of the library and is responsible for intersection testing, conducting scene sampling, and calculating the final radiance. The basic procedure can be seen in \autoref{fig:path-tracer-workflow}. The ray, cast by the ray generator, is tested for intersections. If it misses, the path will be terminated. If a surface hit is detected, the shading will be generated based on the \gls{OpenPBR} specification. The shading generates a new scattered ray and determines the throughput of the ray. Russian roulette uses the throughput to perform probabilistic path termination. If it should be continued, the ray is cast again. The max depth of the ray determines the end of the path. During termination, the radiance contribution is collected in \fGls{RGB}{\e{red, green, and blue}, a common system for color representation in computer graphics.} color space.
 
 \begin{figure}[H]
     \centering
@@ -199,7 +199,7 @@ As rendering progresses, the image becomes increasingly less noisy. However, as 
 
 \begin{itemize}
     \item{Denoise filtering} — A filter to reduce noise based on a circular Gaussian kernel \cite{conventionalGaussianDenoise}. The denoise filter is integrated into the render pipeline. See \coderef{DENOISE-FILTERING} for implementation.
-    \item{\gls{OIDN}} — Open Image Denoise \cite{openImageDenoise}, developed by Intel, is a state-of-the-art denoising library that uses \gls{ML} and is built for noise reduction in ray tracing. The web library is developed by Shen \cite{oidnWeb} and based on \gls{WebGPU}, making it well-suited for integration into the path tracer as a subsequent step. After denoising, the image is rendered using the render pipeline.
+    \item{\gls{OIDN}} — Open Image Denoise \cite{openImageDenoise}, developed by Intel, is a state-of-the-art denoising library that uses \gls{ML} and is built for noise reduction in ray tracing. The web library was developed by Shen \cite{oidnWeb} and is based on \gls{WebGPU}, making it well-suited for integration into the path tracer as a subsequent step. After denoising, the image is rendered using the render pipeline.
 \end{itemize}
 
 Results of simple renderings with and without denoising can be seen in \autoref{fig:denoise-samples}. Note that \gls{OIDN} can effectively denoise images even with a low number of samples, as shown in \autoref{fig:denoise-oidn-10-samples}. The difference in denoising on 100 samples, as shown in \autoref{fig:denoise-oidn-100-samples} for \gls{OIDN} and \autoref{fig:denoise-gaussian-100-samples} for the denoise filter, is less pronounced in local areas. However, \gls{OIDN} is more effective in reducing noise in global regions.
@@ -242,7 +242,7 @@ Results of simple renderings with and without denoising can be seen in \autoref{
 
 \section{Documentation}
 
-The path tracer is designed to be integrated into existing web projects. The package is installable via \gls{npm}, but could also be downloaded and included manually. The complete documentation is available on the website. The documentation is designed to demonstrate the path tracer, provide a quick start guide, and offer detailed information on how to set up \texttt{strahl}. The website is shown in \autoref{fig:strahl-homepage}.
+The path tracer is designed to be integrated into existing web projects. The package is installable via \gls{npm} but could also be downloaded and included manually. The complete documentation is available on the website. The documentation is designed to demonstrate the path tracer, provide a quick start guide, and offer detailed information on how to set up \texttt{strahl}. The website is shown in \autoref{fig:strahl-homepage}.
 
 \begin{figure}[H]
     \centering
@@ -251,12 +251,12 @@ The path tracer is designed to be integrated into existing web projects. The pac
     \label{fig:strahl-homepage}
 \end{figure}
 
-Documentation on how to configure the renderer is provided. The library uses custom exceptions that the user can catch and handle. It provides different exceptions to enable the user to react appropriately to different error conditions. This includes basic exceptions, where the action is limited, such as missing browser support for \gls{WebGPU}, as well as transparent information on what the user misconfigured. The use of \fGls{TypeScript}{a typed superset of JavaScript developed by Microsoft.} enables code completion and type checking. The documentation describes how to control sampling, denoising, environment lighting, and more. See \autoref{fig:strahl-documentation} for an example of a code snippet with an interactive sandbox.
+Documentation on how to configure the renderer is provided. The library uses custom exceptions that the user can catch and handle. It provides different exceptions to enable the user to react appropriately to different error conditions. This includes basic exceptions where the action is limited, such as missing browser support for \gls{WebGPU}, as well as transparent information on what the user misconfigured. The use of \fGls{TypeScript}{a typed superset of JavaScript developed by Microsoft.} enables code completion and type checking. The documentation describes how to control sampling, denoising, environment lighting, and more. See \autoref{fig:strahl-documentation} for an example of a code snippet with an interactive sandbox.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\columnwidth]{resources/website-documentation.png}
-    \caption{Extract of documentation on how to setup denoising, with interactive sandbox.}
+    \caption{Extract of documentation on how to set up denoising, with interactive sandbox.}
     \label{fig:strahl-documentation}
 \end{figure}
 
@@ -286,7 +286,7 @@ Prior sections, such as anti-aliasing, as described in \autoref{sec:anti-aliasin
 
 A total of 100 samples per pixel with a ray depth of five is used. The image is rendered in Chrome 127/128 at a resolution of 512$\times$512 pixels. Experiments are conducted with different model complexities. The simplified versions are decimated meshes of the original, which consists of roughly one million triangles. The \gls{LOD} artifacts can be seen in \autoref{fig:benchmark-models}. The first two levels are intended to be visually similar, while the third level is a simplified version intended to demonstrate the effect of non-manifold geometry for ray tracing.
 
-Unless otherwise specified, the benchmarks are conducted on a MacBook Pro with Apple Silicon M1 Max. The measurements are calculated using the mean time of 30 runs with a confidence interval of 95\% given as $\pm$ standard deviation from the mean time in milliseconds (ms) as described in \autoref{sec:probabilityTheory}. The different measurement sections should not be compared directly, as different factors influence them and may have been taken on different development stages of the renderer. They are only intended for comparison within the same measurement category.
+Unless otherwise specified, the benchmarks are conducted on a MacBook Pro with Apple Silicon M1 Max. The measurements are calculated using the mean time of 30 runs with a confidence interval of 95\% given as $\pm$ standard deviation from the mean time in milliseconds (ms) as described in \autoref{sec:probabilityTheory}. The different measurement sections should not be compared directly, as different factors influence them and may have been taken at different development stages of the renderer. They are only intended for comparison within the same measurement category.
 
 \begin{figure}[H]
     \centering
@@ -385,7 +385,7 @@ The time for each individual sample remains consistent across benchmark runs. Th
 \newpage
 \subsection*{Overall Performance}
 
-A final performance test was conducted on two machines. The AMD/NVIDIA machine is a desktop computer with an AMD Ryzen~5 5600X \gls{CPU} and NVIDIA GeForce RTX~3080 (10 GB) \gls{GPU}. The \gls{CPU} results to setup the \gls{BVH} are measured using the Performance \gls{API} and can be seen in \autoref{tab:cpuPerformance}. The \gls{GPU} results for the core path tracing are presented in \autoref{tab:gpuPerformance}.
+A final performance test was conducted on two machines. The AMD/NVIDIA machine is a desktop computer with an AMD Ryzen~5 5600X \gls{CPU} and NVIDIA GeForce RTX~3080 (10 GB) \gls{GPU}. The \gls{CPU} results for setting up the \gls{BVH} are measured using the Performance \gls{API} and can be seen in \autoref{tab:cpuPerformance}. The \gls{GPU} results for the core path tracing are presented in \autoref{tab:gpuPerformance}.
 
 \begin{table}[H]
     \centering
