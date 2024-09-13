@@ -11,9 +11,12 @@ import {
 import { loadGltf } from "../load-gltf";
 import { Mesh } from "three";
 
-const MODEL_URL_FULL = "models/series-61-rotated/61-serie-edit.gltf"; // 1'068'735
-const MODEL_URL_BARE_BONES = "models/series-61-simplified-2/61-serie-edit.gltf"; // 10'687
-const MODEL_URL_MID = "models/series-61-simplified/61-serie-edit.gltf"; // 106'873
+const MODEL_URL_FULL =
+  "https://stuckisimon.github.io/strahl-sample-models/benchmark-base/61-serie-edit.gltf"; // 1'068'735
+const MODEL_URL_BARE_BONES =
+  "https://stuckisimon.github.io/strahl-sample-models/benchmark-2/61-serie-edit.gltf"; // 10'687
+const MODEL_URL_MID =
+  "https://stuckisimon.github.io/strahl-sample-models/benchmark-1/61-serie-edit.gltf"; // 106'873
 
 const defaultBlueMaterial = new OpenPBRMaterial();
 defaultBlueMaterial.oBaseColor = [0.0, 0.9, 1.0];
