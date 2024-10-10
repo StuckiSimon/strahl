@@ -13,7 +13,7 @@ strahl is a path tracing library for web applications. Path tracing is a techniq
 ## Quick Links
 
 - [website](https://stuckisimon.github.io/strahl/) — documentation, demo, tutorial, and more information
-- [arXiv short paper](https://arxiv.org/abs/2407.19977) — summary of the work
+- [ACM short paper](https://doi.org/10.1145/3665318.3677158) — summary of the work
 - [report](https://github.com/StuckiSimon/strahl/blob/report/report.pdf) — master thesis report with full details
 - [npm package](https://www.npmjs.com/package/strahl) — installable `strahl` package
 
