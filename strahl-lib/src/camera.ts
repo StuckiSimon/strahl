@@ -8,9 +8,13 @@ import {
 import { isNil } from "./util/is-nil";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 
+export type CameraControlsEventMap = {
+  change: { type: "change" };
+};
+
 export type CustomCameraSetup = {
   camera: Camera;
-  controls?: EventDispatcher;
+  controls?: EventDispatcher<CameraControlsEventMap>;
 };
 
 export type Matrix = number[] & { length: 16 };
