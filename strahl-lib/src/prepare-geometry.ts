@@ -30,7 +30,6 @@ export function prepareGeometry(model: { scene: Group }) {
   const reducedModel = consolidateMesh([model.scene]);
   const cpuLogGroup = startMeasurementGroup();
   const boundsTree = new MeshBVH(reducedModel.geometry, {
-    // @ts-expect-error This property is not officially supported by three-mesh-bvh just yet
     indirect: true,
   });
 
